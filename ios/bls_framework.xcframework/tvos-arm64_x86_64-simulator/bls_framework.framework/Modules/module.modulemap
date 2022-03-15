@@ -1,0 +1,6 @@
+framework module bls_framework {
+  umbrella header "bls_framework.h"
+
+  export *
+  module * { export * }
+}

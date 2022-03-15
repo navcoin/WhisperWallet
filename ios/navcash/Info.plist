@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>Whisper Wallet</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>3</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow $(PRODUCT_NAME) access to the camera to scan QR codes</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Allow $(PRODUCT_NAME) to use FaceID</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Montserrat-Regular.ttf</string>
+		<string>Overpass-Bold.ttf</string>
+		<string>GOTHAM-THIN.otf</string>
+		<string>Overpass-Extrabold-Italic.otf</string>
+		<string>Overpass-Regular.ttf</string>
+		<string>Overpass-SemiBold.ttf</string>
+		<string>Roboto-BlackItalic.ttf</string>
+		<string>SFPro-Display-Bold.otf</string>
+		<string>SFPro-Display-Heavy-Italic.otf</string>
+		<string>SpaceMono-Regular.ttf</string>
+		<string>Celias-Hairline.ttf</string>
+		<string>Celias-Light.ttf</string>
+		<string>Celias-Thin.ttf</string>
+		<string>Celias.ttf</string>
+		<string>GOTHAM-THIN.OTF</string>
+		<string>Celias-Black.ttf</string>
+		<string>Celias-BlackItalic.ttf</string>
+		<string>Celias-Bold.ttf</string>
+		<string>Celias-BoldItalic.ttf</string>
+		<string>Celias-Italic.ttf</string>
+		<string>Celias-LightItalic.ttf</string>
+		<string>Celias-Medium.ttf</string>
+		<string>Celias-ThinItalic.ttf</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>SplashScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+</dict>
+</plist>

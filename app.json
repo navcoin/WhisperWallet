@@ -1,0 +1,9 @@
+{
+  "name": "Whisper Wallet",
+  "android": {
+    "package": "net.whisperwallet.wallet"
+  },
+  "ios": {
+    "bundleIdentifier": "net.whisperwallet.wallet"
+  }
+}

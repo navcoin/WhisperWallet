@@ -1,0 +1,56 @@
+import * as Keychain from 'react-native-keychain';
+import {useEffect, useState} from 'react';
+import * as crypto from 'crypto';
+
+const useKeychain = () => {
+  const [state, setState] = useState({
+    service: 'net.whisperwallet.wallet',
+    accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY_OR_DEVICE_PASSCODE,
+    accessible: Keychain.ACCESSIBLE.WHEN_PASSCODE_SET_THIS_DEVICE_ONLY,
+    storage: Keychain.STORAGE_TYPE.RSA,
+  });
+
+  //const appBundleId = await DeviceInfo.getBundleId();
+
+  useEffect(() => {
+    Keychain.getSupportedBiometryType({}).then(biometryType => {
+      setState((prev: any) => ({...prev, biometryType}));
+    });
+  }, []);
+
+  const write = async (suffix: string) => {
+    await Keychain.setGenericPassword(
+      crypto.randomBytes(64).toString('hex'),
+      crypto.randomBytes(64).toString('hex'),
+      {service: 'net.whisperwallet.wallet.' + suffix},
+    );
+  };
+
+  const read = async (suffix: string) => {
+    const options = {
+      ...state,
+      service: 'net.whisperwallet.wallet.' + suffix,
+      authenticationPrompt: {
+        title: 'Authentication needed',
+        cancel: 'Cancel',
+      },
+    };
+    try {
+      let creds = await Keychain.getGenericPassword(options);
+
+      if (creds) {
+        return creds.password;
+      } else {
+        await write(suffix);
+        return await read(suffix);
+      }
+    } catch (e) {
+      console.log(e);
+      throw new Error('Authentication Failed');
+    }
+  };
+
+  return {read};
+};
+
+export default useKeychain;

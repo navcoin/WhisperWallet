@@ -1,0 +1,13 @@
+diff --git a/node_modules/indexeddbshim/dist/indexeddbshim-noninvasive.js b/node_modules/indexeddbshim/dist/indexeddbshim-noninvasive.js
+index 943562d..e8ab138 100644
+--- a/node_modules/indexeddbshim/dist/indexeddbshim-noninvasive.js
++++ b/node_modules/indexeddbshim/dist/indexeddbshim-noninvasive.js
+@@ -9971,7 +9971,7 @@
+   };
+ 
+   var getOrigin = function getOrigin() {
+-    return (typeof location === "undefined" ? "undefined" : _typeof$1(location)) !== 'object' || !location ? 'null' : location.origin;
++    return (typeof location === "undefined" ? "undefined" : _typeof$1(location)) !== 'object' || !location ? undefined : location.origin;
+   };
+ 
+   var hasNullOrigin = function hasNullOrigin() {
