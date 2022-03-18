@@ -106,7 +106,7 @@
 		FA208EB6279BFDFD0055BF58 /* Empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Empty.swift; path = navcash/Empty.swift; sourceTree = "<group>"; };
 		FA8B9D1827908A8D00835343 /* SplashScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SplashScreen.storyboard; sourceTree = "<group>"; };
 		FA98F77B385A42578ACDAEA0 /* Overpass-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Overpass-SemiBold.ttf"; path = "../assets/fonts/Overpass-SemiBold.ttf"; sourceTree = "<group>"; };
-		FADA6CC727D8B2CE003CD0C1 /* bls_framework.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = bls_framework.xcframework; path = "../../bls-eth-swift/bls_framework.xcframework"; sourceTree = "<group>"; };
+		FADA6CC727D8B2CE003CD0C1 /* bls_framework.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = bls_framework.xcframework; sourceTree = "<group>"; };
 		FB50A099BD944FB699673756 /* Overpass-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Overpass-Bold.ttf"; path = "../assets/fonts/Overpass-Bold.ttf"; sourceTree = "<group>"; };
 		FE9755B1E42545D69740C5B6 /* Celias.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Celias.ttf; path = ../assets/fonts/Celias.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -680,7 +680,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -747,7 +747,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
