@@ -86,7 +86,7 @@ const SwipeButton = ({ height = exports.DEFAULT_HEIGHT, width = DEFAULT_WIDTH, b
             styles.container,
             opacityStyle,
             containerStyle,
-            { height, width, borderRadius },
+            { height, width, borderRadius, overflow: 'hidden' },
         ] },
         react_1.default.createElement(SwipeButtonText_1.default, { title: title, titleStyle: titleStyle, titleProps: titleProps, height: height, titleContainerProps: titleContainerProps, titleContainerStyle: titleContainerStyle }),
         !disabled && react_1.default.createElement(react_native_1.Animated.View, { testID: "Underlay", style: [
