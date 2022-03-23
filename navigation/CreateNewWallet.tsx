@@ -218,6 +218,7 @@ const CreateNewWallet = () => {
                     <Input
                       key={'word' + wordpos}
                       style={{width: 120, padding: 0}}
+                      autoCapitalize="none"
                       onChangeText={(name: string) => {
                         words[wordpos] = name.toLowerCase();
                       }}
