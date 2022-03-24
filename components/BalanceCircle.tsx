@@ -12,10 +12,14 @@ const BalanceCircle = memo(() => {
   const {width} = useLayout();
   const {syncProgress, syncing, balances, connected} = useWallet();
   const theme = useTheme();
-  const [balanceSegments, setBalanceSegments] = useState([
+  const [balanceSegments, setBalanceSegments] = useState<
     {
-      size: 0,
-      color: theme['color-nav-pink'],
+      size: number;
+      color?: string;
+    }[]
+  >([
+    {
+      size: 100,
     },
   ]);
   const [totalBalance, setTotalBalance] = useState(0);
@@ -58,7 +62,7 @@ const BalanceCircle = memo(() => {
       <SegmentCircle
         radius={width / 2 - 100}
         segments={
-          syncing
+          syncing || syncProgress === 0
             ? [
                 {
                   size: syncProgress,
@@ -72,7 +76,7 @@ const BalanceCircle = memo(() => {
         }
         totalArcSize={353}
       />
-      {syncing ? (
+      {syncing || syncProgress === 0 ? (
         <Text style={{position: 'absolute', textAlign: 'center'}}>
           Synchronizing...{'\n'}
           {syncProgress}%
@@ -80,7 +84,7 @@ const BalanceCircle = memo(() => {
       ) : (
         <View style={{position: 'absolute'}}>
           <Text style={{textAlign: 'center'}}>Balance:</Text>
-          <CurrencyText children={totalBalance}></CurrencyText>
+          <CurrencyText children={totalBalance} />
         </View>
       )}
     </View>
