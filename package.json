@@ -13,6 +13,7 @@
   "dependencies": {
     "@aguycalled/bitcore-p2p": "^5.0.10",
     "@arelstone/react-native-swipe-button": "^0.1.0",
+    "@callstack/reanimated-arc": "^0.1.0-alpha.3",
     "@eva-design/eva": "^2.1.1",
     "@gorhom/bottom-sheet": "^4.1.5",
     "@react-native-async-storage/async-storage": "^1.15.15",

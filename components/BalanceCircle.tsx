@@ -74,7 +74,7 @@ const BalanceCircle = memo(() => {
               ]
             : balanceSegments
         }
-        totalArcSize={353}
+        maxArcSize={353}
       />
       {syncing || syncProgress === 0 ? (
         <Text style={{position: 'absolute', textAlign: 'center'}}>
