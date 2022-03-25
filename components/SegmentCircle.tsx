@@ -1,9 +1,10 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ReanimatedArc} from '@callstack/reanimated-arc';
 import {Easing} from 'react-native-reanimated';
 import {useTheme} from '@ui-kitten/components';
+import {timeout} from '../utils/helpers';
 
 const easing = Easing.inOut(Easing.quad);
 
@@ -18,22 +19,30 @@ const SegmentCircle = ({
   arcWidth,
 }: SegmentCircleProps) => {
   const theme = useTheme();
-  const [, forceUpdate] = useReducer(x => x + 1, 0);
+  const [hide, setHide] = useState(false);
   const [currentSegmentCount, setCurrentSegmentCount] = useState(
     segments.length,
   );
 
+  /* Rerendering Management*/
   useEffect(() => {
     if (segments) {
       setCurrentSegmentCount(segments.length);
     }
   }, [segments]);
 
+  const forceRerender = async () => {
+    setHide(true);
+    await timeout(300);
+    setHide(false);
+  };
+
   useEffect(() => {
-    forceUpdate();
+    forceRerender();
   }, [currentSegmentCount]);
 
-  const initialRotation = 0;
+  /* Arcs Calculation*/
+  const initialRotation = 210;
   const totalArcs = segments.filter((el: any) => el.size > 0).length;
   const totalSpacing = totalArcs * minArcSpacing;
   const totalSegmentSize = segments
@@ -45,51 +54,48 @@ const SegmentCircle = ({
   const margin = 15;
   const svgWidth = (radius + arcWidth) * 2 + 2 * margin;
 
-  if (!segments.length) {
-    return <></>;
+  /*
+   * Default state
+   *
+   * This if block of code is intentionally added for forcing rerender of the arcs,
+   * This resolves the issue that when there are changes in segments.length, the rerender of the arcs failed
+   * The possible reason for this to happen is due to caching of the package/react
+   */
+  if (!segments.length || hide) {
+    return <View style={{height: svgWidth}} />;
   }
 
   const calculateSegmentSize = (size: number) =>
     (size / totalSegmentSize) * totalArcSize;
+
   return (
     <>
-      <View>
-        {segments.map((segment, index) => {
-          const arcSweepAngle = calculateSegmentSize(segment.size);
-          let rotation = 0 + initialRotation;
-          if (index > 0) {
-            rotation += minArcSpacing * index;
-            for (let i = 0; i < index; i++) {
-              rotation += calculateSegmentSize(segments[i].size);
-            }
+      {segments.map((segment, index) => {
+        const arcSweepAngle = calculateSegmentSize(segment.size);
+        let rotation = 0 + initialRotation;
+        if (index > 0) {
+          rotation += minArcSpacing * index;
+          for (let i = 0; i < index; i++) {
+            rotation += calculateSegmentSize(segments[i].size);
           }
-          return (
-            <>
-              <ReanimatedArc
-                index={index}
-                color={segment.color || theme['color-patrick-blue-400']}
-                diameter={svgWidth}
-                width={arcWidth}
-                arcSweepAngle={arcSweepAngle}
-                lineCap="round"
-                rotation={rotation}
-                initialAnimation={false}
-                easing={easing}
-                style={index === 0 ? {paddingBottom: 20} : styles.absolute}
-              />
-              <Text style={{color: 'white'}}>
-                {JSON.stringify({
-                  index,
-                  rotation,
-                  arcSweepAngle,
-                  color: segment.color,
-                })}
-              </Text>
-            </>
-          );
-        })}
-      </View>
-      <Text style={{color: 'white'}}>{JSON.stringify(segments)}</Text>
+        }
+        return (
+          <>
+            <ReanimatedArc
+              index={index}
+              color={segment.color || theme['color-patrick-blue-400']}
+              diameter={svgWidth}
+              width={arcWidth}
+              arcSweepAngle={arcSweepAngle}
+              lineCap="round"
+              rotation={rotation}
+              initialAnimation={false}
+              easing={easing}
+              style={index === 0 ? {} : styles.absolute}
+            />
+          </>
+        );
+      })}
     </>
   );
 };
@@ -100,11 +106,13 @@ const styles = StyleSheet.create({
   },
 });
 
+interface Segment {
+  size: number;
+  color?: string;
+}
+
 interface SegmentCircleProps {
-  segments: {
-    size: number;
-    color?: string;
-  }[];
+  segments: Segment[];
   arcWidth: number;
   minArcSpacing: number;
   maxArcSize: number;
