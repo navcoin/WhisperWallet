@@ -68,9 +68,25 @@ const SegmentCircle = ({
   const calculateSegmentSize = (size: number) =>
     (size / totalSegmentSize) * totalArcSize;
 
+  let displayedSegments = segments;
+  if (totalArcs === 0 && segments.length > 0) {
+    return (
+      <ReanimatedArc
+        color={theme['color-nav-pink']}
+        diameter={svgWidth}
+        width={arcWidth}
+        arcSweepAngle={360 - minArcSpacing}
+        lineCap="round"
+        rotation={initialRotation}
+        initialAnimation={false}
+        easing={easing}
+      />
+    );
+  }
+
   return (
     <>
-      {segments.map((segment, index) => {
+      {displayedSegments.map((segment, index) => {
         const arcSweepAngle = calculateSegmentSize(segment.size);
         let rotation = 0 + initialRotation;
         if (index > 0) {

@@ -47,3 +47,7 @@ export const scaleValue = (value: number, from: number[], to: number[]) => {
   // eslint-disable-next-line no-bitwise
   return ~~(capped * scale + to[0]);
 };
+
+export function timeout(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
