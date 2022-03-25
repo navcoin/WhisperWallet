@@ -10,7 +10,7 @@
 		</data>
 		<key>Headers/bls.h</key>
 		<data>
-		Jv62dCaj3HtKq+digcExgj+mw1c=
+		zw3559ljOh7Nzg7G5iBOUAMbWSE=
 		</data>
 		<key>Headers/bls_framework.h</key>
 		<data>
@@ -18,7 +18,7 @@
 		</data>
 		<key>Headers/bn.h</key>
 		<data>
-		TMuc1RZZ8acT5axZj12Z1V9riKo=
+		yh1N6y7jLOBrDQ0RRJrNYKmmaSk=
 		</data>
 		<key>Headers/bn_c384_256.h</key>
 		<data>
@@ -26,7 +26,7 @@
 		</data>
 		<key>Headers/curve_type.h</key>
 		<data>
-		zEBFlATCEPmXHqMdU7mDhEmNfLA=
+		WI7xFlxp1YW9HhcVaWj+8fVMI+w=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -50,7 +50,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Lj4cOghQmeByel+5TNuvm8560Xp1yH00ift84yROIDY=
+			jpMpnGydcImdvPZv8VGHJjeFq/M6Rq7jOpz5BjN+Fl0=
 			</data>
 		</dict>
 		<key>Headers/bls_framework.h</key>
@@ -64,7 +64,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			9pAn4Wg3b7I0+B1j8sOQI2AoJLc3GSfzprSQ1MFqXq4=
+			rRkeCyOcJr110fxuTpgi1s6Z04zy9Dy3dacj0G5IWOA=
 			</data>
 		</dict>
 		<key>Headers/bn_c384_256.h</key>
@@ -78,7 +78,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			O4211oeVTjKsW3wHDbluRFuHmCpj55Yked7OtoZOeHI=
+			xAf3iClPhvZxGhWZND/2YRmXJ2/cZmk3IANpMCJz7cQ=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

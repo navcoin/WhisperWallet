@@ -15,6 +15,8 @@ enum {
 	MCL_BN_SNARK1 = 4,
 	MCL_BLS12_381 = 5,
 	MCL_BN160 = 6,
+	MCL_BLS12_461 = 7,
+	MCL_BLS12_377 = 8,
 
 	/*
 		for only G1
@@ -48,8 +50,9 @@ enum {
 	MCL_MAP_TO_MODE_WB19, // (deprecated) used in new eth2.0 spec
 	MCL_MAP_TO_MODE_HASH_TO_CURVE_05 = MCL_MAP_TO_MODE_WB19, // (deprecated) draft-irtf-cfrg-hash-to-curve-05
 	MCL_MAP_TO_MODE_HASH_TO_CURVE_06, // (deprecated) draft-irtf-cfrg-hash-to-curve-06
-	MCL_MAP_TO_MODE_HASH_TO_CURVE_07, // draft-irtf-cfrg-hash-to-curve-07
-	MCL_MAP_TO_MODE_HASH_TO_CURVE = MCL_MAP_TO_MODE_HASH_TO_CURVE_07 // the latset version
+	MCL_MAP_TO_MODE_HASH_TO_CURVE_07 = 5, /* don't change this value! */ // draft-irtf-cfrg-hash-to-curve-07
+	MCL_MAP_TO_MODE_HASH_TO_CURVE = MCL_MAP_TO_MODE_HASH_TO_CURVE_07, // the latset version
+	MCL_MAP_TO_MODE_ETH2_LEGACY // backwards compatible version of MCL_MAP_TO_MODE_ETH2 with commit 730c50d4eaff1e0d685a92ac8c896e873749471b
 };
 
 #ifdef __cplusplus
@@ -91,6 +94,8 @@ const CurveParam BN462 = { "0x4001fffffffffffffffffffffbfff", 5, 2, false, MCL_B
 const CurveParam BN_SNARK1 = { "4965661367192848881", 3, 9, false, MCL_BN_SNARK1 };
 const CurveParam BLS12_381 = { "-0xd201000000010000", 4, 1, true, MCL_BLS12_381 };
 const CurveParam BN160 = { "0x4000000031", 3, 4, false, MCL_BN160 };
+const CurveParam BLS12_461 = { "-0x1ffffffbfffe00000000", 4, 1, true, MCL_BLS12_461 };
+const CurveParam BLS12_377 = { "0x8508c00000000001", 4, 1, true, MCL_BLS12_377 }; // not supported yet
 
 #ifdef __clang__
 	#pragma GCC diagnostic push

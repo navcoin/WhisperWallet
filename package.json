@@ -35,7 +35,7 @@
     "https-browserify": "^0.0.1",
     "indexeddbshim": "^9.0.0",
     "memoizee": "^0.4.15",
-    "navcoin-js": "^1.1.41",
+    "navcoin-js": "^1.1.46",
     "net": "^1.0.2",
     "node-libs-react-native": "^1.2.1",
     "numeral": "^2.0.6",
@@ -50,7 +50,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-keychain": "^8.0.0",
     "react-native-level-fs": "^3.0.1",
-    "react-native-mcl": "^0.1.12",
+    "react-native-mcl": "^0.1.13",
     "react-native-os": "^1.2.6",
     "react-native-pager-view": "^5.4.9",
     "react-native-permissions": "^3.2.0",
@@ -115,6 +115,7 @@
   },
   "react-native": {
     "@aguycalled/mcl-wasm": "react-native-mcl",
+    "@aguycalled/noble-bls12-381": "react-native-mcl",
     "zlib": "browserify-zlib",
     "console": "console-browserify",
     "constants": "constants-browserify",
@@ -170,6 +171,13 @@
     "assets": [
       "./assets/fonts"
     ]
+  },
+  "expo": {
+    "autolinking": {
+      "exclude": [
+        "react-native-reanimated"
+      ]
+    }
   },
   "isSwift": true
 }
