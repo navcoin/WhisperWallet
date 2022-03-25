@@ -13,7 +13,6 @@ const SegmentCircle = ({
   minArcSpacing,
   maxArcSize,
   radius,
-  style,
   animationDuration,
   animated,
   arcWidth,
@@ -68,7 +67,6 @@ const SegmentCircle = ({
   const calculateSegmentSize = (size: number) =>
     (size / totalSegmentSize) * totalArcSize;
 
-  let displayedSegments = segments;
   if (totalArcs === 0 && segments.length > 0) {
     return (
       <ReanimatedArc
@@ -86,7 +84,7 @@ const SegmentCircle = ({
 
   return (
     <>
-      {displayedSegments.map((segment, index) => {
+      {segments.map((segment, index) => {
         const arcSweepAngle = calculateSegmentSize(segment.size);
         let rotation = 0 + initialRotation;
         if (index > 0) {
@@ -134,7 +132,6 @@ interface SegmentCircleProps {
   maxArcSize: number;
   radius: number;
   color: string;
-  style: object;
   animationDuration: number;
   animated: boolean;
 }
@@ -151,7 +148,6 @@ SegmentCircle.propTypes = {
   maxArcSize: PropTypes.number,
   radius: PropTypes.number,
   color: PropTypes.string,
-  style: PropTypes.object,
   animationDuration: PropTypes.number,
   animated: PropTypes.bool,
 };
