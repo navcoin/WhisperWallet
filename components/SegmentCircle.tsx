@@ -67,14 +67,23 @@ const SegmentCircle = ({
   const calculateSegmentSize = (size: number) =>
     (size / totalSegmentSize) * totalArcSize;
 
-  if (totalArcs === 0 && segments.length > 0) {
+  const onlyOneSegmentHasSize = (): Segment | null => {
+    if (totalArcs === 1) {
+      return segments.filter(el => el.size > 0)[0];
+    }
+    return null;
+  };
+
+  if ((totalArcs === 0 && segments.length > 0) || onlyOneSegmentHasSize()) {
     return (
       <ReanimatedArc
-        color={theme['color-nav-pink']}
+        color={
+          onlyOneSegmentHasSize()?.color || theme['color-patrick-blue-400']
+        }
         diameter={svgWidth}
         width={arcWidth}
-        arcSweepAngle={360 - minArcSpacing}
-        lineCap="round"
+        arcSweepAngle={360}
+        lineCap="butt"
         rotation={initialRotation}
         initialAnimation={false}
         easing={easing}
@@ -154,7 +163,7 @@ SegmentCircle.propTypes = {
 
 SegmentCircle.defaultProps = {
   segments: [],
-  arcWidth: 14,
+  arcWidth: 10,
   minArcSpacing: 14,
   radius: 100,
   color: '#ADB1CC',
