@@ -1,15 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, View} from 'react-native';
-import {ReanimatedArc} from '@callstack/reanimated-arc';
-import {Easing} from 'react-native-reanimated';
+import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import {useTheme} from '@ui-kitten/components';
 import {timeout} from '../utils/helpers';
 
-const easing = Easing.inOut(Easing.quad);
-
 const SegmentCircle = ({
-  segments,
+  segmentsSource,
   minArcSpacing,
   maxArcSize,
   radius,
@@ -18,32 +15,18 @@ const SegmentCircle = ({
   arcWidth,
 }: SegmentCircleProps) => {
   const theme = useTheme();
-  const [hide, setHide] = useState(false);
-  const [currentSegmentCount, setCurrentSegmentCount] = useState(
-    segments.length,
-  );
+  const [segments, setSegments] = useState<Segment[]>([]);
 
-  /* Rerendering Management*/
   useEffect(() => {
-    if (segments) {
-      setCurrentSegmentCount(segments.length);
+    if (segmentsSource.length) {
+      setSegments(segmentsSource.filter(el => el.size > 0));
     }
-  }, [segments]);
-
-  const forceRerender = async () => {
-    setHide(true);
-    await timeout(300);
-    setHide(false);
-  };
-
-  useEffect(() => {
-    forceRerender();
-  }, [currentSegmentCount]);
+  }, [segmentsSource]);
 
   /* Arcs Calculation*/
   const initialRotation = 210;
   const totalArcs = segments.filter((el: any) => el.size > 0).length;
-  const totalSpacing = totalArcs * minArcSpacing;
+  const totalSpacing = totalArcs > 1 ? totalArcs * minArcSpacing : 0;
   const totalSegmentSize = segments
     .filter(el => el.size > 0)
     .map(el => el.size)
@@ -53,14 +36,7 @@ const SegmentCircle = ({
   const margin = 15;
   const svgWidth = (radius + arcWidth) * 2 + 2 * margin;
 
-  /*
-   * Default state
-   *
-   * This if block of code is intentionally added for forcing rerender of the arcs,
-   * This resolves the issue that when there are changes in segments.length, the rerender of the arcs failed
-   * The possible reason for this to happen is due to caching of the package/react
-   */
-  if (!segments.length || hide) {
+  if (!segments.length) {
     return <View style={{height: svgWidth}} />;
   }
 
@@ -74,19 +50,19 @@ const SegmentCircle = ({
     return null;
   };
 
-  if ((totalArcs === 0 && segments.length > 0) || onlyOneSegmentHasSize()) {
+  if (totalArcs === 0 && segments.length > 0) {
     return (
-      <ReanimatedArc
-        color={
+      <AnimatedCircularProgress
+        tintColor={
           onlyOneSegmentHasSize()?.color || theme['color-patrick-blue-400']
         }
-        diameter={svgWidth}
+        size={svgWidth}
         width={arcWidth}
         arcSweepAngle={360}
         lineCap="butt"
         rotation={initialRotation}
-        initialAnimation={false}
-        easing={easing}
+        fill={100}
+        backgroundColor="transparent"
       />
     );
   }
@@ -95,28 +71,24 @@ const SegmentCircle = ({
     <>
       {segments.map((segment, index) => {
         const arcSweepAngle = calculateSegmentSize(segment.size);
-        let rotation = 0 + initialRotation;
-        if (index > 0) {
-          rotation += minArcSpacing * index;
-          for (let i = 0; i < index; i++) {
-            rotation += calculateSegmentSize(segments[i].size);
-          }
+        let rotation = 0 + initialRotation + minArcSpacing * index;
+        for (let i = 0; i < index; i++) {
+          rotation += calculateSegmentSize(segments[i].size);
         }
         return (
-          <>
-            <ReanimatedArc
-              index={index}
-              color={segment.color || theme['color-patrick-blue-400']}
-              diameter={svgWidth}
-              width={arcWidth}
-              arcSweepAngle={arcSweepAngle}
-              lineCap="round"
-              rotation={rotation}
-              initialAnimation={false}
-              easing={easing}
-              style={index === 0 ? {} : styles.absolute}
-            />
-          </>
+          <AnimatedCircularProgress
+            index={index}
+            tintColor={segment.color || theme['color-patrick-blue-400']}
+            size={svgWidth}
+            width={arcWidth}
+            lineCap={'round'}
+            rotation={rotation}
+            fill={(arcSweepAngle / 360) * 100}
+            duration={1200}
+            onAnimationComplete={() => console.log('onAnimationComplete')}
+            backgroundColor="transparent"
+            style={index === 0 ? {} : styles.absolute}
+          />
         );
       })}
     </>
@@ -135,7 +107,7 @@ interface Segment {
 }
 
 interface SegmentCircleProps {
-  segments: Segment[];
+  segmentsSource: Segment[];
   arcWidth: number;
   minArcSpacing: number;
   maxArcSize: number;
@@ -146,7 +118,7 @@ interface SegmentCircleProps {
 }
 
 SegmentCircle.propTypes = {
-  segments: PropTypes.arrayOf(
+  segmentsSource: PropTypes.arrayOf(
     PropTypes.shape({
       size: PropTypes.number.isRequired,
       color: PropTypes.string,
@@ -162,7 +134,7 @@ SegmentCircle.propTypes = {
 };
 
 SegmentCircle.defaultProps = {
-  segments: [],
+  segmentsSource: [],
   arcWidth: 10,
   minArcSpacing: 14,
   radius: 100,

@@ -61,7 +61,7 @@ const BalanceCircle = memo(() => {
       }}>
       <SegmentCircle
         radius={width / 2 - 100}
-        segments={
+        segmentsSource={
           syncing || syncProgress === 0
             ? [
                 {
@@ -70,11 +70,11 @@ const BalanceCircle = memo(() => {
                 },
                 {
                   size: 100 - syncProgress,
+                  color: 'transparent',
                 },
               ]
             : balanceSegments
         }
-        maxArcSize={353}
       />
       {syncing || syncProgress === 0 ? (
         <Text style={{position: 'absolute', textAlign: 'center'}}>
