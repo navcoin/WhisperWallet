@@ -36,7 +36,7 @@ const SegmentCircle = ({
   const margin = 15;
   const svgWidth = (radius + arcWidth) * 2 + 2 * margin;
 
-  if (!segments.length) {
+  if (!segmentsSource.length) {
     return <View style={{height: svgWidth}} />;
   }
 
@@ -50,7 +50,7 @@ const SegmentCircle = ({
     return null;
   };
 
-  if (totalArcs === 0 && segments.length > 0) {
+  if (totalArcs === 0) {
     return (
       <AnimatedCircularProgress
         tintColor={
@@ -62,7 +62,7 @@ const SegmentCircle = ({
         lineCap="butt"
         rotation={initialRotation}
         fill={100}
-        backgroundColor="transparent"
+        backgroundColor={theme['color-patrick-blue-400']}
       />
     );
   }
