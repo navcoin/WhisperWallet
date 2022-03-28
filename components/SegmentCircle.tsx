@@ -24,7 +24,7 @@ const SegmentCircle = ({
   }, [segmentsSource]);
 
   /* Arcs Calculation*/
-  const initialRotation = 210;
+  const initialRotation = 180;
   const totalArcs = segments.filter((el: any) => el.size > 0).length;
   const totalSpacing = totalArcs > 1 ? totalArcs * minArcSpacing : 0;
   const totalSegmentSize = segments
@@ -135,8 +135,8 @@ SegmentCircle.propTypes = {
 
 SegmentCircle.defaultProps = {
   segmentsSource: [],
-  arcWidth: 10,
-  minArcSpacing: 14,
+  arcWidth: 4,
+  minArcSpacing: 8,
   radius: 100,
   color: '#ADB1CC',
   animationDuration: 1000,
