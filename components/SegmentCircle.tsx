@@ -17,10 +17,30 @@ const SegmentCircle = ({
   const theme = useTheme();
   const [segments, setSegments] = useState<Segment[]>([]);
 
-  useEffect(() => {
-    if (segmentsSource.length) {
-      setSegments(segmentsSource.filter(el => el.size > 0));
+  const updateDisplayedSegments = async () => {
+    if (!segmentsSource.length) {
+      return;
     }
+    if (segmentsSource.length !== segments.length && segments.length > 0) {
+      const tempSegments = new Array(segmentsSource.length).fill({
+        size: 0,
+        color: 'transparent',
+      });
+      tempSegments.push({
+        size: 100,
+        color: 'transparent',
+      });
+      setSegments(tempSegments);
+      await timeout(800);
+      setSegments(segmentsSource.filter(el => el.size > 0));
+      return;
+    }
+    setSegments(segmentsSource.filter(el => el.size > 0));
+    return;
+  };
+
+  useEffect(() => {
+    updateDisplayedSegments();
   }, [segmentsSource]);
 
   /* Arcs Calculation*/
@@ -51,6 +71,9 @@ const SegmentCircle = ({
   };
 
   if (totalArcs === 0) {
+    const bgColor = segments.length
+      ? segments[0].color
+      : theme['color-patrick-blue-400'];
     return (
       <AnimatedCircularProgress
         tintColor={
@@ -58,11 +81,11 @@ const SegmentCircle = ({
         }
         size={svgWidth}
         width={arcWidth}
-        arcSweepAngle={360}
+        arcSweepAngle={maxArcSize}
         lineCap="butt"
         rotation={initialRotation}
         fill={100}
-        backgroundColor={theme['color-patrick-blue-400']}
+        backgroundColor={bgColor}
       />
     );
   }
@@ -83,9 +106,7 @@ const SegmentCircle = ({
             width={6}
             lineCap={'round'}
             rotation={rotation}
-            fill={(arcSweepAngle / 360) * 100}
-            duration={1200}
-            onAnimationComplete={() => console.log('onAnimationComplete')}
+            fill={(arcSweepAngle / maxArcSize) * 100}
             backgroundColor="transparent"
             style={index === 0 ? {} : styles.absolute}
           />
