@@ -8,7 +8,7 @@
     "start": "expo start --dev-client",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "postinstall": "patch-package"
+    "postinstall": "rm -rf ./node_modules/@aguycalled/bitcore-lib/node_modules/react-native-mcl;patch-package"
   },
   "dependencies": {
     "@aguycalled/bitcore-p2p": "^5.0.10",
@@ -34,7 +34,7 @@
     "https-browserify": "^0.0.1",
     "indexeddbshim": "^9.0.0",
     "memoizee": "^0.4.15",
-    "navcoin-js": "^1.1.41",
+    "navcoin-js": "^1.1.48",
     "net": "^1.0.2",
     "node-libs-react-native": "^1.2.1",
     "numeral": "^2.0.6",

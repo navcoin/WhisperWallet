@@ -49,6 +49,7 @@ export enum View_Types_Enum {
 export enum Connection_Stats_Enum {
   Connecting = "connecting",
   Connected = "connected",
+  Syncing = "syncing",
   Disconnected = "disconnected",
   NoServers = "noservers",
 }

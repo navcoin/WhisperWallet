@@ -239,8 +239,13 @@ export const WalletProvider = (props: any) => {
         setAddresses(await walletFile.GetAllAddresses());
       });
 
+      walletFile.on('sync_started', async () => {
+        setConnected(Connection_Stats_Enum.Syncing);
+      });
+
       walletFile.on('sync_finished', async () => {
         console.log('sync_finished');
+        setConnected(Connection_Stats_Enum.Connected);
         setBalances(await walletFile.GetBalance());
         setHistory(await walletFile.GetHistory());
         setAddresses(await walletFile.GetAllAddresses());
