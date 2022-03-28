@@ -21,6 +21,7 @@ export const WalletProvider = (props: any) => {
   const [mnemonic, setMnemonic] = useState('');
   const [syncProgress, setSyncProgress] = useState(0);
   const [syncing, setSyncing] = useState(false);
+  const [firstSyncCompleted, setFirstSyncCompleted] = useState(false);
   const [balances, setBalances] = useState({
     nav: {confirmed: 0, pending: 0},
     xnav: {confirmed: 0, pending: 0},
@@ -193,6 +194,7 @@ export const WalletProvider = (props: any) => {
         IDBKeyRange: win.IDBKeyRange,
       });
 
+      setFirstSyncCompleted(false);
       setConnected(Connection_Stats_Enum.Connecting);
       setWalletName(name);
 
@@ -239,8 +241,14 @@ export const WalletProvider = (props: any) => {
         setAddresses(await walletFile.GetAllAddresses());
       });
 
+      walletFile.on('sync_started', async () => {
+        setConnected(Connection_Stats_Enum.Syncing);
+      });
+
       walletFile.on('sync_finished', async () => {
         console.log('sync_finished');
+        setFirstSyncCompleted(true);
+        setConnected(Connection_Stats_Enum.Connected);
         setBalances(await walletFile.GetBalance());
         setHistory(await walletFile.GetHistory());
         setAddresses(await walletFile.GetAllAddresses());
@@ -370,6 +378,7 @@ export const WalletProvider = (props: any) => {
       createTransaction: createTransaction,
       sendTransaction: sendTransaction,
       network,
+      firstSyncCompleted
     }),
     [
       win,
@@ -387,6 +396,7 @@ export const WalletProvider = (props: any) => {
       history,
       accounts,
       parsedAddresses,
+      firstSyncCompleted
     ],
   );
 
