@@ -11,9 +11,14 @@ import {
   Connection_Stats_Text,
 } from '../../constants/Type';
 import Text from '../../components/Text';
+import OptionCard from '../../components/OptionCard';
+import useLayout from '../../hooks/useLayout';
+import {WalletScreenNames} from '../Wallet';
 
 const History = (props: any) => {
+  const {width, height} = useLayout();
   const {history, connected} = useWallet();
+
   const {navigate} = useNavigation();
   const [loadingStatusText, setLoadingStatus] =
     useState<Connection_Stats_Text>();
@@ -50,10 +55,28 @@ const History = (props: any) => {
       item={item}
       index={index}
       onPress={() => {
-        navigate('Wallet', {screen: 'ViewTx', params: {item}});
+        navigate('Wallet', {screen: WalletScreenNames.ViewTx, params: {item}});
       }}
     />
   );
+
+  const goToSendCoinScreen = () => {
+    if (props && props.navigation) {
+      navigate('Wallet', {
+        screen: WalletScreenNames.SendTo,
+        params: {from: props.route.params.filter},
+      });
+    }
+  };
+  const goToAddressCoin = () => {
+    if (props && props.navigation) {
+      navigate('Wallet', {
+        screen: WalletScreenNames.Address,
+        params: {from: props.route.params.publicWallet},
+      });
+    }
+  };
+
   return (
     <Container useSafeArea>
       <TopNavigation title={'Wallet History'} />
@@ -75,6 +98,32 @@ const History = (props: any) => {
           <Text style={[styles.text]}>
             There are no transaction record yet!
           </Text>
+          <View style={[styles.cardWrapper]}>
+            <OptionCard
+              key={0}
+              id={'0'}
+              index={0}
+              item={{text: 'Start a transaction'}}
+              selected={'walletName'}
+              onPress={() => {
+                goToSendCoinScreen();
+              }}
+              icon={'target2'}
+              iconColor={'white'}
+            />
+            <OptionCard
+              key={1}
+              id={'1'}
+              index={1}
+              item={{text: 'Request from someone'}}
+              selected={'walletName'}
+              onPress={() => {
+                goToAddressCoin();
+              }}
+              icon={'download'}
+              iconColor={'white'}
+            />
+          </View>
         </View>
       ) : null}
       {loadingStatusText !== Connection_Stats_Text.Connected ? (
@@ -99,9 +148,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   emptyView: {
-    height: 100,
+    flex: 1,
     alignContent: 'center',
     justifyContent: 'center',
     width: '100%',
+  },
+  cardWrapper: {
+    maxWidth: 300,
+    alignSelf: 'center',
+    marginTop: 50,
   },
 });
