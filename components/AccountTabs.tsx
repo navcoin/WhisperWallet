@@ -42,12 +42,13 @@ const AccountsTab = () => {
               toType: el.text,
             },
           });
-        }}></BottomSheetOptions>,
+        }}
+      />,
     );
   }, [account]);
 
   useEffect(() => {
-    if (account[2])
+    if (account[2]) {
       bottomSheet.expand(
         <BottomSheetMenu
           title={account[2]}
@@ -87,11 +88,14 @@ const AccountsTab = () => {
                 screen: 'History',
                 params: {
                   filter: account[0],
+                  publicWallet: account[1],
                 },
               },
             },
-          ]}></BottomSheetMenu>,
+          ]}
+        />,
       );
+    }
   }, [bottomSheet, account]);
 
   return (

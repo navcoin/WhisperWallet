@@ -9,6 +9,16 @@ import ViewTx from './wallet/ViewTx';
 
 const Stack = createStackNavigator<WalletParamList>();
 
+export const WalletScreenGroup = 'Wallet';
+
+export const WalletScreenNames = {
+  SendTo: 'SendTo',
+  Main: 'Main',
+  Address: 'Address',
+  History: 'History',
+  ViewTx: 'ViewTx',
+};
+
 const Wallet = ({navigation}) => {
   return (
     <Stack.Navigator
