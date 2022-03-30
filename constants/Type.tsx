@@ -54,6 +54,14 @@ export enum Connection_Stats_Enum {
   NoServers = "noservers",
 }
 
+export enum Connection_Stats_Text {
+  Connecting = 'Connecting to wallet...',
+  Connected = '',
+  Syncing = 'Synchronizing wallet...',
+  Disconnected = 'Wallet is disconnected.',
+  NoServers = 'No servers found! Please contact our administrator through discord.',
+}
+
 export enum Animation_Types_Enum {
   SlideTop,
   SlideBottom,
