@@ -356,6 +356,12 @@ export const WalletProvider = (props: any) => {
     return hash;
   };
 
+  const refreshWallet = useCallback(async () => {
+    if (wallet) {
+      await wallet.Sync();
+    }
+  }, [wallet]);
+
   const walletContext: WalletContextValue = useMemo(
     () => ({
       bitcore: njs?.wallet.bitcore,
@@ -366,6 +372,7 @@ export const WalletProvider = (props: any) => {
       clearMnemonic: () => {
         setMnemonic('');
       },
+      refreshWallet,
       syncProgress,
       syncing,
       balances,
