@@ -105,7 +105,9 @@ export const WalletProvider = (props: any) => {
   }, [njs, network, addresses]);
 
   useEffect(() => {
-    if (njs && win) njs.wallet.WalletFile.ListWallets().then(setWalletsList);
+    if (njs && win) {
+      njs.wallet.WalletFile.ListWallets().then(setWalletsList);
+    }
   }, [njs, win]);
 
   const newCandidate = useCallback(
@@ -218,8 +220,11 @@ export const WalletProvider = (props: any) => {
 
       walletFile.on('sync_status', (progress: number) => {
         setSyncProgress(progress);
-        if (progress == 100) setSyncing(false);
-        else setSyncing(true);
+        if (progress == 100) {
+          setSyncing(false);
+        } else {
+          setSyncing(true);
+        }
       });
 
       walletFile.on('disconnected', () => {
@@ -305,8 +310,9 @@ export const WalletProvider = (props: any) => {
             0,
             fee,
           );
-          if (!obj) rej("Can't access you wallet keys");
-          else {
+          if (!obj) {
+            rej("Can't access you wallet keys");
+          } else {
             let ret = {fee: obj.fee + fee, tx: undefined};
             let toCombine = [obj.tx[0]];
             for (let c of candidates) {
@@ -351,10 +357,18 @@ export const WalletProvider = (props: any) => {
   };
 
   const sendTransaction = async (tx: any) => {
-    if (!wallet) throw new Error('Wallet not loaded');
+    if (!wallet) {
+      throw new Error('Wallet not loaded');
+    }
     let hash = await wallet.SendTransaction(tx);
     return hash;
   };
+
+  const refreshWallet = useCallback(async () => {
+    if (wallet) {
+      await wallet.Sync();
+    }
+  }, [wallet]);
 
   const walletContext: WalletContextValue = useMemo(
     () => ({
@@ -366,6 +380,7 @@ export const WalletProvider = (props: any) => {
       clearMnemonic: () => {
         setMnemonic('');
       },
+      refreshWallet,
       syncProgress,
       syncing,
       balances,
@@ -378,7 +393,7 @@ export const WalletProvider = (props: any) => {
       createTransaction: createTransaction,
       sendTransaction: sendTransaction,
       network,
-      firstSyncCompleted
+      firstSyncCompleted,
     }),
     [
       win,
@@ -396,7 +411,7 @@ export const WalletProvider = (props: any) => {
       history,
       accounts,
       parsedAddresses,
-      firstSyncCompleted
+      firstSyncCompleted,
     ],
   );
 
