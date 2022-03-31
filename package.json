@@ -8,11 +8,11 @@
     "start": "expo start --dev-client",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "postinstall": "rm -rf ./node_modules/@aguycalled/bitcore-lib/node_modules/react-native-mcl;patch-package"
+    "postinstall": "patch-package;rm -rf ./node_modules/@aguycalled/bitcore-lib/node_modules/react-native-mcl;./node_modules/.bin/rn-nodeify --hack --install"
   },
   "dependencies": {
-    "@aguycalled/bitcore-p2p": "^5.0.10",
     "@aguycalled/bitcore-mnemonic": "^1.5.1",
+    "@aguycalled/bitcore-p2p": "^5.0.10",
     "@arelstone/react-native-swipe-button": "^0.1.0",
     "@eva-design/eva": "^2.1.1",
     "@gorhom/bottom-sheet": "^4.1.5",
@@ -24,7 +24,9 @@
     "@tradle/react-native-http": "^2.0.1",
     "@ui-kitten/components": "^5.1.1",
     "@ui-kitten/eva-icons": "^5.1.1",
+    "assert": "^1.5.0",
     "browserify-zlib": "^0.1.4",
+    "buffer": "^4.9.2",
     "dayjs": "^1.10.7",
     "dns.js": "^1.0.1",
     "electrum-mnemonic": "^2.0.0",
@@ -39,6 +41,7 @@
     "node-libs-react-native": "^1.2.1",
     "numeral": "^2.0.6",
     "path-browserify": "^0.0.0",
+    "punycode": "^1.4.1",
     "react": "17.0.2",
     "react-native": "0.66.4",
     "react-native-big-list": "^1.5.2",
@@ -67,13 +70,14 @@
     "react-native-tcp-socket": "^5.5.0",
     "react-native-toast-notifications": "^3.2.3",
     "react-native-web-refresh-control": "^1.1.0",
-    "react-native-webview": "^11.17.2",
-    "react-native-webview-crypto": "^0.0.24",
     "react-spring": "^9.4.2",
     "readable-stream": "^1.0.33",
     "stream-browserify": "^1.0.0",
+    "string_decoder": "^0.10.31",
     "timers-browserify": "^1.4.2",
+    "url": "^0.10.3",
     "use-between": "^1.0.1",
+    "util": "^0.10.4",
     "vm-browserify": "^0.0.4"
   },
   "devDependencies": {
@@ -121,7 +125,7 @@
     "constants": "constants-browserify",
     "crypto": "react-native-crypto",
     "dns": "dns.js",
-    "net": "react-native-tcp-socket",
+    "net": "react-native-tcp",
     "domain": "domain-browser",
     "http": "@tradle/react-native-http",
     "https": "https-browserify",
@@ -142,6 +146,8 @@
     "tls": false
   },
   "browser": {
+    "@aguycalled/mcl-wasm": "react-native-mcl",
+    "@aguycalled/noble-bls12-381": "react-native-mcl",
     "zlib": "browserify-zlib",
     "console": "console-browserify",
     "constants": "constants-browserify",

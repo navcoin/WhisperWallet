@@ -30,7 +30,6 @@ import useWin from './hooks/useWin';
 import useLockedScreen from './hooks/useLockedScreen';
 import useAsyncStorage from './hooks/useAsyncStorage';
 import LocalAuth from './utils/LocalAuth';
-import PolyfillCrypto from 'react-native-webview-crypto';
 import useWallet from './hooks/useWallet';
 import WalletProvider from './contexts/WalletProvider';
 const win = {};
@@ -150,7 +149,6 @@ const App = () => {
         <IconRegistry icons={[AssetIconsPack, EvaIconsPack]} />
         <ToastProvider offset={50} style={{borderRadius: 20, opacity: 0.8}}>
           <WalletProvider>
-            <PolyfillCrypto />
             <ApplicationProvider
               {...eva}
               theme={
