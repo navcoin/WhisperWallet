@@ -40,7 +40,8 @@ const BottomSheetMenu = (props: any) => {
                 collapse();
               }
             }}
-            selected={''}></OptionCard>
+            selected={''}
+          />
         ))}
     </View>
   );
