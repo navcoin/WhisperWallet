@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Mnemonic = require("bitcore-mnemonic");
+const Mnemonic = require("@aguycalled/bitcore-mnemonic");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const electrumMnemonic = require("electrum-mnemonic");
 

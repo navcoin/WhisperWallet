@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {View} from 'react-native';
+import {ScrollView, RefreshControl, View} from 'react-native';
 import {Layout, StyleService, useStyleSheet} from '@ui-kitten/components';
 
 import Container from '../../components/Container';
@@ -27,9 +27,17 @@ const Main = () => {
   const {navigate} = useNavigation();
 
   const styles = useStyleSheet(themedStyles);
-  const {connected} = useWallet();
+  const {connected, refreshWallet} = useWallet();
 
   const [dotColor, setDotColor] = useState('gray');
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refreshWallet();
+    setRefreshing(false);
+  }, []);
 
   useEffect(() => {
     if (connected == Connection_Stats_Enum.Connecting) {
@@ -44,7 +52,15 @@ const Main = () => {
   return (
     <BottomSheetProvider>
       <Container style={styles.container}>
-        <Layout level="1">
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor="#fff"
+              titleColor="#fff"
+            />
+          }>
           <Layout style={styles.topTab}>
             <View
               style={{
@@ -55,16 +71,17 @@ const Main = () => {
                 marginLeft: 12,
                 marginTop: 12,
                 alignSelf: 'center',
-              }}></View>
-            <Text></Text>
+              }}
+            />
+            <Text />
             <NavigationAction
               icon={'menu'}
               onPress={() => navigate({name: 'Intro'})}
             />
           </Layout>
-        </Layout>
-        <BalanceCircle></BalanceCircle>
-        <AccountsTab></AccountsTab>
+          <BalanceCircle />
+          <AccountsTab />
+        </ScrollView>
       </Container>
     </BottomSheetProvider>
   );
@@ -79,6 +96,7 @@ const themedStyles = StyleService.create({
   },
   container: {
     flex: 1,
+    justifyContent: 'flex-start',
   },
   contentContainer: {
     backgroundColor: 'background-basic-color-3',

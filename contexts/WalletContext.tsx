@@ -11,6 +11,7 @@ export interface WalletContextValue {
   walletName: string;
   mnemonic: string;
   createWallet: any;
+  refreshWallet: () => any;
   clearMnemonic: () => any;
   syncProgress: number;
   syncing: boolean;

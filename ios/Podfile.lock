@@ -239,7 +239,7 @@ PODS:
     - React-Core
   - react-native-camera/RN (4.2.1):
     - React-Core
-  - react-native-mcl (0.1.12):
+  - react-native-mcl (0.1.14):
     - React-Core
   - react-native-pager-view (5.4.15):
     - React-Core
@@ -252,7 +252,7 @@ PODS:
   - react-native-tcp-socket (5.6.0):
     - CocoaAsyncSocket
     - React-Core
-  - react-native-webview (11.17.2):
+  - react-native-webview (11.18.0):
     - React-Core
   - React-perflogger (0.66.4)
   - React-RCTActionSheet (0.66.4):
@@ -319,7 +319,7 @@ PODS:
     - React-jsi (= 0.66.4)
     - React-logger (= 0.66.4)
     - React-perflogger (= 0.66.4)
-  - RNCAsyncStorage (1.17.0):
+  - RNCAsyncStorage (1.17.1):
     - React-Core
   - RNCClipboard (1.5.1):
     - React-Core
@@ -333,7 +333,7 @@ PODS:
     - React
   - RNPermissions (3.3.1):
     - React-Core
-  - RNReanimated (2.4.1):
+  - RNReanimated (2.5.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -589,13 +589,13 @@ SPEC CHECKSUMS:
   React-jsinspector: d0374f7509d407d2264168b6d0fad0b54e300b85
   React-logger: 933f80c97c633ee8965d609876848148e3fef438
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
-  react-native-mcl: 6170371306e646d9fa1ed7bbc49c7545e2d0094f
+  react-native-mcl: 391012a71441a89585f53b1d19d395ebdb3cedd9
   react-native-pager-view: b1914469643f40042e65d78cbf3d3dfebd6fb0d9
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-tcp-socket: 3bd5b9e374380e78258639c00ec20ca3d049002b
-  react-native-webview: 380c1a03ec94b7ed764dac8db1e7c9952d08c93a
+  react-native-webview: b07bc0bc16fa9d855df07530faccbb0a3475cb88
   React-perflogger: 93075d8931c32cd1fce8a98c15d2d5ccc4d891bd
   React-RCTActionSheet: 7d3041e6761b4f3044a37079ddcb156575fb6d89
   React-RCTAnimation: 743e88b55ac62511ae5c2e22803d4f503f2a3a13
@@ -608,19 +608,19 @@ SPEC CHECKSUMS:
   React-RCTVibration: e3ffca672dd3772536cb844274094b0e2c31b187
   React-runtimeexecutor: dec32ee6f2e2a26e13e58152271535fadff5455a
   ReactCommon: 57b69f6383eafcbd7da625bfa6003810332313c4
-  RNCAsyncStorage: 4efdcd2f7378421b29467c9de58f43552b60cf5b
+  RNCAsyncStorage: 4e17811bcadfdc068cd3e2bb896f0fea0198710d
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCPicker: 6d5d64e7b90c240c779ee0938ec433c11e2dd758
   RNGestureHandler: 6e757e487a4834e7280e98e9bac66d2d9c575e9c
   RNKeychain: 4f63aada75ebafd26f4bc2c670199461eab85d94
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
-  RNReanimated: e8afbe2a9e08e9e778ea72ddb1a8533445812621
+  RNReanimated: ee33ab40fa252332a36aeed9d936801ed9700b24
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
   RNSqlite2: 8cf96c4a5cc62f95922de1d01c5f68d7fc52333c
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   Yoga: e7dc4e71caba6472ff48ad7d234389b91dadc280
 
-PODFILE CHECKSUM: 3447a3845589ec87b8baa05c4aa3c41e89ec0d05
+PODFILE CHECKSUM: ece55a1e0daf4a7df4c8095456a6af3c3ff1665c
 
 COCOAPODS: 1.10.1
