@@ -55,7 +55,7 @@ export enum Connection_Stats_Enum {
 }
 
 export enum Connection_Stats_Text {
-  Connecting = 'Connecting to wallet...',
+  Connecting = 'Connecting to the network...',
   Connected = '',
   Syncing = 'Synchronizing wallet...',
   Disconnected = 'Wallet is disconnected.',

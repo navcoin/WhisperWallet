@@ -60,14 +60,6 @@ const History = (props: any) => {
     />
   );
 
-  const goToSendCoinScreen = () => {
-    if (props && props.navigation) {
-      navigate('Wallet', {
-        screen: WalletScreenNames.SendTo,
-        params: {from: props.route.params.filter},
-      });
-    }
-  };
   const goToAddressCoin = () => {
     if (props && props.navigation) {
       navigate('Wallet', {
@@ -100,22 +92,10 @@ const History = (props: any) => {
           </Text>
           <View style={[styles.cardWrapper]}>
             <OptionCard
-              key={0}
-              id={'0'}
-              index={0}
-              item={{text: 'Start a transaction'}}
-              selected={'walletName'}
-              onPress={() => {
-                goToSendCoinScreen();
-              }}
-              icon={'target2'}
-              iconColor={'white'}
-            />
-            <OptionCard
               key={1}
               id={'1'}
               index={1}
-              item={{text: 'Request from someone'}}
+              item={{text: 'Show receiving address'}}
               selected={'walletName'}
               onPress={() => {
                 goToAddressCoin();
