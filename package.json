@@ -8,7 +8,7 @@
     "start": "expo start --dev-client",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "postinstall": "patch-package;./node_modules/.bin/rn-nodeify --hack --install"
+    "postinstall": "patch-package;rm -rf ./node_modules/@aguycalled/bitcore-lib/node_modules/react-native-mcl;./node_modules/.bin/rn-nodeify --hack --install"
   },
   "dependencies": {
     "@aguycalled/bitcore-mnemonic": "^1.5.1",
