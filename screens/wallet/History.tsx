@@ -87,9 +87,7 @@ const History = (props: any) => {
       history.filter((el: any) => el.type === props.route.params.filter)
         .length === 0 ? (
         <View style={[styles.emptyView]}>
-          <Text style={[styles.text]}>
-            There are no transaction record yet!
-          </Text>
+          <Text style={[styles.text]}>There are no transactions yet!</Text>
           <View style={[styles.cardWrapper]}>
             <OptionCard
               key={1}
