@@ -42,7 +42,6 @@ export type WalletParamList = {
   HistoryScreen: undefined;
   ViewTxScreen: ViewTxScreenProps;
   SettingsScreen: undefined;
-  BiometricsScreen: undefined;
   MnemonicScreen: MnemonicScreenProps;
   ServersScreen: undefined;
 };
