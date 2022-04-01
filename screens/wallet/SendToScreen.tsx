@@ -24,7 +24,7 @@ import DestinationComponent from '../../components/DestinationComponent';
 import {QrProvider} from '../../components/QrProvider';
 import SendTransactionButton from '../../components/SendTransactionButton';
 
-const SendTo = (props: any) => {
+const SendToScreen = (props: any) => {
   const styles = useStyleSheet(themedStyles);
   const [from, setFrom] = useState(props.route.params.from);
   const [to, setTo] = useState('');
@@ -41,8 +41,11 @@ const SendTo = (props: any) => {
 
   const currentAmount = useMemo(() => {
     let el = accounts?.filter(el => el.type_id == from)[0];
-    if (!el) return 0;
-    else return el.amount;
+    if (!el) {
+      return 0;
+    } else {
+      return el.amount;
+    }
   }, [from, accounts]);
 
   useEffect(() => {
@@ -50,12 +53,15 @@ const SendTo = (props: any) => {
       toType == Destination_Types_Enum.Address &&
       to &&
       bitcore.Address(to).isXnav()
-    )
+    ) {
       setShowMemo(true);
+    }
   }, [to, toType]);
 
   useEffect(() => {
-    if (amount == currentAmount) setSubtractFee(true);
+    if (amount == currentAmount) {
+      setSubtractFee(true);
+    }
   }, [amount, currentAmount]);
 
   return (
@@ -75,7 +81,8 @@ const SendTo = (props: any) => {
             }}
             closeDialog={() => {
               showMemoDialog(false);
-            }}></DialogInput>
+            }}
+          />
           <TopNavigation title="Send coins" />
           <Content contentContainerStyle={styles.contentContainerStyle}>
             <CardSelect
@@ -91,20 +98,24 @@ const SendTo = (props: any) => {
                 let el = accounts?.filter(
                   el => el.type_id == props.route.params.from,
                 )[0];
-                if (!el) return '';
+                if (!el) {
+                  return '';
+                }
                 return (
                   el.name + ' Wallet (' + el.amount + ' ' + el.currency + ')'
                 );
               })()}
               onSelect={el => {
                 setFrom(el.type);
-              }}></CardSelect>
+              }}
+            />
 
             <DestinationComponent
               setTo={setTo}
               from={from}
               toType={toType}
-              setToType={setToType}></DestinationComponent>
+              setToType={setToType}
+            />
 
             {showMemo && (
               <View>
@@ -147,7 +158,7 @@ const SendTo = (props: any) => {
               <Layout level="2" style={styles.card}>
                 <View style={styles.row}>
                   <Text category="headline">Amount</Text>
-                  <Text category="headline" uppercase></Text>
+                  <Text category="headline" uppercase />
                 </View>
                 <View style={styles.cardNumber}>
                   <Input
@@ -182,7 +193,8 @@ const SendTo = (props: any) => {
               to={to}
               amount={amount}
               memo={memo}
-              subtractFee={subtractFee}></SendTransactionButton>
+              subtractFee={subtractFee}
+            />
           </Layout>
         </QrProvider>
       </Container>
@@ -190,7 +202,7 @@ const SendTo = (props: any) => {
   );
 };
 
-export default SendTo;
+export default SendToScreen;
 
 const themedStyles = StyleService.create({
   contentContainerStyle: {

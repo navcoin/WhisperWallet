@@ -1,4 +1,22 @@
-import {NavigatorScreenParams} from '@react-navigation/native';
+import {
+  NavigationProp,
+  NavigatorScreenParams,
+  RouteProp,
+} from '@react-navigation/native';
+
+type AllParamList = WalletParamList & ;
+
+type ScreenNavigationProp<T extends keyof AllParamList> = NavigationProp<
+  AllParamList,
+  T
+>;
+
+type ScreenRouteProp<T extends keyof AllParamList> = RouteProp<AllParamList, T>;
+
+export type ScreenProps<T extends keyof AllParamList> = {
+  route: ScreenRouteProp<T>;
+  navigation: ScreenNavigationProp<T>;
+};
 
 export type RootStackParamList = {
   Intro: undefined;
@@ -9,10 +27,24 @@ export type RootStackParamList = {
   Wallet: NavigatorScreenParams<WalletParamList>;
 };
 
+export type MnemonicScreenProps = {
+  items: string;
+};
+export type AddressScreenProps = {
+  from: string;
+};
+export type ViewTxScreenProps = {
+  item: any;
+};
+
 export type WalletParamList = {
-  Main: undefined;
-  SendTo: undefined;
-  Address: undefined;
-  History: undefined;
-  ViewTx: undefined;
+  MainWalletScreen: undefined;
+  SendToScreen: undefined;
+  AddressScreen: AddressScreenProps;
+  HistoryScreen: undefined;
+  ViewTxScreen: ViewTxScreenProps;
+  SettingsScreen: undefined;
+  BiometricsScreen: undefined;
+  MnemonicScreen: MnemonicScreenProps;
+  ServersScreen: undefined;
 };

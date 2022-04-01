@@ -16,15 +16,16 @@ import Text from '../../components/Text';
 
 import {Connection_Stats_Enum} from '../../constants/Type';
 
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 import BalanceCircle from '../../components/BalanceCircle';
 
 import {BottomSheetProvider} from '../../contexts/BottomSheetProvider';
 import AccountsTab from '../../components/AccountTabs';
+import {RootStackParamList} from '../../navigation/type';
 
-const Main = () => {
-  const {navigate} = useNavigation();
+const MainWalletScreen = () => {
+  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
 
   const styles = useStyleSheet(themedStyles);
   const {connected, refreshWallet} = useWallet();
@@ -87,7 +88,7 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default MainWalletScreen;
 
 const themedStyles = StyleService.create({
   item: {

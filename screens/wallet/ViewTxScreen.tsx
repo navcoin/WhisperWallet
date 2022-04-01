@@ -5,7 +5,7 @@ import Container from '../../components/Container';
 import InputSelect from '../../components/InputSelect';
 import Clipboard from '@react-native-community/clipboard';
 
-const ViewTx = (props: any) => {
+const ViewTxScreen = (props: any) => {
   return (
     <Container useSafeArea>
       <TopNavigation title={'Transaction Details'} />
@@ -60,4 +60,4 @@ const ViewTx = (props: any) => {
   );
 };
 
-export default ViewTx;
+export default ViewTxScreen;

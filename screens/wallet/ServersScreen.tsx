@@ -15,7 +15,7 @@ import OptionCard from '../../components/OptionCard';
 import useLayout from '../../hooks/useLayout';
 import {WalletScreenNames} from '../Wallet';
 
-const History = (props: any) => {
+const Servers = (props: any) => {
   const {width, height} = useLayout();
   const {history, connected} = useWallet();
 
@@ -50,70 +50,58 @@ const History = (props: any) => {
     }
   }, [connected]);
 
-  const renderItem = ({item, index}) => (
-    <Transaction
-      item={item}
-      index={index}
-      onPress={() => {
-        navigate('Wallet', {screen: WalletScreenNames.ViewTx, params: {item}});
-      }}
-    />
-  );
-
   const goToAddressCoin = () => {
     if (props && props.navigation) {
       navigate('Wallet', {
-        screen: WalletScreenNames.Address,
+        screen: 'AddressScreen'',
         params: {from: props.route.params.publicWallet},
       });
     }
   };
 
+  const items = [
+    {
+      title: 'Show Mnemonic',
+      onPress: () => {},,
+    },
+    {
+      title: 'Biometrics Configuration',
+      onPress: () => {},,
+    },
+    {
+      title: 'Setup Electrum Servers',
+      onPress: () => {},,
+    },
+    {
+      title: 'Delete Wallet',
+      onPress: () => {},,
+    },
+    {
+      title: 'Close Wallet',
+      onPress: () => {},,
+    },
+  ];
+
   return (
     <Container useSafeArea>
       <TopNavigation title={'Wallet History'} />
-      {loadingStatusText === Connection_Stats_Text.Connected &&
-      history.filter((el: any) => el.type === props.route.params.filter)
-        .length ? (
-        <BigList
-          data={history.filter(
-            (el: any) => el.type === props.route.params.filter,
-          )}
-          renderItem={renderItem}
-          itemHeight={90}
-        />
-      ) : null}
-      {loadingStatusText === Connection_Stats_Text.Connected &&
-      history.filter((el: any) => el.type === props.route.params.filter)
-        .length === 0 ? (
-        <View style={[styles.emptyView]}>
-          <Text style={[styles.text]}>There are no transactions yet!</Text>
-          <View style={[styles.cardWrapper]}>
-            <OptionCard
-              key={1}
-              id={'1'}
-              index={1}
-              item={{text: 'Show receiving address'}}
-              selected={'walletName'}
-              onPress={() => {
-                goToAddressCoin();
-              }}
-              icon={'download'}
-              iconColor={'white'}
-            />
-          </View>
-        </View>
-      ) : null}
-      {loadingStatusText !== Connection_Stats_Text.Connected ? (
-        <View style={[styles.emptyView]}>
-          <Text style={[styles.text]}>{loadingStatusText}</Text>
-        </View>
-      ) : null}
+      <OptionCard
+        key={1}
+        id={'1'}
+        index={1}
+        item={{text: 'Show receiving address'}}
+        selected={'walletName'}
+        onPress={() => {
+          goToAddressCoin();
+        }}
+        icon={'download'}
+        iconColor={'white'}
+      />
     </Container>
   );
 };
 
-export default History;
+export default Servers;
 
 const styles = StyleSheet.create({
   header: {
