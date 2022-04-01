@@ -4,7 +4,7 @@ import {
   RouteProp,
 } from '@react-navigation/native';
 
-type AllParamList = WalletParamList & ;
+type AllParamList = WalletParamList & RootStackParamList;
 
 type ScreenNavigationProp<T extends keyof AllParamList> = NavigationProp<
   AllParamList,
