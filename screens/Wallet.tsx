@@ -6,7 +6,7 @@ import SendToScreen from './wallet/SendToScreen';
 import MainWalletScreen from './wallet/MainWalletScreen';
 import HistoryScreen from './wallet/HistoryScreen';
 import ViewTxScreen from './wallet/ViewTxScreen';
-import Settings from './wallet/SettingsScreen';
+import SettingsScreen from './wallet/SettingsScreen';
 import Biometrics from './wallet/BiometricsScreen';
 import MnemonicScreen from './wallet/MnemonicScreen';
 import Servers from './wallet/ServersScreen';
@@ -29,7 +29,7 @@ const Wallet = ({navigation}) => {
       <Stack.Screen name={'AddressScreen'} component={AddressScreen} />
       <Stack.Screen name={'HistoryScreen'} component={HistoryScreen} />
       <Stack.Screen name={'ViewTxScreen'} component={ViewTxScreen} />
-      <Stack.Screen name={'SettingsScreen'} component={Settings} />
+      <Stack.Screen name={'SettingsScreen'} component={SettingsScreen} />
       <Stack.Screen name={'BiometricsScreen'} component={Biometrics} />
       <Stack.Screen name={'MnemonicScreen'} component={MnemonicScreen} />
       <Stack.Screen name={'ServersScreen'} component={Servers} />
