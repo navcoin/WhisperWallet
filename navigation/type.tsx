@@ -27,9 +27,7 @@ export type RootStackParamList = {
   Wallet: NavigatorScreenParams<WalletParamList>;
 };
 
-export type MnemonicScreenProps = {
-  items: string;
-};
+export type MnemonicScreenProps = undefined;
 export type AddressScreenProps = {
   from: string;
 };

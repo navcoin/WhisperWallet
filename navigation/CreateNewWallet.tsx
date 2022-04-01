@@ -27,6 +27,7 @@ import useWin from '../hooks/useWin';
 import {NetworkTypes} from '../constants/Type';
 import OptionCard from '../components/OptionCard';
 import useKeychain from '../utils/Keychain';
+import Mnemonic from '../components/Mnemonic';
 
 const CreateNewWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -154,32 +155,7 @@ const CreateNewWallet = () => {
       ) : index == 2 ? (
         <View style={styles.container}>
           <KeyboardAwareScrollView>
-            <Text center style={{marginHorizontal: 12}}>
-              The following words will allow you to recover your wallet in case
-              you lose your device. Write them down in a safe place.
-            </Text>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: 32,
-              }}>
-              {mnemonic.split(' ').map((word, wordpos) => {
-                return (
-                  <View style={styles.boxWord} key={word + wordpos}>
-                    <Text category="label" status="white" center key={'pos'}>
-                      {wordpos + 1}
-                    </Text>
-                    <Text status="white" marginTop={4} center key={'word'}>
-                      {word}
-                    </Text>
-                  </View>
-                );
-              })}
-            </View>
+            <Mnemonic mnemonic={mnemonic} />
           </KeyboardAwareScrollView>
           <View style={{flexDirection: 'row', marginBottom: 24}}>
             <Button

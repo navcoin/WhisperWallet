@@ -11,58 +11,28 @@ import {
 import OptionCard from '../../components/OptionCard';
 import useLayout from '../../hooks/useLayout';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
-
-namespace WalletScreenNames {
-  export type Mnemonic = 'Mnemonic';
-}
+import useKeychain from '../../utils/Keychain';
 
 const MnemonicScreen: React.FC<ScreenProps<'MnemonicScreen'>> = props => {
-  const {width, height} = useLayout();
   const {history, connected} = useWallet();
 
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
   const [loadingStatusText, setLoadingStatus] =
     useState<Connection_Stats_Text>();
+  const {read} = useKeychain();
+  const {wallet, walletName} = useWallet();
 
   useEffect(() => {
-    switch (connected) {
-      case Connection_Stats_Enum.Connected: {
-        setLoadingStatus(Connection_Stats_Text.Connected);
-        break;
-      }
-      case Connection_Stats_Enum.Connecting: {
-        setLoadingStatus(Connection_Stats_Text.Connecting);
-        break;
-      }
-      case Connection_Stats_Enum.Disconnected: {
-        setLoadingStatus(Connection_Stats_Text.Disconnected);
-        break;
-      }
-      case Connection_Stats_Enum.NoServers: {
-        setLoadingStatus(Connection_Stats_Text.NoServers);
-        break;
-      }
-      case Connection_Stats_Enum.Syncing: {
-        setLoadingStatus(Connection_Stats_Text.Syncing);
-        break;
-      }
-      default:
-        break;
-    }
-  }, [connected]);
-
-  const goToAddressCoin = () => {
-    if (props && props.navigation) {
-      navigate('Wallet', {
-        screen: 'AddressScreen',
-        params: {from: props.route.params.publicWallet},
-      });
-    }
-  };
-
+    read(walletName).then(async (password: string) => {
+      const mnemonic: string = await wallet.db.GetMasterKey(
+        'mnemonic',
+        password,
+      );
+    });
+  }, []);
   return (
-    <Container useSafeArea>
-      <TopNavigation title={'Wallet History'} />
+    <Container>
+      <TopNavigation title={'Mnemonic'} />
       <OptionCard
         key={1}
         id={'1'}
@@ -73,7 +43,7 @@ const MnemonicScreen: React.FC<ScreenProps<'MnemonicScreen'>> = props => {
           goToAddressCoin();
         }}
         icon={'download'}
-        iconColor={'white'}
+        color={'white'}
       />
     </Container>
   );
