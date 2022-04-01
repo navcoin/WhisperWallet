@@ -6,7 +6,7 @@ import Text from './Text';
 const Mnemonic = (props: {mnemonic: string}) => {
   return (
     <KeyboardAwareScrollView>
-      <Text center style={{marginHorizontal: 12}}>
+      <Text center style={{marginHorizontal: 24}}>
         The following words will allow you to recover your wallet in case you
         lose your device. Write them down in a safe place.
       </Text>
