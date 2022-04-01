@@ -154,9 +154,7 @@ const CreateNewWallet = () => {
         </View>
       ) : index == 2 ? (
         <View style={styles.container}>
-          <KeyboardAwareScrollView>
-            <Mnemonic mnemonic={mnemonic} />
-          </KeyboardAwareScrollView>
+          <Mnemonic mnemonic={mnemonic} />
           <View style={{flexDirection: 'row', marginBottom: 24}}>
             <Button
               children="Next"

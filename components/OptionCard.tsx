@@ -61,7 +61,7 @@ const OptionCard = ({
             />
           </View>
           <View>
-            <Text style={{color}} category="headline">
+            <Text style={{color: color || 'white'}} category="headline">
               {text ? text : ''}
             </Text>
           </View>

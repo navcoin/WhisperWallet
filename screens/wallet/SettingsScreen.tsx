@@ -17,7 +17,7 @@ interface SettingsItem {
   title: string;
   onPress: () => void;
   icon?: string;
-  iconColor?: string;
+  color?: string;
 }
 
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {

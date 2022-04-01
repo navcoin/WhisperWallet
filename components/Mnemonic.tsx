@@ -1,17 +1,11 @@
-import React, {Component, useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Modal,
-  ActivityIndicator,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Text from './Text';
-import {Button} from '@ui-kitten/components';
 
 const Mnemonic = (props: {mnemonic: string}) => {
   return (
-    <>
+    <KeyboardAwareScrollView>
       <Text center style={{marginHorizontal: 12}}>
         The following words will allow you to recover your wallet in case you
         lose your device. Write them down in a safe place.
@@ -32,7 +26,7 @@ const Mnemonic = (props: {mnemonic: string}) => {
             })
           : null}
       </View>
-    </>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -40,7 +34,6 @@ export default Mnemonic;
 
 const styles = StyleSheet.create({
   boxWordGroup: {
-    flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
