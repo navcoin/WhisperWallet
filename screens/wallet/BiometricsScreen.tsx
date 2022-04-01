@@ -62,23 +62,23 @@ const Biometrics = (props: any) => {
   const items = [
     {
       title: 'Show Mnemonic',
-      onPress: () => {},,
+      onPress: () => {},
     },
     {
       title: 'Biometrics Configuration',
-      onPress: () => {},,
+      onPress: () => {},
     },
     {
       title: 'Setup Electrum Servers',
-      onPress: () => {},,
+      onPress: () => {},
     },
     {
       title: 'Delete Wallet',
-      onPress: () => {},,
+      onPress: () => {},
     },
     {
       title: 'Close Wallet',
-      onPress: () => {},,
+      onPress: () => {},
     },
   ];
 
@@ -95,7 +95,7 @@ const Biometrics = (props: any) => {
           goToAddressCoin();
         }}
         icon={'download'}
-        iconColor={'white'}
+        color={'white'}
       />
     </Container>
   );

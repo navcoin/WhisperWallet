@@ -77,7 +77,11 @@ const MainWalletScreen = () => {
             <Text />
             <NavigationAction
               icon={'menu'}
-              onPress={() => navigate({name: 'Intro'})}
+              onPress={() =>
+                navigate('Wallet', {
+                  screen: 'SettingsScreen',
+                })
+              }
             />
           </Layout>
           <BalanceCircle />

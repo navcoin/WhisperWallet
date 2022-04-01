@@ -53,7 +53,7 @@ const Servers = (props: any) => {
   const goToAddressCoin = () => {
     if (props && props.navigation) {
       navigate('Wallet', {
-        screen: 'AddressScreen'',
+        screen: 'AddressScreen',
         params: {from: props.route.params.publicWallet},
       });
     }
@@ -62,23 +62,23 @@ const Servers = (props: any) => {
   const items = [
     {
       title: 'Show Mnemonic',
-      onPress: () => {},,
+      onPress: () => {},
     },
     {
       title: 'Biometrics Configuration',
-      onPress: () => {},,
+      onPress: () => {},
     },
     {
       title: 'Setup Electrum Servers',
-      onPress: () => {},,
+      onPress: () => {},
     },
     {
       title: 'Delete Wallet',
-      onPress: () => {},,
+      onPress: () => {},
     },
     {
       title: 'Close Wallet',
-      onPress: () => {},,
+      onPress: () => {},
     },
   ];
 

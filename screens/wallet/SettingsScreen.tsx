@@ -1,16 +1,17 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {TopNavigation} from '@ui-kitten/components';
 import Container from '../../components/Container';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {
+  Animation_Types_Enum,
   Connection_Stats_Enum,
   Connection_Stats_Text,
 } from '../../constants/Type';
 import OptionCard from '../../components/OptionCard';
 import useLayout from '../../hooks/useLayout';
-import {RootStackParamList} from '../../navigation/type';
+import {RootStackParamList, ScreenProps} from '../../navigation/type';
 
 interface SettingsItem {
   title: string;
@@ -19,7 +20,7 @@ interface SettingsItem {
   iconColor?: string;
 }
 
-const Settings = (props: any) => {
+const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const {width, height} = useLayout();
   const {history, connected} = useWallet();
 
@@ -69,29 +70,33 @@ const Settings = (props: any) => {
       onPress: () => {
         navigate('Wallet', {
           screen: 'MnemonicScreen',
-          params: {items: 'a'},
         });
       },
+      icon: 'padLock',
     },
     {
       title: 'Biometrics Configuration',
       onPress: () => {},
+      icon: 'eye',
     },
     {
       title: 'Setup Electrum Servers',
       onPress: () => {},
+      icon: 'book',
     },
     {
       title: 'Delete Wallet',
       onPress: () => {
         navigate('Intro');
       },
+      icon: 'cancel',
     },
     {
       title: 'Close Wallet',
       onPress: () => {
         navigate('Intro');
       },
+      icon: 'undo',
     },
   ];
 
@@ -126,6 +131,10 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
     paddingBottom: 8,
+  },
+  contentWrapper: {
+    padding: 20,
+    marginTop: 40,
   },
   text: {
     color: 'white',
