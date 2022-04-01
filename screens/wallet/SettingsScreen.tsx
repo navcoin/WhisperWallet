@@ -97,26 +97,29 @@ const Settings = (props: any) => {
 
   return (
     <Container useSafeArea>
-      <TopNavigation title={'Wallet History'} />
-      {items.map((item, index) => {
-        return (
-          <OptionCard
-            key={index}
-            id={index.toString()}
-            index={index}
-            item={{text: item.title}}
-            selected={'walletName'}
-            onPress={item.onPress}
-            icon={item.icon || 'download'}
-            iconColor={item.iconColor || 'white'}
-          />
-        );
-      })}
+      <TopNavigation title={'Settings'} />
+      <View style={styles.contentWrapper}>
+        {items.map((item, index) => {
+          return (
+            <OptionCard
+              key={index}
+              id={index.toString()}
+              index={index}
+              item={{text: item.title}}
+              selected={'walletName'}
+              onPress={item.onPress}
+              animationType={Animation_Types_Enum.SlideInLeft}
+              icon={item.icon || 'download'}
+              color={item.color || 'white'}
+            />
+          );
+        })}
+      </View>
     </Container>
   );
 };
 
-export default Settings;
+export default SettingsScreen;
 
 const styles = StyleSheet.create({
   header: {

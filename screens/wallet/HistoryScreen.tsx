@@ -63,7 +63,7 @@ const HistoryScreen = (props: any) => {
   const goToAddressCoin = () => {
     if (props && props.navigation) {
       navigate('Wallet', {
-        screen: 'AddressScreen'',
+        screen: 'AddressScreen',
         params: {from: props.route.params.publicWallet},
       });
     }
@@ -99,7 +99,7 @@ const HistoryScreen = (props: any) => {
                 goToAddressCoin();
               }}
               icon={'download'}
-              iconColor={'white'}
+              color={'white'}
             />
           </View>
         </View>

@@ -27,12 +27,13 @@ const BottomSheetOptions = (props: any) => {
             id={el.text}
             key={el.text}
             icon={el.icon}
-            iconColor={'white'}
+            color={'white'}
             onPress={() => {
               props.onSelect(el);
               collapse();
             }}
-            selected={''}></OptionCard>
+            selected={''}
+          />
         ))}
     </View>
   );

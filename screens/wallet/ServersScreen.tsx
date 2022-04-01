@@ -95,7 +95,7 @@ const Servers = (props: any) => {
           goToAddressCoin();
         }}
         icon={'download'}
-        iconColor={'white'}
+        color={'white'}
       />
     </Container>
   );

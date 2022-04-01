@@ -18,8 +18,9 @@ interface OptionProps {
   selected: string;
   id: string;
   icon: string;
-  iconColor: string;
+  color: string;
   showArrow?: boolean;
+  animationType?: Animation_Types_Enum;
 }
 
 const OptionCard = ({
@@ -29,15 +30,16 @@ const OptionCard = ({
   selected,
   id,
   icon,
-  iconColor,
+  color,
   showArrow,
+  animationType = Animation_Types_Enum.SlideInRight,
 }: OptionProps) => {
   const theme = useTheme();
 
   const {text} = item;
 
   return (
-    <AnimatedAppearance type={Animation_Types_Enum.SlideInRight} index={index}>
+    <AnimatedAppearance type={animationType} index={index}>
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={onPress}
@@ -55,11 +57,13 @@ const OptionCard = ({
             <Icon
               pack="assets"
               name={icon || 'creditCard'}
-              style={{tintColor: iconColor || theme['icon-basic-color']}}
+              style={{tintColor: color || theme['icon-basic-color']}}
             />
           </View>
           <View>
-            <Text category="headline">{text ? text : ''}</Text>
+            <Text style={{color}} category="headline">
+              {text ? text : ''}
+            </Text>
           </View>
         </View>
         {showArrow && (
