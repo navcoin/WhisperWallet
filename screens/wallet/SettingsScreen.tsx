@@ -1,5 +1,5 @@
 import useWallet from '../../hooks/useWallet';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {StyleSheet, View, Alert} from 'react-native';
 import {TopNavigation} from '@ui-kitten/components';
 import Container from '../../components/Container';
@@ -7,17 +7,10 @@ import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {
   Animation_Types_Enum,
   Connection_Stats_Enum,
-  Connection_Stats_Text,
 } from '../../constants/Type';
 import OptionCard from '../../components/OptionCard';
-import useLayout from '../../hooks/useLayout';
-import {
-  RootStackParamList,
-  ScreenProps,
-  WalletParamList,
-} from '../../navigation/type';
+import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import useNjs from '../../hooks/useNjs';
 
 interface SettingsItem {
@@ -28,7 +21,6 @@ interface SettingsItem {
 }
 
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
-  const {width, height} = useLayout();
   const {walletName, wallet, connected} = useWallet();
   const {njs} = useNjs();
 
@@ -40,8 +32,13 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   );
 
   const biometricsAlert = () => {
+    let title = 'Your wallet is NOT locked when WhisperWallet goes background.';
+    if (lockAfterBackground) {
+      title =
+        'Your wallet is currently locked when WhisperWallet goes background.';
+    }
     Alert.alert(
-      'Security',
+      title,
       'Do you want to lock automatically the wallet when it goes to background?',
       [
         {
