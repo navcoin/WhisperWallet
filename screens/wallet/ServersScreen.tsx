@@ -2,10 +2,10 @@ import useWallet from '../../hooks/useWallet';
 import BigList from 'react-native-big-list';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {TopNavigation} from '@ui-kitten/components';
+import {Icon, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
 import Container from '../../components/Container';
 import Transaction from '../../components/Transaction';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {
   Connection_Stats_Enum,
   Connection_Stats_Text,
@@ -14,89 +14,84 @@ import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
 import useLayout from '../../hooks/useLayout';
 import {WalletScreenNames} from '../Wallet';
+import useNjs from '../../hooks/useNjs';
+import {RootStackParamList} from '../../navigation/type';
+import useAsyncStorage from '../../hooks/useAsyncStorage';
+import {networkOptions} from '../../constants/Data';
+
+const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
+  <Icon width={20} height={20} {...props} name={props.name} />
+);
+
+const renderRightActions = (editMode: boolean, onPress: () => void) => (
+  <React.Fragment>
+    <TopNavigationAction
+      style={{padding: 20}}
+      icon={TopRightIcon({name: editMode ? 'check' : 'edit'})}
+      onPress={onPress}
+    />
+  </React.Fragment>
+);
 
 const Servers = (props: any) => {
-  const {width, height} = useLayout();
-  const {history, connected} = useWallet();
+  const {walletName, wallet, connected} = useWallet();
+  const {njs} = useNjs();
 
-  const {navigate} = useNavigation();
-  const [loadingStatusText, setLoadingStatus] =
-    useState<Connection_Stats_Text>();
+  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
 
-  useEffect(() => {
-    switch (connected) {
-      case Connection_Stats_Enum.Connected: {
-        setLoadingStatus(Connection_Stats_Text.Connected);
-        break;
-      }
-      case Connection_Stats_Enum.Connecting: {
-        setLoadingStatus(Connection_Stats_Text.Connecting);
-        break;
-      }
-      case Connection_Stats_Enum.Disconnected: {
-        setLoadingStatus(Connection_Stats_Text.Disconnected);
-        break;
-      }
-      case Connection_Stats_Enum.NoServers: {
-        setLoadingStatus(Connection_Stats_Text.NoServers);
-        break;
-      }
-      case Connection_Stats_Enum.Syncing: {
-        setLoadingStatus(Connection_Stats_Text.Syncing);
-        break;
-      }
-      default:
-        break;
-    }
-  }, [connected]);
+  const [currentServers, setCurrentServers] = useAsyncStorage(
+    'currentServers',
+    networkOptions[wallet.network],
+  );
+  const [editMode, setEditMode] = useState(false);
 
-  const goToAddressCoin = () => {
-    if (props && props.navigation) {
-      navigate('Wallet', {
-        screen: 'AddressScreen',
-        params: {from: props.route.params.publicWallet},
-      });
-    }
-  };
+  useEffect(() => {}, []);
 
-  const items = [
-    {
-      title: 'Show Mnemonic',
-      onPress: () => {},
-    },
-    {
-      title: 'Biometrics Configuration',
-      onPress: () => {},
-    },
-    {
-      title: 'Setup Electrum Servers',
-      onPress: () => {},
-    },
-    {
-      title: 'Delete Wallet',
-      onPress: () => {},
-    },
-    {
-      title: 'Close Wallet',
-      onPress: () => {},
-    },
-  ];
-
+  const summaryText = `Your wallet is currently using ${
+    wallet.network
+  } network. ${
+    editMode
+      ? 'If you want to switch to other networks, please create another wallet.'
+      : ''
+  }`;
   return (
     <Container useSafeArea>
-      <TopNavigation title={'Wallet History'} />
-      <OptionCard
-        key={1}
-        id={'1'}
-        index={1}
-        item={{text: 'Show receiving address'}}
-        selected={'walletName'}
-        onPress={() => {
-          goToAddressCoin();
-        }}
-        icon={'download'}
-        color={'white'}
+      <TopNavigation
+        accessoryRight={renderRightActions(editMode, () =>
+          setEditMode(!editMode),
+        )}
+        title={'Setup Electrum Servers'}
       />
+      <View>
+        <Text style={[styles.summary]}>{summaryText}</Text>
+      </View>
+      <View style={[styles.serversWrapper]}>
+        {editMode ? (
+          <OptionCard
+            id={'0'}
+            index={0}
+            item={{text: 'Add new server'}}
+            selected={''}
+            onPress={() => {}}
+            icon={'add'}
+            color={'white'}
+            cardType={'outline'}
+          />
+        ) : null}
+        {currentServers.map((eachServer, index) => {
+          return (
+            <OptionCard
+              key={index + 1}
+              id={(index + 1).toString()}
+              index={index + 1}
+              item={{text: JSON.stringify(eachServer)}}
+              selected={''}
+              onPress={() => {}}
+              color={'white'}
+            />
+          );
+        })}
+      </View>
     </Container>
   );
 };
@@ -104,24 +99,9 @@ const Servers = (props: any) => {
 export default Servers;
 
 const styles = StyleSheet.create({
-  header: {
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-    paddingBottom: 8,
-  },
-  text: {
-    color: 'white',
-    textAlign: 'center',
-  },
-  emptyView: {
+  summary: {textAlign: 'center', paddingHorizontal: 24},
+  serversWrapper: {
+    padding: 24,
     flex: 1,
-    alignContent: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  cardWrapper: {
-    maxWidth: 300,
-    alignSelf: 'center',
-    marginTop: 50,
   },
 });
