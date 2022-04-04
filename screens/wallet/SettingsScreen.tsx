@@ -1,6 +1,6 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Alert} from 'react-native';
 import {TopNavigation} from '@ui-kitten/components';
 import Container from '../../components/Container';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
@@ -11,7 +11,14 @@ import {
 } from '../../constants/Type';
 import OptionCard from '../../components/OptionCard';
 import useLayout from '../../hooks/useLayout';
-import {RootStackParamList, ScreenProps} from '../../navigation/type';
+import {
+  RootStackParamList,
+  ScreenProps,
+  WalletParamList,
+} from '../../navigation/type';
+import useAsyncStorage from '../../hooks/useAsyncStorage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import useNjs from '../../hooks/useNjs';
 
 interface SettingsItem {
   title: string;
@@ -22,81 +29,100 @@ interface SettingsItem {
 
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const {width, height} = useLayout();
-  const {history, connected} = useWallet();
+  const {walletName, wallet, connected} = useWallet();
+  const {njs} = useNjs();
 
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
-  const [loadingStatusText, setLoadingStatus] =
-    useState<Connection_Stats_Text>();
 
-  useEffect(() => {
-    switch (connected) {
-      case Connection_Stats_Enum.Connected: {
-        setLoadingStatus(Connection_Stats_Text.Connected);
-        break;
+  const [lockAfterBackground, setLockAfterBackground] = useAsyncStorage(
+    'lockAfterBackground',
+    'false',
+  );
+
+  const biometricsAlert = () => {
+    Alert.alert(
+      'Security',
+      'Do you want to lock automatically the wallet when it goes to background?',
+      [
+        {
+          text: 'Yes',
+          onPress: () => {
+            setLockAfterBackground('true');
+          },
+        },
+        {
+          text: 'No',
+          onPress: () => {
+            setLockAfterBackground('false');
+          },
+        },
+        {
+          text: 'Cancel',
+          onPress: () => {},
+        },
+      ],
+    );
+  };
+
+  const disconnectWallet = async (deleteWallet: boolean = false) => {
+    if (connected === Connection_Stats_Enum.Connected) {
+      wallet.Disconnect();
+      wallet.CloseDb();
+      if (deleteWallet) {
+        await njs.wallet.WalletFile.RemoveWallet(walletName);
       }
-      case Connection_Stats_Enum.Connecting: {
-        setLoadingStatus(Connection_Stats_Text.Connecting);
-        break;
-      }
-      case Connection_Stats_Enum.Disconnected: {
-        setLoadingStatus(Connection_Stats_Text.Disconnected);
-        break;
-      }
-      case Connection_Stats_Enum.NoServers: {
-        setLoadingStatus(Connection_Stats_Text.NoServers);
-        break;
-      }
-      case Connection_Stats_Enum.Syncing: {
-        setLoadingStatus(Connection_Stats_Text.Syncing);
-        break;
-      }
-      default:
-        break;
     }
-  }, [connected]);
+    navigate('Intro');
+  };
 
-  // const goToAddressCoin = () => {
-  //   if (props && props.navigation) {
-  //     navigate(RootScreenNames.Wallet, {
-  //       screen: WalletScreenNames.Address,
-  //       params: {from: props.route.params.publicWallet},
-  //     });
-  //   }
-  // };
+  const deleteWallet = () => {
+    Alert.alert('Delete Wallet', 'Are you sure to delete ' + walletName, [
+      {
+        text: 'Delete',
+        onPress: () => disconnectWallet(true),
+      },
+      {
+        text: 'Cancel',
+        onPress: () => {},
+      },
+    ]);
+  };
+
+  const leaveWallet = () => disconnectWallet();
 
   const items: SettingsItem[] = [
     {
       title: 'Show Mnemonic',
+      icon: 'padLock',
       onPress: () => {
         navigate('Wallet', {
           screen: 'MnemonicScreen',
         });
       },
-      icon: 'padLock',
     },
     {
       title: 'Biometrics Configuration',
-      onPress: () => {},
       icon: 'eye',
+      onPress: () => biometricsAlert(),
     },
     {
       title: 'Setup Electrum Servers',
-      onPress: () => {},
       icon: 'book',
+      onPress: () => {
+        navigate('Wallet', {
+          screen: 'ServersScreen',
+        });
+      },
     },
     {
       title: 'Delete Wallet',
-      onPress: () => {
-        navigate('Intro');
-      },
       icon: 'cancel',
+      onPress: () => deleteWallet(),
     },
     {
       title: 'Close Wallet',
-      onPress: () => {
-        navigate('Intro');
-      },
       icon: 'undo',
+      onPress: () => leaveWallet(),
     },
   ];
 
