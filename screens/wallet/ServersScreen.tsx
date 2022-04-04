@@ -68,11 +68,14 @@ const Servers = (props: any) => {
       <View style={[styles.serversWrapper]}>
         {editMode ? (
           <OptionCard
-            id={'0'}
-            index={0}
+            key={'1'}
+            id={'1'}
+            index={1}
             item={{text: 'Add new server'}}
             selected={''}
-            onPress={() => {}}
+            onPress={() => {
+              navigate('Intro');
+            }}
             icon={'add'}
             color={'white'}
             cardType={'outline'}
@@ -86,7 +89,12 @@ const Servers = (props: any) => {
               index={index + 1}
               item={{text: JSON.stringify(eachServer)}}
               selected={''}
-              onPress={() => {}}
+              onPress={() => {
+                navigate('Intro');
+              }}
+              iconRight={editMode ? 'download' : null}
+              iconRightOnPress={() => {
+              }}
               color={'white'}
             />
           );
