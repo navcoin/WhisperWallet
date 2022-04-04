@@ -116,6 +116,7 @@ const CreateNewWallet = () => {
                   onPress={() => {
                     setNetwork(el[0]);
                   }}
+                  icon={'creditCard'}
                 />
               );
             })}

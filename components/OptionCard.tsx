@@ -1,5 +1,11 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Icon, useTheme} from '@ui-kitten/components';
 
 import Text from './Text';
@@ -11,6 +17,7 @@ interface ItemProps {
   text: string;
 }
 
+type CardStyle = 'outline' | 'fill';
 interface OptionProps {
   item: ItemProps;
   onPress?(): void;
@@ -21,6 +28,7 @@ interface OptionProps {
   color: string;
   showArrow?: boolean;
   animationType?: Animation_Types_Enum;
+  cardType?: 'outline' | 'fill';
 }
 
 const OptionCard = ({
@@ -33,33 +41,51 @@ const OptionCard = ({
   color,
   showArrow,
   animationType = Animation_Types_Enum.SlideInRight,
+  cardType = 'fill',
 }: OptionProps) => {
   const theme = useTheme();
 
   const {text} = item;
+  const isSelected = selected === text || (id && selected === id);
+
+  const setContainerStyle = (type: CardStyle): ViewStyle => {
+    const styleResult = {
+      paddingLeft: icon ? 10 : 12,
+      paddingRight: 12,
+    };
+    if (type === 'fill') {
+      Object.assign(styleResult, {
+        backgroundColor: isSelected
+          ? theme['background-basic-color-4']
+          : theme['background-basic-color-2'],
+        borderColor: 'transparent',
+      });
+    }
+    if (type === 'outline') {
+      Object.assign(styleResult, {
+        borderStyle: 'dashed',
+        borderColor: '#FFFFFF99',
+      });
+    }
+    return styleResult;
+  };
 
   return (
     <AnimatedAppearance type={animationType} index={index}>
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={onPress}
-        style={[
-          styles.container,
-          {
-            backgroundColor:
-              selected == text || (id && selected == id)
-                ? theme['background-basic-color-4']
-                : theme['background-basic-color-2'],
-          },
-        ]}>
+        style={[styles.container, {}, setContainerStyle(cardType)]}>
         <View style={styles.content}>
-          <View style={styles.walletIcon}>
-            <Icon
-              pack="assets"
-              name={icon || 'creditCard'}
-              style={{tintColor: color || theme['icon-basic-color']}}
-            />
-          </View>
+          {icon ? (
+            <View style={styles.leftIcon}>
+              <Icon
+                pack="assets"
+                name={icon || 'creditCard'}
+                style={{tintColor: color || theme['icon-basic-color']}}
+              />
+            </View>
+          ) : null}
           <View>
             <Text style={{color: color || 'white'}} category="headline">
               {text ? text : ''}
@@ -84,18 +110,17 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 12,
     paddingVertical: 10,
-    paddingLeft: 10,
-    paddingRight: 21,
     marginBottom: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderWidth: 1,
   },
   content: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  walletIcon: {
+  leftIcon: {
     width: 48,
     height: 48,
     borderRadius: 48,
