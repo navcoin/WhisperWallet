@@ -9,6 +9,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {
   Connection_Stats_Enum,
   Connection_Stats_Text,
+  ServerOption,
 } from '../../constants/Type';
 import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
@@ -47,9 +48,7 @@ const Servers = (props: any) => {
 
   useEffect(() => {}, []);
 
-  const summaryText = `Your wallet is currently using ${
-    wallet.network
-  } network. ${
+  const summaryText = `${wallet.network} network is currently used. ${
     editMode
       ? 'If you want to switch to other networks, please create another wallet.'
       : ''
@@ -81,19 +80,23 @@ const Servers = (props: any) => {
             cardType={'outline'}
           />
         ) : null}
-        {currentServers.map((eachServer, index) => {
+        {currentServers.map((eachServer: ServerOption, index: number) => {
           return (
             <OptionCard
               key={index + 1}
               id={(index + 1).toString()}
               index={index + 1}
-              item={{text: JSON.stringify(eachServer)}}
+              item={{
+                text: `Host: ${eachServer.host}\nPort: ${eachServer.port}; Protocol: ${eachServer.proto}`,
+              }}
+              // item={{text: JSON.stringify(eachServer)}}
               selected={''}
               onPress={() => {
                 navigate('Intro');
               }}
-              iconRight={editMode ? 'download' : null}
+              iconRight={editMode ? 'download' : undefined}
               iconRightOnPress={() => {
+                console.log('wtf');
               }}
               color={'white'}
             />

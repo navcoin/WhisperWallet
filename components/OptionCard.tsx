@@ -20,12 +20,12 @@ interface ItemProps {
 type CardStyle = 'outline' | 'fill';
 interface OptionProps {
   item: ItemProps;
-  onPress?: () => void;
   index: number;
   selected: string;
   id: string;
-  icon: string;
   color: string;
+  icon?: string;
+  onPress?: () => void;
   iconRight?: string;
   iconRightOnPress?: () => void;
   animationType?: Animation_Types_Enum;
@@ -145,7 +145,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 12,
-    paddingVertical: 20,
   },
   leftIconWrapper: {
     marginRight: 16,

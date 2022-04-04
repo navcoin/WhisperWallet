@@ -157,7 +157,6 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     padding: 20,
-    marginTop: 40,
   },
   text: {
     color: 'white',
