@@ -1,24 +1,30 @@
 import useWallet from '../../hooks/useWallet';
-import BigList from 'react-native-big-list';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Icon, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
-import Container from '../../components/Container';
-import Transaction from '../../components/Transaction';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {
-  Connection_Stats_Enum,
-  Connection_Stats_Text,
-  ServerOption,
-} from '../../constants/Type';
+  Button,
+  Icon,
+  IndexPath,
+  Input,
+  Layout,
+  Select,
+  SelectItem,
+  TopNavigation,
+  TopNavigationAction,
+} from '@ui-kitten/components';
+import Container from '../../components/Container';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {ServerOption} from '../../constants/Type';
 import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
-import useLayout from '../../hooks/useLayout';
-import {WalletScreenNames} from '../Wallet';
+import BottomSheetView from '../../components/BottomSheetView';
 import useNjs from '../../hooks/useNjs';
-import {RootStackParamList} from '../../navigation/type';
+import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
-import {networkOptions} from '../../constants/Data';
+import {networkOptions, protosOptions} from '../../constants/Data';
+import {useBottomSheet} from '../../hooks/useBottomSheet';
+import {BottomSheetProvider} from '../../contexts/BottomSheetProvider';
+import {validateIp, validatePort} from '../../utils/server';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
   <Icon width={20} height={20} {...props} name={props.name} />
@@ -34,8 +40,8 @@ const renderRightActions = (editMode: boolean, onPress: () => void) => (
   </React.Fragment>
 );
 
-const Servers = (props: any) => {
-  const {walletName, wallet, connected} = useWallet();
+const ServersScreenContent = (props: ScreenProps<'ServersScreen'>) => {
+  const {walletName, wallet} = useWallet();
   const {njs} = useNjs();
 
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -45,10 +51,152 @@ const Servers = (props: any) => {
     networkOptions[wallet.network],
   );
   const [editMode, setEditMode] = useState(false);
+  // const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [error, setError] = useState('');
+
+  const bottomSheet = useBottomSheet();
+  const {setOnCollapse} = useBottomSheet();
+  const [newServer, setNewServer] = useState<ServerOption>({
+    type: wallet.network,
+  });
+
+  const findMatchedIdx = () => {
+    if (newServer.proto) {
+      const matchedIdx = protosOptions.findIndex(
+        proto => proto === newServer.proto,
+      );
+      if (matchedIdx > 0) {
+        return new IndexPath(matchedIdx);
+      }
+    }
+    return new IndexPath(0);
+  };
+
+  const setNewServerProperty = (
+    type: keyof ServerOption,
+    value: string | number,
+  ) => {
+    const temp = {...newServer};
+    temp[type] = value as any;
+    setNewServer(temp);
+  };
+  const addServer = () => {
+    if (
+      !newServer?.host ||
+      !newServer?.port ||
+      !newServer?.proto ||
+      !newServer?.type
+    ) {
+      setError('Please input  server details.');
+      return;
+    }
+    if (newServer.host && !validateIp(newServer.host)) {
+      setError('Invalid Server');
+      return;
+    }
+    if (newServer.port && !validatePort(newServer.port)) {
+      setError('Invalid Port');
+      return;
+    }
+  };
+
+  const saveServers = () => {
+    setEditMode(!editMode);
+  };
+
+  const removeServer = (serverIndexToBeRemoved: number) => {
+    const newServers = currentServers.filter(
+      (server: ServerOption, index: number) => index !== serverIndexToBeRemoved,
+    );
+    setCurrentServers(newServers);
+  };
+
+  useEffect(() => {
+    // if (!isBottomSheetOpen) {
+    //   return;
+    // }
+  }, [bottomSheet, wallet.network, error, newServer]);
+  const setIsBottomSheetOpen = useCallback(
+    () =>
+      bottomSheet.expand(
+        <BottomSheetView>
+          <TopNavigation title="Add New Server" />
+          <Layout level="2" style={styles.inputCard}>
+            <View style={styles.inputGroup}>
+              <Text category="headline" style={[styles.inputTitle]}>
+                Host:
+              </Text>
+              <Input
+                autoFocus={true}
+                style={[styles.inputField]}
+                onChangeText={value => {
+                  setNewServerProperty('host', value);
+                }}
+              />
+            </View>
+            <View style={styles.inputGroup}>
+              <Text category="headline" style={[styles.inputTitle]}>
+                Port:
+              </Text>
+              <Input
+                style={[styles.inputField]}
+                onChangeText={value => {
+                  setNewServerProperty('host', Number.parseInt(value));
+                }}
+              />
+            </View>
+            <View style={styles.inputGroup}>
+              <Text category="headline" style={[styles.inputTitle]}>
+                Proto:
+              </Text>
+              <Select
+                style={[styles.inputField]}
+                selectedIndex={findMatchedIdx()}
+                value={protosOptions[findMatchedIdx().row]}
+                onSelect={index => {
+                  const i = index as IndexPath;
+                  if (i) {
+                    setNewServerProperty('proto', protosOptions[i.row]);
+                  }
+                }}>
+                {protosOptions.map(proto => {
+                  return <SelectItem title={proto} />;
+                })}
+              </Select>
+            </View>
+            <View style={styles.inputGroup}>
+              <Text category="headline" style={[styles.inputTitle]}>
+                Network:
+              </Text>
+              <Text category="headline">{wallet.network}</Text>
+            </View>
+            <Button onPress={() => addServer()}>Add</Button>
+            {error ? (
+              <Text style={[styles.errorText]} center>
+                {error}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </Layout>
+        </BottomSheetView>,
+      ),
+    [
+      addServer,
+      bottomSheet,
+      error,
+      findMatchedIdx,
+      setNewServerProperty,
+      wallet.network,
+      newServer,
+    ],
+  );
 
   useEffect(() => {}, []);
 
-  const summaryText = `${wallet.network} network is currently used. ${
+  const summaryText = `${walletName} is currently using ${
+    wallet.network
+  } network. ${
     editMode
       ? 'If you want to switch to other networks, please create another wallet.'
       : ''
@@ -56,9 +204,7 @@ const Servers = (props: any) => {
   return (
     <Container useSafeArea>
       <TopNavigation
-        accessoryRight={renderRightActions(editMode, () =>
-          setEditMode(!editMode),
-        )}
+        accessoryRight={renderRightActions(editMode, () => saveServers())}
         title={'Setup Electrum Servers'}
       />
       <View>
@@ -72,9 +218,7 @@ const Servers = (props: any) => {
             index={1}
             item={{text: 'Add new server'}}
             selected={''}
-            onPress={() => {
-              navigate('Intro');
-            }}
+            onPress={() => setIsBottomSheetOpen(true)}
             icon={'add'}
             color={'white'}
             cardType={'outline'}
@@ -87,16 +231,13 @@ const Servers = (props: any) => {
               id={(index + 1).toString()}
               index={index + 1}
               item={{
-                text: `Host: ${eachServer.host}\nPort: ${eachServer.port}; Protocol: ${eachServer.proto}`,
+                text: `Host: ${eachServer.host}\nPort: ${eachServer.port}; <b>Protocol</b>: ${eachServer.proto}`,
               }}
-              // item={{text: JSON.stringify(eachServer)}}
               selected={''}
-              onPress={() => {
-                navigate('Intro');
-              }}
+              onPress={() => {}}
               iconRight={editMode ? 'download' : undefined}
               iconRightOnPress={() => {
-                console.log('wtf');
+                removeServer(index);
               }}
               color={'white'}
             />
@@ -107,7 +248,15 @@ const Servers = (props: any) => {
   );
 };
 
-export default Servers;
+const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
+  return (
+    <BottomSheetProvider>
+      <ServersScreenContent {...props} />
+    </BottomSheetProvider>
+  );
+};
+
+export default ServersScreen;
 
 const styles = StyleSheet.create({
   summary: {textAlign: 'center', paddingHorizontal: 24},
@@ -115,4 +264,24 @@ const styles = StyleSheet.create({
     padding: 24,
     flex: 1,
   },
+  inputCard: {
+    borderRadius: 12,
+    marginTop: 24,
+    paddingVertical: 24,
+    paddingHorizontal: 16,
+  },
+  inputGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  inputField: {
+    flex: 1,
+    flexWrap: 'wrap',
+  },
+  inputTitle: {
+    marginRight: 16,
+  },
+  errorText: {color: 'red', flex: 1},
 });

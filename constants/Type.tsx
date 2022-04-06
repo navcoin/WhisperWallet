@@ -110,8 +110,8 @@ export interface TransactionFragment {
 
 export type NetworkOption = 'testnet' | 'mainnet';
 export interface ServerOption {
-  host: string;
-  port: number;
-  proto: 'tcp' | 'ssl' | 'ws' | 'wss';
-  type: 'testnet' | 'mainnet';
+  host?: string;
+  port?: number;
+  proto?: 'tcp' | 'ssl' | 'ws' | 'wss';
+  type?: 'testnet' | 'mainnet';
 }

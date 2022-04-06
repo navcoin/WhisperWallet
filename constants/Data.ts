@@ -31,6 +31,8 @@ export const OnBoarding = [
   },
 ];
 
+export const protosOptions = ['tcp', 'ssl', 'ws', 'wss'];
+
 export const networkOptions: {
   [key in NetworkOption]: ServerOption[];
 } = {
