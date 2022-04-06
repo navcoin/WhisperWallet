@@ -8,7 +8,8 @@ import HistoryScreen from './wallet/HistoryScreen';
 import ViewTxScreen from './wallet/ViewTxScreen';
 import SettingsScreen from './wallet/SettingsScreen';
 import MnemonicScreen from './wallet/MnemonicScreen';
-import Servers from './wallet/ServersScreen';
+import AddServerScreen from './wallet/AddServerScreen';
+import ServersScreen from './wallet/ServersScreen';
 
 const Stack = createStackNavigator<WalletParamList>();
 
@@ -30,7 +31,8 @@ const Wallet = ({navigation}) => {
       <Stack.Screen name={'ViewTxScreen'} component={ViewTxScreen} />
       <Stack.Screen name={'SettingsScreen'} component={SettingsScreen} />
       <Stack.Screen name={'MnemonicScreen'} component={MnemonicScreen} />
-      <Stack.Screen name={'ServersScreen'} component={Servers} />
+      <Stack.Screen name={'ServersScreen'} component={ServersScreen} />
+      <Stack.Screen name={'AddServerScreen'} component={AddServerScreen} />
     </Stack.Navigator>
   );
 };

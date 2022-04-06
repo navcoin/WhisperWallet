@@ -3,6 +3,7 @@ import {
   NavigatorScreenParams,
   RouteProp,
 } from '@react-navigation/native';
+import {ServerOption} from '../constants/Type';
 
 type AllParamList = WalletParamList & RootStackParamList;
 
@@ -34,6 +35,9 @@ export type AddressScreenProps = {
 export type ViewTxScreenProps = {
   item: any;
 };
+export type AddServerScreenProps = {
+  addServer: (newServer: ServerOption, cb: () => void) => void;
+};
 
 export type WalletParamList = {
   MainWalletScreen: undefined;
@@ -44,4 +48,5 @@ export type WalletParamList = {
   SettingsScreen: undefined;
   MnemonicScreen: MnemonicScreenProps;
   ServersScreen: undefined;
+  AddServerScreen: AddServerScreenProps;
 };
