@@ -26,7 +26,7 @@ const BalanceCircle = memo(() => {
   const [timer, setTimer] = useState<any>(undefined);
 
   useEffect(() => {
-    if (connected != Connection_Stats_Enum.Connecting) {
+    if (connected != Connection_Stats_Enum.Connecting || syncProgress > 0) {
       setRotation(180);
       clearInterval(timer);
     } else {
@@ -86,7 +86,7 @@ const BalanceCircle = memo(() => {
             : undefined
         }
         segmentsSource={
-          connected == Connection_Stats_Enum.Connecting
+          connected == Connection_Stats_Enum.Connecting || syncProgress === 0
             ? [
                 {
                   size: 5,
@@ -97,7 +97,7 @@ const BalanceCircle = memo(() => {
                   color: 'transparent',
                 },
               ]
-            : syncing || syncProgress === 0
+            : syncing
             ? [
                 {
                   size: syncProgress,
