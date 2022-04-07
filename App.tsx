@@ -51,6 +51,7 @@ const App = () => {
     'lockAfterBackground',
     'false',
   );
+  const {refreshWallet} = useWallet();
 
   useEffect(() => {
     AsyncStorage.getItem('shownWelcome').then(itemValue => {
@@ -78,8 +79,9 @@ const App = () => {
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
-      if (lockAfterBackground === 'true') {
-        if (appState.current.match(/background/) && nextAppState === 'active') {
+      if (appState.current.match(/background/) && nextAppState === 'active') {
+        refreshWallet();
+        if (lockAfterBackground === 'true') {
           setLockedScreen(true);
         }
       }
