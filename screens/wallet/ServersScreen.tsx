@@ -1,10 +1,15 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Icon, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
+import {View, StyleSheet, Alert} from 'react-native';
+import {
+  Button,
+  Icon,
+  TopNavigation,
+  TopNavigationAction,
+} from '@ui-kitten/components';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {ServerOption} from '../../constants/Type';
+import {NetworkOption, ServerOption} from '../../constants/Type';
 import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
 import useNjs from '../../hooks/useNjs';
@@ -49,7 +54,20 @@ const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
     setCurrentServers(newServers);
   };
 
-  useEffect(() => {}, []);
+  const restoreServers = () => {
+    Alert.alert('', 'Are you sure you want to restore to default servers?', [
+      {
+        text: 'Yes',
+        onPress: () => {
+          const network = wallet.network as NetworkOption;
+          setCurrentServers(networkOptions[network]);
+        },
+      },
+      {
+        text: 'No',
+      },
+    ]);
+  };
 
   const summaryText = `${walletName} is currently using ${
     wallet.network
@@ -100,7 +118,7 @@ const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
               id={(index + 1).toString()}
               index={index + 1}
               item={{
-                text: `Host: ${eachServer.host}\nPort: ${eachServer.port}; <b>Protocol</b>: ${eachServer.proto}`,
+                text: `Host: ${eachServer.host}\nPort: ${eachServer.port}; Protocol: ${eachServer.proto}`,
               }}
               selected={''}
               onPress={() => {}}
@@ -112,6 +130,11 @@ const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
             />
           );
         })}
+        {editMode ? (
+          <Button onPress={() => restoreServers()}>
+            Restore default server
+          </Button>
+        ) : null}
       </View>
     </Container>
   );
