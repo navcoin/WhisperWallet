@@ -190,7 +190,7 @@ const ImportWallet = () => {
                         network,
                         () => {
                           setLoading(false);
-                          setIndex(3);
+                          setIndex(4);
                         },
                       );
                     })
@@ -201,7 +201,7 @@ const ImportWallet = () => {
               }}
             />
           </KeyboardAwareScrollView>
-        ) : index == 3 ? (
+        ) : index === 4 ? (
           <KeyboardAwareScrollView>
             <Text center key={'title'}>
               Congratulations!
