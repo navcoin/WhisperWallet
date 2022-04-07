@@ -56,7 +56,7 @@ const ImportWallet = () => {
       <AnimatedStep style={styles.animatedStep} step={index} />
 
       <View style={styles.container}>
-        {index == 0 ? (
+        {index === 0 ? (
           <KeyboardAwareScrollView
             style={styles.content}
             enableOnAndroid
@@ -79,7 +79,7 @@ const ImportWallet = () => {
               );
             })}
           </KeyboardAwareScrollView>
-        ) : index == 1 ? (
+        ) : index === 1 ? (
           <KeyboardAwareScrollView>
             <Text center style={{marginHorizontal: 12, marginBottom: 24}}>
               Type the recovery words.
@@ -118,7 +118,7 @@ const ImportWallet = () => {
               />
             </View>
           </KeyboardAwareScrollView>
-        ) : index == 2 ? (
+        ) : index === 2 ? (
           <KeyboardAwareScrollView
             style={styles.content}
             enableOnAndroid
@@ -142,7 +142,7 @@ const ImportWallet = () => {
               );
             })}
           </KeyboardAwareScrollView>
-        ) : index == 3 ? (
+        ) : index === 3 ? (
           <KeyboardAwareScrollView
             style={styles.content}
             enableOnAndroid
