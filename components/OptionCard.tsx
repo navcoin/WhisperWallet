@@ -18,8 +18,11 @@ interface OptionProps {
   selected: string;
   id: string;
   icon: string;
-  iconColor: string;
+  iconColor?: string;
   showArrow?: boolean;
+  backgroundSelected?: string;
+  backgroundDefault?: string;
+  animation?: Animation_Types_Enum;
 }
 
 const OptionCard = ({
@@ -31,13 +34,18 @@ const OptionCard = ({
   icon,
   iconColor,
   showArrow,
+  backgroundSelected,
+  backgroundDefault,
+  animation,
 }: OptionProps) => {
   const theme = useTheme();
 
   const {text} = item;
 
   return (
-    <AnimatedAppearance type={Animation_Types_Enum.SlideInRight} index={index}>
+    <AnimatedAppearance
+      type={animation || Animation_Types_Enum.SlideInRight}
+      index={index}>
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={onPress}
@@ -46,17 +54,19 @@ const OptionCard = ({
           {
             backgroundColor:
               selected == text || (id && selected == id)
-                ? theme['background-basic-color-4']
-                : theme['background-basic-color-2'],
+                ? backgroundSelected || theme['background-basic-color-4']
+                : backgroundDefault || theme['background-basic-color-2'],
           },
         ]}>
         <View style={styles.content}>
           <View style={styles.walletIcon}>
-            <Icon
-              pack="assets"
-              name={icon || 'creditCard'}
-              style={{tintColor: iconColor || theme['icon-basic-color']}}
-            />
+            {icon != 'none' && (
+              <Icon
+                pack="assets"
+                name={icon || 'creditCard'}
+                style={{tintColor: iconColor || theme['icon-basic-color']}}
+              />
+            )}
           </View>
           <View>
             <Text category="headline">{text ? text : ''}</Text>

@@ -6,6 +6,7 @@ export const Icons = {
   upArrow: require('./ic_up_arrow.png'),
   downArrow: require('./ic_down_arrow.png'),
   downArr: require('./ic_arr_down_16.png'),
+  upArr: require('./ic_arr_up_16.png'),
   cancel: require('./ic_cancel.png'),
   headphone: require('./ic_headphones.png'),
   question: require('./ic_question.png'),

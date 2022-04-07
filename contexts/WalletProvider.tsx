@@ -189,7 +189,7 @@ export const WalletProvider = (props: any) => {
         type: type,
         password: password,
         spendingPassword: spendingPassword,
-        zapwallettxes: true,
+        zapwallettxes: zapwallettxes,
         log: log,
         network: network_,
         indexedDB: win.indexedDB,

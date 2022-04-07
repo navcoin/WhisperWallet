@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, Input, useTheme} from '@ui-kitten/components';
+import {Button, Icon, Input, useTheme} from '@ui-kitten/components';
 import {useNavigation} from '@react-navigation/native';
 
 import Text from '../components/Text';
@@ -10,20 +10,22 @@ import useWallet from '../hooks/useWallet';
 import Loading from '../components/Loading';
 import useNjs from '../hooks/useNjs';
 import {Picker} from '@react-native-picker/picker';
-import {NetworkTypes} from '../constants/Type';
+import {Animation_Types_Enum, NetworkTypes} from '../constants/Type';
 import OptionCard from '../components/OptionCard';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useKeychain from '../utils/Keychain';
 
 const OpenWallet = () => {
   const {goBack, navigate} = useNavigation();
-  const {width, bottom} = useLayout();
+  const theme = useTheme();
   const [walletName, setWalletName] = useState('');
   const {createWallet} = useWallet();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const {njs} = useNjs();
   const {read} = useKeychain();
+  const [resync, setResync] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
 
   const [walletList, setWalletList] = useState<any>([]);
 
@@ -65,7 +67,7 @@ const OpenWallet = () => {
                         '',
                         password,
                         password,
-                        false,
+                        resync,
                         true,
                         'mainnet',
                         () => {
@@ -81,7 +83,6 @@ const OpenWallet = () => {
             );
           })}
         </KeyboardAwareScrollView>
-
         {error ? (
           <Text style={{color: 'red', flex: 1}} center key={'error'}>
             {error}
@@ -89,6 +90,43 @@ const OpenWallet = () => {
         ) : (
           <></>
         )}
+
+        <View style={[styles.contentBottom]}>
+          <View
+            onTouchEnd={() => {
+              setShowOptions(!showOptions);
+            }}>
+            <Icon
+              pack="assets"
+              name={showOptions ? 'downArr' : 'upArr'}
+              style={[
+                styles.icon,
+                {
+                  alignSelf: 'center',
+                  marginBottom: 24,
+                  tintColor: theme['icon-basic-color'],
+                },
+              ]}
+            />
+            <Text category="title4" center marginBottom={16}>
+              Options
+            </Text>
+          </View>
+          {showOptions && (
+            <OptionCard
+              animation={Animation_Types_Enum.SlideBottom}
+              key={'resync'}
+              id={'resync'}
+              item={{text: 'Clear history and resync'}}
+              index={0}
+              icon={resync == true ? 'check' : 'none'}
+              selected={resync == true ? 'Clear history and resync' : ''}
+              onPress={() => {
+                setResync(!resync);
+              }}
+            />
+          )}
+        </View>
       </View>
     </Container>
   );
@@ -122,8 +160,12 @@ const styles = StyleSheet.create({
   inputPhone: {
     marginVertical: 20,
   },
+  contentBottom: {
+    marginHorizontal: 24,
+  },
   content: {
     marginHorizontal: 24,
+    marginBottom: 24,
   },
   flexRow: {
     flexDirection: 'row',
@@ -155,5 +197,9 @@ const styles = StyleSheet.create({
     marginTop: 32,
     marginHorizontal: 12,
     height: 21,
+  },
+  icon: {
+    width: 16,
+    height: 16,
   },
 });

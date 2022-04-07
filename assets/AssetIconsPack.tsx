@@ -32,6 +32,7 @@ const AssetIconsPack: IconPack<ImageProps | SvgProps> = {
     upArrow: createIcon(Icons.upArrow),
     downArrow: createIcon(Icons.downArrow),
     downArr: createIcon(Icons.downArr),
+    upArr: createIcon(Icons.upArr),
     website: createIcon(Icons.website),
     cancel: createIcon(Icons.cancel),
     headphone: createIcon(Icons.headphone),
