@@ -18,6 +18,7 @@ interface SettingsItem {
   onPress: () => void;
   icon?: string;
   color?: string;
+  show?: boolean;
 }
 
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
@@ -68,8 +69,8 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       if (deleteWallet) {
         await njs.wallet.WalletFile.RemoveWallet(walletName);
       }
+      navigate('Intro');
     }
-    navigate('Intro');
   };
 
   const deleteWallet = () => {
@@ -91,6 +92,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     {
       title: 'Show Mnemonic',
       icon: 'padLock',
+      show: true,
       onPress: () => {
         navigate('Wallet', {
           screen: 'MnemonicScreen',
@@ -100,11 +102,13 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     {
       title: 'Biometrics Configuration',
       icon: 'eye',
+      show: true,
       onPress: () => biometricsAlert(),
     },
     {
       title: 'Setup Electrum Servers',
       icon: 'book',
+      show: true,
       onPress: () => {
         navigate('Wallet', {
           screen: 'ServersScreen',
@@ -114,11 +118,13 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     {
       title: 'Delete Wallet',
       icon: 'cancel',
+      show: connected === Connection_Stats_Enum.Connected,
       onPress: () => deleteWallet(),
     },
     {
       title: 'Close Wallet',
       icon: 'undo',
+      show: connected === Connection_Stats_Enum.Connected,
       onPress: () => leaveWallet(),
     },
   ];
@@ -128,6 +134,9 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       <TopNavigation title={'Settings'} />
       <View style={styles.contentWrapper}>
         {items.map((item, index) => {
+          if (!item.show) {
+            return <View key={index} />;
+          }
           return (
             <OptionCard
               key={index}
