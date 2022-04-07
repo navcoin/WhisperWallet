@@ -3,7 +3,7 @@
  */
 
 import React, {useEffect, useRef, useState} from 'react';
-import {AppState, StatusBar} from 'react-native';
+import {StatusBar} from 'react-native';
 import {patchFlatListProps} from 'react-native-web-refresh-control';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -45,13 +45,8 @@ const App = () => {
   const [loaded, setLoaded] = useState(false);
   const {setNjs, setP2pPool} = useNjs();
   const {setWin} = useWin();
-  const {lockedScreen, setLockedScreen} = useLockedScreen();
+
   const [shownWelcome, setShownWelcome] = useState('false');
-  const [lockAfterBackground, setLockAfterBackground] = useAsyncStorage(
-    'lockAfterBackground',
-    'false',
-  );
-  const {refreshWallet} = useWallet();
 
   useEffect(() => {
     AsyncStorage.getItem('shownWelcome').then(itemValue => {
@@ -60,39 +55,6 @@ const App = () => {
       }
     });
   }, []);
-
-  const appState = useRef(AppState.currentState);
-
-  const [appStateVisible, setAppStateVisible] = useState(appState.current);
-
-  useEffect(() => {
-    if (appStateVisible == 'active' && lockedScreen) {
-      LocalAuth((error: any) => {
-        if (!error) {
-          setLockedScreen(false);
-        } else {
-          setLockedScreen(true);
-        }
-      });
-    }
-  }, [appStateVisible]);
-
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', nextAppState => {
-      if (appState.current.match(/background/) && nextAppState === 'active') {
-        refreshWallet();
-        if (lockAfterBackground === 'true') {
-          setLockedScreen(true);
-        }
-      }
-      appState.current = nextAppState;
-      setAppStateVisible(appState.current);
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, [lockAfterBackground]);
 
   const toggleTheme = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
