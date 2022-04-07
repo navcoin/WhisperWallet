@@ -1,5 +1,6 @@
+import isValidHostname from 'is-valid-hostname';
 const validateIp = (host: string) => {
-  return host.match(/\./g).length === 3;
+  return isValidHostname(host);
 };
 
 const validatePort = (port: number) => {
