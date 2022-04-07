@@ -21,7 +21,7 @@ import {Destination_Types_Enum} from '../../constants/Type';
 import DialogInput from 'react-native-dialog-input';
 import BottomSheetProvider from '../../contexts/BottomSheetProvider';
 import DestinationComponent from '../../components/DestinationComponent';
-import {QrProvider} from '../../components/QrProvider';
+import {QrProvider} from '../../contexts/QrProvider';
 import SendTransactionButton from '../../components/SendTransactionButton';
 
 const SendTo = (props: any) => {
