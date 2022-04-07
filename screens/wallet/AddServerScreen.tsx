@@ -1,5 +1,5 @@
 import useWallet from '../../hooks/useWallet';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {
   Button,
@@ -9,7 +9,6 @@ import {
   Layout,
   Select,
   SelectItem,
-  Text as KittenText,
   TopNavigation,
   TopNavigationAction,
 } from '@ui-kitten/components';
@@ -17,8 +16,6 @@ import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {ServerOption} from '../../constants/Type';
 import Text from '../../components/Text';
-import OptionCard from '../../components/OptionCard';
-import BottomSheetView from '../../components/BottomSheetView';
 import useNjs from '../../hooks/useNjs';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
@@ -89,7 +86,6 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
       !newServer?.proto ||
       !newServer?.type
     ) {
-      debugger;
       setError('Please input  server details.');
       return;
     }

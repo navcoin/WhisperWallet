@@ -104,7 +104,7 @@ const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
               }}
               selected={''}
               onPress={() => {}}
-              iconRight={editMode ? 'download' : undefined}
+              iconRight={editMode ? 'bin' : undefined}
               iconRightOnPress={() => {
                 removeServer(index);
               }}
