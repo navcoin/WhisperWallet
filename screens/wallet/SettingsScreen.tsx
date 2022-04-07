@@ -34,7 +34,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
 
   const biometricsAlert = () => {
     let title = 'Your wallet is NOT locked when WhisperWallet goes background.';
-    if (lockAfterBackground) {
+    if (lockAfterBackground === 'true') {
       title =
         'Your wallet is currently locked when WhisperWallet goes background.';
     }
