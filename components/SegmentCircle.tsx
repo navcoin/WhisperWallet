@@ -13,6 +13,8 @@ const SegmentCircle = ({
   animationDuration,
   animated,
   arcWidth,
+  background,
+  initialRotation,
 }: SegmentCircleProps) => {
   const theme = useTheme();
   const [segments, setSegments] = useState<Segment[]>([]);
@@ -44,7 +46,6 @@ const SegmentCircle = ({
   }, [segmentsSource]);
 
   /* Arcs Calculation*/
-  const initialRotation = 180;
   const totalArcs = segments.filter((el: any) => el.size > 0).length;
   const totalSpacing = totalArcs > 1 ? totalArcs * minArcSpacing : 0;
   const totalSegmentSize = segments
@@ -92,6 +93,19 @@ const SegmentCircle = ({
 
   return (
     <>
+      {background && (
+        <AnimatedCircularProgress
+          index={9999}
+          tintColor={background}
+          size={svgWidth}
+          width={6}
+          lineCap={'round'}
+          rotation={initialRotation}
+          fill={totalArcSize}
+          backgroundColor="transparent"
+          style={styles.absolute}
+        />
+      )}
       {segments.map((segment, index) => {
         const arcSweepAngle = calculateSegmentSize(segment.size);
         let rotation = 0 + initialRotation + minArcSpacing * index;
@@ -134,8 +148,10 @@ interface SegmentCircleProps {
   maxArcSize: number;
   radius: number;
   color: string;
+  background?: string;
   animationDuration: number;
   animated: boolean;
+  initialRotation: number;
 }
 
 SegmentCircle.propTypes = {
@@ -152,6 +168,7 @@ SegmentCircle.propTypes = {
   color: PropTypes.string,
   animationDuration: PropTypes.number,
   animated: PropTypes.bool,
+  initialRotation: PropTypes.number,
 };
 
 SegmentCircle.defaultProps = {
@@ -163,6 +180,7 @@ SegmentCircle.defaultProps = {
   animationDuration: 1000,
   animated: true,
   maxArcSize: 360,
+  initialRotation: 180,
 };
 
 export default SegmentCircle;
