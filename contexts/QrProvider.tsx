@@ -32,7 +32,7 @@ export const QrProvider = (props: any) => {
         <QRCodeScanner
           onRead={data => {
             let toParse = data.data;
-            if (data.data?.substring(0, 8) == 'navcoin:')
+            if (data.data?.substring(0, 8) === 'navcoin:')
               toParse = data.data.split(':')[1];
             if (bitcore.Address.isValid(toParse)) {
               setTo(toParse);
