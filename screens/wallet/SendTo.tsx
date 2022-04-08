@@ -31,7 +31,7 @@ const SendTo = (props: any) => {
   const [toType, setToType] = useState(props.route.params.toType);
   const [memo, setMemo] = useState('');
   const {bottom} = useSafeAreaInsets();
-  const [amount, setAmount] = useState(0);
+  const [amountInString, setAmount] = useState('0');
   const [showMemo, setShowMemo] = useState(false);
   const [subtractFee, setSubtractFee] = useState(false);
   const {bitcore, accounts, walletName} = useWallet();
@@ -41,8 +41,11 @@ const SendTo = (props: any) => {
 
   const currentAmount = useMemo(() => {
     let el = accounts?.filter(el => el.type_id == from)[0];
-    if (!el) return 0;
-    else return el.amount;
+    if (!el) {
+      return 0;
+    } else {
+      return el.amount;
+    }
   }, [from, accounts]);
 
   useEffect(() => {
@@ -50,13 +53,16 @@ const SendTo = (props: any) => {
       toType == Destination_Types_Enum.Address &&
       to &&
       bitcore.Address(to).isXnav()
-    )
+    ) {
       setShowMemo(true);
+    }
   }, [to, toType]);
 
   useEffect(() => {
-    if (amount == currentAmount) setSubtractFee(true);
-  }, [amount, currentAmount]);
+    if (parseFloat(amountInString) === currentAmount) {
+      setSubtractFee(true);
+    }
+  }, [amountInString, currentAmount]);
 
   return (
     <BottomSheetProvider>
@@ -75,7 +81,8 @@ const SendTo = (props: any) => {
             }}
             closeDialog={() => {
               showMemoDialog(false);
-            }}></DialogInput>
+            }}
+          />
           <TopNavigation title="Send coins" />
           <Content contentContainerStyle={styles.contentContainerStyle}>
             <CardSelect
@@ -91,20 +98,24 @@ const SendTo = (props: any) => {
                 let el = accounts?.filter(
                   el => el.type_id == props.route.params.from,
                 )[0];
-                if (!el) return '';
+                if (!el) {
+                  return '';
+                }
                 return (
                   el.name + ' Wallet (' + el.amount + ' ' + el.currency + ')'
                 );
               })()}
               onSelect={el => {
                 setFrom(el.type);
-              }}></CardSelect>
+              }}
+            />
 
             <DestinationComponent
               setTo={setTo}
               from={from}
               toType={toType}
-              setToType={setToType}></DestinationComponent>
+              setToType={setToType}
+            />
 
             {showMemo && (
               <View>
@@ -147,17 +158,21 @@ const SendTo = (props: any) => {
               <Layout level="2" style={styles.card}>
                 <View style={styles.row}>
                   <Text category="headline">Amount</Text>
-                  <Text category="headline" uppercase></Text>
+                  <Text category="headline" uppercase />
                 </View>
                 <View style={styles.cardNumber}>
                   <Input
                     ref={amountInputRef}
-                    keyboardType={'numbers-and-punctuation'}
+                    keyboardType={'decimal-pad'}
                     status={'transparent'}
                     style={styles.flex1}
-                    value={amount.toString()}
-                    onChangeText={(m: string) => {
-                      setAmount(parseFloat(m) || 0);
+                    value={amountInString}
+                    onChangeText={(text: string) => {
+                      let t = 0;
+                      let res = text.replace(/\./g, match =>
+                        ++t === 2 ? '' : match,
+                      );
+                      setAmount(res.trim());
                     }}
                   />
                   <View
@@ -180,9 +195,10 @@ const SendTo = (props: any) => {
               walletName={walletName}
               from={from}
               to={to}
-              amount={amount}
+              amount={parseFloat(amountInString)}
               memo={memo}
-              subtractFee={subtractFee}></SendTransactionButton>
+              subtractFee={subtractFee}
+            />
           </Layout>
         </QrProvider>
       </Container>
