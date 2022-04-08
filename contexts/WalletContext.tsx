@@ -24,6 +24,7 @@ export interface WalletContextValue {
   parsedAddresses: AddressFragment[];
   createTransaction: any;
   sendTransaction: (tx: any) => Promise<any>;
+  firstSyncCompleted: boolean;
 }
 
 export const WalletContext = createContext<WalletContextValue | undefined>(

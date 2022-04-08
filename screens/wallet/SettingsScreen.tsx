@@ -1,5 +1,5 @@
 import useWallet from '../../hooks/useWallet';
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View, Alert} from 'react-native';
 import {TopNavigation} from '@ui-kitten/components';
 import Container from '../../components/Container';
@@ -12,6 +12,8 @@ import OptionCard from '../../components/OptionCard';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import useNjs from '../../hooks/useNjs';
+import useKeychain from '../../utils/Keychain';
+import Loading from '../../components/Loading';
 
 interface SettingsItem {
   title: string;
@@ -22,10 +24,13 @@ interface SettingsItem {
 }
 
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
-  const {walletName, wallet, connected} = useWallet();
+  const [loading, setLoading] = useState(false);
+  const {read} = useKeychain();
+  const {walletName, wallet, createWallet} = useWallet();
   const {njs} = useNjs();
 
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+  const {navigate, goBack} =
+    useNavigation<NavigationProp<RootStackParamList>>();
 
   const [lockAfterBackground, setLockAfterBackground] = useAsyncStorage(
     'lockAfterBackground',
@@ -63,14 +68,12 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   };
 
   const disconnectWallet = async (deleteWallet: boolean = false) => {
-    if (connected === Connection_Stats_Enum.Connected) {
-      wallet.Disconnect();
-      wallet.CloseDb();
-      if (deleteWallet) {
-        await njs.wallet.WalletFile.RemoveWallet(walletName);
-      }
-      navigate('Intro');
+    wallet.Disconnect();
+    wallet.CloseDb();
+    if (deleteWallet) {
+      await njs.wallet.WalletFile.RemoveWallet(walletName);
     }
+    navigate('Intro');
   };
 
   const deleteWallet = () => {
@@ -84,6 +87,28 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
         onPress: () => {},
       },
     ]);
+  };
+
+  const resyncWallet = () => {
+    setLoading(true);
+    wallet.Disconnect();
+    wallet.CloseDb();
+    read(walletName).then((password: string) => {
+      createWallet(
+        walletName,
+        '',
+        '',
+        password,
+        password,
+        true,
+        true,
+        '',
+        () => {
+          setLoading(false);
+          goBack();
+        },
+      );
+    });
   };
 
   const leaveWallet = () => disconnectWallet();
@@ -116,6 +141,12 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       },
     },
     {
+      title: 'Clear history and resync',
+      icon: 'refresh',
+      show: true,
+      onPress: () => resyncWallet(),
+    },
+    {
       title: 'Delete Wallet',
       icon: 'cancel',
       show: true,
@@ -131,6 +162,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
 
   return (
     <Container useSafeArea>
+      <Loading loading={loading} />
       <TopNavigation title={'Settings'} />
       <View style={styles.contentWrapper}>
         {items.map((item, index) => {
