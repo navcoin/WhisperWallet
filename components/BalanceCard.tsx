@@ -10,7 +10,9 @@ import {
   Animation_Types_Enum,
   Balance_Types_Enum,
   BalanceFragment,
+  Connection_Stats_Enum,
 } from '../constants/Type';
+import useWallet from '../hooks/useWallet';
 
 interface BalanceProps {
   item: BalanceFragment;
@@ -20,6 +22,7 @@ interface BalanceProps {
 
 const BalanceCard = ({item, index, onPress}: BalanceProps) => {
   const theme = useTheme();
+  const {connected, syncProgress, syncing} = useWallet();
 
   const {name, amount, pending_amount, type_id} = item;
 
@@ -49,13 +52,19 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
           </View>
           <View>
             <Text category="headline">{name}</Text>
-            <CurrencyText
-              category="footnote"
-              children={amount + pending_amount}
-              marginTop={4}
-              type={type_id}
-              formatType={type_id}
-            />
+            {connected === Connection_Stats_Enum.Connecting ? (
+              <Text style={{fontSize: 13}}>Connecting...</Text>
+            ) : syncing || syncProgress === 0 ? (
+              <Text style={{fontSize: 13}}>Synchronizing...</Text>
+            ) : (
+              <CurrencyText
+                category="footnote"
+                children={amount + pending_amount}
+                marginTop={4}
+                type={type_id}
+                formatType={type_id}
+              />
+            )}
           </View>
         </View>
         <Icon
