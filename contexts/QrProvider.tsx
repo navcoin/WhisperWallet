@@ -2,7 +2,7 @@ import React, {useMemo, useState} from 'react';
 import {StyleService, useStyleSheet} from '@ui-kitten/components';
 import {QrContextValue, QrContext} from './QrContext';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import Text from './Text';
+import Text from '../components/Text';
 import {TouchableOpacity} from 'react-native';
 import useWallet from '../hooks/useWallet';
 
@@ -31,8 +31,11 @@ export const QrProvider = (props: any) => {
       {showQr ? (
         <QRCodeScanner
           onRead={data => {
-            if (bitcore.Address.isValid(data.data)) {
-              setTo(data.data);
+            let toParse = data.data;
+            if (data.data?.substring(0, 8) === 'navcoin:')
+              toParse = data.data.split(':')[1];
+            if (bitcore.Address.isValid(toParse)) {
+              setTo(toParse);
               setShowQr(false);
               setQrError('');
             } else {
