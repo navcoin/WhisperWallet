@@ -37,17 +37,17 @@ const OnBoardingPage = memo(() => {
     translationX.value = event.contentOffset.x;
   });
   const snapToOffsets = [0, 400];
-  const style = useAnimatedStyle(() => {
+  /*const style = useAnimatedStyle(() => {
     const backgroundColor = interpolateColor(
       translationX.value,
       OnBoarding.map((_, i) => (width - 50) * i),
       OnBoarding.map(product => product.color),
     ) as string;
     return {backgroundColor, flex: 1};
-  });
+  });*/
   return (
     <Container style={styles.container}>
-      <View style={[{height: height}, style]}>
+      <View style={[{height: height}, {flex: 1}]}>
         <Animated.ScrollView
           onScroll={scrollHandler}
           scrollEventThrottle={16}
