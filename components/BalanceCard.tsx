@@ -53,9 +53,9 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
           <View>
             <Text category="headline">{name}</Text>
             {connected === Connection_Stats_Enum.Connecting ? (
-              <Text>Connecting...</Text>
+              <Text style={{fontSize: 13}}>Connecting...</Text>
             ) : syncing || syncProgress === 0 ? (
-              <Text>Synchronizing...</Text>
+              <Text style={{fontSize: 13}}>Synchronizing...</Text>
             ) : (
               <CurrencyText
                 category="footnote"
