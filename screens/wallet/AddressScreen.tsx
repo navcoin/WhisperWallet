@@ -42,7 +42,7 @@ const AddressScreen = (props: any) => {
               marginBottom: 32,
             }}>
             {address ? (
-              <QRCode value={address} size={(width * 7) / 9} />
+              <QRCode value={'navcoin:' + address} size={(width * 7) / 9} />
             ) : (
               <></>
             )}

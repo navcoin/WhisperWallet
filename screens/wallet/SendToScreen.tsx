@@ -21,7 +21,7 @@ import {Destination_Types_Enum} from '../../constants/Type';
 import DialogInput from 'react-native-dialog-input';
 import BottomSheetProvider from '../../contexts/BottomSheetProvider';
 import DestinationComponent from '../../components/DestinationComponent';
-import {QrProvider} from '../../components/QrProvider';
+import {QrProvider} from '../../contexts/QrProvider';
 import SendTransactionButton from '../../components/SendTransactionButton';
 
 const SendToScreen = (props: any) => {
@@ -31,7 +31,7 @@ const SendToScreen = (props: any) => {
   const [toType, setToType] = useState(props.route.params.toType);
   const [memo, setMemo] = useState('');
   const {bottom} = useSafeAreaInsets();
-  const [amount, setAmount] = useState(0);
+  const [amountInString, setAmount] = useState('0');
   const [showMemo, setShowMemo] = useState(false);
   const [subtractFee, setSubtractFee] = useState(false);
   const {bitcore, accounts, walletName} = useWallet();
@@ -59,10 +59,10 @@ const SendToScreen = (props: any) => {
   }, [to, toType]);
 
   useEffect(() => {
-    if (amount == currentAmount) {
+    if (parseFloat(amountInString) === currentAmount) {
       setSubtractFee(true);
     }
-  }, [amount, currentAmount]);
+  }, [amountInString, currentAmount]);
 
   return (
     <BottomSheetProvider>
@@ -163,12 +163,16 @@ const SendToScreen = (props: any) => {
                 <View style={styles.cardNumber}>
                   <Input
                     ref={amountInputRef}
-                    keyboardType={'numbers-and-punctuation'}
+                    keyboardType={'decimal-pad'}
                     status={'transparent'}
                     style={styles.flex1}
-                    value={amount.toString()}
-                    onChangeText={(m: string) => {
-                      setAmount(parseFloat(m) || 0);
+                    value={amountInString}
+                    onChangeText={(text: string) => {
+                      let t = 0;
+                      let res = text.replace(/\./g, match =>
+                        ++t === 2 ? '' : match,
+                      );
+                      setAmount(res.trim());
                     }}
                   />
                   <View
@@ -191,7 +195,7 @@ const SendToScreen = (props: any) => {
               walletName={walletName}
               from={from}
               to={to}
-              amount={amount}
+              amount={parseFloat(amountInString)}
               memo={memo}
               subtractFee={subtractFee}
             />

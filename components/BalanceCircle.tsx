@@ -1,12 +1,11 @@
 import SegmentCircle from './SegmentCircle';
-import Text from './Text';
 import {View} from 'react-native';
-import CurrencyText from './CurrencyText';
 import React, {memo, useEffect, useState} from 'react';
 import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
-import {Icon, useTheme} from '@ui-kitten/components';
+import {useTheme, Text} from '@ui-kitten/components';
 import {Connection_Stats_Enum} from '../constants/Type';
+import CurrencyText from './CurrencyText';
 
 const BalanceCircle = memo(() => {
   const {width} = useLayout();
@@ -23,6 +22,23 @@ const BalanceCircle = memo(() => {
     },
   ]);
   const [totalBalance, setTotalBalance] = useState(0);
+  const [rotation, setRotation] = useState(180);
+  const [timer, setTimer] = useState<any>(undefined);
+
+  useEffect(() => {
+    if (connected != Connection_Stats_Enum.Connecting || syncProgress > 0) {
+      setRotation(180);
+      clearInterval(timer);
+    } else {
+      setTimer(
+        setInterval(() => {
+          setRotation(prev => {
+            return prev + 2;
+          });
+        }, 10),
+      );
+    }
+  }, [connected]);
 
   useEffect(() => {
     if (balances?.nav) {
@@ -60,9 +76,28 @@ const BalanceCircle = memo(() => {
         marginBottom: 16,
       }}>
       <SegmentCircle
+        initialRotation={rotation}
         radius={width / 2 - 100}
+        background={
+          connected == Connection_Stats_Enum.Connecting ||
+          syncing ||
+          syncProgress === 0
+            ? theme['color-basic-800']
+            : undefined
+        }
         segmentsSource={
-          syncing || syncProgress === 0
+          connected == Connection_Stats_Enum.Connecting || syncProgress === 0
+            ? [
+                {
+                  size: 5,
+                  color: theme['color-nav-pink'],
+                },
+                {
+                  size: 95,
+                  color: 'transparent',
+                },
+              ]
+            : syncing
             ? [
                 {
                   size: syncProgress,
@@ -76,7 +111,11 @@ const BalanceCircle = memo(() => {
             : balanceSegments
         }
       />
-      {syncing || syncProgress === 0 ? (
+      {connected == Connection_Stats_Enum.Connecting ? (
+        <Text style={{position: 'absolute', textAlign: 'center'}}>
+          Connecting...
+        </Text>
+      ) : syncing || syncProgress === 0 ? (
         <Text style={{position: 'absolute', textAlign: 'center'}}>
           Synchronizing...{'\n'}
           {syncProgress}%

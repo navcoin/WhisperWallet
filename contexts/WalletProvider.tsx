@@ -366,7 +366,11 @@ export const WalletProvider = (props: any) => {
 
   const refreshWallet = useCallback(async () => {
     if (wallet) {
-      await wallet.Sync();
+      try {
+        await wallet.Sync();
+      } catch (e) {
+        console.log(e);
+      }
     }
   }, [wallet]);
 
