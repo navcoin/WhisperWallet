@@ -49,7 +49,7 @@ const ImportWallet = () => {
 
   return (
     <Container useSafeArea>
-      <Loading loading={loading}></Loading>
+      <Loading loading={loading} />
       <Text category="title1" center marginTop={32}>
         Import wallet
       </Text>
@@ -70,10 +70,12 @@ const ImportWallet = () => {
                 <OptionCard
                   item={{text: el[1]}}
                   index={index}
+                  icon={'creditCard'}
                   onPress={() => {
                     setType(el[0]);
                     setIndex(1);
-                  }}></OptionCard>
+                  }}
+                />
               );
             })}
           </KeyboardAwareScrollView>
@@ -131,10 +133,12 @@ const ImportWallet = () => {
                   key={el[0]}
                   item={{text: el[1]}}
                   index={index}
+                  icon={'creditCard'}
                   onPress={() => {
                     setNetwork(el[0]);
                     setIndex(3);
-                  }}></OptionCard>
+                  }}
+                />
               );
             })}
           </KeyboardAwareScrollView>

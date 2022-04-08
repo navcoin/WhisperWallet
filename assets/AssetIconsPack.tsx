@@ -58,6 +58,7 @@ const AssetIconsPack: IconPack<ImageProps | SvgProps> = {
     edit: createIcon(Icons.edit),
     star: createIcon(Icons.star),
     download: createIcon(Icons.download),
+    bin: createIcon(Icons.bin),
     upload: createIcon(Icons.upload),
     paperPlane: createIcon(Icons.paperPlane),
     link: createIcon(Icons.link),

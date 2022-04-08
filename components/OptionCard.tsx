@@ -1,5 +1,11 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Icon, useTheme} from '@ui-kitten/components';
 
 import Text from './Text';
@@ -11,15 +17,19 @@ interface ItemProps {
   text: string;
 }
 
+type CardStyle = 'outline' | 'fill';
 interface OptionProps {
   item: ItemProps;
-  onPress?(): void;
   index: number;
   selected: string;
   id: string;
-  icon: string;
-  iconColor: string;
-  showArrow?: boolean;
+  color: string;
+  icon?: string;
+  onPress?: () => void;
+  iconRight?: string;
+  iconRightOnPress?: () => void;
+  animationType?: Animation_Types_Enum;
+  cardType?: 'outline' | 'fill';
 }
 
 const OptionCard = ({
@@ -29,46 +39,75 @@ const OptionCard = ({
   selected,
   id,
   icon,
-  iconColor,
-  showArrow,
+  color,
+  iconRight,
+  iconRightOnPress,
+  animationType = Animation_Types_Enum.SlideInRight,
+  cardType = 'fill',
 }: OptionProps) => {
   const theme = useTheme();
 
   const {text} = item;
+  const isSelected = selected === text || (id && selected === id);
+
+  const setContainerStyle = (type: CardStyle): ViewStyle => {
+    const styleResult = {};
+    if (type === 'fill') {
+      Object.assign(styleResult, {
+        backgroundColor: isSelected
+          ? theme['background-basic-color-4']
+          : theme['background-basic-color-2'],
+        borderColor: 'transparent',
+      });
+    }
+    if (type === 'outline') {
+      Object.assign(styleResult, {
+        borderStyle: 'dashed',
+        borderColor: '#FFFFFF99',
+      });
+    }
+    return styleResult;
+  };
 
   return (
-    <AnimatedAppearance type={Animation_Types_Enum.SlideInRight} index={index}>
+    <AnimatedAppearance type={animationType} index={index}>
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={onPress}
-        style={[
-          styles.container,
-          {
-            backgroundColor:
-              selected == text || (id && selected == id)
-                ? theme['background-basic-color-4']
-                : theme['background-basic-color-2'],
-          },
-        ]}>
-        <View style={styles.content}>
-          <View style={styles.walletIcon}>
-            <Icon
-              pack="assets"
-              name={icon || 'creditCard'}
-              style={{tintColor: iconColor || theme['icon-basic-color']}}
-            />
-          </View>
-          <View>
-            <Text category="headline">{text ? text : ''}</Text>
-          </View>
+        style={[styles.container, setContainerStyle(cardType)]}>
+        <View style={styles.contentWrapper}>
+          {icon ? (
+            <View style={[styles.iconWrapper, styles.leftIconWrapper]}>
+              <Icon
+                pack="assets"
+                name={icon || 'creditCard'}
+                style={[
+                  styles.icon,
+                  {tintColor: color || theme['icon-basic-color']},
+                ]}
+              />
+            </View>
+          ) : null}
+          <Text
+            numberOfLines={3}
+            style={[styles.content, {color: color || 'white'}]}
+            category="headline">
+            {text ? text : ''}
+          </Text>
+          {iconRight ? (
+            <View style={[styles.iconWrapper, styles.rightIconWrapper]}>
+              <TouchableOpacity
+                style={[styles.rightIconTouchables]}
+                onPress={iconRightOnPress}>
+                <Icon
+                  pack="assets"
+                  name={iconRight}
+                  style={[styles.icon, {tintColor: theme['icon-basic-color']}]}
+                />
+              </TouchableOpacity>
+            </View>
+          ) : null}
         </View>
-        {showArrow && (
-          <Icon
-            pack="assets"
-            name="arrowRight16"
-            style={[styles.icon, {tintColor: theme['icon-basic-color']}]}
-          />
-        )}
       </TouchableOpacity>
     </AnimatedAppearance>
   );
@@ -79,29 +118,41 @@ export default OptionCard;
 const styles = StyleSheet.create({
   container: {
     borderRadius: 12,
+    paddingHorizontal: 12,
     paddingVertical: 10,
-    paddingLeft: 10,
-    paddingRight: 21,
     marginBottom: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderWidth: 1,
   },
-  content: {
+  contentWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifySelf: 'stretch',
+    flexWrap: 'nowrap',
+    flex: 1,
   },
-  walletIcon: {
-    width: 48,
-    height: 48,
+  icon: {
+    width: 24,
+    height: 24,
+  },
+  content: {
+    flex: 1,
+  },
+  iconWrapper: {
     borderRadius: 48,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 12,
+  },
+  leftIconWrapper: {
     marginRight: 16,
   },
-  icon: {
-    width: 16,
-    height: 16,
+  rightIconWrapper: {
+    marginLeft: 16,
   },
-  card: {},
+  rightIconTouchables: {
+    justifyContent: 'center',
+  },
 });

@@ -1,23 +1,17 @@
 import * as React from 'react';
 import createStackNavigator from '../navigation/createStackNavigator';
 import {WalletParamList} from '../navigation/type';
-import Address from './wallet/Address';
-import SendTo from './wallet/SendTo';
-import Main from '../screens/wallet/Main';
-import History from './wallet/History';
-import ViewTx from './wallet/ViewTx';
+import AddressScreen from './wallet/AddressScreen';
+import SendToScreen from './wallet/SendToScreen';
+import MainWalletScreen from './wallet/MainWalletScreen';
+import HistoryScreen from './wallet/HistoryScreen';
+import ViewTxScreen from './wallet/ViewTxScreen';
+import SettingsScreen from './wallet/SettingsScreen';
+import MnemonicScreen from './wallet/MnemonicScreen';
+import AddServerScreen from './wallet/AddServerScreen';
+import ServersScreen from './wallet/ServersScreen';
 
 const Stack = createStackNavigator<WalletParamList>();
-
-export const WalletScreenGroup = 'Wallet';
-
-export const WalletScreenNames = {
-  SendTo: 'SendTo',
-  Main: 'Main',
-  Address: 'Address',
-  History: 'History',
-  ViewTx: 'ViewTx',
-};
 
 const Wallet = ({navigation}) => {
   return (
@@ -25,16 +19,20 @@ const Wallet = ({navigation}) => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName={'Main'}>
+      initialRouteName={'MainWalletScreen'}>
       <Stack.Screen
-        name="Main"
-        component={Main}
+        name={'MainWalletScreen'}
+        component={MainWalletScreen}
         options={{gestureEnabled: false}}
       />
-      <Stack.Screen name="SendTo" component={SendTo} />
-      <Stack.Screen name="Address" component={Address} />
-      <Stack.Screen name="History" component={History} />
-      <Stack.Screen name="ViewTx" component={ViewTx} />
+      <Stack.Screen name={'SendToScreen'} component={SendToScreen} />
+      <Stack.Screen name={'AddressScreen'} component={AddressScreen} />
+      <Stack.Screen name={'HistoryScreen'} component={HistoryScreen} />
+      <Stack.Screen name={'ViewTxScreen'} component={ViewTxScreen} />
+      <Stack.Screen name={'SettingsScreen'} component={SettingsScreen} />
+      <Stack.Screen name={'MnemonicScreen'} component={MnemonicScreen} />
+      <Stack.Screen name={'ServersScreen'} component={ServersScreen} />
+      <Stack.Screen name={'AddServerScreen'} component={AddServerScreen} />
     </Stack.Navigator>
   );
 };

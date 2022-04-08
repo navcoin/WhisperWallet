@@ -24,7 +24,7 @@ import DestinationComponent from '../../components/DestinationComponent';
 import {QrProvider} from '../../contexts/QrProvider';
 import SendTransactionButton from '../../components/SendTransactionButton';
 
-const SendTo = (props: any) => {
+const SendToScreen = (props: any) => {
   const styles = useStyleSheet(themedStyles);
   const [from, setFrom] = useState(props.route.params.from);
   const [to, setTo] = useState('');
@@ -206,7 +206,7 @@ const SendTo = (props: any) => {
   );
 };
 
-export default SendTo;
+export default SendToScreen;
 
 const themedStyles = StyleService.create({
   contentContainerStyle: {

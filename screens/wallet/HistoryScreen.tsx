@@ -5,7 +5,7 @@ import {View, StyleSheet} from 'react-native';
 import {TopNavigation} from '@ui-kitten/components';
 import Container from '../../components/Container';
 import Transaction from '../../components/Transaction';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {
   Connection_Stats_Enum,
   Connection_Stats_Text,
@@ -13,13 +13,13 @@ import {
 import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
 import useLayout from '../../hooks/useLayout';
-import {WalletScreenNames} from '../Wallet';
+import {RootStackParamList} from '../../navigation/type';
 
-const History = (props: any) => {
+const HistoryScreen = (props: any) => {
   const {width, height} = useLayout();
   const {history, connected} = useWallet();
 
-  const {navigate} = useNavigation();
+  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
   const [loadingStatusText, setLoadingStatus] =
     useState<Connection_Stats_Text>();
 
@@ -55,7 +55,7 @@ const History = (props: any) => {
       item={item}
       index={index}
       onPress={() => {
-        navigate('Wallet', {screen: WalletScreenNames.ViewTx, params: {item}});
+        navigate('Wallet', {screen: 'ViewTxScreen', params: {item}});
       }}
     />
   );
@@ -63,7 +63,7 @@ const History = (props: any) => {
   const goToAddressCoin = () => {
     if (props && props.navigation) {
       navigate('Wallet', {
-        screen: WalletScreenNames.Address,
+        screen: 'AddressScreen',
         params: {from: props.route.params.publicWallet},
       });
     }
@@ -99,7 +99,7 @@ const History = (props: any) => {
                 goToAddressCoin();
               }}
               icon={'download'}
-              iconColor={'white'}
+              color={'white'}
             />
           </View>
         </View>
@@ -113,7 +113,7 @@ const History = (props: any) => {
   );
 };
 
-export default History;
+export default HistoryScreen;
 
 const styles = StyleSheet.create({
   header: {

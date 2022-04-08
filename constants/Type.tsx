@@ -107,3 +107,11 @@ export interface TransactionFragment {
   category?: CategoryFragment;
   transaction_at?: number;
 }
+
+export type NetworkOption = 'testnet' | 'mainnet';
+export interface ServerOption {
+  host?: string;
+  port?: number;
+  proto?: 'tcp' | 'ssl' | 'ws' | 'wss';
+  type?: 'testnet' | 'mainnet';
+}
