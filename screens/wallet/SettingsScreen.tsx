@@ -141,7 +141,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       },
     },
     {
-      title: 'Clear history and resync',
+      title: 'Clear History and Resync',
       icon: 'refresh',
       show: true,
       onPress: () => resyncWallet(),
