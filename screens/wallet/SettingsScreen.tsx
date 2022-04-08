@@ -118,13 +118,13 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     {
       title: 'Delete Wallet',
       icon: 'cancel',
-      show: connected === Connection_Stats_Enum.Connected,
+      show: true,
       onPress: () => deleteWallet(),
     },
     {
       title: 'Close Wallet',
       icon: 'undo',
-      show: connected === Connection_Stats_Enum.Connected,
+      show: true,
       onPress: () => leaveWallet(),
     },
   ];
