@@ -11,7 +11,7 @@ import {RootStackParamList} from './type';
 import useNjs from '../hooks/useNjs';
 import useKeychain from '../utils/Keychain';
 
-const Intro = memo(() => {
+const Intro = memo(props => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
   const styles = useStyleSheet(themedStyles);
   const [walletList, setWalletList] = useState<any>([]);
@@ -19,10 +19,19 @@ const Intro = memo(() => {
   const {read} = useKeychain();
 
   useEffect(() => {
+    refreshWalletList();
+    const willFocusSubscription = props.navigation.addListener('focus', () => {
+      refreshWalletList();
+    });
+
+    return willFocusSubscription;
+  });
+
+  const refreshWalletList = () => {
     njs.wallet.WalletFile.ListWallets().then(list => {
       setWalletList(list);
     });
-  }, []);
+  };
 
   return (
     <Container style={styles.container}>
@@ -32,7 +41,7 @@ const Intro = memo(() => {
         style={styles.icon}
       />
 
-      <View style={styles.spacer}></View>
+      <View style={styles.spacer} />
 
       <Content style={styles.content}>
         <Text
@@ -43,7 +52,7 @@ const Intro = memo(() => {
           center>
           Privacy in the palm of your hands.
         </Text>
-        <View style={styles.spacer}></View>
+        <View style={styles.spacer} />
 
         {walletList.length > 0 ? (
           <Button
