@@ -37,7 +37,7 @@
     "indexeddbshim": "^9.0.0",
     "is-valid-hostname": "^1.0.2",
     "memoizee": "^0.4.15",
-    "navcoin-js": "^1.1.65",
+    "navcoin-js": "^1.1.66",
     "net": "^1.0.2",
     "node-libs-react-native": "^1.2.1",
     "numeral": "^2.0.6",
