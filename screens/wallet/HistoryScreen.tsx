@@ -64,17 +64,17 @@ const HistoryScreen = (props: any) => {
     if (props && props.navigation) {
       navigate('Wallet', {
         screen: 'AddressScreen',
-        params: {from: props.route.params.publicWallet},
+        params: {from: props.route.params.filter},
       });
     }
   };
 
   const condition = el => {
-    const fA = props.route.params.filter[1];
+    const fA = props.route.params.filter.address;
 
     return (
       el &&
-      el.type === props.route.params.filter[0] &&
+      el.type === props.route.params.filter.type_id &&
       (!fA ||
         (fA &&
           (el.addresses_in?.staking?.indexOf(fA) > -1 ||

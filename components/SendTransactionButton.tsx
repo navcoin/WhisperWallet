@@ -16,9 +16,10 @@ import {View} from 'react-native';
 import SwipeButton from '../components/SwipeButton';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/type';
+import {Balance_Types_Enum, Destination_Types_Enum} from '../constants/Type';
 
 const SendTransactionButton = (props: any) => {
-  const {walletName, from, to, amount, memo, subtractFee, fromAddress} = props;
+  const {walletName, from, to, amount, memo, subtractFee} = props;
   const {createTransaction, sendTransaction, wallet} = useWallet();
   const {read} = useKeychain();
   const [loading, setLoading] = useState(false);
@@ -35,14 +36,17 @@ const SendTransactionButton = (props: any) => {
         onPress={() => {
           setLoading(true);
           read(walletName).then((password: string) => {
+            console.log('sub', subtractFee);
             createTransaction(
-              from,
+              from.type_id,
               to,
-              amount,
+              parseInt(amount),
               password,
               memo,
               subtractFee,
-              fromAddress,
+              from.address,
+              from.tokenId,
+              from.tokenNftId,
             )
               .then((tx: any) => {
                 setLoading(false);
@@ -67,9 +71,15 @@ const SendTransactionButton = (props: any) => {
                           Amount:
                         </Text>
                         <Text category="headline">
-                          {(amount - (subtractFee ? tx.fee / 1e8 : 0)).toFixed(
-                            8,
-                          )}
+                          {(
+                            amount -
+                            (subtractFee &&
+                            from.type_id != Balance_Types_Enum.PrivateToken &&
+                            from.type_id != Balance_Types_Enum.Nft
+                              ? tx.fee / 1e8
+                              : 0)
+                          ).toFixed(8)}{' '}
+                          {from.currency}
                         </Text>
                       </View>
                     </Layout>
@@ -82,7 +92,11 @@ const SendTransactionButton = (props: any) => {
                           Fee:
                         </Text>
                         <Text category="headline">
-                          {(tx.fee / 1e8).toFixed(8)}
+                          {(tx.fee / 1e8).toFixed(8)}{' '}
+                          {from.destination_id ==
+                          Destination_Types_Enum.PrivateWallet
+                            ? 'xNAV'
+                            : 'NAV'}
                         </Text>
                       </View>
                     </Layout>

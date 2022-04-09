@@ -63,14 +63,12 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   };
 
   const disconnectWallet = async (deleteWallet: boolean = false) => {
-    if (connected === Connection_Stats_Enum.Connected) {
-      wallet.Disconnect();
-      wallet.CloseDb();
-      if (deleteWallet) {
-        await njs.wallet.WalletFile.RemoveWallet(walletName);
-      }
-      navigate('Intro');
+    wallet.Disconnect();
+    wallet.CloseDb();
+    if (deleteWallet) {
+      await njs.wallet.WalletFile.RemoveWallet(walletName);
     }
+    navigate('Intro');
   };
 
   const deleteWallet = () => {
@@ -104,6 +102,16 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       icon: 'eye',
       show: true,
       onPress: () => biometricsAlert(),
+    },
+    {
+      title: 'Setup Staking Nodes',
+      icon: 'factory',
+      show: true,
+      onPress: () => {
+        navigate('Wallet', {
+          screen: 'StakingNodeScreen',
+        });
+      },
     },
     {
       title: 'Setup Electrum Servers',

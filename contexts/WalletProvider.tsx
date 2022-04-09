@@ -36,6 +36,8 @@ export const WalletProvider = (props: any) => {
     Connection_Stats_Enum.Disconnected,
   );
   const [history, setHistory] = useState([]);
+  const [tokens, setTokens] = useState<BalanceFragment[]>([]);
+  const [nfts, setNfts] = useState<BalanceFragment[]>([]);
   const [accounts, setAccounts] = useState<BalanceFragment[]>([
     {
       name: 'Public',
@@ -134,9 +136,9 @@ export const WalletProvider = (props: any) => {
     }
   }, [p2pPool, wallet]);
 
-  useEffect(() => {
+  const parseAccounts = useCallback(() => {
     if (balances?.nav) {
-      setAccounts([
+      let accs = [
         {
           name: 'Public',
           amount: balances.nav.confirmed / 1e8,
@@ -153,17 +155,68 @@ export const WalletProvider = (props: any) => {
           destination_id: Destination_Types_Enum.PrivateWallet,
           currency: 'xNAV',
         },
-        {
-          name: 'Staking',
-          amount: balances.staked.confirmed / 1e8,
-          pending_amount: balances.staked.pending / 1e8,
+      ];
+
+      for (let address in addresses.staking) {
+        let label = addresses.staking[address].label?.name;
+        if (!label) label = address.substring(0, 8) + '...';
+        accs.push({
+          name: label + ' Staking',
+          amount: addresses.staking[address].staking.confirmed / 1e8,
+          pending_amount: addresses.staking[address].staking.pending / 1e8,
           type_id: Balance_Types_Enum.Staking,
           destination_id: Destination_Types_Enum.StakingWallet,
+          address: address,
           currency: 'NAV',
-        },
-      ]);
+        });
+      }
+
+      let toks = [];
+
+      for (let tokenId in balances.tokens) {
+        toks.push({
+          name: balances[tokenId].name,
+          amount: balances[tokenId].confirmed / 1e8,
+          pending_amount: balances[tokenId].pending / 1e8,
+          type_id: Balance_Types_Enum.PrivateToken,
+          destination_id: Destination_Types_Enum.PrivateWallet,
+          tokenId: tokenId,
+          currency: balances[tokenId].code,
+        });
+      }
+
+      let nft = [];
+
+      for (let tokenId in balances.nfts) {
+        nft.push({
+          name: balances[tokenId].name,
+          amount: Object.keys(balances[tokenId].confirmed).length,
+          pending_amount: Object.keys(balances[tokenId].pending).length,
+          type_id: Balance_Types_Enum.Nft,
+          destination_id: Destination_Types_Enum.PrivateWallet,
+          tokenId: tokenId,
+          currency: 'NFT',
+        });
+      }
+
+      setAccounts(accs);
+      setTokens(toks);
+      setNfts(nft);
     }
-  }, [balances]);
+  }, [balances, addresses]);
+
+  const updateAccounts = async () => {
+    if (wallet) {
+      setBalances(await wallet.GetBalance());
+      setHistory(await wallet.GetHistory());
+      setAddresses(await wallet.GetAllAddresses());
+    }
+    parseAccounts();
+  };
+
+  useEffect(() => {
+    parseAccounts();
+  }, [balances, addresses]);
 
   const createWallet = useCallback(
     async (
@@ -259,6 +312,10 @@ export const WalletProvider = (props: any) => {
         setAddresses(await walletFile.GetAllAddresses());
       });
 
+      walletFile.on('new_staking_address', async () => {
+        updateAccounts();
+      });
+
       walletFile.Load({
         bootstrap: njs.wallet.xNavBootstrap,
       });
@@ -273,6 +330,9 @@ export const WalletProvider = (props: any) => {
     password: string,
     memo = '',
     subtractFee = false,
+    fromAddress = undefined,
+    tokenId = undefined,
+    tokenNftId = undefined,
   ) => {
     return new Promise(async (res, rej) => {
       if (!wallet) {
@@ -398,6 +458,9 @@ export const WalletProvider = (props: any) => {
       sendTransaction: sendTransaction,
       network,
       firstSyncCompleted,
+      tokens,
+      nfts,
+      updateAccounts,
     }),
     [
       win,
@@ -416,6 +479,9 @@ export const WalletProvider = (props: any) => {
       accounts,
       parsedAddresses,
       firstSyncCompleted,
+      tokens,
+      nfts,
+      updateAccounts,
     ],
   );
 

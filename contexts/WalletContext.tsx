@@ -24,6 +24,9 @@ export interface WalletContextValue {
   parsedAddresses: AddressFragment[];
   createTransaction: any;
   sendTransaction: (tx: any) => Promise<any>;
+  tokens: BalanceFragment[];
+  nfts: BalanceFragment[];
+  updateAccounts: () => void;
 }
 
 export const WalletContext = createContext<WalletContextValue | undefined>(

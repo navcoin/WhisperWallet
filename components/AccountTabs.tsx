@@ -3,8 +3,8 @@ import Content from './Content';
 import {View} from 'react-native';
 import BalanceCard from './BalanceCard';
 import Text from './Text';
-import React, {useCallback, useEffect, useState} from 'react';
-import {Balance_Types_Enum, Destination_Types_Enum} from '../constants/Type';
+import React, {useCallback, useState} from 'react';
+import {Balance_Types_Enum, BalanceFragment} from '../constants/Type';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import BottomSheetMenu from './BottomSheetMenu';
 import useWallet from '../hooks/useWallet';
@@ -14,53 +14,47 @@ import {useNavigation} from '@react-navigation/native';
 
 const AccountsTab = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const [account, setAccount] = useState([
-    Balance_Types_Enum.Nav,
-    Destination_Types_Enum.PublicWallet,
-    '',
+  const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
-  ]);
-  const {accounts, addresses} = useWallet();
+  );
+  const {accounts, tokens, nfts} = useWallet();
   const bottomSheet = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
   const {navigate} = useNavigation();
 
-  const pickDestination = useCallback(() => {
-    let options = [
-      {text: Destination_Types_Enum.PublicWallet, address: undefined},
-      {text: Destination_Types_Enum.PrivateWallet, address: undefined},
-    ];
-
-    for (let el of accounts) {
-      if (el.type_id == Balance_Types_Enum.Staking)
-        options.push({
-          text: el.destination_id + ' ' + el.address.substring(0, 12) + '...',
-          address: el.address,
+  const pickDestination = useCallback(
+    account_ => {
+      let options = accounts
+        .filter(el => el.name != account_?.name)
+        .map(el => {
+          return {...el, text: el.name};
         });
-    }
-    bottomSheet.expand(
-      <BottomSheetOptions
-        title={'Select destination'}
-        options={options.filter(el => el.text != account[1])}
-        bottomSheetRef={bottomSheet.getRef}
-        onSelect={(el: any) => {
-          navigate('Wallet', {
-            screen: 'SendToScreen',
-            params: {
-              from: [account[0], account[3]],
-              toType: el.text,
-            },
-          });
-        }}
-      />,
-    );
-  }, [account]);
 
-  useEffect(() => {
-    if (account[2])
+      bottomSheet.expand(
+        <BottomSheetOptions
+          title={'Select destination'}
+          options={options}
+          bottomSheetRef={bottomSheet.getRef}
+          onSelect={(el: any) => {
+            navigate('Wallet', {
+              screen: 'SendToScreen',
+              params: {
+                from: account_,
+                toType: el,
+              },
+            });
+          }}
+        />,
+      );
+    },
+    [accounts],
+  );
+
+  const expandMenu = useCallback(
+    account_ => {
       bottomSheet.expand(
         <BottomSheetMenu
-          title={account[2]}
+          title={account_.name}
           options={[
             {
               text: 'View address to receive',
@@ -68,7 +62,7 @@ const AccountsTab = () => {
               navigate: {
                 screen: 'AddressScreen',
                 params: {
-                  from: [account[1], account[3]],
+                  from: account_,
                 },
               },
             },
@@ -78,7 +72,7 @@ const AccountsTab = () => {
               navigate: {
                 screen: 'SendToScreen',
                 params: {
-                  from: [account[0], account[3]],
+                  from: account_,
                 },
               },
             },
@@ -87,7 +81,7 @@ const AccountsTab = () => {
               icon: 'exchange',
               skipCollapse: true,
               onPress: () => {
-                pickDestination();
+                pickDestination(account_);
               },
             },
             {
@@ -96,15 +90,59 @@ const AccountsTab = () => {
               navigate: {
                 screen: 'HistoryScreen',
                 params: {
-                  filter: [account[0], account[3]],
-                  publicWallet: account[1],
+                  filter: account_,
                 },
               },
             },
           ]}
         />,
       );
-  }, [bottomSheet, account, pickDestination]);
+    },
+    [bottomSheet, pickDestination],
+  );
+
+  const expandMenuToken = useCallback(
+    account_ => {
+      bottomSheet.expand(
+        <BottomSheetMenu
+          title={account_.name}
+          options={[
+            {
+              text: 'View address to receive',
+              icon: 'download',
+              navigate: {
+                screen: 'AddressScreen',
+                params: {
+                  from: account_,
+                },
+              },
+            },
+            {
+              text: 'Send to someone',
+              icon: 'diagonalArrow3',
+              navigate: {
+                screen: 'SendToScreen',
+                params: {
+                  from: account_,
+                },
+              },
+            },
+            {
+              text: 'Transaction history',
+              icon: 'suitcase',
+              navigate: {
+                screen: 'HistoryScreen',
+                params: {
+                  filter: account_,
+                },
+              },
+            },
+          ]}
+        />,
+      );
+    },
+    [bottomSheet, pickDestination],
+  );
 
   return (
     <>
@@ -123,23 +161,33 @@ const AccountsTab = () => {
                   item={{...el, name: el.name + ' Wallet'}}
                   index={i}
                   onPress={() => {
-                    setAccount([
-                      el.type_id,
-                      el.destination_id,
-                      el.name,
-                      el.address,
-                    ]);
+                    setAccount(el);
+                    expandMenu(el);
                   }}
                 />
               </View>
             );
           })
         ) : selectedTab == 1 ? (
-          <Text marginLeft={36} marginBottom={16}>
-            You have no tokens yet.
+          <Text marginBottom={16} center>
+            {tokens.length == 0
+              ? 'You have no tokens yet.'
+              : accounts.map((el, i) => {
+                  return (
+                    <View style={styles.item} key={i}>
+                      <BalanceCard
+                        item={{...el, name: el.name + ' Wallet'}}
+                        index={i}
+                        onPress={() => {
+                          setAccount(el);
+                          expandMenuToken(el);
+                        }}></BalanceCard>
+                    </View>
+                  );
+                })}
           </Text>
         ) : selectedTab == 2 ? (
-          <Text marginLeft={36} marginBottom={16}>
+          <Text center marginBottom={16}>
             You have no NFTs yet.
           </Text>
         ) : (

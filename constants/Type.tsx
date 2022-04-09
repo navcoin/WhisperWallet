@@ -116,3 +116,8 @@ export interface ServerOption {
   proto?: 'tcp' | 'ssl' | 'ws' | 'wss';
   type?: 'testnet' | 'mainnet';
 }
+
+export interface NodeOption {
+  name?: string;
+  address?: string;
+}

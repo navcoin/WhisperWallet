@@ -17,7 +17,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import useWallet from '../../hooks/useWallet';
 import CardSelect from '../../components/CardSelect';
-import {Destination_Types_Enum} from '../../constants/Type';
+import {
+  Balance_Types_Enum,
+  BalanceFragment,
+  Destination_Types_Enum,
+} from '../../constants/Type';
 import DialogInput from 'react-native-dialog-input';
 import BottomSheetProvider from '../../contexts/BottomSheetProvider';
 import DestinationComponent from '../../components/DestinationComponent';
@@ -26,12 +30,21 @@ import SendTransactionButton from '../../components/SendTransactionButton';
 
 const SendToScreen = (props: any) => {
   const styles = useStyleSheet(themedStyles);
-  const [from, setFrom] = useState([
+  const [from, setFrom] = useState<BalanceFragment | undefined>(
     props.route.params.from,
-    props.route.params.fromAddress,
-  ]);
+  );
   const [to, setTo] = useState('');
-  const [toType, setToType] = useState(props.route.params.toType);
+  const [toType, setToType] = useState(
+    props.route.params.toType || {
+      name: 'Address',
+      text: 'Address',
+      amount: 0,
+      pending_amount: 0,
+      type_id: Balance_Types_Enum.Nav,
+      destination_id: Destination_Types_Enum.Address,
+      currency: 'NAV',
+    },
+  );
   const [memo, setMemo] = useState('');
   const {bottom} = useSafeAreaInsets();
   const [amountInString, setAmount] = useState('0');
@@ -45,8 +58,8 @@ const SendToScreen = (props: any) => {
   const currentAmount = useMemo(() => {
     let el = accounts?.filter(
       el =>
-        el.type_id == from[0] &&
-        (!from[1] || (from[1] && el.address == from[1])),
+        el.type_id == from?.type_id &&
+        (!from?.address || (from?.address && el.address == from?.address)),
     )[0];
     if (!el) {
       return 0;
@@ -99,18 +112,18 @@ const SendToScreen = (props: any) => {
             <CardSelect
               options={accounts.map(el => {
                 return {
+                  ...el,
                   text:
                     el.name + ' Wallet (' + el.amount + ' ' + el.currency + ')',
-                  type: el.type_id,
-                  address: el.address,
                 };
               })}
               text={'From'}
               defaultOption={(() => {
                 let el = accounts?.filter(
                   el =>
-                    el.type_id == from[0] &&
-                    (!from[1] || (from[1] && el.address == from[1])),
+                    el.type_id == from?.type_id &&
+                    (!from.address ||
+                      (from.address && el.address == from.address)),
                 )[0];
                 if (!el) {
                   return '';
@@ -120,13 +133,13 @@ const SendToScreen = (props: any) => {
                 );
               })()}
               onSelect={el => {
-                setFrom([el.type, el.address]);
+                setFrom(el);
               }}
             />
 
             <DestinationComponent
               setTo={setTo}
-              from={from[0]}
+              from={from}
               toType={toType}
               setToType={setToType}
             />
@@ -207,8 +220,7 @@ const SendToScreen = (props: any) => {
           <Layout style={[styles.bottom, {paddingBottom: bottom + 16}]}>
             <SendTransactionButton
               walletName={walletName}
-              from={from[0]}
-              fromAddress={from[1]}
+              from={from}
               to={to}
               amount={parseFloat(amountInString)}
               memo={memo}

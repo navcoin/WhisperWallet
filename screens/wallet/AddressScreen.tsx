@@ -6,12 +6,12 @@ import Container from '../../components/Container';
 import {TopNavigation} from '@ui-kitten/components';
 import useLayout from '../../hooks/useLayout';
 import QRCode from 'react-native-qrcode-svg';
-import {Destination_Types_Enum} from '../../constants/Type';
+import {BalanceFragment, Destination_Types_Enum} from '../../constants/Type';
 import useWallet from '../../hooks/useWallet';
 
 const AddressScreen = (props: any) => {
-  const [addressType, setAddressType] = useState(
-    props.route.params.from || [Destination_Types_Enum.PublicWallet, ''],
+  const [addressType, setAddressType] = useState<BalanceFragment>(
+    props.route.params.from,
   );
   const [address, setAddress] = useState('');
   const {width} = useLayout();
@@ -21,9 +21,9 @@ const AddressScreen = (props: any) => {
     setAddress(
       parsedAddresses.filter(
         el =>
-          el.type_id == addressType[0] &&
-          (!addressType[1] ||
-            (addressType[1] && addressType[1] == el.stakingAddress)),
+          el.type_id == addressType.destination_id &&
+          (!addressType.address ||
+            (addressType.address && addressType.address == el.stakingAddress)),
       )[0]?.address,
     );
   }, [addressType, parsedAddresses]);
@@ -33,7 +33,9 @@ const AddressScreen = (props: any) => {
       <TopNavigation
         title={() => (
           <>
-            <Text category="title4">{addressType[0] + ' Address'}</Text>
+            <Text category="title4">
+              {addressType.destination_id + ' Address'}
+            </Text>
           </>
         )}
       />
