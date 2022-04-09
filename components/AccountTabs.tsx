@@ -171,8 +171,8 @@ const AccountsTab = () => {
         ) : selectedTab == 1 ? (
           <Text marginBottom={16} center>
             {tokens.length == 0
-              ? 'You have no tokens yet.'
-              : accounts.map((el, i) => {
+              ? 'You have no private tokens yet.'
+              : tokens.map((el, i) => {
                   return (
                     <View style={styles.item} key={i}>
                       <BalanceCard
@@ -188,7 +188,21 @@ const AccountsTab = () => {
           </Text>
         ) : selectedTab == 2 ? (
           <Text center marginBottom={16}>
-            You have no NFTs yet.
+            {nfts.length == 0
+              ? 'You have no private NFTs yet.'
+              : nfts.map((el, i) => {
+                  return (
+                    <View style={styles.item} key={i}>
+                      <BalanceCard
+                        item={{...el, name: el.name + ' Wallet'}}
+                        index={i}
+                        onPress={() => {
+                          setAccount(el);
+                          expandMenuToken(el);
+                        }}></BalanceCard>
+                    </View>
+                  );
+                })}{' '}
           </Text>
         ) : (
           <></>

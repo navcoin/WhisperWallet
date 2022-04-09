@@ -175,13 +175,13 @@ export const WalletProvider = (props: any) => {
 
       for (let tokenId in balances.tokens) {
         toks.push({
-          name: balances[tokenId].name,
-          amount: balances[tokenId].confirmed / 1e8,
-          pending_amount: balances[tokenId].pending / 1e8,
+          name: balances.tokens[tokenId].name,
+          amount: balances.tokens[tokenId].confirmed / 1e8,
+          pending_amount: balances.tokens[tokenId].pending / 1e8,
           type_id: Balance_Types_Enum.PrivateToken,
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
-          currency: balances[tokenId].code,
+          currency: balances.tokens[tokenId].code,
         });
       }
 
@@ -189,9 +189,9 @@ export const WalletProvider = (props: any) => {
 
       for (let tokenId in balances.nfts) {
         nft.push({
-          name: balances[tokenId].name,
-          amount: Object.keys(balances[tokenId].confirmed).length,
-          pending_amount: Object.keys(balances[tokenId].pending).length,
+          name: balances.nfts[tokenId].name,
+          amount: Object.keys(balances.nfts[tokenId].confirmed).length,
+          pending_amount: Object.keys(balances.nfts[tokenId].pending).length,
           type_id: Balance_Types_Enum.Nft,
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
@@ -294,7 +294,6 @@ export const WalletProvider = (props: any) => {
 
       walletFile.on('new_tx', async () => {
         console.log('new_tx');
-        setBalances(await walletFile.GetBalance());
         setHistory(await walletFile.GetHistory());
         setAddresses(await walletFile.GetAllAddresses());
       });
