@@ -8,7 +8,7 @@ export enum Category_Types_Enum {
 export enum Balance_Types_Enum {
   Nav = 'nav',
   xNav = 'xnav',
-  Staking = 'staking',
+  Staking = 'cold_staking',
   PrivateToken = 'token',
   Nft = 'nft',
 }
@@ -34,6 +34,7 @@ export interface BalanceFragment {
   type_id: Balance_Types_Enum;
   destination_id: Destination_Types_Enum;
   currency: string;
+  address?: string;
   tokenId?: string;
   nftId?: number;
 }

@@ -38,6 +38,7 @@ const AssetIconsPack: IconPack<ImageProps | SvgProps> = {
     question: createIcon(Icons.question),
     eye: createIcon(Icons.eye),
     eyeHide: createIcon(Icons.eyeHide),
+    factory: createIcon(Icons.factory),
     happyFace: createIcon(Icons.happyFace),
     rightChevron: createIcon(Icons.rightChevron),
     leftChevron: createIcon(Icons.leftChevron),

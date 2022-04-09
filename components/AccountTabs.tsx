@@ -18,27 +18,36 @@ const AccountsTab = () => {
     Balance_Types_Enum.Nav,
     Destination_Types_Enum.PublicWallet,
     '',
+    undefined,
   ]);
-  const {accounts} = useWallet();
+  const {accounts, addresses} = useWallet();
   const bottomSheet = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
   const {navigate} = useNavigation();
 
   const pickDestination = useCallback(() => {
+    let options = [
+      {text: Destination_Types_Enum.PublicWallet, address: undefined},
+      {text: Destination_Types_Enum.PrivateWallet, address: undefined},
+    ];
+
+    for (let el of accounts) {
+      if (el.type_id == Balance_Types_Enum.Staking)
+        options.push({
+          text: el.destination_id + ' ' + el.address.substring(0, 12) + '...',
+          address: el.address,
+        });
+    }
     bottomSheet.expand(
       <BottomSheetOptions
         title={'Select destination'}
-        options={[
-          {text: Destination_Types_Enum.PublicWallet},
-          {text: Destination_Types_Enum.PrivateWallet},
-          {text: Destination_Types_Enum.StakingWallet},
-        ].filter(el => el.text != account[1])}
+        options={options.filter(el => el.text != account[1])}
         bottomSheetRef={bottomSheet.getRef}
         onSelect={(el: any) => {
           navigate('Wallet', {
             screen: 'SendToScreen',
             params: {
-              from: account[0],
+              from: [account[0], account[3]],
               toType: el.text,
             },
           });
@@ -48,7 +57,7 @@ const AccountsTab = () => {
   }, [account]);
 
   useEffect(() => {
-    if (account[2]) {
+    if (account[2])
       bottomSheet.expand(
         <BottomSheetMenu
           title={account[2]}
@@ -59,7 +68,7 @@ const AccountsTab = () => {
               navigate: {
                 screen: 'AddressScreen',
                 params: {
-                  from: account[1],
+                  from: [account[1], account[3]],
                 },
               },
             },
@@ -69,7 +78,7 @@ const AccountsTab = () => {
               navigate: {
                 screen: 'SendToScreen',
                 params: {
-                  from: account[0],
+                  from: [account[0], account[3]],
                 },
               },
             },
@@ -87,7 +96,7 @@ const AccountsTab = () => {
               navigate: {
                 screen: 'HistoryScreen',
                 params: {
-                  filter: account[0],
+                  filter: [account[0], account[3]],
                   publicWallet: account[1],
                 },
               },
@@ -95,8 +104,7 @@ const AccountsTab = () => {
           ]}
         />,
       );
-    }
-  }, [bottomSheet, account]);
+  }, [bottomSheet, account, pickDestination]);
 
   return (
     <>
@@ -115,7 +123,12 @@ const AccountsTab = () => {
                   item={{...el, name: el.name + ' Wallet'}}
                   index={i}
                   onPress={() => {
-                    setAccount([el.type_id, el.destination_id, el.name]);
+                    setAccount([
+                      el.type_id,
+                      el.destination_id,
+                      el.name,
+                      el.address,
+                    ]);
                   }}
                 />
               </View>

@@ -26,7 +26,10 @@ import SendTransactionButton from '../../components/SendTransactionButton';
 
 const SendToScreen = (props: any) => {
   const styles = useStyleSheet(themedStyles);
-  const [from, setFrom] = useState(props.route.params.from);
+  const [from, setFrom] = useState([
+    props.route.params.from,
+    props.route.params.fromAddress,
+  ]);
   const [to, setTo] = useState('');
   const [toType, setToType] = useState(props.route.params.toType);
   const [memo, setMemo] = useState('');
@@ -40,7 +43,11 @@ const SendToScreen = (props: any) => {
   const amountInputRef = useRef<Input>();
 
   const currentAmount = useMemo(() => {
-    let el = accounts?.filter(el => el.type_id == from)[0];
+    let el = accounts?.filter(
+      el =>
+        el.type_id == from[0] &&
+        (!from[1] || (from[1] && el.address == from[1])),
+    )[0];
     if (!el) {
       return 0;
     } else {
@@ -55,12 +62,16 @@ const SendToScreen = (props: any) => {
       bitcore.Address(to).isXnav()
     ) {
       setShowMemo(true);
+    } else {
+      setShowMemo(false);
     }
   }, [to, toType]);
 
   useEffect(() => {
     if (parseFloat(amountInString) === currentAmount) {
       setSubtractFee(true);
+    } else {
+      setSubtractFee(false);
     }
   }, [amountInString, currentAmount]);
 
@@ -91,12 +102,15 @@ const SendToScreen = (props: any) => {
                   text:
                     el.name + ' Wallet (' + el.amount + ' ' + el.currency + ')',
                   type: el.type_id,
+                  address: el.address,
                 };
               })}
               text={'From'}
               defaultOption={(() => {
                 let el = accounts?.filter(
-                  el => el.type_id == props.route.params.from,
+                  el =>
+                    el.type_id == from[0] &&
+                    (!from[1] || (from[1] && el.address == from[1])),
                 )[0];
                 if (!el) {
                   return '';
@@ -106,13 +120,13 @@ const SendToScreen = (props: any) => {
                 );
               })()}
               onSelect={el => {
-                setFrom(el.type);
+                setFrom([el.type, el.address]);
               }}
             />
 
             <DestinationComponent
               setTo={setTo}
-              from={from}
+              from={from[0]}
               toType={toType}
               setToType={setToType}
             />
@@ -181,7 +195,7 @@ const SendToScreen = (props: any) => {
                     }}>
                     <TouchableOpacity
                       onPress={() => {
-                        setAmount(currentAmount);
+                        setAmount(currentAmount.toString());
                       }}>
                       <Text category={'footnote'}>MAX</Text>
                     </TouchableOpacity>
@@ -193,7 +207,8 @@ const SendToScreen = (props: any) => {
           <Layout style={[styles.bottom, {paddingBottom: bottom + 16}]}>
             <SendTransactionButton
               walletName={walletName}
-              from={from}
+              from={from[0]}
+              fromAddress={from[1]}
               to={to}
               amount={parseFloat(amountInString)}
               memo={memo}

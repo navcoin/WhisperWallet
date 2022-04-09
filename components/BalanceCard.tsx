@@ -39,7 +39,9 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
           <View style={styles.walletIcon}>
             <Icon
               pack="assets"
-              name="creditCard"
+              name={
+                type_id == Balance_Types_Enum.Staking ? 'factory' : 'creditCard'
+              }
               style={{
                 tintColor:
                   type_id == Balance_Types_Enum.Nav

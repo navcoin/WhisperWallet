@@ -9,7 +9,8 @@ import CurrencyText from './CurrencyText';
 
 const BalanceCircle = memo(() => {
   const {width} = useLayout();
-  const {syncProgress, syncing, balances, connected} = useWallet();
+  const {syncProgress, syncing, balances, connected, firstSyncCompleted} =
+    useWallet();
   const theme = useTheme();
   const [balanceSegments, setBalanceSegments] = useState<
     {
@@ -97,7 +98,7 @@ const BalanceCircle = memo(() => {
                   color: 'transparent',
                 },
               ]
-            : syncing
+            : syncing || !firstSyncCompleted
             ? [
                 {
                   size: syncProgress,

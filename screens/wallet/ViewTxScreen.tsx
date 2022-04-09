@@ -45,11 +45,11 @@ const ViewTxScreen = (props: any) => {
           </>
         )}
         {props.route.params.item.amount > 0 &&
-          props.route.params.item.memos.out.length > 0 && (
+          props.route.params.item.memos?.out?.length > 0 && (
             <InputSelect
               title="Memo"
               value={
-                props.route.params.item.memos.out.length > 1
+                props.route.params.item.memos?.out?.length > 1
                   ? props.route.params.item.memos.out.join(', ')
                   : props.route.params.item.memos.out
               }

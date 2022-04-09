@@ -17,6 +17,7 @@ export const Icons = {
   leftChevron: require('./ic_left-chevron.png'),
   email: require('./ic_email.png'),
   facebook: require('./ic_fb.png'),
+  factory: require('./ic_factory.png'),
   gg: require('./ic_gg.png'),
   user: require('./ic_user.png'),
   padLock: require('./ic_padlock.png'),

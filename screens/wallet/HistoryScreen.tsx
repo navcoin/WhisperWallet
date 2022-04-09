@@ -1,6 +1,6 @@
 import useWallet from '../../hooks/useWallet';
 import BigList from 'react-native-big-list';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {TopNavigation} from '@ui-kitten/components';
 import Container from '../../components/Container';
@@ -69,23 +69,34 @@ const HistoryScreen = (props: any) => {
     }
   };
 
+  const condition = el => {
+    const fA = props.route.params.filter[1];
+
+    return (
+      el &&
+      el.type === props.route.params.filter[0] &&
+      (!fA ||
+        (fA &&
+          (el.addresses_in?.staking?.indexOf(fA) > -1 ||
+            el.addresses_in?.spending?.indexOf(fA) > -1 ||
+            el.addresses_out?.staking?.indexOf(fA) > -1 ||
+            el.addresses_out?.spending?.indexOf(fA) > -1)))
+    );
+  };
+
   return (
     <Container useSafeArea>
       <TopNavigation title={'Wallet History'} />
       {loadingStatusText === Connection_Stats_Text.Connected &&
-      history.filter((el: any) => el.type === props.route.params.filter)
-        .length ? (
+      history.filter((el: any) => condition(el)).length ? (
         <BigList
-          data={history.filter(
-            (el: any) => el.type === props.route.params.filter,
-          )}
+          data={history.filter((el: any) => condition(el))}
           renderItem={renderItem}
           itemHeight={90}
         />
       ) : null}
       {loadingStatusText === Connection_Stats_Text.Connected &&
-      history.filter((el: any) => el.type === props.route.params.filter)
-        .length === 0 ? (
+      history.filter((el: any) => condition(el)).length === 0 ? (
         <View style={[styles.emptyView]}>
           <Text style={[styles.text]}>There are no transactions yet!</Text>
           <View style={[styles.cardWrapper]}>

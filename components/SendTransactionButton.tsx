@@ -18,7 +18,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/type';
 
 const SendTransactionButton = (props: any) => {
-  const {walletName, from, to, amount, memo, subtractFee} = props;
+  const {walletName, from, to, amount, memo, subtractFee, fromAddress} = props;
   const {createTransaction, sendTransaction, wallet} = useWallet();
   const {read} = useKeychain();
   const [loading, setLoading] = useState(false);
@@ -35,7 +35,15 @@ const SendTransactionButton = (props: any) => {
         onPress={() => {
           setLoading(true);
           read(walletName).then((password: string) => {
-            createTransaction(from, to, amount, password, memo, subtractFee)
+            createTransaction(
+              from,
+              to,
+              amount,
+              password,
+              memo,
+              subtractFee,
+              fromAddress,
+            )
               .then((tx: any) => {
                 setLoading(false);
                 bottomSheet.expand(

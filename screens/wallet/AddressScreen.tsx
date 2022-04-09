@@ -11,7 +11,7 @@ import useWallet from '../../hooks/useWallet';
 
 const AddressScreen = (props: any) => {
   const [addressType, setAddressType] = useState(
-    props.route.params.from || Destination_Types_Enum.PublicWallet,
+    props.route.params.from || [Destination_Types_Enum.PublicWallet, ''],
   );
   const [address, setAddress] = useState('');
   const {width} = useLayout();
@@ -19,14 +19,23 @@ const AddressScreen = (props: any) => {
 
   useEffect(() => {
     setAddress(
-      parsedAddresses.filter(el => el.type_id == addressType)[0]?.address,
+      parsedAddresses.filter(
+        el =>
+          el.type_id == addressType[0] &&
+          (!addressType[1] ||
+            (addressType[1] && addressType[1] == el.stakingAddress)),
+      )[0]?.address,
     );
   }, [addressType, parsedAddresses]);
 
   return (
     <Container>
       <TopNavigation
-        title={() => <Text category="title4">{addressType + ' Address'}</Text>}
+        title={() => (
+          <>
+            <Text category="title4">{addressType[0] + ' Address'}</Text>
+          </>
+        )}
       />
       <Container
         style={{

@@ -22,7 +22,7 @@ const Transaction = ({item, index, onPress}: TransactionProps) => {
   const memos = item.memos || {in: [], out: []};
   let category = {};
 
-  if (type == 'nav' || type == 'staking') {
+  if (type == 'nav' || type == 'cold_staking') {
     category = {icon: {path: Images.navLogo}};
   } else if (type == 'xnav') {
     category = {icon: {path: Images.xNavLogo}};
