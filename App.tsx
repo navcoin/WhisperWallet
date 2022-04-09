@@ -17,7 +17,9 @@ import {default as lightTheme} from './constants/theme/light.json';
 import {default as customTheme} from './constants/theme/appTheme.json';
 import {default as customMapping} from './constants/theme/mapping.json';
 import AppContainer from './navigation/AppContainer';
-import SplashScreen from 'react-native-splash-screen';
+// import SplashScreen from 'react-native-splash-screen';
+import RNBootSplash from 'react-native-bootsplash';
+
 import {ToastProvider} from 'react-native-toast-notifications';
 
 patchFlatListProps();
@@ -65,7 +67,9 @@ const App = () => {
 
   useEffect(() => {
     AsyncStorage.getItem('theme').then(value => {
-      if (value === 'light' || value === 'dark') setTheme(value);
+      if (value === 'light' || value === 'dark') {
+        setTheme(value);
+      }
     });
     njs.wallet.Init().then(async () => {
       setNjs(njs);
@@ -103,7 +107,9 @@ const App = () => {
       njs.wallet.WalletFile.SetBackend(win.indexedDB, win.IDBKeyRange);
       setLoaded(true);
 
-      SplashScreen.hide();
+      setTimeout(() => {
+        RNBootSplash.hide({fade: true});
+      }, 3000);
     });
   }, []);
 
