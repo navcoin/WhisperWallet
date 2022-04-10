@@ -56,5 +56,7 @@
   "color-basic-2200": "#343E47",
   "color-basic-2300": "#FFCF5C",
   "color-basic-2400": "#7D8699",
-  "color-nav-pink": "#883EC4"
+  "color-nav-pink": "#883EC4",
+  "color-xnav": "#A98BBD",
+  "color-staking": "#61BAAD"
 }

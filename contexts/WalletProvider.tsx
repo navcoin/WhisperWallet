@@ -10,6 +10,7 @@ import {
   Destination_Types_Enum,
 } from '../constants/Type';
 import useTraceUpdate from '../hooks/useTraceUpdates';
+import Identicon from '../components/Identicon';
 
 export const WalletProvider = (props: any) => {
   const {njs, p2pPool} = useNjs();
@@ -146,6 +147,7 @@ export const WalletProvider = (props: any) => {
           type_id: Balance_Types_Enum.Nav,
           destination_id: Destination_Types_Enum.PublicWallet,
           currency: 'NAV',
+          icon: 'nav',
         },
         {
           name: 'Private',
@@ -154,6 +156,7 @@ export const WalletProvider = (props: any) => {
           type_id: Balance_Types_Enum.xNav,
           destination_id: Destination_Types_Enum.PrivateWallet,
           currency: 'xNAV',
+          icon: 'xnav',
         },
       ];
 
@@ -168,20 +171,23 @@ export const WalletProvider = (props: any) => {
           destination_id: Destination_Types_Enum.StakingWallet,
           address: address,
           currency: 'NAV',
+          icon: 'factory',
         });
       }
 
       let toks = [];
 
       for (let tokenId in balances.tokens) {
+        console.log(balances.tokens[tokenId]);
         toks.push({
           name: balances.tokens[tokenId].name,
           amount: balances.tokens[tokenId].confirmed / 1e8,
-          pending_amount: balances.tokens[tokenId].pending / 1e8,
+          pending_amount: (balances.tokens[tokenId].pending || 0) / 1e8,
           type_id: Balance_Types_Enum.PrivateToken,
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
           currency: balances.tokens[tokenId].code,
+          leftElement: <Identicon value={tokenId}></Identicon>,
         });
       }
 
@@ -195,6 +201,7 @@ export const WalletProvider = (props: any) => {
           type_id: Balance_Types_Enum.Nft,
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
+          leftElement: <Identicon value={tokenId}></Identicon>,
           currency: 'NFT',
         });
       }
@@ -339,7 +346,7 @@ export const WalletProvider = (props: any) => {
         return;
       }
       try {
-        if (from == 'xnav') {
+        if (from == 'xnav' || from == 'token' || from == 'nft') {
           let candidates = (await wallet.GetCandidates())
             .sort(() => 0.5 - Math.random())
             .slice(0, 5);
@@ -356,19 +363,35 @@ export const WalletProvider = (props: any) => {
 
           console.log('using', fee);
 
-          let obj = await wallet.xNavCreateTransaction(
-            to,
-            amount * 1e8,
-            memo,
-            password,
-            subtractFee,
-            new Buffer(new Uint8Array(32)),
-            -1,
-            new Buffer([]),
-            undefined,
-            0,
-            fee,
-          );
+          let obj =
+            from == 'token' || from == 'nft'
+              ? await wallet.tokenCreateTransaction(
+                  to,
+                  Math.floor(amount * 1e8),
+                  memo,
+                  password,
+                  subtractFee,
+                  tokenId,
+                  tokenNftId,
+                  new Buffer([]),
+                  undefined,
+                  false,
+                  false,
+                  fee,
+                )
+              : await wallet.xNavCreateTransaction(
+                  to,
+                  Math.floor(amount * 1e8),
+                  memo,
+                  password,
+                  subtractFee,
+                  new Buffer(new Uint8Array(32)),
+                  -1,
+                  new Buffer([]),
+                  undefined,
+                  0,
+                  fee,
+                );
           if (!obj) {
             rej("Can't access you wallet keys");
           } else {
@@ -395,15 +418,29 @@ export const WalletProvider = (props: any) => {
 
             res(ret);
           }
-        } else {
+        } else if (from == 'nav') {
           let ret = await wallet.NavCreateTransaction(
             to,
-            amount * 1e8,
+            Math.floor(amount * 1e8),
             memo,
             password,
             subtractFee,
             100000,
-            from == 'staking' ? 0x2 : 0x1,
+            0x1,
+            fromAddress,
+          );
+          console.log(ret);
+          res(ret);
+        } else if (from == 'staking') {
+          let ret = await wallet.NavCreateTransaction(
+            to,
+            Math.floor(amount * 1e8),
+            memo,
+            password,
+            subtractFee,
+            100000,
+            0x2,
+            fromAddress,
           );
           console.log(ret);
           res(ret);

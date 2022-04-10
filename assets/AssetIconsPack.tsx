@@ -117,6 +117,8 @@ const AssetIconsPack: IconPack<ImageProps | SvgProps> = {
     none: createIcon(Icons.none),
     money: createIcon(Icons.money),
     qr: createIcon(Icons.qr),
+    nav: createIcon(Icons.nav),
+    xnav: createIcon(Icons.xnav),
   },
 };
 export default AssetIconsPack;

@@ -176,7 +176,7 @@ const AccountsTab = () => {
                   return (
                     <View style={styles.item} key={i}>
                       <BalanceCard
-                        item={{...el, name: el.name + ' Wallet'}}
+                        item={{...el, name: el.name}}
                         index={i}
                         onPress={() => {
                           setAccount(el);

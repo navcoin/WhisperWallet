@@ -59,11 +59,11 @@ const BalanceCircle = memo(() => {
         },
         {
           size: balances.xnav.confirmed + balances.xnav.pending,
-          color: 'orange',
+          color: theme['color-xnav'],
         },
         {
           size: balances.staked.confirmed + balances.staked.pending,
-          color: 'yellow',
+          color: theme['color-staking'],
         },
       ]);
     }
@@ -116,7 +116,7 @@ const BalanceCircle = memo(() => {
         <Text style={{position: 'absolute', textAlign: 'center'}}>
           Connecting...
         </Text>
-      ) : syncing || syncProgress === 0 ? (
+      ) : !firstSyncCompleted && (syncing || syncProgress === 0) ? (
         <Text style={{position: 'absolute', textAlign: 'center'}}>
           Synchronizing...{'\n'}
           {syncProgress}%

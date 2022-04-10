@@ -89,4 +89,6 @@ export const Icons = {
   add: require('./ic_add.png'),
   none: require('./_blank.png'),
   money: require('./money.png'),
+  nav: require('./nav-color.png'),
+  xnav: require('./xnav-color.png'),
 };

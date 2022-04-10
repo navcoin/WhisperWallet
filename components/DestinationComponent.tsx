@@ -81,6 +81,7 @@ const DestinationComponent = (props: any) => {
       type_id: Balance_Types_Enum.Nav,
       destination_id: Destination_Types_Enum.Address,
       currency: 'NAV',
+      icon: 'qr',
     });
 
     bottomSheet.expand(
@@ -141,15 +142,20 @@ const DestinationComponent = (props: any) => {
           ) : (
             <></>
           )}
-          <TouchableOpacity
-            style={styles.iconView}
-            onPress={() => {
-              pickDestination();
-            }}>
-            <View>
-              <Icon pack="assets" name="downArrow" style={styles.icon} />
-            </View>
-          </TouchableOpacity>
+          {!(
+            props.from.type_id == Balance_Types_Enum.Nft ||
+            props.from.type_id == Balance_Types_Enum.PrivateToken
+          ) && (
+            <TouchableOpacity
+              style={styles.iconView}
+              onPress={() => {
+                pickDestination();
+              }}>
+              <View>
+                <Icon pack="assets" name="downArrow" style={styles.icon} />
+              </View>
+            </TouchableOpacity>
+          )}
         </Layout>
       </TouchableOpacity>
     </>

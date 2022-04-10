@@ -5,6 +5,7 @@ import {Icon, useTheme} from '@ui-kitten/components';
 import Text from './Text';
 import CurrencyText from './CurrencyText';
 import AnimatedAppearance from './AnimatedAppearance';
+import Identicon from './Identicon';
 
 import {
   Animation_Types_Enum,
@@ -24,7 +25,7 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
   const theme = useTheme();
   const {connected, syncProgress, syncing} = useWallet();
 
-  const {name, amount, pending_amount, type_id} = item;
+  const {name, amount, pending_amount, type_id, currency, tokenId} = item;
 
   return (
     <AnimatedAppearance type={Animation_Types_Enum.SlideInRight} index={index}>
@@ -37,20 +38,28 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
         ]}>
         <View style={styles.content}>
           <View style={styles.walletIcon}>
-            <Icon
-              pack="assets"
-              name={
-                type_id == Balance_Types_Enum.Staking ? 'factory' : 'creditCard'
-              }
-              style={{
-                tintColor:
-                  type_id == Balance_Types_Enum.Nav
-                    ? theme['color-nav-pink']
-                    : type_id == Balance_Types_Enum.Staking
-                    ? 'yellow'
-                    : 'orange',
-              }}
-            />
+            {type_id == Balance_Types_Enum.PrivateToken ? (
+              <Identicon value={tokenId} />
+            ) : (
+              <Icon
+                pack="assets"
+                name={
+                  type_id == Balance_Types_Enum.Staking
+                    ? 'factory'
+                    : type_id == Balance_Types_Enum.Nav
+                    ? 'nav'
+                    : 'xnav'
+                }
+                style={{
+                  tintColor:
+                    type_id == Balance_Types_Enum.Staking
+                      ? theme['color-staking']
+                      : 'none',
+                  width: 32,
+                  height: 32,
+                }}
+              />
+            )}
           </View>
           <View>
             <Text category="headline">{name}</Text>
@@ -65,6 +74,7 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
                 marginTop={4}
                 type={type_id}
                 formatType={type_id}
+                currency={currency}
               />
             )}
           </View>
@@ -94,6 +104,7 @@ const styles = StyleSheet.create({
   content: {
     flexDirection: 'row',
     alignItems: 'center',
+    width: '100%',
   },
   walletIcon: {
     width: 48,
@@ -106,5 +117,6 @@ const styles = StyleSheet.create({
   icon: {
     width: 16,
     height: 16,
+    right: 16,
   },
 });

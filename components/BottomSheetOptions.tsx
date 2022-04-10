@@ -29,6 +29,7 @@ const BottomSheetOptions = (props: any) => {
               id={el.text}
               key={el.text}
               icon={el.icon}
+              leftElement={el.leftElement}
               color={'white'}
               onPress={() => {
                 props.onSelect(el);

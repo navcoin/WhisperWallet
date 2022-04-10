@@ -1,13 +1,11 @@
 import Content from '../../components/Content';
 import {
-  Button,
   Icon,
   Input,
   Layout,
   StyleService,
   TopNavigation,
   useStyleSheet,
-  useTheme,
 } from '@ui-kitten/components';
 import Text from '../../components/Text';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
@@ -43,6 +41,7 @@ const SendToScreen = (props: any) => {
       type_id: Balance_Types_Enum.Nav,
       destination_id: Destination_Types_Enum.Address,
       currency: 'NAV',
+      icon: 'qr',
     },
   );
   const [memo, setMemo] = useState('');
@@ -50,23 +49,29 @@ const SendToScreen = (props: any) => {
   const [amountInString, setAmount] = useState('0');
   const [showMemo, setShowMemo] = useState(false);
   const [subtractFee, setSubtractFee] = useState(false);
-  const {bitcore, accounts, walletName} = useWallet();
+  const {bitcore, accounts, tokens, walletName} = useWallet();
   const [isMemoDialogVisible, showMemoDialog] = useState(false);
 
   const amountInputRef = useRef<Input>();
 
+  let sources = accounts;
+
+  if (from?.type_id == Balance_Types_Enum.PrivateToken) sources = tokens;
+
   const currentAmount = useMemo(() => {
-    let el = accounts?.filter(
+    let el = sources?.filter(
       el =>
         el.type_id == from?.type_id &&
-        (!from?.address || (from?.address && el.address == from?.address)),
+        (!from?.address || (from?.address && el.address == from?.address)) &&
+        (!from?.tokenId || (from?.tokenId && el.tokenId == from?.tokenId)) &&
+        (!from?.nftId || (from?.nftId && el.nftId == from?.nftId)),
     )[0];
     if (!el) {
       return 0;
     } else {
       return el.amount;
     }
-  }, [from, accounts]);
+  }, [from, sources]);
 
   useEffect(() => {
     if (
@@ -107,10 +112,19 @@ const SendToScreen = (props: any) => {
               showMemoDialog(false);
             }}
           />
-          <TopNavigation title="Send coins" />
+          <TopNavigation
+            title={
+              'Send ' +
+              (from?.type_id == Balance_Types_Enum.PrivateToken
+                ? 'tokens'
+                : from?.type_id == Balance_Types_Enum.Nft
+                ? 'nfts'
+                : 'coins')
+            }
+          />
           <Content contentContainerStyle={styles.contentContainerStyle}>
             <CardSelect
-              options={accounts.map(el => {
+              options={sources.map(el => {
                 return {
                   ...el,
                   text:
@@ -119,7 +133,7 @@ const SendToScreen = (props: any) => {
               })}
               text={'From'}
               defaultOption={(() => {
-                let el = accounts?.filter(
+                let el = sources?.filter(
                   el =>
                     el.type_id == from?.type_id &&
                     (!from.address ||

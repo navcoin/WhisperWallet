@@ -36,11 +36,10 @@ const SendTransactionButton = (props: any) => {
         onPress={() => {
           setLoading(true);
           read(walletName).then((password: string) => {
-            console.log('sub', subtractFee);
             createTransaction(
               from.type_id,
               to,
-              parseInt(amount),
+              amount,
               password,
               memo,
               subtractFee,
