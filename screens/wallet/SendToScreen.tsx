@@ -49,14 +49,21 @@ const SendToScreen = (props: any) => {
   const [amountInString, setAmount] = useState('0');
   const [showMemo, setShowMemo] = useState(false);
   const [subtractFee, setSubtractFee] = useState(false);
-  const {bitcore, accounts, tokens, walletName} = useWallet();
+  const {bitcore, accounts, tokens, nfts, walletName, balances} = useWallet();
   const [isMemoDialogVisible, showMemoDialog] = useState(false);
 
+  const [nftId, setNftId] = useState(-1);
+
   const amountInputRef = useRef<Input>();
+  const [sources, setSources] = useState(accounts);
 
-  let sources = accounts;
-
-  if (from?.type_id == Balance_Types_Enum.PrivateToken) sources = tokens;
+  useEffect(() => {
+    if (from?.type_id == Balance_Types_Enum.PrivateToken) setSources(tokens);
+    else if (from?.type_id == Balance_Types_Enum.Nft) {
+      setAmount((1 / 1e8).toFixed(8));
+      setSources(nfts);
+    }
+  }, [from, tokens, nfts]);
 
   const currentAmount = useMemo(() => {
     let el = sources?.filter(
@@ -192,44 +199,48 @@ const SendToScreen = (props: any) => {
               </View>
             )}
 
-            <TouchableOpacity
-              onPress={() => {
-                amountInputRef.current?.focus();
-              }}>
-              <Layout level="2" style={styles.card}>
-                <View style={styles.row}>
-                  <Text category="headline">Amount</Text>
-                  <Text category="headline" uppercase />
-                </View>
-                <View style={styles.cardNumber}>
-                  <Input
-                    ref={amountInputRef}
-                    keyboardType={'decimal-pad'}
-                    status={'transparent'}
-                    style={styles.flex1}
-                    value={amountInString}
-                    onChangeText={(text: string) => {
-                      let t = 0;
-                      let res = text.replace(/\./g, match =>
-                        ++t === 2 ? '' : match,
-                      );
-                      setAmount(res.trim());
-                    }}
-                  />
-                  <View
-                    style={{
-                      padding: 5,
-                    }}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setAmount(currentAmount.toString());
-                      }}>
-                      <Text category={'footnote'}>MAX</Text>
-                    </TouchableOpacity>
+            {from?.type_id == Balance_Types_Enum.Nft ? (
+              <></>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  amountInputRef.current?.focus();
+                }}>
+                <Layout level="2" style={styles.card}>
+                  <View style={styles.row}>
+                    <Text category="headline">Amount</Text>
+                    <Text category="headline" uppercase />
                   </View>
-                </View>
-              </Layout>
-            </TouchableOpacity>
+                  <View style={styles.cardNumber}>
+                    <Input
+                      ref={amountInputRef}
+                      keyboardType={'decimal-pad'}
+                      status={'transparent'}
+                      style={styles.flex1}
+                      value={amountInString}
+                      onChangeText={(text: string) => {
+                        let t = 0;
+                        let res = text.replace(/\./g, match =>
+                          ++t === 2 ? '' : match,
+                        );
+                        setAmount(res.trim());
+                      }}
+                    />
+                    <View
+                      style={{
+                        padding: 5,
+                      }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setAmount(currentAmount.toString());
+                        }}>
+                        <Text category={'footnote'}>MAX</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </Layout>
+              </TouchableOpacity>
+            )}
           </Content>
           <Layout style={[styles.bottom, {paddingBottom: bottom + 16}]}>
             <SendTransactionButton
@@ -239,6 +250,7 @@ const SendToScreen = (props: any) => {
               amount={parseFloat(amountInString)}
               memo={memo}
               subtractFee={subtractFee}
+              nftId={nftId}
             />
           </Layout>
         </QrProvider>

@@ -1,9 +1,9 @@
-import {TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import Text from '../../components/Text';
 import React, {useEffect, useState} from 'react';
 import Container from '../../components/Container';
-import {TopNavigation} from '@ui-kitten/components';
+import {TopNavigation, useTheme} from '@ui-kitten/components';
 import useLayout from '../../hooks/useLayout';
 import QRCode from 'react-native-qrcode-svg';
 import {BalanceFragment, Destination_Types_Enum} from '../../constants/Type';
@@ -16,6 +16,7 @@ const AddressScreen = (props: any) => {
   const [address, setAddress] = useState('');
   const {width} = useLayout();
   const {parsedAddresses} = useWallet();
+  const theme = useTheme();
 
   useEffect(() => {
     setAddress(
@@ -58,17 +59,17 @@ const AddressScreen = (props: any) => {
               <></>
             )}
           </View>
-          <Text
-            center
-            style={{
-              marginBottom: 32,
-              padding: 32,
-            }}>
-            {address}
-          </Text>
-          <Text center variants={'transparent'}>
+          <View
+            style={[
+              styles.container,
+              {backgroundColor: theme['background-basic-color-2']},
+            ]}>
+            <Text center>{address}</Text>
+          </View>
+          <Text center variants={'transparent'} style={{marginTop: 32}}>
             Tap to copy
           </Text>
+          <View style={{flex: 1}}></View>
         </TouchableOpacity>
       </Container>
     </Container>
@@ -76,3 +77,14 @@ const AddressScreen = (props: any) => {
 };
 
 export default AddressScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    borderRadius: 12,
+    paddingVertical: 32,
+    paddingLeft: 32,
+    paddingRight: 32,
+    marginLeft: 32,
+    marginRight: 32,
+  },
+});

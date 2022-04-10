@@ -29,7 +29,10 @@ const ViewTxScreen = (props: any) => {
         )}
         <InputSelect
           title="Amount"
-          value={props.route.params.item.amount / 1e8}
+          value={
+            props.route.params.item.amount /
+            (props.route.params.item.type == 'nft' ? 1 : 1e8)
+          }
         />
         <InputSelect title="Type" value={props.route.params.item.type} />
         {props.route.params.item.type == 'token' && (
@@ -41,6 +44,18 @@ const ViewTxScreen = (props: any) => {
             <InputSelect
               title="Token Code"
               value={props.route.params.item.token_code}
+            />
+          </>
+        )}
+        {props.route.params.item.type == 'nft' && (
+          <>
+            <InputSelect
+              title="Collection Name"
+              value={props.route.params.item.token_name}
+            />
+            <InputSelect
+              title="Nft Id"
+              value={props.route.params.item.nft_id}
             />
           </>
         )}

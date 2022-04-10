@@ -45,7 +45,7 @@ const SendTransactionButton = (props: any) => {
               subtractFee,
               from.address,
               from.tokenId,
-              from.tokenNftId,
+              props.nftId,
             )
               .then((tx: any) => {
                 setLoading(false);
@@ -116,6 +116,7 @@ const SendTransactionButton = (props: any) => {
                 );
               })
               .catch(e => {
+                console.log(e.stack);
                 bottomSheet.expand(
                   <BottomSheetView>
                     <Text center style={{paddingBottom: 16}}>

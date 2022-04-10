@@ -71,10 +71,14 @@ const HistoryScreen = (props: any) => {
 
   const condition = el => {
     const fA = props.route.params.filter.address;
+    const fTokenId = props.route.params.filter.tokenId;
+    const fNftId = props.route.params.filter.nftId;
 
     return (
       el &&
       el.type === props.route.params.filter.type_id &&
+      (!fTokenId || (fTokenId && el.token_id == fTokenId)) &&
+      (!fNftId || (fNftId && el.nft_id == fNftId)) &&
       (!fA ||
         (fA &&
           (el.addresses_in?.staking?.indexOf(fA) > -1 ||

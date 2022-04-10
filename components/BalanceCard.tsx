@@ -38,7 +38,8 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
         ]}>
         <View style={styles.content}>
           <View style={styles.walletIcon}>
-            {type_id == Balance_Types_Enum.PrivateToken ? (
+            {type_id == Balance_Types_Enum.PrivateToken ||
+            type_id == Balance_Types_Enum.Nft ? (
               <Identicon value={tokenId} />
             ) : (
               <Icon

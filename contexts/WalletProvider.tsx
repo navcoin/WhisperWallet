@@ -178,10 +178,9 @@ export const WalletProvider = (props: any) => {
       let toks = [];
 
       for (let tokenId in balances.tokens) {
-        console.log(balances.tokens[tokenId]);
         toks.push({
           name: balances.tokens[tokenId].name,
-          amount: balances.tokens[tokenId].confirmed / 1e8,
+          amount: (balances.tokens[tokenId].confirmed || 0) / 1e8,
           pending_amount: (balances.tokens[tokenId].pending || 0) / 1e8,
           type_id: Balance_Types_Enum.PrivateToken,
           destination_id: Destination_Types_Enum.PrivateWallet,
@@ -194,6 +193,7 @@ export const WalletProvider = (props: any) => {
       let nft = [];
 
       for (let tokenId in balances.nfts) {
+        console.log(balances.nfts[tokenId]);
         nft.push({
           name: balances.nfts[tokenId].name,
           amount: Object.keys(balances.nfts[tokenId].confirmed).length,
@@ -370,7 +370,6 @@ export const WalletProvider = (props: any) => {
                   Math.floor(amount * 1e8),
                   memo,
                   password,
-                  subtractFee,
                   tokenId,
                   tokenNftId,
                   new Buffer([]),
