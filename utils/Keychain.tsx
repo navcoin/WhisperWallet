@@ -17,7 +17,6 @@ const useKeychain = () => {
 
   useEffect(() => {
     Keychain.getSupportedBiometryType({}).then(biometryType => {
-      console.log(biometryType);
       setState((prev: any) => ({...prev, biometryType}));
     });
   }, []);
