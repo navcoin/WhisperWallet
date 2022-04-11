@@ -23,7 +23,7 @@ interface BalanceProps {
 
 const BalanceCard = ({item, index, onPress}: BalanceProps) => {
   const theme = useTheme();
-  const {connected, syncProgress, syncing} = useWallet();
+  const {connected, syncProgress, syncing, firstSyncCompleted} = useWallet();
 
   const {name, amount, pending_amount, type_id, currency, tokenId} = item;
 
@@ -64,9 +64,10 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
           </View>
           <View>
             <Text category="headline">{name}</Text>
-            {connected === Connection_Stats_Enum.Connecting ? (
+            {connected === Connection_Stats_Enum.Connecting &&
+            !firstSyncCompleted ? (
               <Text style={{fontSize: 13}}>Connecting...</Text>
-            ) : syncing || syncProgress === 0 ? (
+            ) : (syncing || syncProgress === 0) && !firstSyncCompleted ? (
               <Text style={{fontSize: 13}}>Synchronizing...</Text>
             ) : (
               <CurrencyText

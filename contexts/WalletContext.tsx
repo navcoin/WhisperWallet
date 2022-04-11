@@ -27,6 +27,7 @@ export interface WalletContextValue {
   tokens: BalanceFragment[];
   nfts: BalanceFragment[];
   updateAccounts: () => void;
+  firstSyncCompleted: boolean;
 }
 
 export const WalletContext = createContext<WalletContextValue | undefined>(
