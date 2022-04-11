@@ -1,11 +1,10 @@
 package com.navcash;
 import android.os.Bundle;
-import org.devio.rn.splashscreen.SplashScreen;
 import android.os.Bundle;
 import expo.modules.ReactActivityDelegateWrapper;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactActivity;
-import org.devio.rn.splashscreen.SplashScreen; // here
+import com.zoontek.rnbootsplash.RNBootSplash;
 
 public class MainActivity extends ReactActivity {
 
