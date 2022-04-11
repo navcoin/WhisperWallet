@@ -36,7 +36,7 @@ const AccountsTab = () => {
         bottomSheetRef={bottomSheet.getRef}
         onSelect={(el: any) => {
           navigate('Wallet', {
-            screen: 'SendTo',
+            screen: 'SendToScreen',
             params: {
               from: account[0],
               toType: el.text,
@@ -57,7 +57,7 @@ const AccountsTab = () => {
               text: 'View address to receive',
               icon: 'download',
               navigate: {
-                screen: 'Address',
+                screen: 'AddressScreen',
                 params: {
                   from: account[1],
                 },
@@ -67,7 +67,7 @@ const AccountsTab = () => {
               text: 'Send to someone',
               icon: 'diagonalArrow3',
               navigate: {
-                screen: 'SendTo',
+                screen: 'SendToScreen',
                 params: {
                   from: account[0],
                 },
@@ -85,7 +85,7 @@ const AccountsTab = () => {
               text: 'Transaction history',
               icon: 'suitcase',
               navigate: {
-                screen: 'History',
+                screen: 'HistoryScreen',
                 params: {
                   filter: account[0],
                   publicWallet: account[1],

@@ -10,6 +10,7 @@ export const Icons = {
   headphone: require('./ic_headphones.png'),
   question: require('./ic_question.png'),
   eye: require('./ic_eye.png'),
+  bin: require('./ic_bin.png'),
   eyeHide: require('./ic_eye_hide.png'),
   happyFace: require('./ic_happy.png'),
   rightChevron: require('./ic_right-chevron.png'),

@@ -49,14 +49,14 @@ const ImportWallet = () => {
 
   return (
     <Container useSafeArea>
-      <Loading loading={loading}></Loading>
+      <Loading loading={loading} />
       <Text category="title1" center marginTop={32}>
         Import wallet
       </Text>
       <AnimatedStep style={styles.animatedStep} step={index} />
 
       <View style={styles.container}>
-        {index == 0 ? (
+        {index === 0 ? (
           <KeyboardAwareScrollView
             style={styles.content}
             enableOnAndroid
@@ -70,14 +70,16 @@ const ImportWallet = () => {
                 <OptionCard
                   item={{text: el[1]}}
                   index={index}
+                  icon={'creditCard'}
                   onPress={() => {
                     setType(el[0]);
                     setIndex(1);
-                  }}></OptionCard>
+                  }}
+                />
               );
             })}
           </KeyboardAwareScrollView>
-        ) : index == 1 ? (
+        ) : index === 1 ? (
           <KeyboardAwareScrollView>
             <Text center style={{marginHorizontal: 12, marginBottom: 24}}>
               Type the recovery words.
@@ -116,7 +118,7 @@ const ImportWallet = () => {
               />
             </View>
           </KeyboardAwareScrollView>
-        ) : index == 2 ? (
+        ) : index === 2 ? (
           <KeyboardAwareScrollView
             style={styles.content}
             enableOnAndroid
@@ -131,14 +133,16 @@ const ImportWallet = () => {
                   key={el[0]}
                   item={{text: el[1]}}
                   index={index}
+                  icon={'creditCard'}
                   onPress={() => {
                     setNetwork(el[0]);
                     setIndex(3);
-                  }}></OptionCard>
+                  }}
+                />
               );
             })}
           </KeyboardAwareScrollView>
-        ) : index == 3 ? (
+        ) : index === 3 ? (
           <KeyboardAwareScrollView
             style={styles.content}
             enableOnAndroid
@@ -186,7 +190,7 @@ const ImportWallet = () => {
                         network,
                         () => {
                           setLoading(false);
-                          setIndex(3);
+                          setIndex(4);
                         },
                       );
                     })
@@ -197,7 +201,7 @@ const ImportWallet = () => {
               }}
             />
           </KeyboardAwareScrollView>
-        ) : index == 3 ? (
+        ) : index === 4 ? (
           <KeyboardAwareScrollView>
             <Text center key={'title'}>
               Congratulations!

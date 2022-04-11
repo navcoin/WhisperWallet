@@ -35,7 +35,7 @@ const OpenWallet = () => {
 
   return (
     <Container useSafeArea>
-      <Loading loading={loading}></Loading>
+      <Loading loading={loading} />
       <Text category="title1" center marginTop={32}>
         Open wallet
       </Text>
@@ -54,6 +54,7 @@ const OpenWallet = () => {
                 key={el}
                 item={{text: el}}
                 index={index}
+                icon={'creditCard'}
                 selected={walletName}
                 onPress={() => {
                   setLoading(true);
@@ -77,7 +78,8 @@ const OpenWallet = () => {
                     .catch((e: any) => {
                       setLoading(false);
                     });
-                }}></OptionCard>
+                }}
+              />
             );
           })}
         </KeyboardAwareScrollView>

@@ -9,7 +9,7 @@ import QRCode from 'react-native-qrcode-svg';
 import {Destination_Types_Enum} from '../../constants/Type';
 import useWallet from '../../hooks/useWallet';
 
-const Address = (props: any) => {
+const AddressScreen = (props: any) => {
   const [addressType, setAddressType] = useState(
     props.route.params.from || Destination_Types_Enum.PublicWallet,
   );
@@ -64,4 +64,4 @@ const Address = (props: any) => {
   );
 };
 
-export default Address;
+export default AddressScreen;
