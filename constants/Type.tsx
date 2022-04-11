@@ -51,8 +51,10 @@ export enum Connection_Stats_Enum {
   Connecting = 'connecting',
   Connected = 'connected',
   Syncing = 'syncing',
+  Synced = 'synced',
   Disconnected = 'disconnected',
   NoServers = 'noservers',
+  Bootstrapping = 'bootstrapping',
 }
 
 export enum Connection_Stats_Text {

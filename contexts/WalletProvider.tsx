@@ -21,7 +21,7 @@ export const WalletProvider = (props: any) => {
   const [network, setNetwork] = useState('livenet');
   const [mnemonic, setMnemonic] = useState('');
   const [syncProgress, setSyncProgress] = useState(0);
-  const [syncing, setSyncing] = useState(false);
+  const [bootstrapProgress, setBootstrapProgress] = useState(0);
   const [firstSyncCompleted, setFirstSyncCompleted] = useState(false);
   const [balances, setBalances] = useState({
     nav: {confirmed: 0, pending: 0},
@@ -269,6 +269,7 @@ export const WalletProvider = (props: any) => {
 
       walletFile.on('loaded', async () => {
         console.log('loaded');
+        console.log(walletFile.type);
         walletFile.GetBalance().then(setBalances);
         walletFile.GetHistory().then(setHistory);
         njs.wallet.WalletFile.ListWallets().then(setWalletsList);
@@ -280,11 +281,6 @@ export const WalletProvider = (props: any) => {
 
       walletFile.on('sync_status', (progress: number) => {
         setSyncProgress(progress);
-        if (progress == 100) {
-          setSyncing(false);
-        } else {
-          setSyncing(true);
-        }
       });
 
       walletFile.on('disconnected', () => {
@@ -309,10 +305,18 @@ export const WalletProvider = (props: any) => {
         setConnected(Connection_Stats_Enum.Syncing);
       });
 
+      walletFile.on('bootstrap_started', async () => {
+        setConnected(Connection_Stats_Enum.Bootstrapping);
+      });
+
+      walletFile.on('bootstrap_progress', async count => {
+        setBootstrapProgress(count);
+      });
+
       walletFile.on('sync_finished', async () => {
         console.log('sync_finished');
         setFirstSyncCompleted(true);
-        setConnected(Connection_Stats_Enum.Connected);
+        setConnected(Connection_Stats_Enum.Synced);
         setBalances(await walletFile.GetBalance());
         setHistory(await walletFile.GetHistory());
         setAddresses(await walletFile.GetAllAddresses());
@@ -481,7 +485,6 @@ export const WalletProvider = (props: any) => {
       },
       refreshWallet,
       syncProgress,
-      syncing,
       balances,
       connected,
       addresses,
@@ -496,6 +499,7 @@ export const WalletProvider = (props: any) => {
       tokens,
       nfts,
       updateAccounts,
+      bootstrapProgress,
     }),
     [
       win,
@@ -505,7 +509,6 @@ export const WalletProvider = (props: any) => {
       mnemonic,
       syncProgress,
       network,
-      syncing,
       balances,
       connected,
       addresses,
@@ -517,6 +520,7 @@ export const WalletProvider = (props: any) => {
       tokens,
       nfts,
       updateAccounts,
+      bootstrapProgress,
     ],
   );
 

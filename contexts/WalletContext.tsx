@@ -14,7 +14,6 @@ export interface WalletContextValue {
   refreshWallet: () => any;
   clearMnemonic: () => any;
   syncProgress: number;
-  syncing: boolean;
   balances: any;
   connected: Connection_Stats_Enum;
   addresses: any;
@@ -27,6 +26,7 @@ export interface WalletContextValue {
   tokens: BalanceFragment[];
   nfts: BalanceFragment[];
   updateAccounts: () => void;
+  bootstrapProgress: number;
 }
 
 export const WalletContext = createContext<WalletContextValue | undefined>(
