@@ -23,7 +23,7 @@ interface BalanceProps {
 
 const BalanceCard = ({item, index, onPress}: BalanceProps) => {
   const theme = useTheme();
-  const {connected} = useWallet();
+  const {connected, firstSyncCompleted} = useWallet();
 
   const {name, amount, pending_amount, type_id, currency, tokenId} = item;
 
