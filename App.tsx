@@ -107,9 +107,7 @@ const App = () => {
       njs.wallet.WalletFile.SetBackend(win.indexedDB, win.IDBKeyRange);
       setLoaded(true);
 
-      setTimeout(() => {
-        RNBootSplash.hide({fade: true});
-      }, 3000);
+      RNBootSplash.hide({fade: true});
     });
   }, []);
 
