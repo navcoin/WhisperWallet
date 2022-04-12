@@ -1,7 +1,7 @@
 import * as Keychain from 'react-native-keychain';
-import {Platform} from 'react-native';
 import {useEffect, useState} from 'react';
 import * as crypto from 'crypto';
+import {isEmulator} from 'react-native-device-info';
 
 const useKeychain = () => {
   const [state, setState] = useState({
@@ -19,6 +19,16 @@ const useKeychain = () => {
     Keychain.getSupportedBiometryType({}).then(biometryType => {
       setState((prev: any) => ({...prev, biometryType}));
     });
+
+    (async () => {
+      if (await isEmulator()) {
+        setState((prev: any) => ({
+          ...prev,
+          accessControl: undefined,
+          accessible: undefined,
+        }));
+      }
+    })();
   }, []);
 
   const write = async (suffix: string) => {
