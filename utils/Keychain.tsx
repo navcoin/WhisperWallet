@@ -1,15 +1,19 @@
 import * as Keychain from 'react-native-keychain';
 import {useEffect, useState} from 'react';
 import * as crypto from 'crypto';
-import {isEmulator} from 'react-native-device-info';
+import {isEmulatorSync} from 'react-native-device-info';
 
 const useKeychain = () => {
   const [state, setState] = useState({
     service: 'net.whisperwallet.wallet',
     authenticationType:
       Keychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
-    accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY_OR_DEVICE_PASSCODE,
-    accessible: Keychain.ACCESSIBLE.AFTER_FIRST_UNLOCK,
+    accessControl: isEmulatorSync()
+      ? undefined
+      : Keychain.ACCESS_CONTROL.BIOMETRY_ANY_OR_DEVICE_PASSCODE,
+    accessible: isEmulatorSync()
+      ? undefined
+      : Keychain.ACCESSIBLE.AFTER_FIRST_UNLOCK,
     storage: Keychain.STORAGE_TYPE.RSA,
   });
 
@@ -19,16 +23,6 @@ const useKeychain = () => {
     Keychain.getSupportedBiometryType({}).then(biometryType => {
       setState((prev: any) => ({...prev, biometryType}));
     });
-
-    (async () => {
-      if (await isEmulator()) {
-        setState((prev: any) => ({
-          ...prev,
-          accessControl: undefined,
-          accessible: undefined,
-        }));
-      }
-    })();
   }, []);
 
   const write = async (suffix: string) => {
