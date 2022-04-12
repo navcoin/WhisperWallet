@@ -21,10 +21,29 @@
     lodash "~3.10.0"
     prettier "^2.5.1"
 
-"@aguycalled/bitcore-lib@^0.15.77", "@aguycalled/bitcore-lib@^0.15.90":
+"@aguycalled/bitcore-lib@^0.15.77":
   version "0.15.90"
   resolved "https://registry.yarnpkg.com/@aguycalled/bitcore-lib/-/bitcore-lib-0.15.90.tgz#bf91b3e1c85e748b3a5f541cc31e14da971acf55"
   integrity sha512-miF0x5EDZgYsGgm6bqd6e+MRxf2rmBQMtvRQNqXEbleLV3jVbSZS8jB4O19KHRGDbmh1nan8D5bbhzIAsr7aiQ==
+  dependencies:
+    "@aguycalled/mcl-wasm" "^0.8.4"
+    "@aguycalled/noble-bls12-381" "^1.2.1"
+    async-mutex "^0.3.1"
+    bcrypto "^5.4.0"
+    bn.js "=2.0.4"
+    bs58 "=2.0.0"
+    buffer "6.0.3"
+    buffer-compare "=1.0.0"
+    crypto-js "^4.1.1"
+    elliptic "=3.0.3"
+    inherits "=2.0.1"
+    lodash "~3.10.0"
+    prettier "^2.5.1"
+
+"@aguycalled/bitcore-lib@^0.15.97":
+  version "0.15.97"
+  resolved "https://registry.yarnpkg.com/@aguycalled/bitcore-lib/-/bitcore-lib-0.15.97.tgz#6a2721d432e6d026fc1aac0a81e6515804f94688"
+  integrity sha512-TXBmDGsOaEybnvGVs52IFaG7Ac54W4kdi/QBRJZvFzYaOyo+sDHWHKqWvf+jET/bcsZgceiXFm1UonSECsPZPw==
   dependencies:
     "@aguycalled/mcl-wasm" "^0.8.4"
     "@aguycalled/noble-bls12-381" "^1.2.1"
@@ -5359,7 +5378,7 @@ emojis-list@^3.0.0:
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-3.0.0.tgz#5570662046ad29e2e916e71aae260abdff4f6a78"
   integrity sha512-/kyM18EfinwXZbno9FyUGeFh87KC8HRQBQGildHZbEuRyWFOmv1U10o9BBp8XVZDVNNuQKyIGIu5ZYAAXJ0V2Q==
 
-encode-utf8@^1.0.2, encode-utf8@^1.0.3:
+encode-utf8@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/encode-utf8/-/encode-utf8-1.0.3.tgz#f30fdd31da07fb596f281beb2f6b027851994cda"
   integrity sha512-ucAnuBEhUK4boH2HjVYG5Q2mQyPorvv0u/ocS+zhdw0S8AlHYY+GOFhP1Gio5z4icpP2ivFSvhtFjQi8+T9ppw==
@@ -6135,11 +6154,6 @@ fake-indexeddb@^3.1.7:
   integrity sha512-CUGeCzCOVjmeKi2C0pcvSh6NDU6uQIaS+7YyR++tO/atJJujkBYVhDvfePdz/U8bD33BMVWirsr1MKczfAqbjA==
   dependencies:
     realistic-structured-clone "^2.0.1"
-
-fast-base64-encode@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/fast-base64-encode/-/fast-base64-encode-1.0.0.tgz#883945eb67e139dbf5a877bcca57a89e6824c7d4"
-  integrity sha512-z2XCzVK4fde2cuTEHu2QGkLD6BPtJNKJPn0Z7oINvmhq/quUuIIVPYKUdN0gYeZqOyurjJjBH/bUzK5gafyHvw==
 
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
@@ -7348,7 +7362,7 @@ internal-slot@^1.0.3:
     has "^1.0.3"
     side-channel "^1.0.4"
 
-invariant@2.2.4, invariant@^2.2.4:
+invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -8899,11 +8913,6 @@ lodash.zipobject@^4.1.3:
   resolved "https://registry.yarnpkg.com/lodash.zipobject/-/lodash.zipobject-4.1.3.tgz#b399f5aba8ff62a746f6979bf20b214f964dbef8"
   integrity sha1-s5n1q6j/YqdG9peb8gshT5ZNvvg=
 
-lodash@4.17.3:
-  version "4.17.3"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.3.tgz#557ed7d2a9438cac5fd5a43043ca60cb455e01f7"
-  integrity sha1-VX7X0qlDjKxf1aQwQ8pgy0VeAfc=
-
 "lodash@>=3.5 <5", lodash@^4.17.10, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.5, lodash@^4.7.0:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
@@ -9724,12 +9733,12 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-navcoin-js@^1.1.56:
-  version "1.1.62"
-  resolved "https://registry.yarnpkg.com/navcoin-js/-/navcoin-js-1.1.62.tgz#4493102290504a664afc4042fc13818a903fd628"
-  integrity sha512-PAvinIeefEei+E/jvmom1poa+mAsREZlbaqAKpAh7zhBaVN+EYPvJeBboUiA8NGi35ZaVzsnjaTcr0yqfmnp8w==
+navcoin-js@^1.1.66:
+  version "1.1.77"
+  resolved "https://registry.yarnpkg.com/navcoin-js/-/navcoin-js-1.1.77.tgz#88f581c818e087a54413a9c23008051cbaf65479"
+  integrity sha512-NZQI3lsKXQcc6sWQX8iqFynVwgAj0UQO5U9V16/oyzfNMt86KkmfjDwntTjramz7fVn3Uu7BMDLyfGq84V9jvw==
   dependencies:
-    "@aguycalled/bitcore-lib" "^0.15.90"
+    "@aguycalled/bitcore-lib" "^0.15.97"
     "@aguycalled/bitcore-message" "^1.0.4"
     "@aguycalled/bitcore-mnemonic" "^1.5.2"
     "@aguycalled/dexie-encrypted" "^2.0.4"
@@ -11857,10 +11866,45 @@ react-native-level-fs@^3.0.1:
     level-filesystem "^1.0.1"
     levelup "^0.18.2"
 
-react-native-mcl@^0.1.12, react-native-mcl@^0.1.14:
+react-native-mcl@^0.1.12:
   version "0.1.14"
   resolved "https://registry.yarnpkg.com/react-native-mcl/-/react-native-mcl-0.1.14.tgz#c1c93e715c0901a0a7d6590e69cca12801a3ad15"
   integrity sha512-fCoFqgvBMk/eOLcL7V7xQVYOEDMJBVsoeXYkeEQrfTQLon0HMZH1f6a4k8EcrrR24Tc1mpyWoNLQxuIYENDSFw==
+  dependencies:
+    "@tradle/react-native-http" "^2.0.1"
+    assert "^1.5.0"
+    browserify-zlib "^0.1.4"
+    buffer "^4.9.2"
+    console-browserify "^1.2.0"
+    constants-browserify "^1.0.0"
+    dns.js "^1.0.1"
+    domain-browser "^1.2.0"
+    events "^1.1.1"
+    https-browserify "^0.0.1"
+    path-browserify "^0.0.0"
+    process "^0.11.10"
+    punycode "^1.4.1"
+    querystring-es3 "^0.2.1"
+    react-native-crypto "^2.2.0"
+    react-native-http "github:tradle/react-native-http#834492d"
+    react-native-level-fs "^3.0.1"
+    react-native-os "^1.2.6"
+    react-native-randombytes "^3.6.1"
+    react-native-tcp "^3.3.2"
+    react-native-udp "^2.7.0"
+    readable-stream "^1.0.33"
+    stream-browserify "^1.0.0"
+    string_decoder "^0.10.31"
+    timers-browserify "^1.4.2"
+    tty-browserify "^0.0.0"
+    url "^0.10.3"
+    util "^0.10.4"
+    vm-browserify "^0.0.4"
+
+react-native-mcl@^0.1.15:
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/react-native-mcl/-/react-native-mcl-0.1.15.tgz#6ce62a8b5bea14b888176c05452f6c928661783d"
+  integrity sha512-iAxI/JdqXOimUnCjhW4cQcMRUcFX6Nj4uYRPAstLI4a6KgaRvKm1Opd5HYbOBF9GJIEaR2hPwXt/uuC2zFKBgw==
   dependencies:
     "@tradle/react-native-http" "^2.0.1"
     assert "^1.5.0"
@@ -12041,23 +12085,6 @@ react-native-web-refresh-control@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-native-web-refresh-control/-/react-native-web-refresh-control-1.1.1.tgz#41e72b38daa3ae7c6ac44fe37b749975775f7a8c"
   integrity sha512-vHCB4SEVJMrZgVo43dR+h8sg71AaybaPaIqyfzgmY9ejjRdrhbGHncPs2yAhjEzXC+OUt1cSmIpjsltLBYj9KA==
-
-react-native-webview-crypto@^0.0.24:
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/react-native-webview-crypto/-/react-native-webview-crypto-0.0.24.tgz#81107dc663992be32a4e129d0b566f360812493b"
-  integrity sha512-U5swbPXJ9pcY8TYER6TOZDE3ARQucYKCBOOXAGTFvchlB6iKy6EZnKCZRzUb7h3fsUORa+pBi08TPTRy8kZMkA==
-  dependencies:
-    encode-utf8 "^1.0.2"
-    fast-base64-encode "^1.0.0"
-    webview-crypto "^0.1.11"
-
-react-native-webview@^11.17.2:
-  version "11.18.0"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.18.0.tgz#4536bf55d2bda28ed0e6662690f0e997e5630647"
-  integrity sha512-S7GXNZuM7jqBOY6R3Pp0KNRwpL8JJdbUB7f8J2WLlU++TOaUXDmsn5tlGnoycwyHotX5al5LypRgOPVFzrPxBA==
-  dependencies:
-    escape-string-regexp "2.0.0"
-    invariant "2.2.4"
 
 react-native@0.66.4:
   version "0.66.4"
@@ -12723,7 +12750,7 @@ send@0.18.0:
     range-parser "~1.2.1"
     statuses "2.0.1"
 
-serialize-error@2.1.0, serialize-error@^2.1.0:
+serialize-error@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/serialize-error/-/serialize-error-2.1.0.tgz#50b679d5635cdf84667bdc8e59af4e5b81d5f60a"
   integrity sha1-ULZ51WNc34Rme9yOWa9OW4HV9go=
@@ -14625,14 +14652,6 @@ websql@^2.0.3:
     tiny-queue "^0.2.1"
   optionalDependencies:
     sqlite3 "^5.0.2"
-
-webview-crypto@^0.1.11:
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/webview-crypto/-/webview-crypto-0.1.11.tgz#12055748f5885577bbf70c8ddd7445a1a9823bc8"
-  integrity sha512-j+g9bGfgmSMYLLYWtLTVkXLuQQzBb9zcbvSlNhcIb16w880dmrnSpmVca6L6XUgDw0NrQ3oHP63G3ctEAOp3Qw==
-  dependencies:
-    lodash "4.17.3"
-    serialize-error "2.1.0"
 
 whatwg-encoding@^1.0.5:
   version "1.0.5"
