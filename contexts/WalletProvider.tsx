@@ -315,7 +315,6 @@ export const WalletProvider = (props: any) => {
 
       walletFile.on('sync_finished', async () => {
         console.log('sync_finished');
-        setSyncing(false);
         setSyncProgress(100);
         setFirstSyncCompleted(true);
         setConnected(Connection_Stats_Enum.Synced);
