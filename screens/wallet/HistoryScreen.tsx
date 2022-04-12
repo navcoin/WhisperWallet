@@ -29,6 +29,10 @@ const HistoryScreen = (props: any) => {
         setLoadingStatus(Connection_Stats_Text.Connected);
         break;
       }
+      case Connection_Stats_Enum.Synced: {
+        setLoadingStatus(Connection_Stats_Text.Synced);
+        break;
+      }
       case Connection_Stats_Enum.Connecting: {
         setLoadingStatus(Connection_Stats_Text.Connecting);
         break;
@@ -91,7 +95,7 @@ const HistoryScreen = (props: any) => {
   return (
     <Container useSafeArea>
       <TopNavigation title={'Wallet History'} />
-      {loadingStatusText === Connection_Stats_Text.Connected &&
+      {loadingStatusText === Connection_Stats_Text.Synced &&
       history.filter((el: any) => condition(el)).length ? (
         <BigList
           data={history.filter((el: any) => condition(el))}
@@ -99,7 +103,7 @@ const HistoryScreen = (props: any) => {
           itemHeight={90}
         />
       ) : null}
-      {loadingStatusText === Connection_Stats_Text.Connected &&
+      {loadingStatusText === Connection_Stats_Text.Synced &&
       history.filter((el: any) => condition(el)).length === 0 ? (
         <View style={[styles.emptyView]}>
           <Text style={[styles.text]}>There are no transactions yet!</Text>
@@ -119,7 +123,7 @@ const HistoryScreen = (props: any) => {
           </View>
         </View>
       ) : null}
-      {loadingStatusText !== Connection_Stats_Text.Connected ? (
+      {loadingStatusText !== Connection_Stats_Text.Synced ? (
         <View style={[styles.emptyView]}>
           <Text style={[styles.text]}>{loadingStatusText}</Text>
         </View>
