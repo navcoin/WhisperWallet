@@ -28,6 +28,7 @@ import {NetworkTypes} from '../constants/Type';
 import OptionCard from '../components/OptionCard';
 import useKeychain from '../utils/Keychain';
 import Mnemonic from '../components/Mnemonic';
+import {layoutStyles} from '../utils/layout';
 
 const CreateNewWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -61,25 +62,29 @@ const CreateNewWallet = () => {
             <Text category="title4" center marginBottom={32}>
               Choose a name for the wallet
             </Text>
-            <View style={styles.layout}>
+            <View style={[styles.layout]}>
               <Input
                 autoFocus={true}
-                style={styles.flex1}
+                style={[layoutStyles.responsiveRowComponentWidth, styles.flex1]}
                 onChangeText={(name: string) => {
                   setError('');
                   setWalletName(name);
                 }}
               />
+              {error ? (
+                <Text style={{color: 'red', flex: 1}} center>
+                  {error}
+                </Text>
+              ) : (
+                <></>
+              )}
             </View>
-            {error ? (
-              <Text style={{color: 'red', flex: 1}} center>
-                {error}
-              </Text>
-            ) : (
-              <></>
-            )}
           </KeyboardAwareScrollView>
-          <View style={{flexDirection: 'row', marginBottom: 24}}>
+          <View
+            style={[
+              layoutStyles.responsiveRowComponentWidth,
+              {marginBottom: 24},
+            ]}>
             <Button
               children="Next"
               status={'control'}
@@ -104,20 +109,21 @@ const CreateNewWallet = () => {
             <Text category="title4" center marginBottom={32}>
               Choose the network
             </Text>
-
             {NetworkTypes.map((el, index) => {
               return (
-                <OptionCard
-                  key={el[0]}
-                  id={el[0]}
-                  item={{text: el[1]}}
-                  index={index}
-                  selected={network}
-                  onPress={() => {
-                    setNetwork(el[0]);
-                  }}
-                  icon={'creditCard'}
-                />
+                <View style={[layoutStyles.responsiveColumnComponentWidth]}>
+                  <OptionCard
+                    key={el[0]}
+                    id={el[0]}
+                    item={{text: el[1]}}
+                    index={index}
+                    selected={network}
+                    onPress={() => {
+                      setNetwork(el[0]);
+                    }}
+                    icon={'creditCard'}
+                  />
+                </View>
               );
             })}
           </KeyboardAwareScrollView>
@@ -326,12 +332,10 @@ const styles = StyleSheet.create({
     marginTop: 28,
   },
   layout: {
-    flexDirection: 'row',
     marginBottom: 24,
   },
   button: {
     marginTop: 32,
-    marginHorizontal: 24,
     flex: 1,
   },
 });

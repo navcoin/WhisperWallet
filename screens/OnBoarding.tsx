@@ -20,6 +20,7 @@ import Card from '../components/Card';
 import {OnBoarding} from '../constants/Data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useAsyncStorage from '../hooks/useAsyncStorage';
+import {maxComponentWidth, screenWidth} from '../utils/layout';
 
 const OnBoardingPage = memo(() => {
   const {navigate} = useNavigation();
@@ -66,7 +67,7 @@ const OnBoardingPage = memo(() => {
         <Button
           size="large"
           children="Start using Whisper Wallet!"
-          style={{flex: 1, marginLeft: 46}}
+          style={{flex: 1, maxWidth: maxComponentWidth}}
           onPress={() => {
             Alert.alert(
               'Security',
@@ -113,13 +114,15 @@ const themedStyles = StyleService.create({
   bottomView: {
     paddingBottom: 16,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginLeft: 32,
-    marginRight: 24,
+    paddingLeft: 32,
+    paddingRight: 24,
     backgroundColor: 'transparent',
     position: 'absolute',
     bottom: 0,
     marginBottom: 16,
+    justifyContent: 'flex-end',
+    width: screenWidth,
+    flex: 1,
   },
   dot: {
     marginRight: 46,

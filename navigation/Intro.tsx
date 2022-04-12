@@ -10,6 +10,7 @@ import {Images} from '../assets/images';
 import {RootStackParamList} from './type';
 import useNjs from '../hooks/useNjs';
 import useKeychain from '../utils/Keychain';
+import {layoutStyles, maxComponentWidth} from '../utils/layout';
 
 const Intro = memo(props => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -36,52 +37,54 @@ const Intro = memo(props => {
   return (
     <Container style={styles.container}>
       <Content style={styles.content}>
-        <Image
-          source={Images.logo}
-          /* @ts-ignore */
-          style={styles.icon}
-        />
+        <View style={{alignItems: 'center'}}>
+          <Image
+            source={Images.logo}
+            /* @ts-ignore */
+            style={styles.icon}
+          />
 
-        <View style={styles.spacer} />
+          <View style={styles.spacer} />
 
-        <Text
-          category="header"
-          marginTop={16}
-          marginRight={0}
-          marginBottom={8}
-          center>
-          Privacy in the palm of your hands.
-        </Text>
-        <View style={styles.spacer} />
+          <Text
+            category="header"
+            marginTop={16}
+            marginRight={0}
+            marginBottom={8}
+            center>
+            Privacy in the palm of your hands.
+          </Text>
+          <View style={styles.spacer} />
 
-        {walletList.length > 0 ? (
+          {walletList.length > 0 ? (
+            <Button
+              children="Open Wallet"
+              style={[layoutStyles.responsiveRowComponentWidth, styles.wallet]}
+              status="control"
+              onPress={() => {
+                navigate('OpenWallet');
+              }}
+            />
+          ) : (
+            <></>
+          )}
           <Button
-            children="Open Wallet"
-            style={styles.wallet}
+            children="New Wallet"
+            style={[layoutStyles.responsiveRowComponentWidth, styles.wallet]}
             status="control"
             onPress={() => {
-              navigate('OpenWallet');
+              navigate('CreateNewWallet');
             }}
           />
-        ) : (
-          <></>
-        )}
-        <Button
-          children="New Wallet"
-          style={styles.wallet}
-          status="control"
-          onPress={() => {
-            navigate('CreateNewWallet');
-          }}
-        />
-        <Button
-          children="Import Wallet"
-          style={styles.wallet}
-          status="control"
-          onPress={() => {
-            navigate('ImportWallet');
-          }}
-        />
+          <Button
+            children="Import Wallet"
+            style={[layoutStyles.responsiveRowComponentWidth, styles.wallet]}
+            status="control"
+            onPress={() => {
+              navigate('ImportWallet');
+            }}
+          />
+        </View>
       </Content>
     </Container>
   );
@@ -98,6 +101,7 @@ const themedStyles = StyleService.create({
     width: 200,
     height: 200,
     marginTop: 48,
+    alignSelf: 'center',
   },
   iconArrow: {
     tintColor: 'color-primary-100',
