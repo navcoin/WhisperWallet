@@ -29,6 +29,7 @@ import Card from '../components/Card';
 import OptionCard from '../components/OptionCard';
 import {NetworkTypes, WalletTypes} from '../constants/Type';
 import useKeychain from '../utils/Keychain';
+import {layoutStyles} from '../utils/layout';
 
 const ImportWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -67,24 +68,30 @@ const ImportWallet = () => {
 
             {WalletTypes.map((el, index) => {
               return (
-                <OptionCard
-                  item={{text: el[1]}}
-                  index={index}
-                  icon={'creditCard'}
-                  onPress={() => {
-                    setType(el[0]);
-                    setIndex(1);
-                  }}
-                />
+                <View style={[layoutStyles.responsiveColumnComponentWidth]}>
+                  <OptionCard
+                    item={{text: el[1]}}
+                    index={index}
+                    icon={'creditCard'}
+                    onPress={() => {
+                      setType(el[0]);
+                      setIndex(1);
+                    }}
+                  />
+                </View>
               );
             })}
           </KeyboardAwareScrollView>
         ) : index === 1 ? (
-          <KeyboardAwareScrollView>
+          <View>
             <Text center style={{marginHorizontal: 12, marginBottom: 24}}>
               Type the recovery words.
             </Text>
-            <View style={styles.layout}>
+            <View
+              style={[
+                layoutStyles.responsiveColumnComponentWidth,
+                styles.layout,
+              ]}>
               <Input
                 multiline={true}
                 numberOfLines={3}
@@ -102,7 +109,11 @@ const ImportWallet = () => {
             ) : (
               <></>
             )}
-            <View style={styles.layout}>
+            <View
+              style={[
+                layoutStyles.responsiveRowComponentWidth,
+                {marginBottom: 24},
+              ]}>
               <Button
                 status={'control'}
                 children="Next"
@@ -117,7 +128,7 @@ const ImportWallet = () => {
                 }}
               />
             </View>
-          </KeyboardAwareScrollView>
+          </View>
         ) : index === 2 ? (
           <KeyboardAwareScrollView
             style={styles.content}

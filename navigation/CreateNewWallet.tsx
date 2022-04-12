@@ -127,7 +127,11 @@ const CreateNewWallet = () => {
               );
             })}
           </KeyboardAwareScrollView>
-          <View style={{flexDirection: 'row', marginBottom: 24}}>
+          <View
+            style={[
+              layoutStyles.responsiveRowComponentWidth,
+              {marginBottom: 24},
+            ]}>
             <Button
               children="Next"
               status={'control'}

@@ -14,6 +14,7 @@ import {NetworkTypes} from '../constants/Type';
 import OptionCard from '../components/OptionCard';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useKeychain from '../utils/Keychain';
+import {layoutStyles} from '../utils/layout';
 
 const OpenWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -50,36 +51,38 @@ const OpenWallet = () => {
           showsVerticalScrollIndicator={false}>
           {walletList.map((el, index) => {
             return (
-              <OptionCard
-                key={el}
-                item={{text: el}}
-                index={index}
-                icon={'creditCard'}
-                selected={walletName}
-                onPress={() => {
-                  setLoading(true);
-                  read(el)
-                    .then((password: string) => {
-                      createWallet(
-                        el,
-                        '',
-                        '',
-                        password,
-                        password,
-                        false,
-                        true,
-                        'mainnet',
-                        () => {
-                          setLoading(false);
-                          navigate('Wallet');
-                        },
-                      );
-                    })
-                    .catch((e: any) => {
-                      setLoading(false);
-                    });
-                }}
-              />
+              <View style={[layoutStyles.responsiveColumnComponentWidth]}>
+                <OptionCard
+                  key={el}
+                  item={{text: el}}
+                  index={index}
+                  icon={'creditCard'}
+                  selected={walletName}
+                  onPress={() => {
+                    setLoading(true);
+                    read(el)
+                      .then((password: string) => {
+                        createWallet(
+                          el,
+                          '',
+                          '',
+                          password,
+                          password,
+                          false,
+                          true,
+                          'mainnet',
+                          () => {
+                            setLoading(false);
+                            navigate('Wallet');
+                          },
+                        );
+                      })
+                      .catch((e: any) => {
+                        setLoading(false);
+                      });
+                  }}
+                />
+              </View>
             );
           })}
         </KeyboardAwareScrollView>
