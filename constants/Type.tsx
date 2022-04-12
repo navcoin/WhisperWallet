@@ -61,6 +61,7 @@ export enum Connection_Stats_Text {
   Connecting = 'Connecting to the network...',
   Connected = '',
   Syncing = 'Synchronizing wallet...',
+  Synced = '',
   Disconnected = 'Wallet is disconnected.',
   NoServers = 'No servers found! Please contact our administrator through discord.',
 }
