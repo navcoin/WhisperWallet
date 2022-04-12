@@ -1,5 +1,11 @@
 import React from 'react';
-import {Image, View, StyleSheet, ImageSourcePropType} from 'react-native';
+import {
+  Image,
+  View,
+  StyleSheet,
+  ImageSourcePropType,
+  ScrollView,
+} from 'react-native';
 import Text from './Text';
 import Animated, {
   Extrapolate,
@@ -47,7 +53,10 @@ const Card = ({
   });
 
   return (
-    <View style={{width: widthItem, paddingTop: top}}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+      style={{width: widthItem, paddingTop: top}}>
       <Animated.View
         style={[
           {
@@ -69,7 +78,7 @@ const Card = ({
           />
         </View>
       </Animated.View>
-      <Animated.View style={[styleText, styles.textView]}>
+      <Animated.View style={[styleText, styles.textView, styles.spacer]}>
         <Text marginTop={48} category="title1">
           {title}
         </Text>
@@ -77,11 +86,13 @@ const Card = ({
           {description}
         </Text>
       </Animated.View>
-    </View>
+    </ScrollView>
   );
 };
 
 export default Card;
+const bottomButtonHeight = 32 + 64;
+const spaceBetweenButtonAndContent = 16;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -95,4 +106,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  spacer: {paddingBottom: spaceBetweenButtonAndContent + bottomButtonHeight},
 });

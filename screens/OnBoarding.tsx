@@ -112,14 +112,14 @@ const themedStyles = StyleService.create({
   },
   bottomView: {
     paddingBottom: 16,
-    paddingTop: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginLeft: 32,
     marginRight: 24,
     backgroundColor: 'transparent',
     position: 'absolute',
-    bottom: 16,
+    bottom: 0,
+    marginBottom: 16,
   },
   dot: {
     marginRight: 46,

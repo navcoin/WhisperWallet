@@ -35,15 +35,15 @@ const Intro = memo(props => {
 
   return (
     <Container style={styles.container}>
-      <Image
-        source={Images.logo}
-        /* @ts-ignore */
-        style={styles.icon}
-      />
-
-      <View style={styles.spacer} />
-
       <Content style={styles.content}>
+        <Image
+          source={Images.logo}
+          /* @ts-ignore */
+          style={styles.icon}
+        />
+
+        <View style={styles.spacer} />
+
         <Text
           category="header"
           marginTop={16}
