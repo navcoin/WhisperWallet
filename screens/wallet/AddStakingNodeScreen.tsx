@@ -1,27 +1,14 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {
-  Button,
-  Icon,
-  IndexPath,
-  Input,
-  Layout,
-  Select,
-  SelectItem,
-  TopNavigation,
-  TopNavigationAction,
-} from '@ui-kitten/components';
+import {Button, Input, Layout} from '@ui-kitten/components';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {NodeOption, ServerOption} from '../../constants/Type';
+import {NodeOption} from '../../constants/Type';
 import Text from '../../components/Text';
-import useNjs from '../../hooks/useNjs';
-import {RootStackParamList, ScreenProps} from '../../navigation/type';
-import useAsyncStorage from '../../hooks/useAsyncStorage';
-import {networkOptions, protosOptions} from '../../constants/Data';
-import {validateIp, validatePort} from '../../utils/server';
+import {RootStackParamList} from '../../navigation/type';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import TopNavigationComponent from '../../components/TopNavigation';
 
 const AddStakingNodeScreen = () => {
   const {bitcore, wallet, updateAccounts} = useWallet();
@@ -68,7 +55,7 @@ const AddStakingNodeScreen = () => {
   return (
     <Container useSafeArea>
       <KeyboardAwareScrollView>
-        <TopNavigation title={'Add New Staking Node'} />
+        <TopNavigationComponent title={'Add New Staking Node'} />
 
         <Layout level="2" style={styles.inputCard}>
           <View style={styles.inputGroup}>

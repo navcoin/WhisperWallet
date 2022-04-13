@@ -4,7 +4,6 @@ import {
   Input,
   Layout,
   StyleService,
-  TopNavigation,
   useStyleSheet,
 } from '@ui-kitten/components';
 import Text from '../../components/Text';
@@ -25,6 +24,7 @@ import BottomSheetProvider from '../../contexts/BottomSheetProvider';
 import DestinationComponent from '../../components/DestinationComponent';
 import {QrProvider} from '../../contexts/QrProvider';
 import SendTransactionButton from '../../components/SendTransactionButton';
+import TopNavigationComponent from '../../components/TopNavigation';
 
 const SendToScreen = (props: any) => {
   const styles = useStyleSheet(themedStyles);
@@ -119,7 +119,7 @@ const SendToScreen = (props: any) => {
               showMemoDialog(false);
             }}
           />
-          <TopNavigation
+          <TopNavigationComponent
             title={
               'Send ' +
               (from?.type_id == Balance_Types_Enum.PrivateToken

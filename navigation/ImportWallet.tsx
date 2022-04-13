@@ -1,39 +1,25 @@
-import React, {memo, useState, useEffect, useCallback} from 'react';
-import {StyleSheet, TextInput, View} from 'react-native';
-import {
-  Button,
-  IndexPath,
-  Input,
-  Select,
-  SelectItem,
-  Tab,
-  TabBar,
-  TopNavigation,
-  useTheme,
-} from '@ui-kitten/components';
+import React, {useState} from 'react';
+import {StyleSheet, View} from 'react-native';
+import {Button, Input, useTheme} from '@ui-kitten/components';
 import {useNavigation} from '@react-navigation/native';
 
 import Text from '../components/Text';
 import Container from '../components/Container';
 import AnimatedStep from '../components/AnimatedStep';
-import NavigationAction from '../components/NavigationAction';
-import {SceneMap, TabView} from 'react-native-tab-view';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
 import Loading from '../components/Loading';
 import useNjs from '../hooks/useNjs';
-import useWin from '../hooks/useWin';
 import {IsValidMnemonic} from '../utils/Mnemonic';
-import Card from '../components/Card';
 import OptionCard from '../components/OptionCard';
 import {NetworkTypes, WalletTypes} from '../constants/Type';
 import useKeychain from '../utils/Keychain';
+import TopNavigationComponent from '../components/TopNavigation';
 
 const ImportWallet = () => {
   const {goBack, navigate} = useNavigation();
   const theme = useTheme();
-  const {width, bottom} = useLayout();
   const [index, setIndex] = useState(0);
   const [walletName, setWalletName] = useState('');
   const [mnemonic, setMnemonic] = useState('');
@@ -45,14 +31,10 @@ const ImportWallet = () => {
   const {njs} = useNjs();
   const {read} = useKeychain();
 
-  let words = [];
-
   return (
     <Container useSafeArea>
       <Loading loading={loading} />
-      <Text category="title1" center marginTop={32}>
-        Import wallet
-      </Text>
+      <TopNavigationComponent title={'Import Wallet'} />
       <AnimatedStep style={styles.animatedStep} step={index} />
 
       <View style={styles.container}>

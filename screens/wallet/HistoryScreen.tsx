@@ -1,8 +1,7 @@
 import useWallet from '../../hooks/useWallet';
 import BigList from 'react-native-big-list';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {TopNavigation} from '@ui-kitten/components';
 import Container from '../../components/Container';
 import Transaction from '../../components/Transaction';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -14,9 +13,9 @@ import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
 import useLayout from '../../hooks/useLayout';
 import {RootStackParamList} from '../../navigation/type';
+import TopNavigationComponent from '../../components/TopNavigation';
 
 const HistoryScreen = (props: any) => {
-  const {width, height} = useLayout();
   const {history, connected} = useWallet();
 
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -94,7 +93,7 @@ const HistoryScreen = (props: any) => {
 
   return (
     <Container useSafeArea>
-      <TopNavigation title={'Wallet History'} />
+      <TopNavigationComponent title={'Wallet History'} />
       {loadingStatusText === Connection_Stats_Text.Synced &&
       history.filter((el: any) => condition(el)).length ? (
         <BigList
