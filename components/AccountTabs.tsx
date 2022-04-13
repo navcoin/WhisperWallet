@@ -1,6 +1,6 @@
 import Tab from './Tab';
 import Content from './Content';
-import {View} from 'react-native';
+import {RefreshControl, ScrollView, View} from 'react-native';
 import BalanceCard from './BalanceCard';
 import Text from './Text';
 import React, {useCallback, useEffect, useState} from 'react';
@@ -19,7 +19,7 @@ const AccountsTab = () => {
     Destination_Types_Enum.PublicWallet,
     '',
   ]);
-  const {accounts} = useWallet();
+  const {accounts, refreshWallet} = useWallet();
   const bottomSheet = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
   const {navigate} = useNavigation();
@@ -98,6 +98,14 @@ const AccountsTab = () => {
     }
   }, [bottomSheet, account]);
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refreshWallet();
+    setRefreshing(false);
+  }, []);
+
   return (
     <>
       <Tab
@@ -106,33 +114,43 @@ const AccountsTab = () => {
         onChange={setSelectedTab}
         style={{marginHorizontal: 16}}
       />
-      <Content style={{paddingTop: 24}}>
-        {selectedTab == 0 ? (
-          accounts.map((el, i) => {
-            return (
-              <View style={styles.item} key={i}>
-                <BalanceCard
-                  item={{...el, name: el.name + ' Wallet'}}
-                  index={i}
-                  onPress={() => {
-                    setAccount([el.type_id, el.destination_id, el.name]);
-                  }}
-                />
-              </View>
-            );
-          })
-        ) : selectedTab == 1 ? (
-          <Text marginLeft={36} marginBottom={16}>
-            You have no tokens yet.
-          </Text>
-        ) : selectedTab == 2 ? (
-          <Text marginLeft={36} marginBottom={16}>
-            You have no NFTs yet.
-          </Text>
-        ) : (
-          <></>
-        )}
-      </Content>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#fff"
+            titleColor="#fff"
+          />
+        }>
+        <Content style={{paddingTop: 24}}>
+          {selectedTab == 0 ? (
+            accounts.map((el, i) => {
+              return (
+                <View style={styles.item} key={i}>
+                  <BalanceCard
+                    item={{...el, name: el.name + ' Wallet'}}
+                    index={i}
+                    onPress={() => {
+                      setAccount([el.type_id, el.destination_id, el.name]);
+                    }}
+                  />
+                </View>
+              );
+            })
+          ) : selectedTab == 1 ? (
+            <Text marginLeft={36} marginBottom={16}>
+              You have no tokens yet.
+            </Text>
+          ) : selectedTab == 2 ? (
+            <Text marginLeft={36} marginBottom={16}>
+              You have no NFTs yet.
+            </Text>
+          ) : (
+            <></>
+          )}
+        </Content>
+      </ScrollView>
     </>
   );
 };
