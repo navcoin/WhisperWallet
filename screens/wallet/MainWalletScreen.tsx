@@ -22,10 +22,10 @@ import BalanceCircle from '../../components/BalanceCircle';
 
 import {BottomSheetProvider} from '../../contexts/BottomSheetProvider';
 import AccountsTab from '../../components/AccountTabs';
-import {RootStackParamList} from '../../navigation/type';
+import {RootStackParamList, WalletParamList} from '../../navigation/type';
 
 const MainWalletScreen = () => {
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+  const {navigate, reset} = useNavigation<NavigationProp<WalletParamList>>();
 
   const styles = useStyleSheet(themedStyles);
   const {connected, refreshWallet} = useWallet();
@@ -49,6 +49,13 @@ const MainWalletScreen = () => {
       setDotColor('red');
     }
   }, [connected]);
+
+  useEffect(() => {
+    /*reset({
+      index: 0,
+      routes: [{name: 'MainWalletScreen'}],
+    });*/
+  }, [reset]);
 
   return (
     <BottomSheetProvider>

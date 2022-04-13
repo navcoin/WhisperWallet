@@ -20,11 +20,7 @@ const Wallet = ({navigation}) => {
         headerShown: false,
       }}
       initialRouteName={'MainWalletScreen'}>
-      <Stack.Screen
-        name={'MainWalletScreen'}
-        component={MainWalletScreen}
-        options={{gestureEnabled: false}}
-      />
+      <Stack.Screen name={'MainWalletScreen'} component={MainWalletScreen} />
       <Stack.Screen name={'SendToScreen'} component={SendToScreen} />
       <Stack.Screen name={'AddressScreen'} component={AddressScreen} />
       <Stack.Screen name={'HistoryScreen'} component={HistoryScreen} />
