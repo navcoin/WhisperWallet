@@ -1,5 +1,6 @@
 import React, {memo, useEffect, useState} from 'react';
 import {Image, View} from 'react-native';
+import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
 import {StyleService, useStyleSheet, Button} from '@ui-kitten/components';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 
@@ -48,9 +49,9 @@ const Intro = memo(props => {
 
           <Text
             category="header"
-            marginTop={16}
-            marginRight={0}
-            marginBottom={8}
+            marginTop={scale(16)}
+            marginRight={scale(0)}
+            marginBottom={scale(8)}
             center>
             Privacy in the palm of your hands.
           </Text>
@@ -98,35 +99,35 @@ const themedStyles = StyleService.create({
     alignItems: 'center',
   },
   icon: {
-    width: 200,
-    height: 200,
-    marginTop: 48,
+    width: scale(200),
+    height: scale(200),
+    marginTop: scale(48),
     alignSelf: 'center',
   },
   iconArrow: {
     tintColor: 'color-primary-100',
-    marginRight: 8,
+    marginRight: scale(8),
   },
   input: {
-    marginVertical: 24,
+    marginVertical: scale(24),
   },
   wallet: {
-    marginTop: 8,
-    marginBottom: 16,
+    marginTop: scale(8),
+    marginBottom: scale(16),
   },
   content: {
-    marginHorizontal: 40,
+    marginHorizontal: scale(40),
   },
   btnImage: {
     justifyContent: 'space-between',
-    marginTop: 48,
+    marginTop: scale(48),
     flex: 1,
   },
   spacer: {
-    marginTop: 32,
+    marginTop: scale(32),
   },
   btnText: {
-    marginTop: 24,
+    marginTop: scale(24),
     textAlign: 'center',
   },
 });

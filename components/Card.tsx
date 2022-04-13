@@ -13,6 +13,7 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import useLayout from '../hooks/useLayout';
+import {scale} from 'react-native-size-matters';
 
 interface Product {
   id: number;
@@ -56,22 +57,22 @@ const Card = ({
     <ScrollView
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
-      style={{width: widthItem, paddingTop: top}}>
+      style={{width: scale(widthItem), paddingTop: scale(top)}}>
       <Animated.View
         style={[
           {
-            width: widthItem,
-            height: height / 2.2,
-            paddingRight: 16,
+            width: scale(widthItem),
+            height: scale(height) / 2.2,
+            paddingRight: scale(16),
           },
         ]}>
         <View style={[styles.image, {backgroundColor: color}]}>
           <Image
             source={image}
             style={{
-              width: '90%',
-              maxWidth: 300,
-              maxHeight: 300,
+              width: scale('90%'),
+              maxWidth: scale(300),
+              maxHeight: scale(300),
               height: undefined,
               aspectRatio: 1,
             }}

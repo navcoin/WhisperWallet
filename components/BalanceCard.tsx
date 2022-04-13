@@ -13,6 +13,7 @@ import {
   Connection_Stats_Enum,
 } from '../constants/Type';
 import useWallet from '../hooks/useWallet';
+import {scale} from 'react-native-size-matters';
 
 interface BalanceProps {
   item: BalanceFragment;
@@ -82,10 +83,10 @@ export default BalanceCard;
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 12,
-    paddingVertical: 10,
-    paddingLeft: 10,
-    paddingRight: 21,
+    borderRadius: scale(12),
+    paddingVertical: scale(10),
+    paddingLeft: scale(10),
+    paddingRight: scale(21),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -95,15 +96,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   walletIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 48,
+    width: scale(48),
+    height: scale(48),
+    borderRadius: scale(48),
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: scale(16),
   },
   icon: {
-    width: 16,
-    height: 16,
+    width: scale(16),
+    height: scale(16),
   },
 });

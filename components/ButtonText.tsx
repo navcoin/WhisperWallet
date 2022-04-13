@@ -3,6 +3,7 @@ import {TouchableOpacity, ViewStyle, StyleProp} from 'react-native';
 import {StyleService, useStyleSheet, Icon} from '@ui-kitten/components';
 
 import Text, {MyTextProps} from './Text';
+import {scale} from 'react-native-size-matters';
 
 interface Props extends MyTextProps {
   title: string;
@@ -33,7 +34,7 @@ const ButtonText = ({
       ]}>
       {icon ? (
         <Icon
-          style={[styleIcon, {width: 16, height: 16}]}
+          style={[styleIcon, {width: scale(16), height: scale(16)}]}
           pack="assets"
           name={icon}
         />
