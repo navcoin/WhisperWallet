@@ -1,12 +1,5 @@
-import React, {
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import {ScrollView, RefreshControl, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View} from 'react-native';
 import {Layout, StyleService, useStyleSheet} from '@ui-kitten/components';
 
 import Container from '../../components/Container';
