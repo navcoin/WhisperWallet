@@ -23,6 +23,7 @@ import BalanceCircle from '../../components/BalanceCircle';
 import {BottomSheetProvider} from '../../contexts/BottomSheetProvider';
 import AccountsTab from '../../components/AccountTabs';
 import {RootStackParamList} from '../../navigation/type';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const MainWalletScreen = () => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -92,7 +93,7 @@ const MainWalletScreen = () => {
   );
 };
 
-export default MainWalletScreen;
+export default gestureHandlerRootHOC(MainWalletScreen);
 
 const themedStyles = StyleService.create({
   item: {
