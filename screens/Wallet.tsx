@@ -10,17 +10,39 @@ import SettingsScreen from './wallet/SettingsScreen';
 import MnemonicScreen from './wallet/MnemonicScreen';
 import AddServerScreen from './wallet/AddServerScreen';
 import ServersScreen from './wallet/ServersScreen';
+import {BackHandler} from 'react-native';
+import {useCallback} from 'react';
 
 const Stack = createStackNavigator<WalletParamList>();
 
 const Wallet = ({navigation}) => {
+  const _handleBackButtonClick = useCallback(() => true, []);
+
+  const _onBlur = useCallback(() => {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      _handleBackButtonClick,
+    );
+  }, []);
+
+  const _onFocus = useCallback(() => {
+    BackHandler.addEventListener('hardwareBackPress', _handleBackButtonClick);
+  }, []);
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
       initialRouteName={'MainWalletScreen'}>
-      <Stack.Screen name={'MainWalletScreen'} component={MainWalletScreen} />
+      <Stack.Screen
+        name={'MainWalletScreen'}
+        component={MainWalletScreen}
+        listeners={{
+          blur: _onBlur,
+          focus: _onFocus,
+        }}
+      />
       <Stack.Screen name={'SendToScreen'} component={SendToScreen} />
       <Stack.Screen name={'AddressScreen'} component={AddressScreen} />
       <Stack.Screen name={'HistoryScreen'} component={HistoryScreen} />
