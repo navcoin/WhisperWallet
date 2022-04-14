@@ -4,6 +4,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+#import "RNBootSplash.h" // <- add the header import
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
 #import <FlipperKitLayoutPlugin/FlipperKitLayoutPlugin.h>
@@ -51,8 +52,8 @@ static void InitializeFlipper(UIApplication *application) {
   //UIStoryboard *sb = [UIStoryboard storyboardWithName:@"LaunchScreen" bundle:nil];
   //UIViewController *vc = [sb instantiateInitialViewController];
   //rootView.loadingView = vc.view;
-  [super application:application didFinishLaunchingWithOptions:launchOptions];
-  return YES;
+  [RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView]; // <- initialization using the storyboard file name
+ return YES;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
