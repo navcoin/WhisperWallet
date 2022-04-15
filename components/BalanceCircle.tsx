@@ -6,6 +6,7 @@ import useWallet from '../hooks/useWallet';
 import {useTheme, Text} from '@ui-kitten/components';
 import {Connection_Stats_Enum} from '../constants/Type';
 import CurrencyText from './CurrencyText';
+import BackgroundTimer from 'react-native-background-timer';
 
 const BalanceCircle = memo(() => {
   const {width} = useLayout();
@@ -29,7 +30,6 @@ const BalanceCircle = memo(() => {
   ]);
   const [totalBalance, setTotalBalance] = useState(0);
   const [rotation, setRotation] = useState(180);
-  const [timer, setTimer] = useState<any>(undefined);
 
   useEffect(() => {
     if (
@@ -37,15 +37,13 @@ const BalanceCircle = memo(() => {
       connected != Connection_Stats_Enum.Bootstrapping
     ) {
       setRotation(180);
-      clearInterval(timer);
+      BackgroundTimer.stopBackgroundTimer();
     } else {
-      setTimer(
-        setInterval(() => {
-          setRotation(prev => {
-            return prev + 2;
-          });
-        }, 10),
-      );
+      BackgroundTimer.runBackgroundTimer(() => {
+        setRotation(prev => {
+          return prev + 2;
+        });
+      }, 10);
     }
   }, [connected]);
 
