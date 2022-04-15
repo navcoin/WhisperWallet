@@ -1,11 +1,4 @@
-import React, {
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {ScrollView, RefreshControl, View} from 'react-native';
 import {Layout, StyleService, useStyleSheet} from '@ui-kitten/components';
 
@@ -22,11 +15,11 @@ import BalanceCircle from '../../components/BalanceCircle';
 
 import {BottomSheetProvider} from '../../contexts/BottomSheetProvider';
 import AccountsTab from '../../components/AccountTabs';
-import {RootStackParamList} from '../../navigation/type';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
+import {WalletParamList} from '../../navigation/type';
 
 const MainWalletScreen = () => {
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+  const {navigate} = useNavigation<NavigationProp<WalletParamList>>();
 
   const styles = useStyleSheet(themedStyles);
   const {connected, refreshWallet} = useWallet();
