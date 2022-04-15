@@ -65,7 +65,7 @@ const CreateNewWallet = () => {
           <View style={{flexDirection: 'row', marginBottom: 24}}>
             <Button
               children="Next"
-              status={'control'}
+              status={'primary-whisper'}
               style={styles.button}
               onPressOut={async () => {
                 const walletList = await njs.wallet.WalletFile.ListWallets();
@@ -107,7 +107,7 @@ const CreateNewWallet = () => {
           <View style={{flexDirection: 'row', marginBottom: 24}}>
             <Button
               children="Next"
-              status={'control'}
+              status={'primary-whisper'}
               style={styles.button}
               onPressOut={() => {
                 setLoading(true);
@@ -142,7 +142,7 @@ const CreateNewWallet = () => {
           <View style={{flexDirection: 'row', marginBottom: 24}}>
             <Button
               children="Next"
-              status={'control'}
+              status={'primary-whisper'}
               style={styles.button}
               onPressOut={() => setIndex(3)}
             />
@@ -180,7 +180,9 @@ const CreateNewWallet = () => {
                       autoCapitalize="none"
                       value={words[wordpos]}
                       onChangeText={(name: string) => {
-                        setWords((prev) => prev[wordpos] = name.toLowerCase());
+                        let newWords = [...words];
+                        newWords[wordpos] = name.toLowerCase();
+                        setWords(newWords);
                       }}
                     />
                   </View>
@@ -198,7 +200,7 @@ const CreateNewWallet = () => {
           <View style={{flexDirection: 'row', marginBottom: 24}}>
             <Button
               children="Back"
-              status={'control'}
+              status={'primary-whisper'}
               style={styles.button}
               onPress={() => {
                 setError('');
@@ -208,14 +210,14 @@ const CreateNewWallet = () => {
             <Button
               children="Skip"
               style={styles.button}
-              status={'control'}
+              status={'primary-whisper'}
               onPress={() => {
                 setIndex(4);
               }}
             />
             <Button
               children="Next"
-              status={'control'}
+              status={'primary-whisper'}
               style={styles.button}
               onPressOut={() => {
                 if (words.join(' ') == mnemonic) {
@@ -242,7 +244,7 @@ const CreateNewWallet = () => {
           <View style={{flexDirection: 'row', marginBottom: 24}}>
             <Button
               children="Next"
-              status={'control'}
+              status={'primary-whisper'}
               style={styles.button}
               onPressOut={() => {
                 navigate('Wallet');
