@@ -7,6 +7,7 @@ import useKeychain from '../../utils/Keychain';
 import Mnemonic from '../../components/Mnemonic';
 import Text from '../../components/Text';
 import TopNavigationComponent from '../../components/TopNavigation';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const MnemonicScreen: React.FC<ScreenProps<'MnemonicScreen'>> = () => {
   const {mnemonic: mnemonicSource, wallet, walletName} = useWallet();
@@ -43,7 +44,7 @@ const MnemonicScreen: React.FC<ScreenProps<'MnemonicScreen'>> = () => {
   );
 };
 
-export default MnemonicScreen;
+export default gestureHandlerRootHOC(MnemonicScreen);
 
 const styles = StyleSheet.create({
   contentWrapper: {

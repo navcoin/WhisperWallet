@@ -435,7 +435,7 @@ export const WalletProvider = (props: any) => {
           );
           console.log(ret);
           res(ret);
-        } else if (from == 'staking') {
+        } else if (from == 'cold_staking') {
           let ret = await wallet.NavCreateTransaction(
             to,
             Math.floor(amount * 1e8),
@@ -448,6 +448,8 @@ export const WalletProvider = (props: any) => {
           );
           console.log(ret);
           res(ret);
+        } else {
+          console.log('unknown wallet type', from);
         }
       } catch (e) {
         console.log(e.stack);

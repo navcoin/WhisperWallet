@@ -9,6 +9,7 @@ import QRCode from 'react-native-qrcode-svg';
 import {BalanceFragment} from '../../constants/Type';
 import useWallet from '../../hooks/useWallet';
 import TopNavigationComponent from '../../components/TopNavigation';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const AddressScreen = (props: any) => {
   const [addressType, setAddressType] = useState<BalanceFragment>(
@@ -70,7 +71,7 @@ const AddressScreen = (props: any) => {
   );
 };
 
-export default AddressScreen;
+export default gestureHandlerRootHOC(AddressScreen);
 
 const styles = StyleSheet.create({
   container: {

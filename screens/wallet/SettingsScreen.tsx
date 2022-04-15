@@ -11,6 +11,7 @@ import useNjs from '../../hooks/useNjs';
 import useKeychain from '../../utils/Keychain';
 import Loading from '../../components/Loading';
 import TopNavigationComponent from '../../components/TopNavigation';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 interface SettingsItem {
   title: string;
@@ -195,7 +196,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   );
 };
 
-export default SettingsScreen;
+export default gestureHandlerRootHOC(SettingsScreen);
 
 const styles = StyleSheet.create({
   header: {

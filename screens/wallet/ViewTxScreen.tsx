@@ -4,6 +4,7 @@ import TopNavigationComponent from '../../components/TopNavigation';
 import Container from '../../components/Container';
 import InputSelect from '../../components/InputSelect';
 import Clipboard from '@react-native-community/clipboard';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const ViewTxScreen = (props: any) => {
   return (
@@ -75,4 +76,4 @@ const ViewTxScreen = (props: any) => {
   );
 };
 
-export default ViewTxScreen;
+export default gestureHandlerRootHOC(ViewTxScreen);

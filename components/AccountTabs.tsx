@@ -1,6 +1,6 @@
 import Tab from './Tab';
 import Content from './Content';
-import {View} from 'react-native';
+import {RefreshControl, ScrollView, View} from 'react-native';
 import BalanceCard from './BalanceCard';
 import Text from './Text';
 import React, {useCallback, useState} from 'react';
@@ -144,6 +144,14 @@ const AccountsTab = () => {
     [bottomSheet, pickDestination],
   );
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refreshWallet();
+    setRefreshing(false);
+  }, []);
+
   return (
     <>
       <Tab
@@ -152,6 +160,15 @@ const AccountsTab = () => {
         onChange={setSelectedTab}
         style={{marginHorizontal: 16}}
       />
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#fff"
+            titleColor="#fff"
+          />
+        }>
       <Content style={{paddingTop: 24}}>
         {selectedTab == 0 ? (
           accounts.map((el, i) => {
@@ -208,6 +225,7 @@ const AccountsTab = () => {
           <></>
         )}
       </Content>
+      </ScrollView>
     </>
   );
 };

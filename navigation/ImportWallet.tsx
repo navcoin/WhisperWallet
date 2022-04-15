@@ -72,6 +72,7 @@ const ImportWallet = () => {
                 numberOfLines={3}
                 autoFocus={true}
                 style={styles.flex1}
+                value={mnemonic}
                 onChangeText={(m: string) => {
                   setMnemonic(m.toLowerCase());
                 }}
@@ -136,6 +137,7 @@ const ImportWallet = () => {
               <Input
                 autoFocus={true}
                 style={styles.flex1}
+                value={walletName}
                 onChangeText={(name: string) => {
                   setError('');
                   setWalletName(name);

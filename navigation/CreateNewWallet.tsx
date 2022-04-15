@@ -26,7 +26,7 @@ const CreateNewWallet = () => {
   const {njs} = useNjs();
   const {read} = useKeychain();
 
-  let words = [];
+  const [words, setWords] = useState([]);
 
   return (
     <Container useSafeArea>
@@ -178,8 +178,9 @@ const CreateNewWallet = () => {
                       key={'word' + wordpos}
                       style={{width: 120, padding: 0}}
                       autoCapitalize="none"
+                      value={words[wordpos]}
                       onChangeText={(name: string) => {
-                        words[wordpos] = name.toLowerCase();
+                        setWords((prev) => prev[wordpos] = name.toLowerCase());
                       }}
                     />
                   </View>

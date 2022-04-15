@@ -15,23 +15,16 @@ import BalanceCircle from '../../components/BalanceCircle';
 
 import {BottomSheetProvider} from '../../contexts/BottomSheetProvider';
 import AccountsTab from '../../components/AccountTabs';
-import {RootStackParamList} from '../../navigation/type';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
+import {WalletParamList} from '../../navigation/type';
 
 const MainWalletScreen = () => {
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+  const {navigate} = useNavigation<NavigationProp<WalletParamList>>();
 
   const styles = useStyleSheet(themedStyles);
-  const {connected, refreshWallet} = useWallet();
+  const {connected} = useWallet();
 
   const [dotColor, setDotColor] = useState('gray');
-
-  const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await refreshWallet();
-    setRefreshing(false);
-  }, []);
 
   useEffect(() => {
     if (connected == Connection_Stats_Enum.Connecting) {
@@ -46,46 +39,36 @@ const MainWalletScreen = () => {
   return (
     <BottomSheetProvider>
       <Container style={styles.container}>
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              tintColor="#fff"
-              titleColor="#fff"
-            />
-          }>
-          <Layout style={styles.topTab}>
-            <View
-              style={{
-                width: 8,
-                borderRadius: 4,
-                height: 8,
-                backgroundColor: dotColor,
-                marginLeft: 12,
-                marginTop: 12,
-                alignSelf: 'center',
-              }}
-            />
-            <Text />
-            <NavigationAction
-              icon={'menu'}
-              onPress={() =>
-                navigate('Wallet', {
-                  screen: 'SettingsScreen',
-                })
-              }
-            />
-          </Layout>
-          <BalanceCircle />
-          <AccountsTab />
-        </ScrollView>
+        <Layout style={styles.topTab}>
+          <View
+            style={{
+              width: 8,
+              borderRadius: 4,
+              height: 8,
+              backgroundColor: dotColor,
+              marginLeft: 12,
+              marginTop: 12,
+              alignSelf: 'center',
+            }}
+          />
+          <Text />
+          <NavigationAction
+            icon={'menu'}
+            onPress={() =>
+              navigate('Wallet', {
+                screen: 'SettingsScreen',
+              })
+            }
+          />
+        </Layout>
+        <BalanceCircle />
+        <AccountsTab />
       </Container>
     </BottomSheetProvider>
   );
 };
 
-export default MainWalletScreen;
+export default gestureHandlerRootHOC(MainWalletScreen);
 
 const themedStyles = StyleService.create({
   item: {
