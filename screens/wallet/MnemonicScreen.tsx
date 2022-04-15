@@ -1,12 +1,13 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {TopNavigation} from '@ui-kitten/components';
 import Container from '../../components/Container';
 import {ScreenProps} from '../../navigation/type';
 import useKeychain from '../../utils/Keychain';
 import Mnemonic from '../../components/Mnemonic';
 import Text from '../../components/Text';
+import TopNavigationComponent from '../../components/TopNavigation';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const MnemonicScreen: React.FC<ScreenProps<'MnemonicScreen'>> = () => {
   const {mnemonic: mnemonicSource, wallet, walletName} = useWallet();
@@ -27,7 +28,7 @@ const MnemonicScreen: React.FC<ScreenProps<'MnemonicScreen'>> = () => {
   }, [mnemonic]);
   return (
     <Container>
-      <TopNavigation title={'Mnemonic'} />
+      <TopNavigationComponent title={'Mnemonic'} />
       <View style={styles.contentWrapper}>
         {mnemonic ? (
           <Mnemonic mnemonic={mnemonic} />
@@ -43,7 +44,7 @@ const MnemonicScreen: React.FC<ScreenProps<'MnemonicScreen'>> = () => {
   );
 };
 
-export default MnemonicScreen;
+export default gestureHandlerRootHOC(MnemonicScreen);
 
 const styles = StyleSheet.create({
   contentWrapper: {

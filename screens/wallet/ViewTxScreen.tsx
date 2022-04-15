@@ -1,14 +1,15 @@
 import React from 'react';
-import {View, Text} from 'react-native';
-import {TopNavigation} from '@ui-kitten/components';
+import {View} from 'react-native';
+import TopNavigationComponent from '../../components/TopNavigation';
 import Container from '../../components/Container';
 import InputSelect from '../../components/InputSelect';
 import Clipboard from '@react-native-community/clipboard';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const ViewTxScreen = (props: any) => {
   return (
     <Container useSafeArea>
-      <TopNavigation title={'Transaction Details'} />
+      <TopNavigationComponent title={'Transaction Details'} />
 
       <View>
         <InputSelect
@@ -29,7 +30,10 @@ const ViewTxScreen = (props: any) => {
         )}
         <InputSelect
           title="Amount"
-          value={props.route.params.item.amount / 1e8}
+          value={
+            props.route.params.item.amount /
+            (props.route.params.item.type == 'nft' ? 1 : 1e8)
+          }
         />
         <InputSelect title="Type" value={props.route.params.item.type} />
         {props.route.params.item.type == 'token' && (
@@ -44,12 +48,24 @@ const ViewTxScreen = (props: any) => {
             />
           </>
         )}
+        {props.route.params.item.type == 'nft' && (
+          <>
+            <InputSelect
+              title="Collection Name"
+              value={props.route.params.item.token_name}
+            />
+            <InputSelect
+              title="Nft Id"
+              value={props.route.params.item.nft_id}
+            />
+          </>
+        )}
         {props.route.params.item.amount > 0 &&
-          props.route.params.item.memos.out.length > 0 && (
+          props.route.params.item.memos?.out?.length > 0 && (
             <InputSelect
               title="Memo"
               value={
-                props.route.params.item.memos.out.length > 1
+                props.route.params.item.memos?.out?.length > 1
                   ? props.route.params.item.memos.out.join(', ')
                   : props.route.params.item.memos.out
               }
@@ -60,4 +76,4 @@ const ViewTxScreen = (props: any) => {
   );
 };
 
-export default ViewTxScreen;
+export default gestureHandlerRootHOC(ViewTxScreen);

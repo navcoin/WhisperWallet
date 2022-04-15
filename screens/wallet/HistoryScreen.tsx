@@ -2,7 +2,6 @@ import useWallet from '../../hooks/useWallet';
 import BigList from 'react-native-big-list';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {TopNavigation} from '@ui-kitten/components';
 import Container from '../../components/Container';
 import Transaction from '../../components/Transaction';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -14,9 +13,10 @@ import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
 import useLayout from '../../hooks/useLayout';
 import {RootStackParamList} from '../../navigation/type';
+import TopNavigationComponent from '../../components/TopNavigation';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const HistoryScreen = (props: any) => {
-  const {width, height} = useLayout();
   const {history, connected} = useWallet();
 
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -27,6 +27,10 @@ const HistoryScreen = (props: any) => {
     switch (connected) {
       case Connection_Stats_Enum.Connected: {
         setLoadingStatus(Connection_Stats_Text.Connected);
+        break;
+      }
+      case Connection_Stats_Enum.Synced: {
+        setLoadingStatus(Connection_Stats_Text.Synced);
         break;
       }
       case Connection_Stats_Enum.Connecting: {
@@ -64,28 +68,43 @@ const HistoryScreen = (props: any) => {
     if (props && props.navigation) {
       navigate('Wallet', {
         screen: 'AddressScreen',
-        params: {from: props.route.params.publicWallet},
+        params: {from: props.route.params.filter},
       });
     }
   };
 
+  const condition = el => {
+    const fA = props.route.params.filter.address;
+    const fTokenId = props.route.params.filter.tokenId;
+    const fNftId = props.route.params.filter.nftId;
+
+    return (
+      el &&
+      el.type === props.route.params.filter.type_id &&
+      (!fTokenId || (fTokenId && el.token_id == fTokenId)) &&
+      (!fNftId || (fNftId && el.nft_id == fNftId)) &&
+      (!fA ||
+        (fA &&
+          (el.addresses_in?.staking?.indexOf(fA) > -1 ||
+            el.addresses_in?.spending?.indexOf(fA) > -1 ||
+            el.addresses_out?.staking?.indexOf(fA) > -1 ||
+            el.addresses_out?.spending?.indexOf(fA) > -1)))
+    );
+  };
+
   return (
     <Container useSafeArea>
-      <TopNavigation title={'Wallet History'} />
-      {loadingStatusText === Connection_Stats_Text.Connected &&
-      history.filter((el: any) => el.type === props.route.params.filter)
-        .length ? (
+      <TopNavigationComponent title={'Wallet History'} />
+      {loadingStatusText === Connection_Stats_Text.Synced &&
+      history.filter((el: any) => condition(el)).length ? (
         <BigList
-          data={history.filter(
-            (el: any) => el.type === props.route.params.filter,
-          )}
+          data={history.filter((el: any) => condition(el))}
           renderItem={renderItem}
           itemHeight={90}
         />
       ) : null}
-      {loadingStatusText === Connection_Stats_Text.Connected &&
-      history.filter((el: any) => el.type === props.route.params.filter)
-        .length === 0 ? (
+      {loadingStatusText === Connection_Stats_Text.Synced &&
+      history.filter((el: any) => condition(el)).length === 0 ? (
         <View style={[styles.emptyView]}>
           <Text style={[styles.text]}>There are no transactions yet!</Text>
           <View style={[styles.cardWrapper]}>
@@ -104,7 +123,7 @@ const HistoryScreen = (props: any) => {
           </View>
         </View>
       ) : null}
-      {loadingStatusText !== Connection_Stats_Text.Connected ? (
+      {loadingStatusText !== Connection_Stats_Text.Synced ? (
         <View style={[styles.emptyView]}>
           <Text style={[styles.text]}>{loadingStatusText}</Text>
         </View>
@@ -113,7 +132,7 @@ const HistoryScreen = (props: any) => {
   );
 };
 
-export default HistoryScreen;
+export default gestureHandlerRootHOC(HistoryScreen);
 
 const styles = StyleSheet.create({
   header: {

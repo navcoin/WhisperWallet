@@ -9,7 +9,6 @@ import {
   Layout,
   Select,
   SelectItem,
-  TopNavigation,
   TopNavigationAction,
 } from '@ui-kitten/components';
 import Container from '../../components/Container';
@@ -22,6 +21,8 @@ import useAsyncStorage from '../../hooks/useAsyncStorage';
 import {networkOptions, protosOptions} from '../../constants/Data';
 import {validateIp, validatePort} from '../../utils/server';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import TopNavigationComponent from '../../components/TopNavigation';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
   <Icon width={20} height={20} {...props} name={props.name} />
@@ -107,7 +108,7 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
   return (
     <Container useSafeArea>
       <KeyboardAwareScrollView>
-        <TopNavigation title={'Add New Server'} />
+        <TopNavigationComponent title={'Add New Server'} />
 
         <Layout level="2" style={styles.inputCard}>
           <View style={styles.inputGroup}>
@@ -172,7 +173,7 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
   );
 };
 
-export default AddServerScreen;
+export default gestureHandlerRootHOC(AddServerScreen);
 
 const styles = StyleSheet.create({
   inputCard: {

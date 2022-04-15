@@ -9,12 +9,11 @@ import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
 import Loading from '../components/Loading';
 import useNjs from '../hooks/useNjs';
-import {Picker} from '@react-native-picker/picker';
-import {NetworkTypes} from '../constants/Type';
 import OptionCard from '../components/OptionCard';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useKeychain from '../utils/Keychain';
 import {layoutStyles} from '../utils/layout';
+import TopNavigationComponent from '../components/TopNavigation';
 
 const OpenWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -37,10 +36,7 @@ const OpenWallet = () => {
   return (
     <Container useSafeArea>
       <Loading loading={loading} />
-      <Text category="title1" center marginTop={32}>
-        Open wallet
-      </Text>
-
+      <TopNavigationComponent title={'Open Wallet'} />
       <View style={styles.container}>
         <Text category="title4" center marginBottom={32}>
           Select which wallet you want to open:

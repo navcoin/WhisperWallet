@@ -1,19 +1,17 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useState} from 'react';
 import {StyleSheet, View, Alert} from 'react-native';
-import {TopNavigation} from '@ui-kitten/components';
 import Container from '../../components/Container';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
-import {
-  Animation_Types_Enum,
-  Connection_Stats_Enum,
-} from '../../constants/Type';
+import {Animation_Types_Enum} from '../../constants/Type';
 import OptionCard from '../../components/OptionCard';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import useNjs from '../../hooks/useNjs';
 import useKeychain from '../../utils/Keychain';
 import Loading from '../../components/Loading';
+import TopNavigationComponent from '../../components/TopNavigation';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 interface SettingsItem {
   title: string;
@@ -131,6 +129,16 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       onPress: () => biometricsAlert(),
     },
     {
+      title: 'Setup Staking Nodes',
+      icon: 'factory',
+      show: true,
+      onPress: () => {
+        navigate('Wallet', {
+          screen: 'StakingNodeScreen',
+        });
+      },
+    },
+    {
       title: 'Setup Electrum Servers',
       icon: 'book',
       show: true,
@@ -163,7 +171,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   return (
     <Container useSafeArea>
       <Loading loading={loading} />
-      <TopNavigation title={'Settings'} />
+      <TopNavigationComponent title={'Settings'} />
       <View style={styles.contentWrapper}>
         {items.map((item, index) => {
           if (!item.show) {
@@ -188,7 +196,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   );
 };
 
-export default SettingsScreen;
+export default gestureHandlerRootHOC(SettingsScreen);
 
 const styles = StyleSheet.create({
   header: {

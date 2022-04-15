@@ -1,13 +1,10 @@
 import Content from '../../components/Content';
 import {
-  Button,
   Icon,
   Input,
   Layout,
   StyleService,
-  TopNavigation,
   useStyleSheet,
-  useTheme,
 } from '@ui-kitten/components';
 import Text from '../../components/Text';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
@@ -17,36 +14,72 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import useWallet from '../../hooks/useWallet';
 import CardSelect from '../../components/CardSelect';
-import {Destination_Types_Enum} from '../../constants/Type';
+import {
+  Balance_Types_Enum,
+  BalanceFragment,
+  Destination_Types_Enum,
+} from '../../constants/Type';
 import DialogInput from 'react-native-dialog-input';
 import BottomSheetProvider from '../../contexts/BottomSheetProvider';
 import DestinationComponent from '../../components/DestinationComponent';
 import {QrProvider} from '../../contexts/QrProvider';
 import SendTransactionButton from '../../components/SendTransactionButton';
+import TopNavigationComponent from '../../components/TopNavigation';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const SendToScreen = (props: any) => {
   const styles = useStyleSheet(themedStyles);
-  const [from, setFrom] = useState(props.route.params.from);
+  const [from, setFrom] = useState<BalanceFragment | undefined>(
+    props.route.params.from,
+  );
   const [to, setTo] = useState('');
-  const [toType, setToType] = useState(props.route.params.toType);
+  const [toType, setToType] = useState(
+    props.route.params.toType || {
+      name: 'Address',
+      text: 'Address',
+      amount: 0,
+      pending_amount: 0,
+      type_id: Balance_Types_Enum.Nav,
+      destination_id: Destination_Types_Enum.Address,
+      currency: 'NAV',
+      icon: 'qr',
+    },
+  );
   const [memo, setMemo] = useState('');
   const {bottom} = useSafeAreaInsets();
   const [amountInString, setAmount] = useState('0');
   const [showMemo, setShowMemo] = useState(false);
   const [subtractFee, setSubtractFee] = useState(false);
-  const {bitcore, accounts, walletName} = useWallet();
+  const {bitcore, accounts, tokens, nfts, walletName, balances} = useWallet();
   const [isMemoDialogVisible, showMemoDialog] = useState(false);
 
+  const [nftId, setNftId] = useState(-1);
+
   const amountInputRef = useRef<Input>();
+  const [sources, setSources] = useState(accounts);
+
+  useEffect(() => {
+    if (from?.type_id == Balance_Types_Enum.PrivateToken) setSources(tokens);
+    else if (from?.type_id == Balance_Types_Enum.Nft) {
+      setAmount((1 / 1e8).toFixed(8));
+      setSources(nfts);
+    }
+  }, [from, tokens, nfts]);
 
   const currentAmount = useMemo(() => {
-    let el = accounts?.filter(el => el.type_id == from)[0];
+    let el = sources?.filter(
+      el =>
+        el.type_id == from?.type_id &&
+        (!from?.address || (from?.address && el.address == from?.address)) &&
+        (!from?.tokenId || (from?.tokenId && el.tokenId == from?.tokenId)) &&
+        (!from?.nftId || (from?.nftId && el.nftId == from?.nftId)),
+    )[0];
     if (!el) {
       return 0;
     } else {
       return el.amount;
     }
-  }, [from, accounts]);
+  }, [from, sources]);
 
   useEffect(() => {
     if (
@@ -55,12 +88,16 @@ const SendToScreen = (props: any) => {
       bitcore.Address(to).isXnav()
     ) {
       setShowMemo(true);
+    } else {
+      setShowMemo(false);
     }
   }, [to, toType]);
 
   useEffect(() => {
     if (parseFloat(amountInString) === currentAmount) {
       setSubtractFee(true);
+    } else {
+      setSubtractFee(false);
     }
   }, [amountInString, currentAmount]);
 
@@ -83,20 +120,32 @@ const SendToScreen = (props: any) => {
               showMemoDialog(false);
             }}
           />
-          <TopNavigation title="Send coins" />
+          <TopNavigationComponent
+            title={
+              'Send ' +
+              (from?.type_id == Balance_Types_Enum.PrivateToken
+                ? 'tokens'
+                : from?.type_id == Balance_Types_Enum.Nft
+                ? 'nfts'
+                : 'coins')
+            }
+          />
           <Content contentContainerStyle={styles.contentContainerStyle}>
             <CardSelect
-              options={accounts.map(el => {
+              options={sources.map(el => {
                 return {
+                  ...el,
                   text:
                     el.name + ' Wallet (' + el.amount + ' ' + el.currency + ')',
-                  type: el.type_id,
                 };
               })}
               text={'From'}
               defaultOption={(() => {
-                let el = accounts?.filter(
-                  el => el.type_id == props.route.params.from,
+                let el = sources?.filter(
+                  el =>
+                    el.type_id == from?.type_id &&
+                    (!from.address ||
+                      (from.address && el.address == from.address)),
                 )[0];
                 if (!el) {
                   return '';
@@ -106,7 +155,7 @@ const SendToScreen = (props: any) => {
                 );
               })()}
               onSelect={el => {
-                setFrom(el.type);
+                setFrom(el);
               }}
             />
 
@@ -151,44 +200,48 @@ const SendToScreen = (props: any) => {
               </View>
             )}
 
-            <TouchableOpacity
-              onPress={() => {
-                amountInputRef.current?.focus();
-              }}>
-              <Layout level="2" style={styles.card}>
-                <View style={styles.row}>
-                  <Text category="headline">Amount</Text>
-                  <Text category="headline" uppercase />
-                </View>
-                <View style={styles.cardNumber}>
-                  <Input
-                    ref={amountInputRef}
-                    keyboardType={'decimal-pad'}
-                    status={'transparent'}
-                    style={styles.flex1}
-                    value={amountInString}
-                    onChangeText={(text: string) => {
-                      let t = 0;
-                      let res = text.replace(/\./g, match =>
-                        ++t === 2 ? '' : match,
-                      );
-                      setAmount(res.trim());
-                    }}
-                  />
-                  <View
-                    style={{
-                      padding: 5,
-                    }}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setAmount(currentAmount);
-                      }}>
-                      <Text category={'footnote'}>MAX</Text>
-                    </TouchableOpacity>
+            {from?.type_id == Balance_Types_Enum.Nft ? (
+              <></>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  amountInputRef.current?.focus();
+                }}>
+                <Layout level="2" style={styles.card}>
+                  <View style={styles.row}>
+                    <Text category="headline">Amount</Text>
+                    <Text category="headline" uppercase />
                   </View>
-                </View>
-              </Layout>
-            </TouchableOpacity>
+                  <View style={styles.cardNumber}>
+                    <Input
+                      ref={amountInputRef}
+                      keyboardType={'decimal-pad'}
+                      status={'transparent'}
+                      style={styles.flex1}
+                      value={amountInString}
+                      onChangeText={(text: string) => {
+                        let t = 0;
+                        let res = text.replace(/\./g, match =>
+                          ++t === 2 ? '' : match,
+                        );
+                        setAmount(res.trim());
+                      }}
+                    />
+                    <View
+                      style={{
+                        padding: 5,
+                      }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setAmount(currentAmount.toString());
+                        }}>
+                        <Text category={'footnote'}>MAX</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </Layout>
+              </TouchableOpacity>
+            )}
           </Content>
           <Layout style={[styles.bottom, {paddingBottom: bottom + 16}]}>
             <SendTransactionButton
@@ -198,6 +251,7 @@ const SendToScreen = (props: any) => {
               amount={parseFloat(amountInString)}
               memo={memo}
               subtractFee={subtractFee}
+              nftId={nftId}
             />
           </Layout>
         </QrProvider>
@@ -206,7 +260,7 @@ const SendToScreen = (props: any) => {
   );
 };
 
-export default SendToScreen;
+export default gestureHandlerRootHOC(SendToScreen);
 
 const themedStyles = StyleService.create({
   contentContainerStyle: {

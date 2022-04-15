@@ -1,39 +1,23 @@
-import React, {memo, useState, useEffect, useCallback} from 'react';
-import {StyleSheet, TextInput, View} from 'react-native';
-import {
-  Button,
-  IndexPath,
-  Input,
-  Select,
-  SelectItem,
-  Tab,
-  TabBar,
-  TopNavigation,
-  useTheme,
-} from '@ui-kitten/components';
+import React, {useState} from 'react';
+import {StyleSheet, View} from 'react-native';
+import {Button, Input} from '@ui-kitten/components';
 import {useNavigation} from '@react-navigation/native';
-
 import Text from '../components/Text';
 import Container from '../components/Container';
 import AnimatedStep from '../components/AnimatedStep';
-import NavigationAction from '../components/NavigationAction';
-import {SceneMap, TabView} from 'react-native-tab-view';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
 import Loading from '../components/Loading';
 import useNjs from '../hooks/useNjs';
-import useWin from '../hooks/useWin';
 import {NetworkTypes} from '../constants/Type';
 import OptionCard from '../components/OptionCard';
 import useKeychain from '../utils/Keychain';
 import Mnemonic from '../components/Mnemonic';
 import {layoutStyles} from '../utils/layout';
+import TopNavigationComponent from '../components/TopNavigation';
 
 const CreateNewWallet = () => {
   const {goBack, navigate} = useNavigation();
-  const theme = useTheme();
-  const {width, bottom} = useLayout();
   const [index, setIndex] = useState(0);
   const [walletName, setWalletName] = useState('');
   const {mnemonic, createWallet} = useWallet();
@@ -43,14 +27,12 @@ const CreateNewWallet = () => {
   const {njs} = useNjs();
   const {read} = useKeychain();
 
-  let words = [];
+  const [words, setWords] = useState([]);
 
   return (
     <Container useSafeArea>
       <Loading loading={loading} />
-      <Text category="title1" center marginTop={32}>
-        New wallet
-      </Text>
+      <TopNavigationComponent title={'New Wallet'} />
       <AnimatedStep style={styles.animatedStep} step={index} steps={5} />
 
       {index == 0 ? (
@@ -66,6 +48,7 @@ const CreateNewWallet = () => {
               <Input
                 autoFocus={true}
                 style={[layoutStyles.responsiveRowComponentWidth, styles.flex1]}
+                value={walletName}
                 onChangeText={(name: string) => {
                   setError('');
                   setWalletName(name);
@@ -205,8 +188,9 @@ const CreateNewWallet = () => {
                       key={'word' + wordpos}
                       style={{width: 120, padding: 0}}
                       autoCapitalize="none"
+                      value={words[wordpos]}
                       onChangeText={(name: string) => {
-                        words[wordpos] = name.toLowerCase();
+                        setWords(prev => (prev[wordpos] = name.toLowerCase()));
                       }}
                     />
                   </View>

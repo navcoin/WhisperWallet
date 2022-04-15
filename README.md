@@ -63,6 +63,11 @@ References: https://www.ios-resolution.com/
 
 ## Potential Fixes
 
+#### `Android tapping backdrop of bottom tab does not close the bottom tab`
+
+References: [Issue 65](https://github.com/aguycalled/WhisperWallet/issues/65)
+Add `gestureHandlerRootHOC` to the page that the bottom tab doesn't work
+
 #### `Duplicate interface definition for class 'RCTModuleRegistry'`
 
 Solution: https://github.com/LinusU/react-native-get-random-values/pull/33/commits/30267ff4e9b5e93136cc935cf0370d8a09dd3aee

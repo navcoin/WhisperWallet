@@ -48,5 +48,7 @@ export type WalletParamList = {
   SettingsScreen: undefined;
   MnemonicScreen: MnemonicScreenProps;
   ServersScreen: undefined;
+  StakingNodeScreen: undefined;
   AddServerScreen: AddServerScreenProps;
+  AddStakingNodeScreen: undefined;
 };
