@@ -70,9 +70,9 @@ const Card = ({
           <Image
             source={image}
             style={{
-              width: scale('90%'),
-              maxWidth: scale(300),
-              maxHeight: scale(300),
+              width: '90%',
+              maxWidth: 300,
+              maxHeight: 300,
               height: undefined,
               aspectRatio: 1,
             }}
