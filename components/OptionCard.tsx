@@ -30,6 +30,7 @@ interface OptionProps {
   iconRightOnPress?: () => void;
   animationType?: Animation_Types_Enum;
   cardType?: 'outline' | 'fill';
+  leftElement: any;
 }
 
 const OptionCard = ({
@@ -44,6 +45,7 @@ const OptionCard = ({
   iconRightOnPress,
   animationType = Animation_Types_Enum.SlideInRight,
   cardType = 'fill',
+  leftElement,
 }: OptionProps) => {
   const theme = useTheme();
 
@@ -76,8 +78,10 @@ const OptionCard = ({
         onPress={onPress}
         style={[styles.container, setContainerStyle(cardType)]}>
         <View style={styles.contentWrapper}>
-          {icon ? (
-            <View style={[styles.iconWrapper, styles.leftIconWrapper]}>
+          <View style={[styles.iconWrapper, styles.leftIconWrapper]}>
+            {leftElement ? (
+              leftElement
+            ) : (
               <Icon
                 pack="assets"
                 name={icon || 'creditCard'}
@@ -86,8 +90,8 @@ const OptionCard = ({
                   {tintColor: color || theme['icon-basic-color']},
                 ]}
               />
-            </View>
-          ) : null}
+            )}
+          </View>
           <Text
             numberOfLines={3}
             style={[styles.content, {color: color || 'white'}]}

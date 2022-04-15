@@ -18,7 +18,7 @@ const BottomSheetMenu = (props: any) => {
     <View
       style={{paddingBottom: safeBottomArea || 6, ...styles.contentContainer}}>
       <Text category={'title4'} center style={{marginBottom: 32}}>
-        {props.title} Wallet
+        {props.title} {props.ignoreSuffix ? '' : 'Wallet'}
       </Text>
 
       {props.options &&
