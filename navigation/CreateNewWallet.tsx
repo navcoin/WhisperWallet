@@ -42,7 +42,7 @@ const CreateNewWallet = () => {
   const {njs} = useNjs();
   const {read} = useKeychain();
 
-  let words = [];
+  const [words, setWords] = useState([]);
 
   return (
     <Container useSafeArea>
@@ -65,6 +65,7 @@ const CreateNewWallet = () => {
               <Input
                 autoFocus={true}
                 style={styles.flex1}
+                value={walletName}
                 onChangeText={(name: string) => {
                   setError('');
                   setWalletName(name);
@@ -195,8 +196,9 @@ const CreateNewWallet = () => {
                       key={'word' + wordpos}
                       style={{width: 120, padding: 0}}
                       autoCapitalize="none"
+                      value={words[wordpos]}
                       onChangeText={(name: string) => {
-                        words[wordpos] = name.toLowerCase();
+                        setWords((prev) => prev[wordpos] = name.toLowerCase());
                       }}
                     />
                   </View>

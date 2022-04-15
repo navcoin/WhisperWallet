@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import {useTheme} from '@ui-kitten/components';
+import {Icon, useTheme} from '@ui-kitten/components';
 
 import Text from './Text';
 import CurrencyText from './CurrencyText';
@@ -18,16 +18,16 @@ interface TransactionProps {
 
 const Transaction = ({item, index, onPress}: TransactionProps) => {
   const theme = useTheme();
-  const {name, note, amount, timestamp, type} = item;
+  const {name, note, amount, timestamp, type, token_code} = item;
   const memos = item.memos || {in: [], out: []};
   let category = {};
 
-  if (type == 'nav' || type == 'staking') {
+  if (type == 'nav' || type == 'cold_staking') {
     category = {icon: {path: Images.navLogo}};
   } else if (type == 'xnav') {
     category = {icon: {path: Images.xNavLogo}};
+  } else {
   }
-  console.log(item);
 
   return (
     <AnimatedAppearance index={index}>
@@ -43,8 +43,14 @@ const Transaction = ({item, index, onPress}: TransactionProps) => {
             styles.iconView,
             {backgroundColor: theme['color-basic-1300']},
           ]}>
-          {!!category?.icon?.path && (
+          {!!category?.icon?.path ? (
             <Image source={category?.icon?.path} style={[styles.icon]} />
+          ) : (
+            <Icon
+              pack="assets"
+              name={'creditCard'}
+              style={[styles.icon, {tintColor: theme['icon-basic-color']}]}
+            />
           )}
         </View>
         <View style={styles.content}>
@@ -61,8 +67,16 @@ const Transaction = ({item, index, onPress}: TransactionProps) => {
         <CurrencyText
           category="headline"
           status={(amount || 0) > 0 ? 'success' : 'danger'}
-          currency={type == 'xnav' ? 'xNAV' : 'NAV'}>
-          {(amount || 0) / 1e8}
+          currency={
+            type == 'token'
+              ? token_code
+              : type == 'nft'
+              ? 'item'
+              : type == 'xnav'
+              ? 'xNAV'
+              : 'NAV'
+          }>
+          {(amount || 0) / (type == 'nft' ? 1 : 1e8)}
         </CurrencyText>
       </TouchableOpacity>
     </AnimatedAppearance>

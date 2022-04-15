@@ -17,6 +17,7 @@ export const Icons = {
   leftChevron: require('./ic_left-chevron.png'),
   email: require('./ic_email.png'),
   facebook: require('./ic_fb.png'),
+  factory: require('./ic_factory.png'),
   gg: require('./ic_gg.png'),
   user: require('./ic_user.png'),
   padLock: require('./ic_padlock.png'),
@@ -88,4 +89,6 @@ export const Icons = {
   add: require('./ic_add.png'),
   none: require('./_blank.png'),
   money: require('./money.png'),
+  nav: require('./nav-color.png'),
+  xnav: require('./xnav-color.png'),
 };

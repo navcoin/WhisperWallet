@@ -78,16 +78,20 @@ const CurrencyText = memo(
 
     const formatDefault = (amount: string, currency = 'NAV') => {
       let textResult = '';
-      try {
-        if (isNaN(parseFloat(amount))) {
-          textResult += numeral(parseFloat(amount.replace(',', ''))).format(
-            '0,0.00',
-          );
-        } else {
-          textResult += numeral(parseFloat(amount)).format('0,0.00');
+      if (currency.substring(0, 4) == 'item') {
+        textResult = parseInt(amount);
+      } else {
+        try {
+          if (isNaN(parseFloat(amount))) {
+            textResult += numeral(parseFloat(amount.replace(',', ''))).format(
+              '0,0.00',
+            );
+          } else {
+            textResult += numeral(parseFloat(amount)).format('0,0.00');
+          }
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.log(e);
       }
       return textResult + ` ${currency}`;
     };
@@ -107,7 +111,7 @@ const CurrencyText = memo(
           : formatType === Balance_Types_Enum.PrivateToken
           ? formatDefault(children, currency)
           : formatType === Balance_Types_Enum.Nft
-          ? formatSecure(currency)
+          ? formatDefault(children, 'item')
           : formatDefault(children, currency)}
       </Text>
     );

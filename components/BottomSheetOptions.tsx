@@ -20,21 +20,24 @@ const BottomSheetOptions = (props: any) => {
       </Text>
 
       {props.options &&
-        props.options.map((el: any) => (
-          <OptionCard
-            item={{text: el.text}}
-            index={0}
-            id={el.text}
-            key={el.text}
-            icon={el.icon}
-            color={'white'}
-            onPress={() => {
-              props.onSelect(el);
-              collapse();
-            }}
-            selected={''}
-          />
-        ))}
+        props.options
+          .filter(el => !!el)
+          .map((el: any) => (
+            <OptionCard
+              item={{text: el.text}}
+              index={0}
+              id={el.text}
+              key={el.text}
+              icon={el.icon}
+              leftElement={el.leftElement}
+              color={'white'}
+              onPress={() => {
+                props.onSelect(el);
+                collapse();
+              }}
+              selected={''}
+            />
+          ))}
     </View>
   );
 };

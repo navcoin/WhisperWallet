@@ -14,7 +14,6 @@ export interface WalletContextValue {
   refreshWallet: () => any;
   clearMnemonic: () => any;
   syncProgress: number;
-  syncing: boolean;
   balances: any;
   connected: Connection_Stats_Enum;
   addresses: any;
@@ -24,6 +23,10 @@ export interface WalletContextValue {
   parsedAddresses: AddressFragment[];
   createTransaction: any;
   sendTransaction: (tx: any) => Promise<any>;
+  tokens: BalanceFragment[];
+  nfts: BalanceFragment[];
+  updateAccounts: () => void;
+  bootstrapProgress: number;
   firstSyncCompleted: boolean;
 }
 

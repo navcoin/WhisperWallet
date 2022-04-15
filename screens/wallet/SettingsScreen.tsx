@@ -131,6 +131,16 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       onPress: () => biometricsAlert(),
     },
     {
+      title: 'Setup Staking Nodes',
+      icon: 'factory',
+      show: true,
+      onPress: () => {
+        navigate('Wallet', {
+          screen: 'StakingNodeScreen',
+        });
+      },
+    },
+    {
       title: 'Setup Electrum Servers',
       icon: 'book',
       show: true,

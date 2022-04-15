@@ -8,7 +8,7 @@ export enum Category_Types_Enum {
 export enum Balance_Types_Enum {
   Nav = 'nav',
   xNav = 'xnav',
-  Staking = 'staking',
+  Staking = 'cold_staking',
   PrivateToken = 'token',
   Nft = 'nft',
 }
@@ -34,6 +34,7 @@ export interface BalanceFragment {
   type_id: Balance_Types_Enum;
   destination_id: Destination_Types_Enum;
   currency: string;
+  address?: string;
   tokenId?: string;
   nftId?: number;
 }
@@ -50,14 +51,17 @@ export enum Connection_Stats_Enum {
   Connecting = 'connecting',
   Connected = 'connected',
   Syncing = 'syncing',
+  Synced = 'synced',
   Disconnected = 'disconnected',
   NoServers = 'noservers',
+  Bootstrapping = 'bootstrapping',
 }
 
 export enum Connection_Stats_Text {
   Connecting = 'Connecting to the network...',
   Connected = '',
   Syncing = 'Synchronizing wallet...',
+  Synced = '',
   Disconnected = 'Wallet is disconnected.',
   NoServers = 'No servers found! Please contact our administrator through discord.',
 }
@@ -114,4 +118,9 @@ export interface ServerOption {
   port?: number;
   proto?: 'tcp' | 'ssl' | 'ws' | 'wss';
   type?: 'testnet' | 'mainnet';
+}
+
+export interface NodeOption {
+  name?: string;
+  address?: string;
 }
