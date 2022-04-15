@@ -139,7 +139,7 @@ const BalanceCircle = memo(() => {
       ) : (
         <View style={{position: 'absolute'}}>
           <Text style={{textAlign: 'center'}}>Balance:</Text>
-          <CurrencyText children={totalBalance} />
+          <CurrencyText children={totalBalance.toFixed(8)} />
         </View>
       )}
     </View>
