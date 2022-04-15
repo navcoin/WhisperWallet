@@ -66,7 +66,7 @@ const OnBoardingPage = memo(() => {
       <View style={styles.bottomView}>
         <Button
           size="large"
-          children="Start using Whisper Wallet!"
+          children="Start using Whisper Wallet"
           style={{flex: 1, maxWidth: maxComponentWidth}}
           onPress={() => {
             Alert.alert(
