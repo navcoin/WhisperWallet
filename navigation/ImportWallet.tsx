@@ -86,17 +86,13 @@ const ImportWallet = () => {
               />
             </View>
             {error ? (
-              <Text style={{color: 'red', flex: 1}} center>
+              <Text style={{color: 'red'}} center>
                 {error}
               </Text>
             ) : (
               <></>
             )}
-            <View
-              style={[
-                layoutStyles.responsiveRowComponentWidth,
-                {marginBottom: 24},
-              ]}>
+            <View style={[layoutStyles.responsiveRowComponentWidth]}>
               <Button
                 status={'control'}
                 children="Next"
@@ -277,11 +273,11 @@ const styles = StyleSheet.create({
   layout: {
     flexDirection: 'row',
     marginBottom: 24,
-    marginHorizontal: 24,
+    paddingHorizontal: 24,
   },
   button: {
     marginTop: 24,
-    marginHorizontal: 12,
+    marginHorizontal: 24,
     flex: 1,
   },
 });

@@ -66,7 +66,7 @@ const CreateNewWallet = () => {
           <View
             style={[
               layoutStyles.responsiveRowComponentWidth,
-              {marginBottom: 24},
+              styles.bottomButtonWrapper,
             ]}>
             <Button
               children="Next"
@@ -113,7 +113,7 @@ const CreateNewWallet = () => {
           <View
             style={[
               layoutStyles.responsiveRowComponentWidth,
-              {marginBottom: 24},
+              styles.bottomButtonWrapper,
             ]}>
             <Button
               children="Next"
@@ -149,7 +149,7 @@ const CreateNewWallet = () => {
       ) : index == 2 ? (
         <View style={styles.container}>
           <Mnemonic mnemonic={mnemonic} />
-          <View style={{flexDirection: 'row', marginBottom: 24}}>
+          <View style={[styles.bottomButtonWrapper]}>
             <Button
               children="Next"
               status={'control'}
@@ -205,8 +205,8 @@ const CreateNewWallet = () => {
               <></>
             )}
           </KeyboardAwareScrollView>
-          <View style={{flexDirection: 'row', marginBottom: 24}}>
-            <Button
+          <View style={[styles.bottomButtonWrapper]}>
+            {/* <Button
               children="Back"
               status={'control'}
               style={styles.button}
@@ -214,10 +214,11 @@ const CreateNewWallet = () => {
                 setError('');
                 setIndex(2);
               }}
-            />
+            /> */}
+            {/* //TODO: Make the top left corner back button go back to previous index instead */}
             <Button
               children="Skip"
-              style={styles.button}
+              style={[styles.button, {marginRight: 20}]}
               status={'control'}
               onPress={() => {
                 setIndex(4);
@@ -249,7 +250,7 @@ const CreateNewWallet = () => {
               You can now start using NavCash.
             </Text>
           </KeyboardAwareScrollView>
-          <View style={{flexDirection: 'row', marginBottom: 24}}>
+          <View style={[styles.bottomButtonWrapper]}>
             <Button
               children="Next"
               status={'control'}
@@ -294,6 +295,11 @@ const styles = StyleSheet.create({
   },
   inputPhone: {
     marginVertical: 20,
+  },
+  bottomButtonWrapper: {
+    flexDirection: 'row',
+    marginBottom: 24,
+    paddingHorizontal: 24,
   },
   content: {
     marginHorizontal: 24,
