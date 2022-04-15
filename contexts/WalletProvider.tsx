@@ -254,8 +254,6 @@ export const WalletProvider = (props: any) => {
         wallet.Disconnect();
       }
 
-      console.log('walletfile', name, password, spendingPassword);
-
       const walletFile = new njs.wallet.WalletFile({
         file: name,
         mnemonic: mnemonic_,
@@ -282,7 +280,6 @@ export const WalletProvider = (props: any) => {
 
       walletFile.on('loaded', async () => {
         console.log('loaded');
-        console.log(walletFile.type);
         walletFile.GetBalance().then(setBalances);
         walletFile.GetHistory().then(setHistory);
         njs.wallet.WalletFile.ListWallets().then(setWalletsList);
@@ -364,7 +361,6 @@ export const WalletProvider = (props: any) => {
         rej('Wallet not loaded');
         return;
       }
-      console.log('wp am', Math.floor(amount * 1e8), amount);
       try {
         if (from == 'xnav' || from == 'token' || from == 'nft') {
           let candidates = (await wallet.GetCandidates())
@@ -374,14 +370,8 @@ export const WalletProvider = (props: any) => {
           let fee = 0;
 
           for (let c of candidates) {
-            console.log(
-              'candidate fee',
-              parseInt(BigInt(c.fee.words).toString()),
-            );
             fee += parseInt(BigInt(c.fee.words).toString());
           }
-
-          console.log('using', fee);
 
           let obj =
             from == 'token' || from == 'nft'
@@ -448,7 +438,6 @@ export const WalletProvider = (props: any) => {
             0x1,
             fromAddress,
           );
-          console.log(ret);
           res(ret);
         } else if (from == 'cold_staking') {
           let ret = await wallet.NavCreateTransaction(
@@ -461,7 +450,6 @@ export const WalletProvider = (props: any) => {
             0x2,
             fromAddress,
           );
-          console.log(ret);
           res(ret);
         } else {
           console.log('unknown wallet type', from);
