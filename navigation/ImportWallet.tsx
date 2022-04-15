@@ -17,6 +17,7 @@ import {NetworkTypes, WalletTypes} from '../constants/Type';
 import useKeychain from '../utils/Keychain';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
+import {scale} from 'react-native-size-matters';
 
 const ImportWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -66,7 +67,9 @@ const ImportWallet = () => {
           </KeyboardAwareScrollView>
         ) : index === 1 ? (
           <View>
-            <Text center style={{marginHorizontal: 12, marginBottom: 24}}>
+            <Text
+              center
+              style={{marginHorizontal: scale(12), marginBottom: scale(24)}}>
               Type the recovery words.
             </Text>
             <View
@@ -222,62 +225,62 @@ export default ImportWallet;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 32,
+    marginTop: scale(32),
     flex: 1,
   },
   flex1: {
     flex: 1,
   },
   tabBar: {
-    marginHorizontal: 80,
+    marginHorizontal: scale(80),
   },
   bottom: {
     position: 'absolute',
-    bottom: 0,
+    bottom: scale(0),
     width: '100%',
   },
   topNav: {
-    marginHorizontal: 12,
+    marginHorizontal: scale(12),
   },
   input01: {
     flex: 1,
-    marginRight: 16,
+    marginRight: scale(16),
   },
   inputPhone: {
-    marginVertical: 20,
+    marginVertical: scale(20),
   },
   content: {
-    marginHorizontal: 24,
+    marginHorizontal: scale(24),
   },
   flexRow: {
     flexDirection: 'row',
   },
   box: {
-    borderRadius: 12,
-    padding: 16,
-    width: 120,
+    borderRadius: scale(12),
+    padding: scale(16),
+    width: scale(120),
   },
   boxConfirm: {
-    margin: 4,
-    width: 120,
+    margin: scale(4),
+    width: scale(120),
   },
   boxWord: {
-    borderRadius: 16,
-    margin: 4,
-    padding: 16,
-    width: 120,
+    borderRadius: scale(16),
+    margin: scale(4),
+    padding: scale(16),
+    width: scale(120),
   },
   animatedStep: {
-    marginTop: 28,
+    marginTop: scale(28),
   },
   layout: {
     flexDirection: 'row',
-    marginBottom: 24,
-    paddingHorizontal: 24,
+    marginBottom: scale(24),
+    paddingHorizontal: scale(24),
   },
   button: {
-    marginTop: 24,
-    marginHorizontal: 24,
+    marginTop: scale(24),
+    marginHorizontal: scale(24),
     flex: 1,
   },
 });

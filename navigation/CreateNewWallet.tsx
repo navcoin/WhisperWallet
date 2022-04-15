@@ -15,6 +15,7 @@ import useKeychain from '../utils/Keychain';
 import Mnemonic from '../components/Mnemonic';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
+import {scale} from 'react-native-size-matters';
 
 const CreateNewWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -161,7 +162,7 @@ const CreateNewWallet = () => {
       ) : index == 3 ? (
         <View style={styles.container}>
           <KeyboardAwareScrollView>
-            <Text center style={{marginHorizontal: 12}}>
+            <Text center style={{marginHorizontal: scale(12)}}>
               Confirm the words:
             </Text>
             <View
@@ -171,7 +172,7 @@ const CreateNewWallet = () => {
                 flexWrap: 'wrap',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginTop: 16,
+                marginTop: scale(16),
               }}>
               {mnemonic.split(' ').map((word, wordpos) => {
                 return (
@@ -186,7 +187,7 @@ const CreateNewWallet = () => {
                     </Text>
                     <Input
                       key={'word' + wordpos}
-                      style={{width: 120, padding: 0}}
+                      style={{width: scale(120), padding: 0}}
                       autoCapitalize="none"
                       value={words[wordpos]}
                       onChangeText={(name: string) => {
@@ -198,7 +199,9 @@ const CreateNewWallet = () => {
               })}
             </View>
             {error ? (
-              <Text style={{color: 'red', flex: 1, marginTop: 16}} center>
+              <Text
+                style={{color: 'red', flex: 1, marginTop: scale(16)}}
+                center>
                 {error}
               </Text>
             ) : (
@@ -218,7 +221,7 @@ const CreateNewWallet = () => {
             {/* //TODO: Make the top left corner back button go back to previous index instead */}
             <Button
               children="Skip"
-              style={[styles.button, {marginRight: 20}]}
+              style={[styles.button, {marginRight: scale(20)}]}
               status={'control'}
               onPress={() => {
                 setIndex(4);
@@ -272,14 +275,14 @@ export default CreateNewWallet;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 32,
+    marginTop: scale(32),
     flex: 1,
   },
   flex1: {
     flex: 1,
   },
   tabBar: {
-    marginHorizontal: 80,
+    marginHorizontal: scale(80),
   },
   bottom: {
     position: 'absolute',
@@ -287,49 +290,49 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   topNav: {
-    marginHorizontal: 12,
+    marginHorizontal: scale(12),
   },
   input01: {
     flex: 1,
-    marginRight: 16,
+    marginRight: scale(16),
   },
   inputPhone: {
-    marginVertical: 20,
+    marginVertical: scale(20),
   },
   bottomButtonWrapper: {
     flexDirection: 'row',
-    marginBottom: 24,
-    paddingHorizontal: 24,
+    marginBottom: scale(24),
+    paddingHorizontal: scale(24),
   },
   content: {
-    marginHorizontal: 24,
+    marginHorizontal: scale(24),
   },
   flexRow: {
     flexDirection: 'row',
   },
   box: {
-    borderRadius: 12,
-    padding: 16,
-    width: 120,
+    borderRadius: scale(12),
+    padding: scale(16),
+    width: scale(120),
   },
   boxConfirm: {
-    margin: 4,
-    width: 120,
+    margin: scale(4),
+    width: scale(120),
   },
   boxWord: {
-    borderRadius: 16,
-    margin: 4,
-    padding: 16,
-    width: 120,
+    borderRadius: scale(16),
+    margin: scale(4),
+    padding: scale(16),
+    width: scale(120),
   },
   animatedStep: {
-    marginTop: 28,
+    marginTop: scale(28),
   },
   layout: {
-    marginBottom: 24,
+    marginBottom: scale(24),
   },
   button: {
-    marginTop: 32,
+    marginTop: scale(32),
     flex: 1,
   },
 });
