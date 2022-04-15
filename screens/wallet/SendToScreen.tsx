@@ -77,7 +77,7 @@ const SendToScreen = (props: any) => {
     if (!el) {
       return 0;
     } else {
-      return el.amount;
+      return el.spendable_amount;
     }
   }, [from, sources]);
 
@@ -136,7 +136,12 @@ const SendToScreen = (props: any) => {
                 return {
                   ...el,
                   text:
-                    el.name + ' Wallet (' + el.amount + ' ' + el.currency + ')',
+                    el.name +
+                    ' Wallet (' +
+                    el.spendable_amount +
+                    ' ' +
+                    el.currency +
+                    ')',
                 };
               })}
               text={'From'}
@@ -151,7 +156,12 @@ const SendToScreen = (props: any) => {
                   return '';
                 }
                 return (
-                  el.name + ' Wallet (' + el.amount + ' ' + el.currency + ')'
+                  el.name +
+                  ' Wallet (' +
+                  el.spendable_amount +
+                  ' ' +
+                  el.currency +
+                  ')'
                 );
               })()}
               onSelect={el => {
