@@ -236,7 +236,7 @@ const CreateNewWallet = () => {
             </Text>
             <Text center key={'text'}>
               {'\n'}
-              You can now start using NavCash.
+              You can now start using Whisper Wallet.
             </Text>
           </KeyboardAwareScrollView>
           <View style={{flexDirection: 'row', marginBottom: 24}}>
