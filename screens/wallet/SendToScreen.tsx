@@ -77,7 +77,7 @@ const SendToScreen = (props: any) => {
     if (!el) {
       return 0;
     } else {
-      return el.amount;
+      return el.currency == 'NAV' ? el.amount + el?.pending_amount : el.amount;
     }
   }, [from, sources]);
 
