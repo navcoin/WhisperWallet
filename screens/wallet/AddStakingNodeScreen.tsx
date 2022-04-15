@@ -8,6 +8,7 @@ import {NodeOption} from '../../constants/Type';
 import Text from '../../components/Text';
 import {RootStackParamList} from '../../navigation/type';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const AddStakingNodeScreen = () => {
@@ -55,7 +56,7 @@ const AddStakingNodeScreen = () => {
   return (
     <Container useSafeArea>
       <KeyboardAwareScrollView>
-        <TopNavigation title={'Add New Staking Node'} />
+        <TopNavigationComponent title={'Add New Staking Node'} />
 
         <Layout level="2" style={styles.inputCard}>
           <View style={styles.inputGroup}>

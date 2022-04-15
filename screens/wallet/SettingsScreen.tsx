@@ -1,7 +1,6 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useState} from 'react';
 import {StyleSheet, View, Alert} from 'react-native';
-import {TopNavigation} from '@ui-kitten/components';
 import Container from '../../components/Container';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {Animation_Types_Enum} from '../../constants/Type';
@@ -11,6 +10,7 @@ import useAsyncStorage from '../../hooks/useAsyncStorage';
 import useNjs from '../../hooks/useNjs';
 import useKeychain from '../../utils/Keychain';
 import Loading from '../../components/Loading';
+import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 interface SettingsItem {
@@ -171,7 +171,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   return (
     <Container useSafeArea>
       <Loading loading={loading} />
-      <TopNavigation title={'Settings'} />
+      <TopNavigationComponent title={'Settings'} />
       <View style={styles.contentWrapper}>
         {items.map((item, index) => {
           if (!item.show) {

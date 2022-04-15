@@ -1,7 +1,7 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Icon, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
+import {Icon, TopNavigationAction} from '@ui-kitten/components';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Balance_Types_Enum, BalanceFragment} from '../../constants/Type';
@@ -9,6 +9,7 @@ import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
 import {RootStackParamList} from '../../navigation/type';
 import DialogInput from 'react-native-dialog-input';
+import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
@@ -56,7 +57,7 @@ const StakingNodeScreen = () => {
           showEditDialog(false);
         }}
       />
-      <TopNavigation
+      <TopNavigationComponent
         accessoryRight={renderRightActions(editMode, () => saveServers())}
         title={'Setup Staking Nodes'}
       />

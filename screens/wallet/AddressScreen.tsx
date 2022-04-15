@@ -3,11 +3,12 @@ import Clipboard from '@react-native-community/clipboard';
 import Text from '../../components/Text';
 import React, {useEffect, useState} from 'react';
 import Container from '../../components/Container';
-import {TopNavigation, useTheme} from '@ui-kitten/components';
+import {useTheme} from '@ui-kitten/components';
 import useLayout from '../../hooks/useLayout';
 import QRCode from 'react-native-qrcode-svg';
-import {BalanceFragment, Destination_Types_Enum} from '../../constants/Type';
+import {BalanceFragment} from '../../constants/Type';
 import useWallet from '../../hooks/useWallet';
+import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const AddressScreen = (props: any) => {
@@ -32,15 +33,8 @@ const AddressScreen = (props: any) => {
 
   return (
     <Container>
-      <TopNavigation
-        title={() => (
-          <>
-            <Text category="title4">
-              {addressType.destination_id + ' Address'}
-            </Text>
-          </>
-        )}
-      />
+      <TopNavigationComponent title={addressType.destination_id + ' Address'} />
+
       <Container
         style={{
           flex: 1,

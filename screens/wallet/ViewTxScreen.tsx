@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import {TopNavigation} from '@ui-kitten/components';
+import TopNavigationComponent from '../../components/TopNavigation';
 import Container from '../../components/Container';
 import InputSelect from '../../components/InputSelect';
 import Clipboard from '@react-native-community/clipboard';
@@ -9,7 +9,7 @@ import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 const ViewTxScreen = (props: any) => {
   return (
     <Container useSafeArea>
-      <TopNavigation title={'Transaction Details'} />
+      <TopNavigationComponent title={'Transaction Details'} />
 
       <View>
         <InputSelect

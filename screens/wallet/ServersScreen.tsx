@@ -1,12 +1,7 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useState} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
-import {
-  Button,
-  Icon,
-  TopNavigation,
-  TopNavigationAction,
-} from '@ui-kitten/components';
+import {Button, Icon, TopNavigationAction} from '@ui-kitten/components';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {NetworkOption, ServerOption} from '../../constants/Type';
@@ -16,6 +11,7 @@ import useNjs from '../../hooks/useNjs';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import {networkOptions} from '../../constants/Data';
+import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
@@ -79,7 +75,7 @@ const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
   }`;
   return (
     <Container useSafeArea>
-      <TopNavigation
+      <TopNavigationComponent
         accessoryRight={renderRightActions(editMode, () => saveServers())}
         title={'Setup Electrum Servers'}
       />
