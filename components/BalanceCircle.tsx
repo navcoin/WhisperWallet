@@ -39,6 +39,7 @@ const BalanceCircle = memo(() => {
       setRotation(180);
       BackgroundTimer.stopBackgroundTimer();
     } else {
+      BackgroundTimer.stopBackgroundTimer();
       BackgroundTimer.runBackgroundTimer(() => {
         setRotation(prev => {
           return prev + 2;
