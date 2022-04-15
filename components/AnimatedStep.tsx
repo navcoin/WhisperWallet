@@ -44,7 +44,7 @@ const AnimatedStep = ({step, steps = 4, style}: AnimatedStepProps) => {
           [
             theme['color-basic-1300'],
             theme['color-basic-1300'],
-            theme['color-nav-pink'],
+            theme['color-xnav'],
           ],
         );
 
@@ -57,7 +57,7 @@ const AnimatedStep = ({step, steps = 4, style}: AnimatedStepProps) => {
         const backgroundColor = interpolateColor(
           progress.value,
           [0, 1],
-          [theme['color-basic-1300'], theme['color-nav-pink']],
+          [theme['color-basic-1300'], theme['color-xnav']],
         );
 
         const widthX = interpolate(progress.value, [0, 1], [0, width]);

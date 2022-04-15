@@ -50,15 +50,15 @@ const Intro = memo(props => {
           marginRight={0}
           marginBottom={8}
           center>
-          Privacy in the palm of your hands.
+          Whisper Wallet
         </Text>
         <View style={styles.spacer} />
 
         {walletList.length > 0 ? (
           <Button
-            children="Open Wallet"
+            children="Open"
             style={styles.wallet}
-            status="control"
+            status="primary-whisper"
             onPress={() => {
               navigate('OpenWallet');
             }}
@@ -67,17 +67,17 @@ const Intro = memo(props => {
           <></>
         )}
         <Button
-          children="New Wallet"
+          children="New"
+          status="primary-whisper"
           style={styles.wallet}
-          status="control"
           onPress={() => {
             navigate('CreateNewWallet');
           }}
         />
         <Button
-          children="Import Wallet"
+          children="Import"
           style={styles.wallet}
-          status="control"
+          status="primary-whisper"
           onPress={() => {
             navigate('ImportWallet');
           }}
@@ -95,8 +95,8 @@ const themedStyles = StyleService.create({
     alignItems: 'center',
   },
   icon: {
-    width: 200,
-    height: 200,
+    width: 250,
+    height: 250,
     marginTop: 48,
   },
   iconArrow: {

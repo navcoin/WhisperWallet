@@ -159,7 +159,9 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
             </Text>
             <Text category="headline">{wallet.network}</Text>
           </View>
-          <Button onPress={() => addServer()}>Add</Button>
+          <Button status={'primary-whisper'} onPress={() => addServer()}>
+            Add
+          </Button>
           {error ? (
             <Text style={[styles.errorText]} center>
               {error}
