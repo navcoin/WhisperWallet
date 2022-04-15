@@ -17,7 +17,7 @@ const AccountsTab = () => {
   const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
   );
-  const {accounts, tokens, nfts} = useWallet();
+  const {accounts, tokens, nfts, refreshWallet} = useWallet();
   const bottomSheet = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
   const {navigate} = useNavigation();
@@ -169,62 +169,62 @@ const AccountsTab = () => {
             titleColor="#fff"
           />
         }>
-      <Content style={{paddingTop: 24}}>
-        {selectedTab == 0 ? (
-          accounts.map((el, i) => {
-            return (
-              <View style={styles.item} key={i}>
-                <BalanceCard
-                  item={{...el, name: el.name + ' Wallet'}}
-                  index={i}
-                  onPress={() => {
-                    setAccount(el);
-                    expandMenu(el);
-                  }}
-                />
-              </View>
-            );
-          })
-        ) : selectedTab == 1 ? (
-          <Text marginBottom={16} center>
-            {tokens.length == 0
-              ? 'You have no private tokens yet.'
-              : tokens.map((el, i) => {
-                  return (
-                    <View style={styles.item} key={i}>
-                      <BalanceCard
-                        item={{...el, name: el.name}}
-                        index={i}
-                        onPress={() => {
-                          setAccount(el);
-                          expandMenuToken(el);
-                        }}></BalanceCard>
-                    </View>
-                  );
-                })}
-          </Text>
-        ) : selectedTab == 2 ? (
-          <Text center marginBottom={16}>
-            {nfts.length == 0
-              ? 'You have no private NFTs yet.'
-              : nfts.map((el, i) => {
-                  return (
-                    <View style={styles.item} key={i}>
-                      <BalanceCard
-                        item={{...el, name: el.name}}
-                        index={i}
-                        onPress={() => {
-                          setAccount(el);
-                          expandMenuToken(el);
-                        }}></BalanceCard>
-                    </View>
-                  );
-                })}{' '}
-          </Text>
-        ) : (
-          <></>
-        )}
-      </Content>
+        <Content style={{paddingTop: 24}}>
+          {selectedTab == 0 ? (
+            accounts.map((el, i) => {
+              return (
+                <View style={styles.item} key={i}>
+                  <BalanceCard
+                    item={{...el, name: el.name + ' Wallet'}}
+                    index={i}
+                    onPress={() => {
+                      setAccount(el);
+                      expandMenu(el);
+                    }}
+                  />
+                </View>
+              );
+            })
+          ) : selectedTab == 1 ? (
+            <Text marginBottom={16} center>
+              {tokens.length == 0
+                ? 'You have no private tokens yet.'
+                : tokens.map((el, i) => {
+                    return (
+                      <View style={styles.item} key={i}>
+                        <BalanceCard
+                          item={{...el, name: el.name}}
+                          index={i}
+                          onPress={() => {
+                            setAccount(el);
+                            expandMenuToken(el);
+                          }}></BalanceCard>
+                      </View>
+                    );
+                  })}
+            </Text>
+          ) : selectedTab == 2 ? (
+            <Text center marginBottom={16}>
+              {nfts.length == 0
+                ? 'You have no private NFTs yet.'
+                : nfts.map((el, i) => {
+                    return (
+                      <View style={styles.item} key={i}>
+                        <BalanceCard
+                          item={{...el, name: el.name}}
+                          index={i}
+                          onPress={() => {
+                            setAccount(el);
+                            expandMenuToken(el);
+                          }}></BalanceCard>
+                      </View>
+                    );
+                  })}{' '}
+            </Text>
+          ) : (
+            <></>
+          )}
+        </Content>
       </ScrollView>
     </>
   );

@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, View} from 'react-native';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import {useTheme} from '@ui-kitten/components';
-import {timeout} from '../utils/helpers';
 
 const SegmentCircle = ({
   segmentsSource,
@@ -19,27 +18,12 @@ const SegmentCircle = ({
   const theme = useTheme();
   const [segments, setSegments] = useState<Segment[]>([]);
 
-  const updateDisplayedSegments = async () => {
+  const updateDisplayedSegments = useCallback(() => {
     if (!segmentsSource.length) {
       return;
     }
-    if (segmentsSource.length !== segments.length && segments.length > 0) {
-      const tempSegments = new Array(segmentsSource.length).fill({
-        size: 0,
-        color: 'transparent',
-      });
-      tempSegments.push({
-        size: 100,
-        color: 'transparent',
-      });
-      setSegments(tempSegments);
-      await timeout(800);
-      setSegments(segmentsSource.filter(el => el.size > 0));
-      return;
-    }
     setSegments(segmentsSource.filter(el => el.size > 0));
-    return;
-  };
+  }, [segmentsSource]);
 
   useEffect(() => {
     updateDisplayedSegments();
