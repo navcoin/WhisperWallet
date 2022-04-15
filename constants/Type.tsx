@@ -31,6 +31,7 @@ export interface BalanceFragment {
   name: string;
   amount: number;
   pending_amount: number;
+  spendable_amount: number;
   type_id: Balance_Types_Enum;
   destination_id: Destination_Types_Enum;
   currency: string;
