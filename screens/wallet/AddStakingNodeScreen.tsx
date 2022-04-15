@@ -1,27 +1,14 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {
-  Button,
-  Icon,
-  IndexPath,
-  Input,
-  Layout,
-  Select,
-  SelectItem,
-  TopNavigation,
-  TopNavigationAction,
-} from '@ui-kitten/components';
+import {Button, Input, Layout, TopNavigation} from '@ui-kitten/components';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {NodeOption, ServerOption} from '../../constants/Type';
+import {NodeOption} from '../../constants/Type';
 import Text from '../../components/Text';
-import useNjs from '../../hooks/useNjs';
-import {RootStackParamList, ScreenProps} from '../../navigation/type';
-import useAsyncStorage from '../../hooks/useAsyncStorage';
-import {networkOptions, protosOptions} from '../../constants/Data';
-import {validateIp, validatePort} from '../../utils/server';
+import {RootStackParamList} from '../../navigation/type';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const AddStakingNodeScreen = () => {
   const {bitcore, wallet, updateAccounts} = useWallet();
@@ -109,7 +96,7 @@ const AddStakingNodeScreen = () => {
   );
 };
 
-export default AddStakingNodeScreen;
+export default gestureHandlerRootHOC(AddStakingNodeScreen);
 
 const styles = StyleSheet.create({
   inputCard: {

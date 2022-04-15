@@ -7,11 +7,9 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Balance_Types_Enum, BalanceFragment} from '../../constants/Type';
 import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
-import useNjs from '../../hooks/useNjs';
-import {RootStackParamList, ScreenProps} from '../../navigation/type';
-import useAsyncStorage from '../../hooks/useAsyncStorage';
-import {networkOptions} from '../../constants/Data';
+import {RootStackParamList} from '../../navigation/type';
 import DialogInput from 'react-native-dialog-input';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
   <Icon width={20} height={20} {...props} name={props.name} />
@@ -110,7 +108,7 @@ const StakingNodeScreen = () => {
   );
 };
 
-export default StakingNodeScreen;
+export default gestureHandlerRootHOC(StakingNodeScreen);
 
 const styles = StyleSheet.create({
   summary: {textAlign: 'center', paddingHorizontal: 24},

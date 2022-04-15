@@ -1,6 +1,6 @@
 import useWallet from '../../hooks/useWallet';
 import BigList from 'react-native-big-list';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {TopNavigation} from '@ui-kitten/components';
 import Container from '../../components/Container';
@@ -14,9 +14,9 @@ import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
 import useLayout from '../../hooks/useLayout';
 import {RootStackParamList} from '../../navigation/type';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const HistoryScreen = (props: any) => {
-  const {width, height} = useLayout();
   const {history, connected} = useWallet();
 
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -132,7 +132,7 @@ const HistoryScreen = (props: any) => {
   );
 };
 
-export default HistoryScreen;
+export default gestureHandlerRootHOC(HistoryScreen);
 
 const styles = StyleSheet.create({
   header: {

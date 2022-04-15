@@ -15,6 +15,7 @@ import BalanceCircle from '../../components/BalanceCircle';
 
 import {BottomSheetProvider} from '../../contexts/BottomSheetProvider';
 import AccountsTab from '../../components/AccountTabs';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {WalletParamList} from '../../navigation/type';
 
 const MainWalletScreen = () => {
@@ -67,7 +68,7 @@ const MainWalletScreen = () => {
   );
 };
 
-export default MainWalletScreen;
+export default gestureHandlerRootHOC(MainWalletScreen);
 
 const themedStyles = StyleService.create({
   item: {

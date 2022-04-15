@@ -25,6 +25,7 @@ import BottomSheetProvider from '../../contexts/BottomSheetProvider';
 import DestinationComponent from '../../components/DestinationComponent';
 import {QrProvider} from '../../contexts/QrProvider';
 import SendTransactionButton from '../../components/SendTransactionButton';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const SendToScreen = (props: any) => {
   const styles = useStyleSheet(themedStyles);
@@ -259,7 +260,7 @@ const SendToScreen = (props: any) => {
   );
 };
 
-export default SendToScreen;
+export default gestureHandlerRootHOC(SendToScreen);
 
 const themedStyles = StyleService.create({
   contentContainerStyle: {
