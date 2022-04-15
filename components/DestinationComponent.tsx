@@ -7,8 +7,12 @@ import {
   useStyleSheet,
 } from '@ui-kitten/components';
 import Text from './Text';
-import {Destination_Types_Enum} from '../constants/Type';
-import React, {useEffect, useRef, useState} from 'react';
+import {
+  Balance_Types_Enum,
+  BalanceFragment,
+  Destination_Types_Enum,
+} from '../constants/Type';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import BottomSheetOptions from './BottomSheetOptions';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import {useQr} from '../hooks/useQr';
@@ -19,29 +23,33 @@ const DestinationComponent = (props: any) => {
   const bottomSheet = useBottomSheet();
   const destinationInputRef = useRef<Input>();
   const qrContext = useQr();
-  const {parsedAddresses} = useWallet();
+  const {parsedAddresses, accounts} = useWallet();
 
-  const [toType, setToType] = useState(
-    props.toType || Destination_Types_Enum.Address,
+  const [toType, setToType] = useState<BalanceFragment | undefined>(
+    props.toType || undefined,
   );
   const [to, setTo] = useState(
-    toType != Destination_Types_Enum.Address
-      ? parsedAddresses.filter(el => el.type_id == toType)[0]?.address
+    toType?.destination_id != Destination_Types_Enum.Address
+      ? parsedAddresses.filter(el => el.type_id == toType?.destination_id)[0]
+          ?.address
       : '',
   );
 
   useEffect(() => {
     if (props.setToType) props.setToType(toType);
-    if (
-      toType != Destination_Types_Enum.Address &&
-      parsedAddresses.length > 0
-    ) {
-      setTo(parsedAddresses.filter(el => el.type_id == toType)[0]?.address);
+    if (toType?.destination_id != Destination_Types_Enum.Address) {
+      setTo(
+        parsedAddresses.filter(el => el.type_id == toType?.destination_id)[0]
+          ?.address,
+      );
       if (props.setTo) {
         props.setTo(
-          parsedAddresses.filter(el => el.type_id == toType)[0]?.address,
+          parsedAddresses.filter(el => el.type_id == toType?.destination_id)[0]
+            ?.address,
         );
       }
+    } else {
+      setTo('');
     }
   }, [toType, parsedAddresses]);
 
@@ -58,22 +66,35 @@ const DestinationComponent = (props: any) => {
     }
   }, [to]);
 
-  const pickDestination = () => {
+  const pickDestination = useCallback(() => {
+    let options = accounts
+      .filter(el => el.name != props.from?.name)
+      .map(el => {
+        return {...el, text: el.name + ' Wallet'};
+      });
+
+    options.push({
+      name: 'Address',
+      text: 'Address',
+      amount: 0,
+      pending_amount: 0,
+      type_id: Balance_Types_Enum.Nav,
+      destination_id: Destination_Types_Enum.Address,
+      currency: 'NAV',
+      icon: 'qr',
+    });
+
     bottomSheet.expand(
       <BottomSheetOptions
         title={'Select destination'}
-        options={[
-          {text: Destination_Types_Enum.PublicWallet},
-          {text: Destination_Types_Enum.PrivateWallet},
-          {text: Destination_Types_Enum.StakingWallet},
-          {text: Destination_Types_Enum.Address},
-        ].filter(el => el.text != props.from)}
+        options={options}
         bottomSheetRef={bottomSheet.getRef}
-        onSelect={el => {
-          setToType(el.text);
-        }}></BottomSheetOptions>,
+        onSelect={(el: any) => {
+          setToType(el);
+        }}
+      />,
     );
-  };
+  }, [accounts]);
 
   return (
     <>
@@ -85,10 +106,11 @@ const DestinationComponent = (props: any) => {
           <View style={styles.row}>
             <Text category="headline">Destination</Text>
             <Text category="headline">
-              {toType != Destination_Types_Enum.Address && toType}
+              {toType?.destination_id != Destination_Types_Enum.Address &&
+                toType?.name}
             </Text>
           </View>
-          {toType == Destination_Types_Enum.Address ? (
+          {toType?.destination_id == Destination_Types_Enum.Address ? (
             <View style={styles.cardNumber}>
               <Input
                 ref={destinationInputRef}
@@ -120,15 +142,20 @@ const DestinationComponent = (props: any) => {
           ) : (
             <></>
           )}
-          <TouchableOpacity
-            style={styles.iconView}
-            onPress={() => {
-              pickDestination();
-            }}>
-            <View>
-              <Icon pack="assets" name="downArrow" style={styles.icon} />
-            </View>
-          </TouchableOpacity>
+          {!(
+            props.from.type_id == Balance_Types_Enum.Nft ||
+            props.from.type_id == Balance_Types_Enum.PrivateToken
+          ) && (
+            <TouchableOpacity
+              style={styles.iconView}
+              onPress={() => {
+                pickDestination();
+              }}>
+              <View>
+                <Icon pack="assets" name="downArrow" style={styles.icon} />
+              </View>
+            </TouchableOpacity>
+          )}
         </Layout>
       </TouchableOpacity>
     </>

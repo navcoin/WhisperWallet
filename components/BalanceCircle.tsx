@@ -9,7 +9,13 @@ import CurrencyText from './CurrencyText';
 
 const BalanceCircle = memo(() => {
   const {width} = useLayout();
-  const {syncProgress, syncing, balances, connected} = useWallet();
+  const {
+    syncProgress,
+    bootstrapProgress,
+    balances,
+    connected,
+    firstSyncCompleted,
+  } = useWallet();
   const theme = useTheme();
   const [balanceSegments, setBalanceSegments] = useState<
     {
@@ -26,7 +32,10 @@ const BalanceCircle = memo(() => {
   const [timer, setTimer] = useState<any>(undefined);
 
   useEffect(() => {
-    if (connected != Connection_Stats_Enum.Connecting || syncProgress > 0) {
+    if (
+      connected != Connection_Stats_Enum.Connecting &&
+      connected != Connection_Stats_Enum.Bootstrapping
+    ) {
       setRotation(180);
       clearInterval(timer);
     } else {
@@ -58,11 +67,11 @@ const BalanceCircle = memo(() => {
         },
         {
           size: balances.xnav.confirmed + balances.xnav.pending,
-          color: 'orange',
+          color: theme['color-xnav'],
         },
         {
           size: balances.staked.confirmed + balances.staked.pending,
-          color: 'yellow',
+          color: theme['color-staking'],
         },
       ]);
     }
@@ -80,13 +89,14 @@ const BalanceCircle = memo(() => {
         radius={width / 2 - 100}
         background={
           connected == Connection_Stats_Enum.Connecting ||
-          syncing ||
-          syncProgress === 0
+          connected == Connection_Stats_Enum.Syncing ||
+          connected == Connection_Stats_Enum.Bootstrapping
             ? theme['color-basic-800']
             : undefined
         }
         segmentsSource={
-          connected == Connection_Stats_Enum.Connecting || syncProgress === 0
+          connected == Connection_Stats_Enum.Connecting ||
+          connected == Connection_Stats_Enum.Bootstrapping
             ? [
                 {
                   size: 5,
@@ -97,7 +107,7 @@ const BalanceCircle = memo(() => {
                   color: 'transparent',
                 },
               ]
-            : syncing
+            : connected == Connection_Stats_Enum.Syncing
             ? [
                 {
                   size: syncProgress,
@@ -115,10 +125,16 @@ const BalanceCircle = memo(() => {
         <Text style={{position: 'absolute', textAlign: 'center'}}>
           Connecting...
         </Text>
-      ) : syncing || syncProgress === 0 ? (
+      ) : !firstSyncCompleted && connected == Connection_Stats_Enum.Syncing ? (
         <Text style={{position: 'absolute', textAlign: 'center'}}>
           Synchronizing...{'\n'}
           {syncProgress}%
+        </Text>
+      ) : !firstSyncCompleted &&
+        connected == Connection_Stats_Enum.Bootstrapping ? (
+        <Text style={{position: 'absolute', textAlign: 'center'}}>
+          Bootstrapping...{'\n'}
+          {bootstrapProgress} txs in queue
         </Text>
       ) : (
         <View style={{position: 'absolute'}}>

@@ -10,6 +10,7 @@ import {
   Destination_Types_Enum,
 } from '../constants/Type';
 import useTraceUpdate from '../hooks/useTraceUpdates';
+import Identicon from '../components/Identicon';
 
 export const WalletProvider = (props: any) => {
   const {njs, p2pPool} = useNjs();
@@ -20,7 +21,7 @@ export const WalletProvider = (props: any) => {
   const [network, setNetwork] = useState('livenet');
   const [mnemonic, setMnemonic] = useState('');
   const [syncProgress, setSyncProgress] = useState(0);
-  const [syncing, setSyncing] = useState(false);
+  const [bootstrapProgress, setBootstrapProgress] = useState(0);
   const [firstSyncCompleted, setFirstSyncCompleted] = useState(false);
   const [balances, setBalances] = useState({
     nav: {confirmed: 0, pending: 0},
@@ -36,6 +37,8 @@ export const WalletProvider = (props: any) => {
     Connection_Stats_Enum.Disconnected,
   );
   const [history, setHistory] = useState([]);
+  const [tokens, setTokens] = useState<BalanceFragment[]>([]);
+  const [nfts, setNfts] = useState<BalanceFragment[]>([]);
   const [accounts, setAccounts] = useState<BalanceFragment[]>([
     {
       name: 'Public',
@@ -134,9 +137,9 @@ export const WalletProvider = (props: any) => {
     }
   }, [p2pPool, wallet]);
 
-  useEffect(() => {
+  const parseAccounts = useCallback(() => {
     if (balances?.nav) {
-      setAccounts([
+      let accs = [
         {
           name: 'Public',
           amount: balances.nav.confirmed / 1e8,
@@ -144,6 +147,7 @@ export const WalletProvider = (props: any) => {
           type_id: Balance_Types_Enum.Nav,
           destination_id: Destination_Types_Enum.PublicWallet,
           currency: 'NAV',
+          icon: 'nav',
         },
         {
           name: 'Private',
@@ -152,18 +156,74 @@ export const WalletProvider = (props: any) => {
           type_id: Balance_Types_Enum.xNav,
           destination_id: Destination_Types_Enum.PrivateWallet,
           currency: 'xNAV',
+          icon: 'xnav',
         },
-        {
-          name: 'Staking',
-          amount: balances.staked.confirmed / 1e8,
-          pending_amount: balances.staked.pending / 1e8,
+      ];
+
+      for (let address in addresses.staking) {
+        let label = addresses.staking[address].label?.name;
+        if (!label) label = address.substring(0, 8) + '...';
+        accs.push({
+          name: label + ' Staking',
+          amount: addresses.staking[address].staking.confirmed / 1e8,
+          pending_amount: addresses.staking[address].staking.pending / 1e8,
           type_id: Balance_Types_Enum.Staking,
           destination_id: Destination_Types_Enum.StakingWallet,
+          address: address,
           currency: 'NAV',
-        },
-      ]);
+          icon: 'factory',
+        });
+      }
+
+      let toks = [];
+
+      for (let tokenId in balances.tokens) {
+        toks.push({
+          name: balances.tokens[tokenId].name,
+          amount: (balances.tokens[tokenId].confirmed || 0) / 1e8,
+          pending_amount: (balances.tokens[tokenId].pending || 0) / 1e8,
+          type_id: Balance_Types_Enum.PrivateToken,
+          destination_id: Destination_Types_Enum.PrivateWallet,
+          tokenId: tokenId,
+          currency: balances.tokens[tokenId].code,
+          leftElement: <Identicon value={tokenId}></Identicon>,
+        });
+      }
+
+      let nft = [];
+
+      for (let tokenId in balances.nfts) {
+        console.log(balances.nfts[tokenId]);
+        nft.push({
+          name: balances.nfts[tokenId].name,
+          amount: Object.keys(balances.nfts[tokenId].confirmed).length,
+          pending_amount: Object.keys(balances.nfts[tokenId].pending).length,
+          type_id: Balance_Types_Enum.Nft,
+          destination_id: Destination_Types_Enum.PrivateWallet,
+          tokenId: tokenId,
+          leftElement: <Identicon value={tokenId}></Identicon>,
+          currency: 'NFT',
+        });
+      }
+
+      setAccounts(accs);
+      setTokens(toks);
+      setNfts(nft);
     }
-  }, [balances]);
+  }, [balances, addresses]);
+
+  const updateAccounts = async () => {
+    if (wallet) {
+      setBalances(await wallet.GetBalance());
+      setHistory(await wallet.GetHistory());
+      setAddresses(await wallet.GetAllAddresses());
+    }
+    parseAccounts();
+  };
+
+  useEffect(() => {
+    parseAccounts();
+  }, [balances, addresses]);
 
   const createWallet = useCallback(
     async (
@@ -209,6 +269,7 @@ export const WalletProvider = (props: any) => {
 
       walletFile.on('loaded', async () => {
         console.log('loaded');
+        console.log(walletFile.type);
         walletFile.GetBalance().then(setBalances);
         walletFile.GetHistory().then(setHistory);
         njs.wallet.WalletFile.ListWallets().then(setWalletsList);
@@ -220,11 +281,6 @@ export const WalletProvider = (props: any) => {
 
       walletFile.on('sync_status', (progress: number) => {
         setSyncProgress(progress);
-        if (progress == 100) {
-          setSyncing(false);
-        } else {
-          setSyncing(true);
-        }
       });
 
       walletFile.on('disconnected', () => {
@@ -241,7 +297,6 @@ export const WalletProvider = (props: any) => {
 
       walletFile.on('new_tx', async () => {
         console.log('new_tx');
-        setBalances(await walletFile.GetBalance());
         setHistory(await walletFile.GetHistory());
         setAddresses(await walletFile.GetAllAddresses());
       });
@@ -250,15 +305,26 @@ export const WalletProvider = (props: any) => {
         setConnected(Connection_Stats_Enum.Syncing);
       });
 
+      walletFile.on('bootstrap_started', async () => {
+        setConnected(Connection_Stats_Enum.Bootstrapping);
+      });
+
+      walletFile.on('bootstrap_progress', async count => {
+        setBootstrapProgress(count);
+      });
+
       walletFile.on('sync_finished', async () => {
         console.log('sync_finished');
-        setSyncing(false);
         setSyncProgress(100);
         setFirstSyncCompleted(true);
-        setConnected(Connection_Stats_Enum.Connected);
+        setConnected(Connection_Stats_Enum.Synced);
         setBalances(await walletFile.GetBalance());
         setHistory(await walletFile.GetHistory());
         setAddresses(await walletFile.GetAllAddresses());
+      });
+
+      walletFile.on('new_staking_address', async () => {
+        updateAccounts();
       });
 
       walletFile.Load({
@@ -275,6 +341,9 @@ export const WalletProvider = (props: any) => {
     password: string,
     memo = '',
     subtractFee = false,
+    fromAddress = undefined,
+    tokenId = undefined,
+    tokenNftId = undefined,
   ) => {
     return new Promise(async (res, rej) => {
       if (!wallet) {
@@ -282,7 +351,7 @@ export const WalletProvider = (props: any) => {
         return;
       }
       try {
-        if (from == 'xnav') {
+        if (from == 'xnav' || from == 'token' || from == 'nft') {
           let candidates = (await wallet.GetCandidates())
             .sort(() => 0.5 - Math.random())
             .slice(0, 5);
@@ -299,19 +368,34 @@ export const WalletProvider = (props: any) => {
 
           console.log('using', fee);
 
-          let obj = await wallet.xNavCreateTransaction(
-            to,
-            amount * 1e8,
-            memo,
-            password,
-            subtractFee,
-            new Buffer(new Uint8Array(32)),
-            -1,
-            new Buffer([]),
-            undefined,
-            0,
-            fee,
-          );
+          let obj =
+            from == 'token' || from == 'nft'
+              ? await wallet.tokenCreateTransaction(
+                  to,
+                  Math.floor(amount * 1e8),
+                  memo,
+                  password,
+                  tokenId,
+                  tokenNftId,
+                  new Buffer([]),
+                  undefined,
+                  false,
+                  false,
+                  fee,
+                )
+              : await wallet.xNavCreateTransaction(
+                  to,
+                  Math.floor(amount * 1e8),
+                  memo,
+                  password,
+                  subtractFee,
+                  new Buffer(new Uint8Array(32)),
+                  -1,
+                  new Buffer([]),
+                  undefined,
+                  0,
+                  fee,
+                );
           if (!obj) {
             rej("Can't access you wallet keys");
           } else {
@@ -338,18 +422,34 @@ export const WalletProvider = (props: any) => {
 
             res(ret);
           }
-        } else {
+        } else if (from == 'nav') {
           let ret = await wallet.NavCreateTransaction(
             to,
-            amount * 1e8,
+            Math.floor(amount * 1e8),
             memo,
             password,
             subtractFee,
             100000,
-            from == 'staking' ? 0x2 : 0x1,
+            0x1,
+            fromAddress,
           );
           console.log(ret);
           res(ret);
+        } else if (from == 'cold_staking') {
+          let ret = await wallet.NavCreateTransaction(
+            to,
+            Math.floor(amount * 1e8),
+            memo,
+            password,
+            subtractFee,
+            100000,
+            0x2,
+            fromAddress,
+          );
+          console.log(ret);
+          res(ret);
+        } else {
+          console.log('unknown wallet type', from);
         }
       } catch (e) {
         console.log(e.stack);
@@ -388,7 +488,6 @@ export const WalletProvider = (props: any) => {
       },
       refreshWallet,
       syncProgress,
-      syncing,
       balances,
       connected,
       addresses,
@@ -400,6 +499,10 @@ export const WalletProvider = (props: any) => {
       sendTransaction: sendTransaction,
       network,
       firstSyncCompleted,
+      tokens,
+      nfts,
+      updateAccounts,
+      bootstrapProgress,
     }),
     [
       win,
@@ -409,7 +512,6 @@ export const WalletProvider = (props: any) => {
       mnemonic,
       syncProgress,
       network,
-      syncing,
       balances,
       connected,
       addresses,
@@ -418,6 +520,10 @@ export const WalletProvider = (props: any) => {
       accounts,
       parsedAddresses,
       firstSyncCompleted,
+      tokens,
+      nfts,
+      updateAccounts,
+      bootstrapProgress,
     ],
   );
 
