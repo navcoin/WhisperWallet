@@ -7,7 +7,6 @@ import {useTheme, Text} from '@ui-kitten/components';
 import {Connection_Stats_Enum} from '../constants/Type';
 import CurrencyText from './CurrencyText';
 import BackgroundTimer from 'react-native-background-timer';
-import Animated from 'react-native-reanimated';
 
 const BalanceCircle = memo(() => {
   const {width} = useLayout();
