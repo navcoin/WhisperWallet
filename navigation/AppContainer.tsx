@@ -70,7 +70,7 @@ const AppContainer = (props: any) => {
           headerShown: false,
         }}
         initialRouteName={
-          props.shownWelcome === 'true' ? 'Intro' : 'OnBoarding'
+          props.shownWelcome !== 'true' ? 'Intro' : 'OnBoarding'
         }>
         <Stack.Screen name="Intro" component={Intro} />
         <Stack.Screen name="OnBoarding" component={OnBoarding} />
