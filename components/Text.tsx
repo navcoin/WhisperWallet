@@ -2,42 +2,51 @@ import React, {memo} from 'react';
 import {StyleProp, TextStyle} from 'react-native';
 import {Text, TextProps} from '@ui-kitten/components';
 import {EvaStatus} from '@ui-kitten/components/devsupport';
+import {
+  TEXT_CATEGORIES,
+  TEXT_STYLE_VARIABLES,
+} from '../constants/theme/TextCategory';
+import {scale} from 'react-native-size-matters';
+
+type TextCategory =
+  | 'h6'
+  | 'roboto'
+  | 'extra'
+  | 'extra-1'
+  | 'header'
+  | 'title1'
+  | 'title2'
+  | 'title3'
+  | 'title4'
+  | 'body'
+  | 'headline'
+  | 'call-out'
+  | 'subhead'
+  | 'footnote'
+  | 'caption1'
+  | 'caption2'
+  | 'label';
+
+type TextStatus =
+  | EvaStatus
+  | 'placeholder'
+  | 'white'
+  | 'corn'
+  | 'black'
+  | 'note'
+  | 'blue'
+  | 'salmon'
+  | 'snow'
+  | 'description'
+  | 'details'
+  | 'title'
+  | 'grey300'
+  | 'grey500';
 
 export interface MyTextProps extends TextProps {
   style?: StyleProp<TextStyle>;
-  category?:
-    | 'h6'
-    | 'roboto'
-    | 'extra'
-    | 'extra-1'
-    | 'header'
-    | 'title1'
-    | 'title2'
-    | 'title3'
-    | 'title4'
-    | 'body'
-    | 'headline'
-    | 'call-out'
-    | 'subhead'
-    | 'footnote'
-    | 'caption1'
-    | 'caption2'
-    | 'label';
-  status?:
-    | EvaStatus
-    | 'placeholder'
-    | 'white'
-    | 'corn'
-    | 'black'
-    | 'note'
-    | 'blue'
-    | 'salmon'
-    | 'snow'
-    | 'description'
-    | 'details'
-    | 'title'
-    | 'grey300'
-    | 'grey500';
+  category?: TextCategory;
+  status?: TextStatus;
   children?: any;
   marginLeft?: number;
   marginRight?: number;
@@ -61,64 +70,91 @@ export interface MyTextProps extends TextProps {
   underline?: boolean;
   bold?: boolean;
   italic?: boolean;
+  sizeMatters?: boolean;
 }
-const getLineHeight = (
-  category:
-    | 'roboto'
-    | 'extra'
-    | 'extra-1'
-    | 'header'
-    | 'title1'
-    | 'title2'
-    | 'title3'
-    | 'title4'
-    | 'body'
-    | 'call-out'
-    | 'headline'
-    | 'subhead'
-    | 'footnote'
-    | 'caption1'
-    | 'caption2'
-    | 'h6'
-    | 'label',
-): number => {
+const getLineHeight = (category: TextCategory, sizeMatters = true): number => {
+  let lineHeight: number;
   switch (category) {
-    case 'roboto':
-      return 37.5;
-    case 'extra':
-      return 85.79;
-    case 'extra-1':
-      return 66.83;
-    case 'header':
-      return 44;
-    case 'title1':
-      return 40;
-    case 'title2':
-      return 40;
-    case 'title3':
-      return 36;
-    case 'title4':
-      return 24;
-    case 'body':
-      return 24;
-    case 'call-out':
-      return 24;
-    case 'headline':
-      return 22;
-    case 'subhead':
-      return 20;
-    case 'footnote':
-      return 18;
-    case 'caption1':
-      return 16;
-    case 'caption2':
-      return 13;
-    case 'h6':
-      return 18;
-    default:
-      return 24;
+    case 'roboto': {
+      lineHeight = 37.5;
+      break;
+    }
+    case 'extra': {
+      lineHeight = 85.79;
+      break;
+    }
+    case 'extra-1': {
+      lineHeight = 66.83;
+      break;
+    }
+    case 'header': {
+      lineHeight = 44;
+      break;
+    }
+    case 'title1': {
+      lineHeight = 40;
+      break;
+    }
+    case 'title2': {
+      lineHeight = 40;
+      break;
+    }
+    case 'title3': {
+      lineHeight = 36;
+      break;
+    }
+    case 'title4': {
+      lineHeight = 24;
+      break;
+    }
+    case 'body': {
+      lineHeight = 24;
+      break;
+    }
+    case 'call-out': {
+      lineHeight = 24;
+      break;
+    }
+    case 'headline': {
+      lineHeight = 22;
+      break;
+    }
+    case 'subhead': {
+      lineHeight = 20;
+      break;
+    }
+    case 'footnote': {
+      lineHeight = 18;
+      break;
+    }
+    case 'caption1': {
+      lineHeight = 16;
+      break;
+    }
+    case 'caption2': {
+      lineHeight = 13;
+      break;
+    }
+    case 'h6': {
+      lineHeight = 18;
+      break;
+    }
+    default: {
+      lineHeight = 24;
+      break;
+    }
   }
+  return sizeMatters ? scale(lineHeight) : lineHeight;
 };
+
+const getFontSize = (category: TextCategory): number | null => {
+  if (TEXT_CATEGORIES[category] && TEXT_CATEGORIES[category].fontSize) {
+    const matchedStyle = TEXT_CATEGORIES[category].fontSize;
+    return scale(Number.parseInt(TEXT_STYLE_VARIABLES[matchedStyle]) as number);
+  }
+  return null;
+};
+
 export default memo(
   ({
     marginLeft,
@@ -145,6 +181,7 @@ export default memo(
     children,
     maxWidth,
     style,
+    sizeMatters = true,
     ...rest
   }: MyTextProps) => {
     let textAlign: 'left' | 'center' | 'right' | 'auto' | 'justify' | 'left';
@@ -181,30 +218,32 @@ export default memo(
     let fontStyle: 'normal' | 'italic';
     italic ? (fontStyle = 'italic') : (fontStyle = 'normal');
 
+    let defaultStyles: StyleProp<TextStyle> = {
+      marginLeft: marginLeft,
+      marginRight: marginRight,
+      marginTop: marginTop,
+      paddingTop: paddingTop,
+      paddingBottom: paddingBottom,
+      marginBottom: marginBottom,
+      marginVertical: marginVertical,
+      marginHorizontal: marginHorizontal,
+      opacity: opacity,
+      textAlign: textAlign,
+      maxWidth: maxWidth,
+      lineHeight: getLineHeight(category, sizeMatters),
+      textTransform: textTransform,
+      textDecorationLine: textDecorationLine,
+      fontStyle: fontStyle,
+    };
+    if (sizeMatters) {
+      defaultStyles.fontSize = getFontSize(category);
+    }
+
     return (
       <Text
         category={category}
         status={status}
-        style={[
-          {
-            marginLeft: marginLeft,
-            marginRight: marginRight,
-            marginTop: marginTop,
-            paddingTop: paddingTop,
-            paddingBottom: paddingBottom,
-            marginBottom: marginBottom,
-            marginVertical: marginVertical,
-            marginHorizontal: marginHorizontal,
-            opacity: opacity,
-            textAlign: textAlign,
-            maxWidth: maxWidth,
-            lineHeight: getLineHeight(category),
-            textTransform: textTransform,
-            textDecorationLine: textDecorationLine,
-            fontStyle: fontStyle,
-          },
-          style,
-        ]}
+        style={[defaultStyles, style]}
         {...rest}>
         {children}
       </Text>

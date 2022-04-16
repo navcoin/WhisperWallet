@@ -57,13 +57,13 @@ const Card = ({
     <ScrollView
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
-      style={{width: scale(widthItem), paddingTop: scale(top)}}>
+      style={{width: widthItem, paddingTop: top}}>
       <Animated.View
         style={[
           {
-            width: scale(widthItem),
-            height: scale(height) / 2.2,
-            paddingRight: scale(16),
+            width: widthItem,
+            height: height / 2.2,
+            paddingRight: 16,
           },
         ]}>
         <View style={[styles.image, {backgroundColor: color}]}>
@@ -99,10 +99,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textView: {
-    marginRight: 32,
+    marginRight: scale(32),
   },
   image: {
-    borderRadius: 16,
+    borderRadius: scale(16),
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
