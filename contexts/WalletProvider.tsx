@@ -11,6 +11,7 @@ import {
 } from '../constants/Type';
 import useTraceUpdate from '../hooks/useTraceUpdates';
 import Identicon from '../components/Identicon';
+import Db from '../utils/Db';
 
 export const WalletProvider = (props: any) => {
   const {njs, p2pPool} = useNjs();
@@ -254,6 +255,7 @@ export const WalletProvider = (props: any) => {
         network: network_,
         indexedDB: win.indexedDB,
         IDBKeyRange: win.IDBKeyRange,
+        dbBackend: Db,
       });
 
       setFirstSyncCompleted(false);
