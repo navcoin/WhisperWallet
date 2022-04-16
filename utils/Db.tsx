@@ -931,7 +931,7 @@ export default class Db extends events.EventEmitter {
   async GetUtxos(forBalance = false) {
     if (!this.db) return [];
 
-    let ret = await this.db
+    let ret = this.db
       .objects('OutPoint')
       .filtered(`spentIn == ''` + forBalance ? ` || spentIn == '0:0'` : '');
 
@@ -947,13 +947,13 @@ export default class Db extends events.EventEmitter {
   async GetTxs() {
     if (!this.dbTx) return;
 
-    return await this.dbTx.objects('Tx');
+    return this.dbTx.objects('Tx');
   }
 
   async GetTx(hash) {
     if (!this.dbTx) return;
 
-    return await this.dbTx?.objectForPrimaryKey('Tx', hash);
+    return this.dbTx?.objectForPrimaryKey('Tx', hash);
   }
 
   async AddUtxo(
