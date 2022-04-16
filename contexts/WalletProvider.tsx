@@ -113,6 +113,10 @@ export const WalletProvider = (props: any) => {
       njs.wallet.WalletFile.ListWallets().then(setWalletsList);
     }
   }, [njs, win]);
+  
+  useEffect(() => {
+    njs.wallet.SetBackendDb(Db);
+  }, []);
 
   const newCandidate = useCallback(
     function (session: string, candidate: any) {
