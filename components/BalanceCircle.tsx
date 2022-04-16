@@ -7,6 +7,7 @@ import {useTheme, Text} from '@ui-kitten/components';
 import {Connection_Stats_Enum} from '../constants/Type';
 import CurrencyText from './CurrencyText';
 import BackgroundTimer from 'react-native-background-timer';
+import Animated from 'react-native-reanimated';
 
 const BalanceCircle = memo(() => {
   const {width} = useLayout();
@@ -36,13 +37,13 @@ const BalanceCircle = memo(() => {
       connected != Connection_Stats_Enum.Connecting &&
       connected != Connection_Stats_Enum.Bootstrapping
     ) {
-      setRotation(180);
       BackgroundTimer.stopBackgroundTimer();
+      setRotation(180);
     } else {
       BackgroundTimer.stopBackgroundTimer();
       BackgroundTimer.runBackgroundTimer(() => {
         setRotation(prev => {
-          return prev + 2;
+          return (prev + 2) % 360;
         });
       }, 10);
     }
@@ -84,7 +85,12 @@ const BalanceCircle = memo(() => {
         marginBottom: 16,
       }}>
       <SegmentCircle
-        initialRotation={rotation}
+        initialRotation={
+          connected != Connection_Stats_Enum.Connecting &&
+          connected != Connection_Stats_Enum.Bootstrapping
+            ? 180
+            : rotation
+        }
         radius={width / 2 - 100}
         background={
           connected == Connection_Stats_Enum.Connecting ||
@@ -138,7 +144,7 @@ const BalanceCircle = memo(() => {
       ) : (
         <View style={{position: 'absolute'}}>
           <Text style={{textAlign: 'center'}}>Balance:</Text>
-          <CurrencyText children={totalBalance} />
+          <CurrencyText children={totalBalance.toFixed(8)} />
         </View>
       )}
     </View>
