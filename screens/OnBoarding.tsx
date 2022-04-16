@@ -1,15 +1,11 @@
 import React, {memo} from 'react';
 import {useWindowDimensions, View, Alert} from 'react-native';
-import {
-  useTheme,
-  StyleService,
-  useStyleSheet,
-  Button,
-} from '@ui-kitten/components';
+import {useTheme, StyleService, useStyleSheet} from '@ui-kitten/components';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import Container from '../components/Container';
+import Button from '../components/Button';
 import Animated, {
   interpolateColor,
   useAnimatedScrollHandler,
@@ -68,7 +64,7 @@ const OnBoardingPage = memo(() => {
         <Button
           size="large"
           children="Start using Whisper Wallet"
-          style={{flex: 1, maxWidth: maxComponentWidth}}
+          style={{flex: 1}}
           onPress={() => {
             Alert.alert(
               'Security',

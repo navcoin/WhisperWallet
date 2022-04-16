@@ -5,7 +5,7 @@ import {EvaStatus} from '@ui-kitten/components/devsupport';
 import {
   TEXT_CATEGORIES,
   TEXT_STYLE_VARIABLES,
-} from '../constants/theme/TextCategory';
+} from '../constants/theme/TextSize';
 import {scale} from 'react-native-size-matters';
 
 type TextCategory =
@@ -147,12 +147,12 @@ const getLineHeight = (category: TextCategory, sizeMatters = true): number => {
   return sizeMatters ? scale(lineHeight) : lineHeight;
 };
 
-const getFontSize = (category: TextCategory): number | null => {
+const getFontSize = (category: TextCategory): number => {
   if (TEXT_CATEGORIES[category] && TEXT_CATEGORIES[category].fontSize) {
     const matchedStyle = TEXT_CATEGORIES[category].fontSize;
     return scale(Number.parseInt(TEXT_STYLE_VARIABLES[matchedStyle]) as number);
   }
-  return null;
+  return 12;
 };
 
 export default memo(

@@ -92,8 +92,8 @@ const Card = ({
 };
 
 export default Card;
-const bottomButtonHeight = 32 + 64;
-const spaceBetweenButtonAndContent = 16;
+const bottomButtonHeight = scale(32 + 64);
+const spaceBetweenButtonAndContent = scale(16);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
