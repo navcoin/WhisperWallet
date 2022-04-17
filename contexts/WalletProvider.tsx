@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import useNjs from '../hooks/useNjs';
-import useWin from '../hooks/useWin';
 import {WalletContext, WalletContextValue} from './WalletContext';
 import {
   AddressFragment,
@@ -15,10 +14,9 @@ import Db from '../utils/Db';
 
 export const WalletProvider = (props: any) => {
   const {njs, p2pPool} = useNjs();
-  const {win} = useWin();
   const [wallet, setWallet] = useState<any>(undefined);
   const [walletName, setWalletName] = useState('');
-  const [walletsList, setWalletsList] = useState([]);
+  const [walletsList, setWalletsList] = useState<string[]>([]);
   const [network, setNetwork] = useState('livenet');
   const [mnemonic, setMnemonic] = useState('');
   const [syncProgress, setSyncProgress] = useState(0);
@@ -109,10 +107,11 @@ export const WalletProvider = (props: any) => {
   }, [njs, network, addresses]);
 
   useEffect(() => {
-    if (njs && win) {
-      njs.wallet.WalletFile.ListWallets().then(setWalletsList);
+    if (njs) {
+      njs.wallet.SetBackendDb(Db);
+      Db.ListWallets().then(setWalletsList);
     }
-  }, [njs, win]);
+  }, [njs]);
   
   useEffect(() => {
     njs.wallet.SetBackendDb(Db);
@@ -257,8 +256,6 @@ export const WalletProvider = (props: any) => {
         zapwallettxes: zapwallettxes,
         log: log,
         network: network_,
-        indexedDB: win.indexedDB,
-        IDBKeyRange: win.IDBKeyRange,
         dbBackend: Db,
       });
 
@@ -337,7 +334,7 @@ export const WalletProvider = (props: any) => {
         bootstrap: njs.wallet.xNavBootstrap,
       });
     },
-    [njs, wallet, win],
+    [njs, wallet],
   );
 
   const createTransaction = async (
@@ -511,7 +508,6 @@ export const WalletProvider = (props: any) => {
       bootstrapProgress,
     }),
     [
-      win,
       njs,
       wallet,
       walletName,
