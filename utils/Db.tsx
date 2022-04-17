@@ -235,8 +235,6 @@ export default class Db extends events.EventEmitter {
     this.db = undefined;
     let self = this;
 
-    console.log('ope ning', filename);
-
     Realm.open({
       path: filename,
       schema: [
@@ -257,13 +255,11 @@ export default class Db extends events.EventEmitter {
     })
       .progress(console.log)
       .then(db => {
-        console.log('dada');
         self.db = db;
         Realm.open({
           path: 'txDb',
           schema: [TxKeysSchema, TxSchema, CandidateSchema],
         }).then(dbTx => {
-          console.log('didi');
           self.dbTx = dbTx;
           this.emit('db_open');
         });
