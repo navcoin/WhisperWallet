@@ -24,21 +24,13 @@ import {ToastProvider} from 'react-native-toast-notifications';
 
 patchFlatListProps();
 
-import SQLite from 'react-native-sqlite-2';
-
-import setGlobalVars from 'indexeddbshim/dist/indexeddbshim-noninvasive';
 import useNjs from './hooks/useNjs';
-import useWin from './hooks/useWin';
 import useLockedScreen from './hooks/useLockedScreen';
 import useAsyncStorage from './hooks/useAsyncStorage';
 import LocalAuth from './utils/LocalAuth';
 import useWallet from './hooks/useWallet';
 import WalletProvider from './contexts/WalletProvider';
-const win = {};
 
-setGlobalVars(win, {win: SQLite});
-
-win.indexedDB.__useShim();
 const njs = require('navcoin-js');
 const P2pPool = require('@aguycalled/bitcore-p2p').Pool;
 
@@ -46,7 +38,6 @@ const App = () => {
   const [theme, setTheme] = React.useState<'light' | 'dark'>('dark');
   const [loaded, setLoaded] = useState(false);
   const {setNjs, setP2pPool} = useNjs();
-  const {setWin} = useWin();
 
   const [shownWelcome, setShownWelcome] = useState('false');
 
@@ -73,7 +64,6 @@ const App = () => {
     });
     njs.wallet.Init().then(async () => {
       setNjs(njs);
-      setWin(win);
       setP2pPool(
         new P2pPool({
           dnsSeed: false, // prevent seeding with DNS discovered known peers upon connecting
@@ -104,7 +94,6 @@ const App = () => {
         }),
       );
 
-      njs.wallet.WalletFile.SetBackend(win.indexedDB, win.IDBKeyRange);
       setLoaded(true);
 
       setTimeout(() => {
