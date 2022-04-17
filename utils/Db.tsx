@@ -14,10 +14,10 @@ const KeySchema = {
   properties: {
     hash: 'string',
     value: 'string',
-    type: 'integer',
+    type: 'int',
     address: 'string',
-    used: 'integer',
-    change: 'integer',
+    used: 'int',
+    change: 'int',
     path: 'string',
   },
 };
@@ -47,8 +47,8 @@ const TxSchema = {
     hash: 'string',
     txid: 'string',
     hex: 'string',
-    height: 'integer',
-    pos: 'integer',
+    height: 'int',
+    pos: 'int',
   },
 };
 
@@ -56,7 +56,7 @@ const TxKeysInputSchema = {
   name: 'TxKeysInput',
   properties: {
     txid: 'string',
-    vout: 'integer',
+    vout: 'int',
     outputKey: 'string?',
     spendingKey: 'string?',
     script: 'string?',
@@ -74,10 +74,10 @@ const TxKeysOutputSchema = {
 
 const TxKeysSchema = {
   name: 'TxKeys',
-  primaryKey: 'string',
+  primaryKey: 'hash',
   properties: {
-    vin: {type: 'list', objectType: 'TxKeysInputSchema'},
-    vout: {type: 'list', objectType: 'TxKeysOutputSchema'},
+    vin: 'string',
+    vout: 'string',
     hash: 'string',
   },
 };
@@ -110,7 +110,7 @@ const CandidateSchema = {
     network: 'string',
     tx: 'string',
     input: 'string',
-    fee: 'integer',
+    fee: 'int',
   },
 };
 
@@ -118,12 +118,12 @@ const OutPointSchema = {
   name: 'OutPoint',
   primaryKey: 'id',
   properties: {
-    id: 'string:1',
+    id: 'string',
     out: 'string',
     spentIn: 'string',
-    amount: 'integer',
+    amount: 'int',
     label: 'string',
-    type: 'integer',
+    type: 'int',
     spendingPk: 'string',
     stakingPk: 'string',
     votingPk: 'string',
@@ -138,8 +138,8 @@ const ScriptHistorySchema = {
     id: 'string',
     scriptHash: 'string',
     tx_hash: 'string',
-    height: 'integer',
-    fetched: 'integer',
+    height: 'int',
+    fetched: 'int',
   },
 };
 
@@ -168,8 +168,8 @@ const NftSchema = {
     id: 'string',
     name: 'string',
     code: 'string',
-    supply: 'integer',
-    version: 'integer',
+    supply: 'int',
+    version: 'int',
     key: 'string',
   },
 };
@@ -179,8 +179,8 @@ const NameSchema = {
   primaryKey: 'name',
   properties: {
     name: 'string',
-    height: 'integer',
-    data: 'object',
+    height: 'int',
+    //data: 'object',
   },
 };
 
@@ -190,16 +190,16 @@ const WalletTxSchema = {
   properties: {
     id: 'string',
     hash: 'string',
-    amount: 'integer',
+    amount: 'int',
     type: 'string',
-    confirmed: 'integer',
-    height: 'integer',
-    pos: 'integer',
-    timestamp: 'integer',
-    memos: 'object?',
-    strdzeel: 'object?',
-    addresses_in: 'object?',
-    addresses_out: 'object?',
+    confirmed: 'int',
+    height: 'int',
+    pos: 'int',
+    timestamp: 'int',
+    memos: 'string?',
+    strdzeel: 'string?',
+    addresses_in: 'string?',
+    addresses_out: 'string?',
     token_name: 'string?',
     token_code: 'string?',
     token_id: 'string?',
@@ -225,10 +225,10 @@ export default class Db extends events.EventEmitter {
 
     let key = new Buffer(
       crypto
-        .createHash('sha256')
+        .createHash('sha512')
         .update(String(secret))
         .digest('hex')
-        .substring(0, 64),
+        .substring(0, 128),
       'hex',
     );
 
@@ -251,9 +251,11 @@ export default class Db extends events.EventEmitter {
         NftSchema,
         NameSchema,
         WalletTxSchema,
+        LabelSchema,
       ],
       encryptionKey: key,
     })
+      .progress(console.log)
       .then(db => {
         console.log('dada');
         self.db = db;
@@ -291,7 +293,7 @@ export default class Db extends events.EventEmitter {
     return ciphertext.toString('base64');
   }
 
-  static async ListWallets() {
+  static async ListWallets(): Promise<string[]> {
     return ['dada'];
   }
 
@@ -392,7 +394,7 @@ export default class Db extends events.EventEmitter {
 
     let ret = this.db.objectForPrimaryKey('Setting', 'counter_' + index);
 
-    if (ret) return ret.value;
+    if (ret) return parseInt(ret.value);
 
     return undefined;
   }
@@ -436,7 +438,7 @@ export default class Db extends events.EventEmitter {
           type: type,
           address: address,
           used: 0,
-          change: change,
+          change: change ? 1 : 0,
           path: path,
         },
         'modified',
@@ -489,7 +491,7 @@ export default class Db extends events.EventEmitter {
         'Setting',
         {
           key: key,
-          value: value,
+          value: value.toString(),
         },
         'modified',
       );
@@ -553,13 +555,13 @@ export default class Db extends events.EventEmitter {
 
     return this.db
       .objects('StakingAddress')
-      .filtered(`address == ${address} && addressVoting == ${address2}`);
+      .filtered(`address == '${address}' && addressVoting == '${address2}'`);
   }
 
   async GetStatusForScriptHash(s: string) {
     if (!this.db) return;
 
-    let ret = this.db.objects('Status').filtered(`scriptHash == ${s}`)[0];
+    let ret = this.db.objects('Status').filtered(`scriptHash == '${s}'`)[0];
 
     return ret?.status;
   }
@@ -592,7 +594,15 @@ export default class Db extends events.EventEmitter {
 
     this.dbTx.write(() => {
       for (let d of documents) {
-        item = self.dbTx?.create('TxKeys', d, 'modified');
+        item = self.dbTx?.create(
+          'TxKeys',
+          {
+            ...d,
+            vin: JSON.stringify(d.vin),
+            vout: JSON.stringify(d.vout),
+          },
+          'modified',
+        );
       }
     });
 
@@ -632,19 +642,19 @@ export default class Db extends events.EventEmitter {
   async GetXNavReceivingAddresses(all: boolean) {
     if (!this.db) return [];
 
-    return this.db.objects('Keys').filtered(`type == ${AddressTypes.XNAV}`);
+    return this.db.objects('Key').filtered(`type == ${AddressTypes.XNAV}`);
   }
 
   async GetNavReceivingAddresses(all: boolean) {
     if (!this.db) return [];
 
-    return this.db.objects('Keys').filtered(`type == ${AddressTypes.NAV}`);
+    return this.db.objects('Key').filtered(`type == ${AddressTypes.NAV}`);
   }
 
   async GetNavAddress(address) {
     if (!this.db) return;
 
-    let ret = this.db.objects('Keys').filtered(`address == ${address}`);
+    let ret = this.db.objects('Key').filtered(`address == '${address}'`);
 
     return ret[0];
   }
@@ -671,7 +681,7 @@ export default class Db extends events.EventEmitter {
         self.db
           ?.objects('ScriptHistory')
           .filtered(
-            `(height >= ${upperLimit} || height <= ${lowerLimit}) && scriptHash == ${scriptHash}`,
+            `(height >= ${upperLimit} || height <= ${lowerLimit}) && scriptHash == '${scriptHash}'`,
           ),
       );
     });
@@ -690,7 +700,7 @@ export default class Db extends events.EventEmitter {
 
     this.db.write(() => {
       item = self.db?.create(
-        'ScriptHash',
+        'ScriptHistory',
         {
           id: scriptHash + '_' + hash,
           scriptHash: scriptHash,
@@ -838,8 +848,8 @@ export default class Db extends events.EventEmitter {
     if (!this.db) return [];
 
     return this.db
-      .objects('ScriptHash')
-      .filtered(`scriptHash == ${scriptHash}`);
+      .objects('ScriptHistory')
+      .filtered(`scriptHash == '${scriptHash}'`);
   }
 
   async MarkAsFetched(hash: string) {
@@ -849,8 +859,8 @@ export default class Db extends events.EventEmitter {
 
     this.db.write(() => {
       self.db
-        .objects('ScriptHash')
-        .filtered(`tx_hash == ${hash}`)
+        .objects('ScriptHistory')
+        .filtered(`tx_hash == '${hash}'`)
         .forEach(el => {
           el.fetched = 1;
         });
@@ -860,12 +870,20 @@ export default class Db extends events.EventEmitter {
   async GetWalletHistory() {
     if (!this.db) return [];
 
-    let history = this.db.objects('WalletTx');
+    let history = this.db.objects('WalletTx').map(el => {
+      return {
+        ...el,
+        memos: JSON.parse(el.memos),
+        strdzeel: JSON.parse(el.strdzeel),
+        addresses_in: JSON.parse(el.addresses_in),
+        addresses_out: JSON.parse(el.addresses_out),
+      };
+    });
 
-    let confirmed = history.filtered(e => e.height > 0);
-    let unconfirmed = history.filtered(e => !e.confirmed || e.height <= 0);
+    let confirmed = history.filtered('height > 0');
+    let unconfirmed = history.filtered('confirmed == 0 || height <= 0');
 
-    let ret = unconfirmed.concat(confirmed.reverse());
+    let ret = unconfirmed.concat(confirmed.sorted('height', true));
 
     ret.sort((a, b) => {
       if (a.height == b.height) {
@@ -912,10 +930,10 @@ export default class Db extends events.EventEmitter {
           height: height,
           pos: pos,
           timestamp: timestamp,
-          memos: memos,
-          strdzeel: strdzeel,
-          addresses_in: addresses_in,
-          addresses_out: addresses_out,
+          memos: JSON.stringify(memos),
+          strdzeel: JSON.stringify(strdzeel),
+          addresses_in: JSON.stringify(addresses_in),
+          addresses_out: JSON.stringify(addresses_out),
           token_name: name,
           token_code: code,
           token_id: tokenId,
@@ -933,7 +951,7 @@ export default class Db extends events.EventEmitter {
 
     let ret = this.db
       .objects('OutPoint')
-      .filtered(`spentIn == ''` + forBalance ? ` || spentIn == '0:0'` : '');
+      .filtered(`spentIn == ''` + (forBalance ? ` || spentIn == '0:0'` : ''));
 
     return ret;
   }
@@ -941,7 +959,7 @@ export default class Db extends events.EventEmitter {
   async GetCandidates(network: string) {
     if (!this.dbTx) return;
 
-    return this.dbTx.objects('OutPoint').filtered(`network == '${network}'`);
+    return this.dbTx.objects('Candidate').filtered(`network == '${network}'`);
   }
 
   async GetTxs() {
@@ -1080,7 +1098,11 @@ export default class Db extends events.EventEmitter {
 
     try {
       self.dbTx?.write(() => {
-        self.dbTx?.create('TxKey', tx);
+        self.dbTx?.create('TxKeys', {
+          ...tx,
+          vin: JSON.stringify(tx.vin),
+          vout: JSON.stringify(tx.vout),
+        });
       });
     } catch (e) {}
   }
@@ -1118,7 +1140,8 @@ export default class Db extends events.EventEmitter {
   async GetTxKeys(hash: string) {
     if (!this.dbTx) return;
 
-    return this.dbTx.objectForPrimaryKey('TxKey', hash);
+    let ret = this.dbTx.objectForPrimaryKey('TxKeys', hash);
+    return {...ret, vin: JSON.parse(ret?.vin), vout: JSON.parse(ret?.vout)};
   }
 }
 
