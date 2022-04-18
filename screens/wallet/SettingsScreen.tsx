@@ -1,6 +1,6 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useState} from 'react';
-import {StyleSheet, View, Alert} from 'react-native';
+import {StyleSheet, View, Alert, ScrollView} from 'react-native';
 import Container from '../../components/Container';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {Animation_Types_Enum} from '../../constants/Type';
@@ -12,6 +12,8 @@ import useKeychain from '../../utils/Keychain';
 import Loading from '../../components/Loading';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
+import {screenHeight} from '../../utils/layout';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 interface SettingsItem {
   title: string;
@@ -172,7 +174,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     <Container useSafeArea>
       <Loading loading={loading} />
       <TopNavigationComponent title={'Settings'} />
-      <View style={styles.contentWrapper}>
+      <ScrollView style={styles.contentWrapper}>
         {items.map((item, index) => {
           if (!item.show) {
             return <View key={index} />;
@@ -191,7 +193,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
             />
           );
         })}
-      </View>
+      </ScrollView>
     </Container>
   );
 };
@@ -199,27 +201,9 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
 export default gestureHandlerRootHOC(SettingsScreen);
 
 const styles = StyleSheet.create({
-  header: {
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-    paddingBottom: 8,
-  },
   contentWrapper: {
-    padding: 20,
-  },
-  text: {
-    color: 'white',
-    textAlign: 'center',
-  },
-  emptyView: {
-    flex: 1,
-    alignContent: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  cardWrapper: {
-    maxWidth: 300,
-    alignSelf: 'center',
-    marginTop: 50,
+    paddingHorizontal: scale(20),
+    marginBottom: verticalScale(20),
+    height: screenHeight,
   },
 });
