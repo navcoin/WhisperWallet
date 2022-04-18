@@ -16,6 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import Text from './Text';
 
 import {EvaStatus} from '@ui-kitten/components/devsupport';
+import {scale} from 'react-native-size-matters';
 
 interface NavigationActionProps {
   icon?: string;
@@ -148,15 +149,17 @@ const NavigationAction = memo(
           styles.container,
           style,
           {
-            marginBottom: marginBottom,
-            marginTop: marginTop,
-            marginLeft: marginLeft,
-            marginRight: marginRight,
-            marginHorizontal: marginHorizontal,
-            marginVertical: marginVertical,
-            height: getSize(size),
-            width: getSize(size),
-            borderRadius: getBorderRadius(size),
+            marginBottom: marginBottom ? scale(marginBottom) : undefined,
+            marginTop: marginTop ? scale(marginTop) : undefined,
+            marginLeft: marginLeft ? scale(marginLeft) : undefined,
+            marginRight: marginRight ? scale(marginRight) : undefined,
+            marginHorizontal: marginHorizontal
+              ? scale(marginHorizontal)
+              : undefined,
+            marginVertical: marginVertical ? scale(marginVertical) : undefined,
+            height: scale(getSize(size)),
+            width: scale(getSize(size)),
+            borderRadius: scale(getBorderRadius(size)),
             backgroundColor: backgroundColor,
           },
         ]}
@@ -167,8 +170,8 @@ const NavigationAction = memo(
             name={icon || 'cancel'}
             style={[
               {
-                height: getSizeIcon(size),
-                width: getSizeIcon(size),
+                height: scale(getSizeIcon(size)),
+                width: scale(getSizeIcon(size)),
               },
               {tintColor: getIconColor(status)},
             ]}

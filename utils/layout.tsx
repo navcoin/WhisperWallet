@@ -7,13 +7,11 @@ const maxComponentWidth = 400;
 
 const layoutStyles = StyleService.create({
   responsiveRowComponentWidth: {
-    maxWidth: maxComponentWidth,
     width: '100%',
     flexDirection: 'row',
     alignSelf: 'center',
   },
   responsiveColumnComponentWidth: {
-    maxWidth: maxComponentWidth,
     width: '100%',
     flexDirection: 'column',
     alignSelf: 'center',

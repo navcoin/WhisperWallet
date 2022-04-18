@@ -28,45 +28,33 @@ const ButtonStyleOptionsWithNumbers = [
   'paddingHorizontal',
 ];
 
-const parseUiKittenStyle = (size: sizeOptions, sizeMatters: boolean) => {
+const parseUiKittenStyle = (size: sizeOptions) => {
   let styles: StyleProp<TextStyle> = {};
 
   if (BUTTON_SIZE[size]) {
     for (const styleKey in BUTTON_SIZE[size]) {
       if (ButtonStyleOptionsWithNumbers.includes(styleKey)) {
-        styles[styleKey] = sizeMatters
-          ? scale(BUTTON_SIZE[size][styleKey])
-          : BUTTON_SIZE[size][styleKey];
+        styles[styleKey] = scale(BUTTON_SIZE[size][styleKey]);
       }
     }
     if (BUTTON_SIZE[size].textFontSize) {
-      styles.fontSize = sizeMatters
-        ? scale(BUTTON_SIZE[size].textFontSize)
-        : BUTTON_SIZE[size].textFontSize;
+      styles.fontSize = BUTTON_SIZE[size].textFontSize;
     }
   }
   return styles;
 };
 
 export default memo(
-  ({
-    size = 'medium',
-    sizeMatters = true,
-    children,
-    style,
-    ...rest
-  }: MyButtonProps) => {
+  ({size = 'medium', children, style, ...rest}: MyButtonProps) => {
     let [finalizedStyle, setFinalizedStyle] = useState<StyleProp<TextStyle>>(
       {},
     );
     useEffect(() => {
       let defaultStyles: StyleProp<TextStyle> = {};
-      if (size && sizeMatters) {
-        defaultStyles = {
-          ...defaultStyles,
-          ...parseUiKittenStyle(size as sizeOptions, sizeMatters),
-        };
-      }
+      defaultStyles = {
+        ...defaultStyles,
+        ...parseUiKittenStyle(size as sizeOptions),
+      };
       let injectedStyles: StyleProp<TextStyle> = {};
       if (Array.isArray(style)) {
         for (const e of style) {
@@ -76,7 +64,7 @@ export default memo(
         injectedStyles = style;
       }
       setFinalizedStyle([defaultStyles, injectedStyles]);
-    }, [size, sizeMatters, style]);
+    }, [size, style]);
     return (
       <Button style={finalizedStyle} {...rest}>
         {evaProps => (

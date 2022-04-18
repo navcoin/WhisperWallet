@@ -15,7 +15,7 @@ import useKeychain from '../utils/Keychain';
 import Mnemonic from '../components/Mnemonic';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
-import {scale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 const CreateNewWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -326,13 +326,13 @@ const styles = StyleSheet.create({
     width: scale(120),
   },
   animatedStep: {
-    marginTop: scale(28),
+    marginTop: verticalScale(28),
   },
   layout: {
-    marginBottom: scale(24),
+    marginBottom: verticalScale(24),
   },
   button: {
-    marginTop: scale(32),
+    marginTop: verticalScale(32),
     flex: 1,
   },
 });
