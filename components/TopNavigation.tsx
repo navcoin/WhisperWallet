@@ -20,8 +20,10 @@ const TopNavigationComponent = memo((props: TopNavigationProps_) => {
       accessoryLeft={
         !props.hideBack ? (
           <TopNavigationAction
-            style={{padding: 20}}
-            icon={<Icon width={20} height={20} name={'leftArrow'} />}
+            style={{padding: scale(20)}}
+            icon={
+              <Icon width={scale(20)} height={scale(20)} name={'leftArrow'} />
+            }
             onPress={goBack}
           />
         ) : (

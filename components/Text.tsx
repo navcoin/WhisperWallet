@@ -152,7 +152,7 @@ const getFontSize = (category: TextCategory): number => {
     const matchedStyle = TEXT_CATEGORIES[category].fontSize;
     return scale(Number.parseInt(TEXT_STYLE_VARIABLES[matchedStyle]) as number);
   }
-  return 12;
+  return scale(12);
 };
 
 export default memo(
