@@ -11,6 +11,7 @@ import useWallet from '../hooks/useWallet';
 import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import BottomSheetOptions from './BottomSheetOptions';
 import {useNavigation} from '@react-navigation/native';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 const AccountsTab = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -158,7 +159,7 @@ const AccountsTab = () => {
         tabs={['Accounts', 'Tokens', 'NFTs']}
         selectedIndex={selectedTab}
         onChange={setSelectedTab}
-        style={{marginHorizontal: 16}}
+        style={{marginHorizontal: scale(16)}}
       />
       <ScrollView
         refreshControl={
@@ -169,7 +170,7 @@ const AccountsTab = () => {
             titleColor="#fff"
           />
         }>
-        <Content style={{paddingTop: 24}}>
+        <Content style={{paddingTop: verticalScale(24)}}>
           {selectedTab == 0 ? (
             accounts.map((el, i) => {
               return (
@@ -198,7 +199,8 @@ const AccountsTab = () => {
                           onPress={() => {
                             setAccount(el);
                             expandMenuToken(el);
-                          }}></BalanceCard>
+                          }}
+                        />
                       </View>
                     );
                   })}
@@ -216,7 +218,8 @@ const AccountsTab = () => {
                           onPress={() => {
                             setAccount(el);
                             expandMenuToken(el);
-                          }}></BalanceCard>
+                          }}
+                        />
                       </View>
                     );
                   })}{' '}
@@ -234,7 +237,7 @@ export default AccountsTab;
 
 const themedStyles = StyleService.create({
   item: {
-    paddingHorizontal: 16,
-    marginBottom: 16,
+    paddingHorizontal: scale(16),
+    marginBottom: verticalScale(16),
   },
 });

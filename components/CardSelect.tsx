@@ -19,6 +19,7 @@ import BottomSheetMenu from './BottomSheetMenu';
 import {Balance_Types_Enum} from '../constants/Type';
 import BottomSheetOptions from './BottomSheetOptions';
 import {useBottomSheet} from '../hooks/useBottomSheet';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 interface InputSelectProps {
   defaultOption?: string;
@@ -72,14 +73,14 @@ export default CardSelect;
 
 const themedStyles = StyleService.create({
   card: {
-    borderRadius: 12,
-    borderWidth: 1,
+    borderRadius: scale(12),
+    borderWidth: scale(1),
     borderColor: 'color-basic-1500',
-    marginTop: 24,
-    paddingTop: 14,
-    paddingBottom: 12,
-    paddingHorizontal: 16,
-    marginBottom: 24,
+    marginTop: verticalScale(24),
+    paddingTop: verticalScale(14),
+    paddingBottom: verticalScale(12),
+    paddingHorizontal: scale(16),
+    marginBottom: verticalScale(24),
   },
   row: {
     flexDirection: 'row',

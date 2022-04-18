@@ -17,15 +17,16 @@ import useAsyncStorage from '../../hooks/useAsyncStorage';
 import {networkOptions} from '../../constants/Data';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
+import {scale} from 'react-native-size-matters';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
-  <Icon width={20} height={20} {...props} name={props.name} />
+  <Icon width={scale(20)} height={scale(20)} {...props} name={props.name} />
 );
 
 const renderRightActions = (editMode: boolean, onPress: () => void) => (
   <React.Fragment>
     <TopNavigationAction
-      style={{padding: 20}}
+      style={{padding: scale(20)}}
       icon={TopRightIcon({name: editMode ? 'check' : 'edit'})}
       onPress={onPress}
     />

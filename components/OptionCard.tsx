@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(12),
     paddingHorizontal: scale(12),
     paddingVertical: verticalScale(10),
-    marginBottom: scale(16),
+    marginBottom: verticalScale(16),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

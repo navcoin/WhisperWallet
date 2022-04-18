@@ -17,7 +17,7 @@ import {NetworkTypes, WalletTypes} from '../constants/Type';
 import useKeychain from '../utils/Keychain';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
-import {scale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 const ImportWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -225,7 +225,7 @@ export default ImportWallet;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: scale(32),
+    marginTop: verticalScale(32),
     flex: 1,
   },
   flex1: {
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     marginRight: scale(16),
   },
   inputPhone: {
-    marginVertical: scale(20),
+    marginVertical: verticalScale(20),
   },
   content: {
     marginHorizontal: scale(24),
@@ -275,11 +275,11 @@ const styles = StyleSheet.create({
   },
   layout: {
     flexDirection: 'row',
-    marginBottom: scale(24),
+    marginBottom: verticalScale(24),
     paddingHorizontal: scale(24),
   },
   button: {
-    marginTop: scale(24),
+    marginTop: verticalScale(24),
     marginHorizontal: scale(24),
     flex: 1,
   },

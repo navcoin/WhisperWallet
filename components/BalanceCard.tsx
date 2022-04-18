@@ -14,7 +14,7 @@ import {
   Connection_Stats_Enum,
 } from '../constants/Type';
 import useWallet from '../hooks/useWallet';
-import {scale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 interface BalanceProps {
   item: BalanceFragment;
@@ -57,8 +57,8 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
                     type_id == Balance_Types_Enum.Staking
                       ? theme['color-staking']
                       : 'none',
-                  width: 32,
-                  height: 32,
+                  width: scale(32),
+                  height: scale(32),
                 }}
               />
             )}
@@ -67,9 +67,9 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
             <Text category="headline">{name}</Text>
             {connected === Connection_Stats_Enum.Connecting &&
             !firstSyncCompleted ? (
-              <Text style={{fontSize: 13}}>Connecting...</Text>
+              <Text style={{fontSize: scale(13)}}>Connecting...</Text>
             ) : connected === Connection_Stats_Enum.Syncing ? (
-              <Text style={{fontSize: 13}}>Synchronizing...</Text>
+              <Text style={{fontSize: scale(13)}}>Synchronizing...</Text>
             ) : (
               <CurrencyText
                 category="footnote"

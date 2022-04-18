@@ -5,6 +5,7 @@ import React, {memo, useMemo, useState} from 'react';
 import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useBottomSheet} from '../hooks/useBottomSheet';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 const BottomSheetOptions = (props: any) => {
   const styles = useStyleSheet(themedStyles);
@@ -46,17 +47,17 @@ export default BottomSheetOptions;
 
 const themedStyles = StyleService.create({
   item: {
-    paddingHorizontal: 16,
-    marginBottom: 16,
+    paddingHorizontal: scale(16),
+    marginBottom: verticalScale(16),
   },
   container: {
     flex: 1,
   },
-  button: {padding: 100},
+  button: {padding: scale(100)},
   contentContainer: {
     backgroundColor: 'background-basic-color-3',
     flex: 1,
-    paddingTop: 8,
-    padding: 20,
+    padding: scale(20),
+    paddingTop: verticalScale(8),
   },
 });

@@ -11,6 +11,7 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import Container from '../../components/Container';
 import {TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 import useWallet from '../../hooks/useWallet';
 import CardSelect from '../../components/CardSelect';
@@ -173,10 +174,12 @@ const SendToScreen = (props: any) => {
                   onPress={() => {
                     showMemoDialog(true);
                   }}
-                  style={{marginHorizontal: 12, flexDirection: 'row'}}>
+                  style={{marginHorizontal: scale(12), flexDirection: 'row'}}>
                   {memo ? (
                     <>
-                      <Text category={'headline'} style={{paddingRight: 12}}>
+                      <Text
+                        category={'headline'}
+                        style={{paddingRight: scale(12)}}>
                         Encrypted memo:
                       </Text>
                       <Text
@@ -192,7 +195,12 @@ const SendToScreen = (props: any) => {
                       <Icon
                         pack={'assets'}
                         name={'add'}
-                        style={{tintColor: 'white', marginRight: 24}}
+                        style={{
+                          tintColor: 'white',
+                          width: scale(24),
+                          height: scale(24),
+                          marginRight: scale(24),
+                        }}
                       />
                       <Text>Add an encrypted memo</Text>
                     </>
@@ -244,7 +252,11 @@ const SendToScreen = (props: any) => {
               </TouchableOpacity>
             )}
           </Content>
-          <Layout style={[styles.bottom, {paddingBottom: bottom + 16}]}>
+          <Layout
+            style={[
+              styles.bottom,
+              {paddingBottom: verticalScale(bottom + 16)},
+            ]}>
             <SendTransactionButton
               walletName={walletName}
               from={from}
@@ -265,48 +277,18 @@ export default gestureHandlerRootHOC(SendToScreen);
 
 const themedStyles = StyleService.create({
   contentContainerStyle: {
-    paddingTop: 24,
-    paddingHorizontal: 24,
-  },
-  avatar: {
-    alignSelf: 'center',
-    borderRadius: 32,
-  },
-  boxView: {
-    marginTop: 54,
-  },
-  box: {
-    borderRadius: 12,
-    padding: 16,
-    backgroundColor: 'color-radical-100',
-  },
-  iconView: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    borderWidth: 3,
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    top: -36,
-    borderColor: 'background-basic-color-1',
-    backgroundColor: 'color-salmon-100',
-  },
-  icon: {
-    width: 16,
-    height: 16,
-    tintColor: 'color-basic-100',
+    paddingTop: verticalScale(24),
+    paddingHorizontal: scale(24),
   },
   card: {
-    borderRadius: 12,
-    borderWidth: 1,
+    borderRadius: scale(12),
+    borderWidth: scale(1),
     borderColor: 'color-basic-1500',
-    marginTop: 24,
-    paddingTop: 14,
-    paddingBottom: 12,
-    paddingHorizontal: 16,
-    marginBottom: 24,
+    marginTop: verticalScale(24),
+    paddingTop: verticalScale(14),
+    paddingBottom: verticalScale(12),
+    paddingHorizontal: scale(16),
+    marginBottom: verticalScale(24),
   },
   row: {
     flexDirection: 'row',
@@ -317,12 +299,12 @@ const themedStyles = StyleService.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 4,
+    marginTop: verticalScale(4),
   },
   note: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 24,
+    paddingVertical: verticalScale(12),
+    paddingHorizontal: scale(16),
+    borderRadius: scale(24),
   },
   text: {
     color: 'color-basic-1100',
@@ -332,22 +314,8 @@ const themedStyles = StyleService.create({
     right: 0,
     left: 0,
     bottom: 0,
-    paddingTop: 8,
-    paddingHorizontal: 24,
-  },
-  item: {
-    paddingHorizontal: 16,
-    marginBottom: 16,
-    marginTop: 16,
-  },
-  container: {
-    flex: 1,
-  },
-  button: {padding: 100},
-  contentContainer: {
-    backgroundColor: 'background-basic-color-3',
-    flex: 1,
-    padding: 20,
+    paddingTop: verticalScale(8),
+    paddingHorizontal: scale(24),
   },
   flex1: {
     flex: 1,

@@ -7,6 +7,7 @@ import {
   useStyleSheet,
 } from '@tsejerome/ui-kitten-components';
 import Text from './Text';
+import {scale, verticalScale} from 'react-native-size-matters';
 import {
   Balance_Types_Enum,
   BalanceFragment,
@@ -36,7 +37,9 @@ const DestinationComponent = (props: any) => {
   );
 
   useEffect(() => {
-    if (props.setToType) props.setToType(toType);
+    if (props.setToType) {
+      props.setToType(toType);
+    }
     if (toType?.destination_id != Destination_Types_Enum.Address) {
       setTo(
         parsedAddresses.filter(el => el.type_id == toType?.destination_id)[0]
@@ -131,10 +134,10 @@ const DestinationComponent = (props: any) => {
                   name={'qr'}
                   style={{
                     tintColor: 'white',
-                    width: 24,
-                    height: 24,
-                    marginRight: 8,
-                    marginLeft: 16,
+                    width: scale(24),
+                    height: scale(24),
+                    marginRight: scale(8),
+                    marginLeft: scale(16),
                   }}
                 />
               </TouchableOpacity>
@@ -165,49 +168,33 @@ const DestinationComponent = (props: any) => {
 export default DestinationComponent;
 
 const themedStyles = StyleService.create({
-  contentContainerStyle: {
-    paddingTop: 24,
-    paddingHorizontal: 24,
-  },
-  avatar: {
-    alignSelf: 'center',
-    borderRadius: 32,
-  },
-  boxView: {
-    marginTop: 54,
-  },
-  box: {
-    borderRadius: 12,
-    padding: 16,
-    backgroundColor: 'color-radical-100',
-  },
   iconView: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    borderWidth: 3,
+    width: scale(48),
+    height: scale(48),
+    borderRadius: scale(24),
+    borderWidth: scale(3),
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    top: -36,
+    top: verticalScale(-36),
     borderColor: 'background-basic-color-1',
     backgroundColor: 'color-salmon-100',
   },
   icon: {
-    width: 16,
-    height: 16,
+    width: scale(16),
+    height: scale(16),
     tintColor: 'color-basic-100',
   },
   card: {
-    borderRadius: 12,
-    borderWidth: 1,
+    borderRadius: scale(12),
+    borderWidth: scale(1),
     borderColor: 'color-basic-1500',
-    marginTop: 24,
-    paddingTop: 14,
-    paddingBottom: 12,
-    paddingHorizontal: 16,
-    marginBottom: 24,
+    marginTop: verticalScale(24),
+    paddingTop: verticalScale(14),
+    paddingBottom: verticalScale(12),
+    paddingHorizontal: scale(16),
+    marginBottom: verticalScale(24),
   },
   row: {
     flexDirection: 'row',
@@ -219,36 +206,6 @@ const themedStyles = StyleService.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 4,
-  },
-  note: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 24,
-  },
-  text: {
-    color: 'color-basic-1100',
-  },
-  bottom: {
-    position: 'absolute',
-    right: 0,
-    left: 0,
-    bottom: 0,
-    paddingTop: 8,
-    paddingHorizontal: 24,
-  },
-  item: {
-    paddingHorizontal: 16,
-    marginBottom: 16,
-    marginTop: 16,
-  },
-  container: {
-    flex: 1,
-  },
-  button: {padding: 100},
-  contentContainer: {
-    backgroundColor: 'background-basic-color-3',
-    flex: 1,
-    padding: 20,
   },
   flex1: {
     flex: 1,
