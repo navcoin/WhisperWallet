@@ -31,14 +31,9 @@ const ButtonStyleOptionsWithNumbers = [
 const parseUiKittenStyle = (size: sizeOptions, sizeMatters: boolean) => {
   let styles: StyleProp<TextStyle> = {};
 
-  console.log('wtf312312');
   if (BUTTON_SIZE[size]) {
-    console.log('wtf');
-    console.log(JSON.stringify(BUTTON_SIZE[size]));
     for (const styleKey in BUTTON_SIZE[size]) {
       if (ButtonStyleOptionsWithNumbers.includes(styleKey)) {
-        console.log(styleKey);
-        console.log(BUTTON_SIZE[size][styleKey]);
         styles[styleKey] = sizeMatters
           ? scale(BUTTON_SIZE[size][styleKey])
           : BUTTON_SIZE[size][styleKey];
@@ -54,18 +49,36 @@ const parseUiKittenStyle = (size: sizeOptions, sizeMatters: boolean) => {
 };
 
 export default memo(
-  ({size, sizeMatters = true, children, ...rest}: MyButtonProps) => {
-    let defaultStyles: StyleProp<TextStyle> = {};
-    if (size && sizeMatters) {
-      defaultStyles = {
-        ...defaultStyles,
-        ...parseUiKittenStyle(size as sizeOptions, sizeMatters),
-      };
-      console.log(JSON.stringify(defaultStyles));
-      console.log('defaultStyles');
-    }
+  ({
+    size = 'medium',
+    sizeMatters = true,
+    children,
+    style,
+    ...rest
+  }: MyButtonProps) => {
+    let [finalizedStyle, setFinalizedStyle] = useState<StyleProp<TextStyle>>(
+      {},
+    );
+    useEffect(() => {
+      let defaultStyles: StyleProp<TextStyle> = {};
+      if (size && sizeMatters) {
+        defaultStyles = {
+          ...defaultStyles,
+          ...parseUiKittenStyle(size as sizeOptions, sizeMatters),
+        };
+      }
+      let injectedStyles: StyleProp<TextStyle> = {};
+      if (Array.isArray(style)) {
+        for (const e of style) {
+          Object.assign(injectedStyles, e);
+        }
+      } else {
+        injectedStyles = style;
+      }
+      setFinalizedStyle([defaultStyles, injectedStyles]);
+    }, [size, sizeMatters, style]);
     return (
-      <Button style={[defaultStyles]} {...rest}>
+      <Button style={finalizedStyle} {...rest}>
         {evaProps => (
           <Text style={{fontWeight: '700'}} category={'call-out'}>
             {children}
