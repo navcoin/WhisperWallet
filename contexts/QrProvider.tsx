@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {QrContextValue, QrContext} from './QrContext';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import Text from '../components/Text';

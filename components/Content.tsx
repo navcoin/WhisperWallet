@@ -1,6 +1,6 @@
 import React from 'react';
 import {ScrollView, ScrollViewProps} from 'react-native';
-import {useTheme} from '@ui-kitten/components';
+import {useTheme} from '@tsejerome/ui-kitten-components';
 
 interface ContentProps extends ScrollViewProps {
   padder?: boolean;

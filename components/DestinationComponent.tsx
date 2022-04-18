@@ -5,7 +5,7 @@ import {
   Layout,
   StyleService,
   useStyleSheet,
-} from '@ui-kitten/components';
+} from '@tsejerome/ui-kitten-components';
 import Text from './Text';
 import {
   Balance_Types_Enum,

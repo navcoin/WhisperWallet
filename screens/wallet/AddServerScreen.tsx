@@ -10,7 +10,7 @@ import {
   Select,
   SelectItem,
   TopNavigationAction,
-} from '@ui-kitten/components';
+} from '@tsejerome/ui-kitten-components';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {ServerOption} from '../../constants/Type';

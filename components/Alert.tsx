@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import Text from './Text';
-import {Button} from '@ui-kitten/components';
+import {Button} from '@tsejerome/ui-kitten-components';
 
 const Alert = (props: any) => {
   const [visible, setVisible] = useState(false);

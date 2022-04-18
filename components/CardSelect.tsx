@@ -6,7 +6,7 @@ import {
   Layout,
   useStyleSheet,
   StyleService,
-} from '@ui-kitten/components';
+} from '@tsejerome/ui-kitten-components';
 
 import Text from './Text';
 import BottomSheet, {
@@ -47,7 +47,8 @@ const CardSelect = ({
         onSelect={el => {
           setSelectedOption(el.text);
           onSelect(el);
-        }}></BottomSheetOptions>,
+        }}
+      />,
     );
 
   return (

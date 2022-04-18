@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
-import {useTheme, Layout} from '@ui-kitten/components';
+import {useTheme, Layout} from '@tsejerome/ui-kitten-components';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,

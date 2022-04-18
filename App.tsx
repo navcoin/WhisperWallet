@@ -11,7 +11,10 @@ import ThemeContext from './ThemeContext';
 import * as eva from '@eva-design/eva';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import AssetIconsPack from './assets/AssetIconsPack';
-import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
+import {
+  ApplicationProvider,
+  IconRegistry,
+} from '@tsejerome/ui-kitten-components';
 import {default as darkTheme} from './constants/theme/dark.json';
 import {default as lightTheme} from './constants/theme/light.json';
 import {default as customTheme} from './constants/theme/appTheme.json';

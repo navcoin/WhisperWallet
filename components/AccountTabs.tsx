@@ -8,7 +8,7 @@ import {Balance_Types_Enum, BalanceFragment} from '../constants/Type';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import BottomSheetMenu from './BottomSheetMenu';
 import useWallet from '../hooks/useWallet';
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import BottomSheetOptions from './BottomSheetOptions';
 import {useNavigation} from '@react-navigation/native';
 

@@ -13,7 +13,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {
   BottomSheetContextValue,
   BottomSheetContext,

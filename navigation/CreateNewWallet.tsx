@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, Input} from '@ui-kitten/components';
+import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 import Text from '../components/Text';
 import Container from '../components/Container';

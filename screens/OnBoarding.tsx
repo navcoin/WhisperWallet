@@ -1,6 +1,10 @@
 import React, {memo} from 'react';
 import {useWindowDimensions, View, Alert} from 'react-native';
-import {useTheme, StyleService, useStyleSheet} from '@ui-kitten/components';
+import {
+  useTheme,
+  StyleService,
+  useStyleSheet,
+} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -62,7 +66,7 @@ const OnBoardingPage = memo(() => {
 
       <View style={styles.bottomView}>
         <Button
-          size="large"
+          size={'large'}
           children="Start using Whisper Wallet"
           style={{flex: 1}}
           onPress={() => {

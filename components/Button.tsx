@@ -1,5 +1,5 @@
-import React, {memo} from 'react';
-import {Button, ButtonProps} from '@ui-kitten/components';
+import React, {memo, useEffect, useState} from 'react';
+import {Button, ButtonProps} from '@tsejerome/ui-kitten-components';
 import BUTTON_SIZE from '../constants/theme/ButtonSize';
 import {StyleProp, TextStyle} from 'react-native';
 import {scale} from 'react-native-size-matters';

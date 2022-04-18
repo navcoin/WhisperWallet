@@ -6,7 +6,11 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from 'react-native';
-import {useTheme, Icon, TopNavigationAction} from '@ui-kitten/components';
+import {
+  useTheme,
+  Icon,
+  TopNavigationAction,
+} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 
 import Text from './Text';

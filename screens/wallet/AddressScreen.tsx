@@ -3,7 +3,7 @@ import Clipboard from '@react-native-community/clipboard';
 import Text from '../../components/Text';
 import React, {useEffect, useState} from 'react';
 import Container from '../../components/Container';
-import {useTheme} from '@ui-kitten/components';
+import {useTheme} from '@tsejerome/ui-kitten-components';
 import useLayout from '../../hooks/useLayout';
 import QRCode from 'react-native-qrcode-svg';
 import {BalanceFragment} from '../../constants/Type';
@@ -64,7 +64,7 @@ const AddressScreen = (props: any) => {
           <Text center variants={'transparent'} style={{marginTop: 32}}>
             Tap to copy
           </Text>
-          <View style={{flex: 1}}></View>
+          <View style={{flex: 1}} />
         </TouchableOpacity>
       </Container>
     </Container>

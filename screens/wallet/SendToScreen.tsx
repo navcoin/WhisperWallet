@@ -5,7 +5,7 @@ import {
   Layout,
   StyleService,
   useStyleSheet,
-} from '@ui-kitten/components';
+} from '@tsejerome/ui-kitten-components';
 import Text from '../../components/Text';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import Container from '../../components/Container';
@@ -59,8 +59,9 @@ const SendToScreen = (props: any) => {
   const [sources, setSources] = useState(accounts);
 
   useEffect(() => {
-    if (from?.type_id == Balance_Types_Enum.PrivateToken) setSources(tokens);
-    else if (from?.type_id == Balance_Types_Enum.Nft) {
+    if (from?.type_id == Balance_Types_Enum.PrivateToken) {
+      setSources(tokens);
+    } else if (from?.type_id == Balance_Types_Enum.Nft) {
       setAmount((1 / 1e8).toFixed(8));
       setSources(nfts);
     }

@@ -6,7 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {Icon, useTheme} from '@ui-kitten/components';
+import {Icon, useTheme} from '@tsejerome/ui-kitten-components';
 
 import Text from './Text';
 import AnimatedAppearance from './AnimatedAppearance';

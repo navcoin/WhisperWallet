@@ -1,7 +1,7 @@
 import React, {memo, useEffect, useState} from 'react';
 import {Image, View} from 'react-native';
 import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
-import {StyleService, useStyleSheet, Button} from '@ui-kitten/components';
+import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 import Text from '../components/Text';

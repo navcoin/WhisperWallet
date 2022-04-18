@@ -2,7 +2,7 @@ import Text from './Text';
 import OptionCard from './OptionCard';
 import {View} from 'react-native';
 import React, {memo, useMemo, useState} from 'react';
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 

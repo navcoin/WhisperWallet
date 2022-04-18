@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, StyleProp, ViewStyle} from 'react-native';
-import {useTheme} from '@ui-kitten/components';
+import {useTheme} from '@tsejerome/ui-kitten-components';
 import {scale} from 'react-native-size-matters';
 import Animated, {
   interpolate,

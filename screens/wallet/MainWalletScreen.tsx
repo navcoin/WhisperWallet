@@ -1,6 +1,10 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {ScrollView, RefreshControl, View} from 'react-native';
-import {Layout, StyleService, useStyleSheet} from '@ui-kitten/components';
+import {
+  Layout,
+  StyleService,
+  useStyleSheet,
+} from '@tsejerome/ui-kitten-components';
 
 import Container from '../../components/Container';
 import NavigationAction from '../../components/NavigationAction';

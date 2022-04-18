@@ -1,6 +1,10 @@
 import React from 'react';
 import {TouchableOpacity, ViewStyle, StyleProp} from 'react-native';
-import {StyleService, useStyleSheet, Icon} from '@ui-kitten/components';
+import {
+  StyleService,
+  useStyleSheet,
+  Icon,
+} from '@tsejerome/ui-kitten-components';
 
 import Text, {MyTextProps} from './Text';
 import {scale} from 'react-native-size-matters';

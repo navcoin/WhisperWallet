@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, ImageProps, ImageSourcePropType, StyleSheet} from 'react-native';
-import {IconPack, IconProvider} from '@ui-kitten/components';
+import {IconPack, IconProvider} from '@tsejerome/ui-kitten-components';
 import {SvgProps} from 'react-native-svg';
 import {Icons} from './icons';
 import {scale} from 'react-native-size-matters';
