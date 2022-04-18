@@ -7,6 +7,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import Text from '../components/Text';
 import Content from '../components/Content';
 import Container from '../components/Container';
+import Button from '../components/Button';
 import {Images} from '../assets/images';
 import {RootStackParamList} from './type';
 import useNjs from '../hooks/useNjs';
@@ -60,7 +61,7 @@ const Intro = memo(props => {
           {walletList.length > 0 ? (
             <Button
               children="Open Wallet"
-              style={[layoutStyles.responsiveRowComponentWidth, styles.wallet]}
+              style={[styles.wallet]}
               status="control"
               onPress={() => {
                 navigate('OpenWallet');
@@ -71,7 +72,7 @@ const Intro = memo(props => {
           )}
           <Button
             children="New Wallet"
-            style={[layoutStyles.responsiveRowComponentWidth, styles.wallet]}
+            style={[styles.wallet]}
             status="control"
             onPress={() => {
               navigate('CreateNewWallet');
@@ -79,7 +80,7 @@ const Intro = memo(props => {
           />
           <Button
             children="Import Wallet"
-            style={[layoutStyles.responsiveRowComponentWidth, styles.wallet]}
+            style={[styles.wallet]}
             status="control"
             onPress={() => {
               navigate('ImportWallet');
@@ -99,9 +100,9 @@ const themedStyles = StyleService.create({
     alignItems: 'center',
   },
   icon: {
-    width: scale(200),
-    height: scale(200),
-    marginTop: scale(48),
+    width: verticalScale(200),
+    height: verticalScale(200),
+    marginTop: verticalScale(48),
     alignSelf: 'center',
   },
   iconArrow: {
@@ -109,11 +110,12 @@ const themedStyles = StyleService.create({
     marginRight: scale(8),
   },
   input: {
-    marginVertical: scale(24),
+    marginVertical: verticalScale(24),
   },
   wallet: {
-    marginTop: scale(8),
-    marginBottom: scale(16),
+    marginTop: verticalScale(8),
+    marginBottom: verticalScale(16),
+    width: '100%',
   },
   content: {
     marginHorizontal: scale(40),
@@ -124,10 +126,10 @@ const themedStyles = StyleService.create({
     flex: 1,
   },
   spacer: {
-    marginTop: scale(32),
+    marginTop: verticalScale(32),
   },
   btnText: {
-    marginTop: scale(24),
+    marginTop: verticalScale(24),
     textAlign: 'center',
   },
 });
