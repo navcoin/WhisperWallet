@@ -72,7 +72,7 @@ export interface MyTextProps extends TextProps {
   italic?: boolean;
   sizeMatters?: boolean;
 }
-const getLineHeight = (category: TextCategory, sizeMatters = true): number => {
+const getLineHeight = (category: TextCategory): number => {
   let lineHeight: number;
   switch (category) {
     case 'roboto': {
@@ -144,7 +144,7 @@ const getLineHeight = (category: TextCategory, sizeMatters = true): number => {
       break;
     }
   }
-  return sizeMatters ? scale(lineHeight) : lineHeight;
+  return lineHeight;
 };
 
 const getFontSize = (category: TextCategory): number => {
@@ -219,18 +219,20 @@ export default memo(
     italic ? (fontStyle = 'italic') : (fontStyle = 'normal');
 
     let defaultStyles: StyleProp<TextStyle> = {
-      marginLeft: marginLeft,
-      marginRight: marginRight,
-      marginTop: marginTop,
-      paddingTop: paddingTop,
-      paddingBottom: paddingBottom,
-      marginBottom: marginBottom,
-      marginVertical: marginVertical,
-      marginHorizontal: marginHorizontal,
+      marginLeft: marginLeft ? scale(marginLeft) : undefined,
+      marginRight: marginRight ? scale(marginRight) : undefined,
+      marginTop: marginTop ? verticalScale(marginTop) : undefined,
+      paddingTop: paddingTop ? verticalScale(paddingTop) : undefined,
+      paddingBottom: paddingBottom ? verticalScale(paddingBottom) : undefined,
+      marginBottom: marginBottom ? verticalScale(marginBottom) : undefined,
+      marginVertical: marginVertical
+        ? verticalScale(marginVertical)
+        : undefined,
+      marginHorizontal: marginHorizontal ? scale(marginHorizontal) : undefined,
       opacity: opacity,
       textAlign: textAlign,
-      maxWidth: maxWidth,
-      lineHeight: getLineHeight(category, sizeMatters),
+      maxWidth: maxWidth ? scale(maxWidth) : undefined,
+      lineHeight: scale(getLineHeight(category)),
       textTransform: textTransform,
       textDecorationLine: textDecorationLine,
       fontStyle: fontStyle,

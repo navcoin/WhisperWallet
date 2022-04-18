@@ -50,9 +50,9 @@ const Intro = memo(props => {
 
           <Text
             category="header"
-            marginTop={scale(16)}
-            marginRight={scale(0)}
-            marginBottom={scale(8)}
+            marginTop={16}
+            marginRight={0}
+            marginBottom={8}
             center>
             Privacy in the palm of your hands.
           </Text>
