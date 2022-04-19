@@ -2444,10 +2444,10 @@
     Base64 "~0.2.0"
     inherits "~2.0.1"
 
-"@tsejerome/ui-kitten-components@^5.1.3":
-  version "5.1.3"
-  resolved "https://registry.yarnpkg.com/@tsejerome/ui-kitten-components/-/ui-kitten-components-5.1.3.tgz#aec8b2d858bf7652fd5b61a78753116572cef696"
-  integrity sha512-MKSnF3/cWhmbkJ4RuIF4FjV7KeyYb120hB6/pwvH6pb0lM5eZAANWiquAnueQNDjmzvhmlJ2vOuuwTRwp/jo/A==
+"@tsejerome/ui-kitten-components@^5.1.5":
+  version "5.1.5"
+  resolved "https://registry.yarnpkg.com/@tsejerome/ui-kitten-components/-/ui-kitten-components-5.1.5.tgz#3597eb72e3eca1464aff2004801dc3f65c423674"
+  integrity sha512-LJdspj1dKzMTb6nf9YmIR9qEKzdmW9yk8yy7Ut5JIWBsJMNvN0PhMrS2YoqPhVHYF8LlGYIoCHml/qvllvKrKQ==
   dependencies:
     "@eva-design/dss" "^2.0.0"
     "@eva-design/processor" "^2.0.0"
@@ -2819,17 +2819,6 @@
   dependencies:
     "@typescript-eslint/types" "5.19.0"
     eslint-visitor-keys "^3.0.0"
-
-"@ui-kitten/components@^5.1.1":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@ui-kitten/components/-/components-5.1.2.tgz#18b6aba8ed67b0b893f0ec3f40daf5e698676811"
-  integrity sha512-J1Gd53+2qngktLSKot9aT+LGhUt05uGE3ouEiY6FsxUZdexlzcQVhp5rRasExUSAYNcN5J7/XSNEPNB9qX0v1g==
-  dependencies:
-    "@eva-design/dss" "^2.0.0"
-    "@eva-design/processor" "^2.0.0"
-    fecha "3.0.3"
-    hoist-non-react-statics "^3.2.1"
-    lodash.merge "^4.6.1"
 
 "@ui-kitten/eva-icons@^5.1.1":
   version "5.1.2"

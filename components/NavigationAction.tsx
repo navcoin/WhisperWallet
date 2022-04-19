@@ -15,7 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import Text from './Text';
 
-import {EvaStatus} from '@ui-kitten/components/devsupport';
+import {EvaStatus} from '@tsejerome/ui-kitten-components/devsupport';
 import {scale} from 'react-native-size-matters';
 
 interface NavigationActionProps {

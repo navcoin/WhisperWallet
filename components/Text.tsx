@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
 import {StyleProp, TextStyle} from 'react-native';
 import {Text, TextProps} from '@tsejerome/ui-kitten-components';
-import {EvaStatus} from '@ui-kitten/components/devsupport';
+import {EvaStatus} from '@tsejerome/ui-kitten-components/devsupport';
 import {
   TEXT_CATEGORIES,
   TEXT_STYLE_VARIABLES,

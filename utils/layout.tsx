@@ -1,4 +1,4 @@
-import {StyleService} from '@ui-kitten/components/theme';
+import {StyleService} from '@tsejerome/ui-kitten-components/theme';
 import {Dimensions} from 'react-native';
 const {width, height} = Dimensions.get('window');
 
