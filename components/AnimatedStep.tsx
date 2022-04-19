@@ -65,7 +65,7 @@ const AnimatedStep = ({step, steps = 4, style}: AnimatedStepProps) => {
 
         return {
           flex: 1,
-          width: scale(widthX),
+          width: widthX,
           backgroundColor: backgroundColor,
         };
       });
