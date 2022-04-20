@@ -213,37 +213,17 @@ const CreateNewWallet = () => {
             )}
             <View
               style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
-              {/* <Button
-              children="Back"
-              status={'primary-whisper'}
-              style={styles.button}
-              onPress={() => {
-                setError('');
-                setIndex(2);
-              }}
-            /> */}
-              {/* //TODO: Make the top left corner back button go back to previous index instead */}
               <Button
                 children="Skip"
                 style={[styles.button, {marginRight: scale(20)}]}
-              status={'primary-whisper'}
-              onPress={() => {
-                setIndex(4);
-              }}
-            />
-            <Button
-              children="Next"
-              status={'primary-whisper'}
-              style={styles.button}
-              onPressOut={() => {
-                if (words.join(' ') == mnemonic) {
-                  setError('');
+                status={'primary-whisper'}
+                onPress={() => {
                   setIndex(4);
                 }}
               />
               <Button
                 children="Next"
-                status={'control'}
+                status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={() => {
                   if (words.join(' ') == mnemonic) {
@@ -269,12 +249,13 @@ const CreateNewWallet = () => {
               style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
               <Button
                 children="Next"
-              status={'primary-whisper'}
-              style={styles.button}
-              onPressOut={() => {
-                navigate('Wallet');
-              }}
-            />
+                status={'primary-whisper'}
+                style={styles.button}
+                onPressOut={() => {
+                  navigate('Wallet');
+                }}
+              />
+            </View>
           </View>
         ) : (
           <Text center>Wrong option</Text>

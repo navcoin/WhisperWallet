@@ -73,7 +73,7 @@ const Intro = memo(props => {
           <Button
             children="New"
             style={[styles.wallet]}
-            status="control"
+            status="primary-whisper"
             onPress={() => {
               navigate('CreateNewWallet');
             }}
@@ -87,25 +87,6 @@ const Intro = memo(props => {
             }}
           />
         </View>
-        ) : (
-          <></>
-        )}
-        <Button
-          children="New"
-          status="primary-whisper"
-          style={styles.wallet}
-          onPress={() => {
-            navigate('CreateNewWallet');
-          }}
-        />
-        <Button
-          children="Import"
-          style={styles.wallet}
-          status="primary-whisper"
-          onPress={() => {
-            navigate('ImportWallet');
-          }}
-        />
       </Content>
     </Container>
   );
@@ -119,8 +100,8 @@ const themedStyles = StyleService.create({
     alignItems: 'center',
   },
   icon: {
-    width: verticalScale(200),
-    height: verticalScale(200),
+    width: verticalScale(250),
+    height: verticalScale(250),
     marginTop: verticalScale(48),
     alignSelf: 'center',
   },
@@ -134,7 +115,7 @@ const themedStyles = StyleService.create({
   wallet: {
     marginTop: verticalScale(8),
     marginBottom: verticalScale(16),
-    width: '100%',
+    width: moderateScale(250, 0.5),
   },
   content: {
     marginHorizontal: scale(40),

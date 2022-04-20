@@ -6,7 +6,7 @@ import {
   TEXT_CATEGORIES,
   TEXT_STYLE_VARIABLES,
 } from '../constants/theme/TextSize';
-import {verticalScale, scale} from 'react-native-size-matters';
+import {verticalScale, moderateScale, scale} from 'react-native-size-matters';
 
 type TextCategory =
   | 'h6'
@@ -149,7 +149,7 @@ const getLineHeight = (category: TextCategory): number => {
 const getFontSize = (category: TextCategory): number => {
   if (TEXT_CATEGORIES[category] && TEXT_CATEGORIES[category].fontSize) {
     const matchedStyle = TEXT_CATEGORIES[category].fontSize;
-    return scale(Number.parseInt(TEXT_STYLE_VARIABLES[matchedStyle]) as number);
+    return moderateScale(Number.parseInt(TEXT_STYLE_VARIABLES[matchedStyle], 0.8) as number);
   }
   return scale(12);
 };

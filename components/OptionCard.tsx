@@ -24,14 +24,14 @@ interface OptionProps {
   index: number;
   selected: string;
   id: string;
-  color: string;
+  color?: string;
   icon?: string;
   onPress?: () => void;
   iconRight?: string;
   iconRightOnPress?: () => void;
   animationType?: Animation_Types_Enum;
   cardType?: 'outline' | 'fill';
-  leftElement: any;
+  leftElement?: any;
 }
 
 const OptionCard = ({
