@@ -1,7 +1,11 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useState} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
-import {Button, Icon, TopNavigationAction} from '@ui-kitten/components';
+import {
+  Button,
+  Icon,
+  TopNavigationAction,
+} from '@tsejerome/ui-kitten-components';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {NetworkOption, ServerOption} from '../../constants/Type';
@@ -13,15 +17,16 @@ import useAsyncStorage from '../../hooks/useAsyncStorage';
 import {networkOptions} from '../../constants/Data';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
+import {scale} from 'react-native-size-matters';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
-  <Icon width={20} height={20} {...props} name={props.name} />
+  <Icon width={scale(20)} height={scale(20)} {...props} name={props.name} />
 );
 
 const renderRightActions = (editMode: boolean, onPress: () => void) => (
   <React.Fragment>
     <TopNavigationAction
-      style={{padding: 20}}
+      style={{padding: scale(20)}}
       icon={TopRightIcon({name: editMode ? 'check' : 'edit'})}
       onPress={onPress}
     />

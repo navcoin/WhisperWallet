@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, Input} from '@ui-kitten/components';
+import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 import Text from '../components/Text';
 import Container from '../components/Container';
@@ -13,7 +13,10 @@ import {NetworkTypes} from '../constants/Type';
 import OptionCard from '../components/OptionCard';
 import useKeychain from '../utils/Keychain';
 import Mnemonic from '../components/Mnemonic';
+import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
+import {scale, verticalScale} from 'react-native-size-matters';
+import useLayout from '../hooks/useLayout';
 
 const CreateNewWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -24,134 +27,143 @@ const CreateNewWallet = () => {
   const [error, setError] = useState('');
   const [network, setNetwork] = useState('mainnet');
   const {njs} = useNjs();
+  const {height} = useLayout();
   const {read} = useKeychain();
 
-  const [words, setWords] = useState<string[]>([]);
+  const [words, setWords] = useState<string[]>(new Array(12));
 
   return (
     <Container useSafeArea>
-      <Loading loading={loading} />
       <TopNavigationComponent title={'New Wallet'} />
-      <AnimatedStep style={styles.animatedStep} step={index} steps={5} />
+      <KeyboardAwareScrollView
+        contentContainerStyle={{flexGrow: 1}}
+        enableOnAndroid
+        showsVerticalScrollIndicator={false}>
+        <Loading loading={loading} />
+        <AnimatedStep style={styles.animatedStep} step={index} steps={5} />
 
-      {index == 0 ? (
-        <View style={styles.container}>
-          <KeyboardAwareScrollView
-            style={styles.content}
-            enableOnAndroid
-            showsVerticalScrollIndicator={false}>
+        {index == 0 ? (
+          <View style={[styles.container, styles.horizontalPadding24]}>
             <Text category="title4" center marginBottom={32}>
               Choose a name for the wallet
             </Text>
-            <View style={styles.layout}>
+            <View style={[styles.layout]}>
               <Input
                 autoFocus={true}
-                style={styles.flex1}
+                style={[layoutStyles.responsiveRowComponentWidth, styles.flex1]}
                 value={walletName}
                 onChangeText={(name: string) => {
                   setError('');
                   setWalletName(name);
                 }}
               />
+              {error ? (
+                <Text style={{color: 'red', flex: 1}} center>
+                  {error}
+                </Text>
+              ) : (
+                <></>
+              )}
             </View>
-            {error ? (
-              <Text style={{color: 'red', flex: 1}} center>
-                {error}
-              </Text>
-            ) : (
-              <></>
-            )}
-          </KeyboardAwareScrollView>
-          <View style={{flexDirection: 'row', marginBottom: 24}}>
-            <Button
-              children="Next"
-              status={'primary-whisper'}
-              style={styles.button}
-              onPressOut={async () => {
-                const walletList = await njs.wallet.WalletFile.ListWallets();
-                if (walletList.indexOf(walletName) > -1) {
-                  setError('There is already a wallet with that name.');
-                } else if (walletName) {
-                  setIndex(1);
-                }
-              }}
-            />
+            <View
+              style={[
+                layoutStyles.responsiveRowComponentWidth,
+                styles.bottomButtonWrapper,
+              ]}>
+              <Button
+                children="Next"
+                status={'control'}
+                style={styles.button}
+                onPressOut={async () => {
+                  const walletList = await njs.wallet.WalletFile.ListWallets();
+                  if (walletList.indexOf(walletName) > -1) {
+                    setError('There is already a wallet with that name.');
+                  } else if (walletName) {
+                    setIndex(1);
+                  }
+                }}
+              />
+            </View>
           </View>
-        </View>
-      ) : index == 1 ? (
-        <View style={styles.container}>
-          <KeyboardAwareScrollView
-            style={styles.content}
-            enableOnAndroid
-            showsVerticalScrollIndicator={false}>
+        ) : index == 1 ? (
+          <View style={[styles.container, styles.horizontalPadding24]}>
             <Text category="title4" center marginBottom={32}>
               Choose the network
             </Text>
-
             {NetworkTypes.map((el, index) => {
               return (
-                <OptionCard
-                  key={el[0]}
-                  id={el[0]}
-                  item={{text: el[1]}}
-                  index={index}
-                  selected={network}
-                  onPress={() => {
-                    setNetwork(el[0]);
-                  }}
-                  icon={'creditCard'}
-                />
+                <View style={[layoutStyles.responsiveColumnComponentWidth]}>
+                  <OptionCard
+                    key={el[0]}
+                    id={el[0]}
+                    item={{text: el[1]}}
+                    index={index}
+                    selected={network}
+                    onPress={() => {
+                      setNetwork(el[0]);
+                    }}
+                    icon={'creditCard'}
+                  />
+                </View>
               );
             })}
-          </KeyboardAwareScrollView>
-          <View style={{flexDirection: 'row', marginBottom: 24}}>
-            <Button
-              children="Next"
-              status={'primary-whisper'}
-              style={styles.button}
-              onPressOut={() => {
-                setLoading(true);
-                read(walletName)
-                  .then((password: string) => {
-                    createWallet(
-                      walletName,
-                      '',
-                      '',
-                      password,
-                      password,
-                      false,
-                      true,
-                      network,
-                      () => {
-                        setLoading(false);
-                        setIndex(2);
-                      },
-                    );
-                  })
-                  .catch((e: any) => {
-                    console.log(e);
-                    setLoading(false);
-                  });
-              }}
-            />
+            <View
+              style={[
+                layoutStyles.responsiveRowComponentWidth,
+                styles.bottomButtonWrapper,
+              ]}>
+              <Button
+                children="Next"
+                status={'primary-whisper'}
+                style={styles.button}
+                onPressOut={() => {
+                  setLoading(true);
+                  read(walletName)
+                    .then((password: string) => {
+                      createWallet(
+                        walletName,
+                        '',
+                        '',
+                        password,
+                        password,
+                        false,
+                        true,
+                        network,
+                        () => {
+                          setLoading(false);
+                          setIndex(2);
+                        },
+                      );
+                    })
+                    .catch((e: any) => {
+                      console.log(e);
+                      setLoading(false);
+                    });
+                }}
+              />
+            </View>
           </View>
-        </View>
-      ) : index == 2 ? (
-        <View style={styles.container}>
-          <Mnemonic mnemonic={mnemonic} />
-          <View style={{flexDirection: 'row', marginBottom: 24}}>
-            <Button
-              children="Next"
-              status={'primary-whisper'}
-              style={styles.button}
-              onPressOut={() => setIndex(3)}
-            />
+        ) : index == 2 ? (
+          <View style={styles.container}>
+            <View style={{marginBottom: scale(90)}}>
+              <Mnemonic mnemonic={mnemonic} />
+            </View>
+            <View
+              style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
+              <Button
+                children="Next"
+                status={'primary-whisper'}
+                style={styles.button}
+                onPressOut={() => setIndex(3)}
+              />
+            </View>
           </View>
-        </View>
-      ) : index == 3 ? (
-        <View style={styles.container}>
-          <KeyboardAwareScrollView>
-            <Text center style={{marginHorizontal: 12}}>
+        ) : index == 3 ? (
+          <View style={styles.container}>
+            <Text
+              center
+              category={'footnote'}
+              style={{marginHorizontal: scale(12)}}>
               Confirm the words:
             </Text>
             <View
@@ -161,7 +173,7 @@ const CreateNewWallet = () => {
                 flexWrap: 'wrap',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginTop: 16,
+                marginTop: scale(16),
               }}>
               {mnemonic.split(' ').map((word, wordpos) => {
                 return (
@@ -176,7 +188,8 @@ const CreateNewWallet = () => {
                     </Text>
                     <Input
                       key={'word' + wordpos}
-                      style={{width: 120, padding: 0}}
+                      size="small"
+                      style={{width: scale(120), padding: 0}}
                       autoCapitalize="none"
                       value={words[wordpos]}
                       onChangeText={(name: string) => {
@@ -190,49 +203,41 @@ const CreateNewWallet = () => {
               })}
             </View>
             {error ? (
-              <Text style={{color: 'red', flex: 1, marginTop: 16}} center>
+              <Text
+                style={{color: 'red', flex: 1, marginTop: scale(16)}}
+                center>
                 {error}
               </Text>
             ) : (
               <></>
             )}
-          </KeyboardAwareScrollView>
-          <View style={{flexDirection: 'row', marginBottom: 24}}>
-            <Button
-              children="Back"
-              status={'primary-whisper'}
-              style={styles.button}
-              onPress={() => {
-                setError('');
-                setIndex(2);
-              }}
-            />
-            <Button
-              children="Skip"
-              style={styles.button}
-              status={'primary-whisper'}
-              onPress={() => {
-                setIndex(4);
-              }}
-            />
-            <Button
-              children="Next"
-              status={'primary-whisper'}
-              style={styles.button}
-              onPressOut={() => {
-                if (words.join(' ') == mnemonic) {
-                  setError('');
+            <View
+              style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
+              <Button
+                children="Skip"
+                style={[styles.button, {marginRight: scale(20)}]}
+                status={'primary-whisper'}
+                onPress={() => {
                   setIndex(4);
-                } else {
-                  setError('Wrong mnemonic.');
-                }
-              }}
-            />
+                }}
+              />
+              <Button
+                children="Next"
+                status={'primary-whisper'}
+                style={styles.button}
+                onPressOut={() => {
+                  if (words.join(' ') == mnemonic) {
+                    setError('');
+                    setIndex(4);
+                  } else {
+                    setError('Wrong mnemonic.');
+                  }
+                }}
+              />
+            </View>
           </View>
-        </View>
-      ) : index == 4 ? (
-        <View style={styles.container}>
-          <KeyboardAwareScrollView>
+        ) : index == 4 ? (
+          <View style={styles.container}>
             <Text center key={'title'}>
               Congratulations!
             </Text>
@@ -240,21 +245,22 @@ const CreateNewWallet = () => {
               {'\n'}
               You can now start using Whisper Wallet.
             </Text>
-          </KeyboardAwareScrollView>
-          <View style={{flexDirection: 'row', marginBottom: 24}}>
-            <Button
-              children="Next"
-              status={'primary-whisper'}
-              style={styles.button}
-              onPressOut={() => {
-                navigate('Wallet');
-              }}
-            />
+            <View
+              style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
+              <Button
+                children="Next"
+                status={'primary-whisper'}
+                style={styles.button}
+                onPressOut={() => {
+                  navigate('Wallet');
+                }}
+              />
+            </View>
           </View>
-        </View>
-      ) : (
-        <Text center>Wrong option</Text>
-      )}
+        ) : (
+          <Text center>Wrong option</Text>
+        )}
+      </KeyboardAwareScrollView>
     </Container>
   );
 };
@@ -263,14 +269,14 @@ export default CreateNewWallet;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 32,
+    marginTop: scale(32),
     flex: 1,
   },
   flex1: {
     flex: 1,
   },
   tabBar: {
-    marginHorizontal: 80,
+    marginHorizontal: scale(80),
   },
   bottom: {
     position: 'absolute',
@@ -278,46 +284,47 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   topNav: {
-    marginHorizontal: 12,
+    marginHorizontal: scale(12),
   },
   input01: {
     flex: 1,
-    marginRight: 16,
+    marginRight: scale(16),
   },
   inputPhone: {
-    marginVertical: 20,
+    marginVertical: scale(20),
   },
-  content: {
-    marginHorizontal: 24,
+  bottomButtonWrapper: {
+    flexDirection: 'row',
+    bottom: scale(24),
+    position: 'absolute',
   },
+  horizontalPadding24: {marginHorizontal: scale(24)},
   flexRow: {
     flexDirection: 'row',
   },
   box: {
-    borderRadius: 12,
-    padding: 16,
-    width: 120,
+    borderRadius: scale(12),
+    padding: scale(16),
+    width: scale(120),
   },
   boxConfirm: {
-    margin: 4,
-    width: 120,
+    margin: scale(4),
+    width: scale(120),
   },
   boxWord: {
-    borderRadius: 16,
-    margin: 4,
-    padding: 16,
-    width: 120,
+    borderRadius: scale(16),
+    margin: scale(4),
+    padding: scale(16),
+    width: scale(120),
   },
   animatedStep: {
-    marginTop: 28,
+    marginTop: verticalScale(28),
   },
   layout: {
-    flexDirection: 'row',
-    marginBottom: 24,
+    marginBottom: verticalScale(24),
   },
   button: {
-    marginTop: 32,
-    marginHorizontal: 24,
+    marginTop: verticalScale(32),
     flex: 1,
   },
 });

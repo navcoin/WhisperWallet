@@ -47,7 +47,9 @@ const AppContainer = (props: any) => {
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (appState.current.match(/background/) && nextAppState === 'active') {
-        if (refreshWallet) refreshWallet();
+        if (refreshWallet) {
+          refreshWallet();
+        }
         if (lockAfterBackground === 'true') {
           setLockedScreen(true);
         }

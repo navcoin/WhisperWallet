@@ -4,7 +4,7 @@ import {
   StyleService,
   TopNavigation,
   useStyleSheet,
-} from '@ui-kitten/components';
+} from '@tsejerome/ui-kitten-components';
 import React, {useState} from 'react';
 import Loading from './Loading';
 import useKeychain from '../utils/Keychain';

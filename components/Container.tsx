@@ -1,5 +1,5 @@
 import React from 'react';
-import {Layout, LayoutProps} from '@ui-kitten/components';
+import {Layout, LayoutProps} from '@tsejerome/ui-kitten-components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface ContainerProps extends LayoutProps {

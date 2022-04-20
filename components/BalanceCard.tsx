@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Icon, useTheme} from '@ui-kitten/components';
+import {Icon, useTheme} from '@tsejerome/ui-kitten-components';
 
 import Text from './Text';
 import CurrencyText from './CurrencyText';
@@ -14,6 +14,7 @@ import {
   Connection_Stats_Enum,
 } from '../constants/Type';
 import useWallet from '../hooks/useWallet';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 interface BalanceProps {
   item: BalanceFragment;
@@ -56,8 +57,8 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
                     type_id == Balance_Types_Enum.Staking
                       ? theme['color-staking']
                       : 'none',
-                  width: 32,
-                  height: 32,
+                  width: scale(32),
+                  height: scale(32),
                 }}
               />
             )}
@@ -66,9 +67,9 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
             <Text category="headline">{name}</Text>
             {connected === Connection_Stats_Enum.Connecting &&
             !firstSyncCompleted ? (
-              <Text style={{fontSize: 13}}>Connecting...</Text>
+              <Text style={{fontSize: scale(13)}}>Connecting...</Text>
             ) : connected === Connection_Stats_Enum.Syncing ? (
-              <Text style={{fontSize: 13}}>Synchronizing...</Text>
+              <Text style={{fontSize: scale(13)}}>Synchronizing...</Text>
             ) : (
               <CurrencyText
                 category="footnote"
@@ -95,10 +96,10 @@ export default BalanceCard;
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 12,
-    paddingVertical: 10,
-    paddingLeft: 10,
-    paddingRight: 21,
+    borderRadius: scale(12),
+    paddingVertical: scale(10),
+    paddingLeft: scale(10),
+    paddingRight: scale(21),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -109,16 +110,16 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   walletIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 48,
+    width: scale(48),
+    height: scale(48),
+    borderRadius: scale(48),
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: scale(16),
   },
   icon: {
-    width: 16,
-    height: 16,
-    right: 16,
+    width: scale(16),
+    height: scale(16),
+    right: scale(16),
   },
 });

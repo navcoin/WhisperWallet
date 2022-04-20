@@ -48,6 +48,19 @@ $ npm run iOS
 
 Happy Coding 🧑🏽‍💻
 
+## Development
+
+#### Screen Size
+
+We are currently using [@tsejerome/react-native-size-matters](https://github.com/tsejerome/react-native-size-matters/). <br> The suggested default dimension screen size for UI development is 390 x 844.<br> The devices below are the suggested iPhone Simulator that matches such requirements:
+
+- iPhone 12
+- iPhone 12 Pro
+- iPhone 13
+- iPhone 13 Pro
+
+References: https://www.ios-resolution.com/
+
 ## Potential Fixes
 
 #### `Android tapping backdrop of bottom tab does not close the bottom tab`

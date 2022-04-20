@@ -6,12 +6,13 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {Icon, useTheme} from '@ui-kitten/components';
+import {Icon, useTheme} from '@tsejerome/ui-kitten-components';
 
 import Text from './Text';
 import AnimatedAppearance from './AnimatedAppearance';
 
 import {Animation_Types_Enum} from '../constants/Type';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 interface ItemProps {
   text: string;
@@ -23,14 +24,14 @@ interface OptionProps {
   index: number;
   selected: string;
   id: string;
-  color: string;
+  color?: string;
   icon?: string;
   onPress?: () => void;
   iconRight?: string;
   iconRightOnPress?: () => void;
   animationType?: Animation_Types_Enum;
   cardType?: 'outline' | 'fill';
-  leftElement: any;
+  leftElement?: any;
 }
 
 const OptionCard = ({
@@ -121,14 +122,14 @@ export default OptionCard;
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginBottom: 16,
+    borderRadius: scale(12),
+    paddingHorizontal: scale(12),
+    paddingVertical: verticalScale(10),
+    marginBottom: verticalScale(16),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderWidth: 1,
+    borderWidth: scale(1),
   },
   contentWrapper: {
     flexDirection: 'row',
@@ -138,23 +139,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   icon: {
-    width: 24,
-    height: 24,
+    width: scale(24),
+    height: scale(24),
   },
   content: {
     flex: 1,
   },
   iconWrapper: {
-    borderRadius: 48,
+    borderRadius: scale(48),
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 12,
+    padding: scale(12),
   },
   leftIconWrapper: {
-    marginRight: 16,
+    marginRight: scale(16),
   },
   rightIconWrapper: {
-    marginLeft: 16,
+    marginLeft: scale(16),
   },
   rightIconTouchables: {
     justifyContent: 'center',

@@ -4,12 +4,12 @@ import {
   useTheme,
   StyleService,
   useStyleSheet,
-  Button,
-} from '@ui-kitten/components';
+} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import Container from '../components/Container';
+import Button from '../components/Button';
 import Animated, {
   interpolateColor,
   useAnimatedScrollHandler,
@@ -20,6 +20,8 @@ import Card from '../components/Card';
 import {OnBoarding} from '../constants/Data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useAsyncStorage from '../hooks/useAsyncStorage';
+import {maxComponentWidth, screenWidth} from '../utils/layout';
+import {scale} from 'react-native-size-matters';
 
 const OnBoardingPage = memo(() => {
   const {navigate} = useNavigation();
@@ -53,7 +55,10 @@ const OnBoardingPage = memo(() => {
           scrollEventThrottle={16}
           decelerationRate="fast"
           contentContainerStyle={styles.content}
-          snapToInterval={width - 80}
+          // snapToInterval={scale(width - 80)}
+          snapToOffsets={[...Array(OnBoarding.length)].map(
+            (x, i) => i * (width - scale(80)),
+          )}
           horizontal
           showsHorizontalScrollIndicator={true}>
           {OnBoarding.map((product, index) => (
@@ -64,8 +69,9 @@ const OnBoardingPage = memo(() => {
 
       <View style={styles.bottomView}>
         <Button
-          children="Start using Whisper Wallet!"
-          style={{flex: 1, marginBottom: 32}}
+          size={'large'}
+          children="Start using Whisper Wallet"
+          style={{flex: 1}}
           onPress={() => {
             AsyncStorage.setItem('shownWelcome', 'true').then(() => {
               Alert.alert(
@@ -103,28 +109,30 @@ export default OnBoardingPage;
 const themedStyles = StyleService.create({
   container: {
     flex: 1,
-    paddingLeft: 16,
+    paddingLeft: scale(16),
   },
   content: {
-    paddingRight: 60,
-    paddingLeft: 16,
+    paddingRight: scale(60),
+    paddingLeft: scale(16),
   },
   bottomView: {
-    paddingBottom: 16,
-    paddingTop: 8,
+    paddingBottom: scale(16),
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginLeft: 32,
-    marginRight: 24,
+    paddingLeft: scale(32),
+    paddingRight: scale(24),
     backgroundColor: 'transparent',
     position: 'absolute',
-    bottom: 16,
+    bottom: scale(0),
+    marginBottom: scale(16),
+    justifyContent: 'flex-end',
+    width: screenWidth,
+    flex: 1,
   },
   dot: {
-    marginRight: 46,
+    marginRight: scale(46),
   },
   animated: {
     flexDirection: 'row',
-    paddingLeft: 16,
+    paddingLeft: scale(16),
   },
 });

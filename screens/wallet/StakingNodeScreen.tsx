@@ -1,7 +1,7 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Icon, TopNavigationAction} from '@ui-kitten/components';
+import {Icon, TopNavigationAction} from '@tsejerome/ui-kitten-components';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Balance_Types_Enum, BalanceFragment} from '../../constants/Type';
@@ -11,15 +11,16 @@ import {RootStackParamList} from '../../navigation/type';
 import DialogInput from 'react-native-dialog-input';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
+import {scale} from 'react-native-size-matters';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
-  <Icon width={20} height={20} {...props} name={props.name} />
+  <Icon width={scale(20)} height={scale(20)} {...props} name={props.name} />
 );
 
 const renderRightActions = (editMode: boolean, onPress: () => void) => (
   <React.Fragment>
     <TopNavigationAction
-      style={{padding: 20}}
+      style={{padding: scale(20)}}
       icon={TopRightIcon({name: editMode ? 'check' : 'edit'})}
       onPress={onPress}
     />
@@ -38,7 +39,7 @@ const StakingNodeScreen = () => {
     setEditMode(!editMode);
   };
 
-  const summaryText = `Current list of staking nodes:`;
+  const summaryText = 'Current list of staking nodes:';
   return (
     <Container useSafeArea>
       <DialogInput

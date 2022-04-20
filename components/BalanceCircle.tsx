@@ -3,13 +3,15 @@ import {View} from 'react-native';
 import React, {memo, useEffect, useState} from 'react';
 import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
-import {useTheme, Text} from '@ui-kitten/components';
+import {useTheme} from '@tsejerome/ui-kitten-components';
 import {Connection_Stats_Enum} from '../constants/Type';
 import CurrencyText from './CurrencyText';
+import Text from './Text';
+import {verticalScale} from 'react-native-size-matters';
 import BackgroundTimer from 'react-native-background-timer';
 
 const BalanceCircle = memo(() => {
-  const {width} = useLayout();
+  const {height} = useLayout();
   const {
     syncProgress,
     bootstrapProgress,
@@ -81,16 +83,16 @@ const BalanceCircle = memo(() => {
       style={{
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 16,
+        marginBottom: verticalScale(16),
       }}>
       <SegmentCircle
+        radius={(height * 0.6) / 2 / 2}
         initialRotation={
           connected != Connection_Stats_Enum.Connecting &&
           connected != Connection_Stats_Enum.Bootstrapping
             ? 180
             : rotation
         }
-        radius={width / 2 - 100}
         background={
           connected == Connection_Stats_Enum.Connecting ||
           connected == Connection_Stats_Enum.Syncing ||

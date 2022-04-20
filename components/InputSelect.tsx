@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import {useTheme, Icon} from '@ui-kitten/components';
+import {useTheme, Icon} from '@tsejerome/ui-kitten-components';
 
 import Text from './Text';
 

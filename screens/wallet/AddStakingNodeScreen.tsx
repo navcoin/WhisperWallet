@@ -1,7 +1,12 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Button, Input, Layout, TopNavigation} from '@ui-kitten/components';
+import {
+  Button,
+  Input,
+  Layout,
+  TopNavigation,
+} from '@tsejerome/ui-kitten-components';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {NodeOption} from '../../constants/Type';
