@@ -339,7 +339,7 @@ export const WalletProvider = (props: any) => {
       });
 
       walletFile.Load({
-        bootstrap: njs.wallet.xNavBootstrap,
+        //bootstrap: njs.wallet.xNavBootstrap,
       });
     },
     [njs, wallet, win],
