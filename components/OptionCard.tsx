@@ -57,9 +57,9 @@ const OptionCard = ({
     if (type === 'fill') {
       Object.assign(styleResult, {
         backgroundColor: isSelected
-          ? theme['background-basic-color-4']
+          ? theme['background-basic-color-2']
           : theme['background-basic-color-2'],
-        borderColor: 'transparent',
+        borderColor: isSelected ? theme['color-xnav'] : 'transparent',
       });
     }
     if (type === 'outline') {

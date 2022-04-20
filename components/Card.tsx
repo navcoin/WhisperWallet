@@ -70,10 +70,10 @@ const Card = ({
         </View>
       </Animated.View>
       <Animated.View style={[styleText, styles.textView]}>
-        <Text marginTop={48} category="title1">
+        <Text marginTop={48} category="title1" center>
           {title}
         </Text>
-        <Text marginTop={16} category="call-out" status="placeholder">
+        <Text marginTop={16} category="call-out" status="placeholder" center>
           {description}
         </Text>
       </Animated.View>
