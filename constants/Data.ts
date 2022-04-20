@@ -1,33 +1,24 @@
-import { Images } from '../assets/images';
-import { NetworkOption, ServerOption } from './Type';
+import {Images} from '../assets/images';
+import {NetworkOption, ServerOption} from './Type';
 
 export const OnBoarding = [
   {
     id: 0,
-    image: Images.logo,
-    color: '#215190',
+    image: Images.navLogo,
+    color: '#A98BBD',
     aspectRatio: 1,
     title: 'Whisper Wallet',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras facilisis risus eu sapien dictum, nec sollicitudin metus placerat. Nam eget eros aliquet, laoreet eros quis, congue dolor. ',
+      "Whisper Wallet is a privacy-preserving wallet for your mobile phone. Store, transfer and stake your coins using Navcoin's self-developed technology.",
   },
   {
     id: 1,
-    color: '#4B9BAE',
+    color: '#61BAAD',
     image: Images.xNavLogo,
     aspectRatio: 1,
     title: 'Keep your finances secret.',
     description:
-      'Morbi semper nibh vulputate, consectetur risus eu, eleifend sapien. Etiam posuere maximus elementum. Vestibulum ipsum metus, mollis vitae tincidunt at, molestie et ipsum. ',
-  },
-  {
-    id: 2,
-    color: '#333333',
-    image: Images.navLogo,
-    aspectRatio: 1,
-    title: 'Encrypted, secure.',
-    description:
-      'Sed eget viverra mi, non placerat risus. Aliquam vel felis eget nunc condimentum hendrerit. Fusce feugiat, nibh suscipit pharetra tempor, risus nulla euismod ante, sit amet rhoncus odio urna ac lorem. Cras elit erat, lacinia vel malesuada vel, cursus eu odio. ',
+      'Enjoy the convenience of having separated public and private wallets. You are the one who decides who has access to your financial data.',
   },
 ];
 

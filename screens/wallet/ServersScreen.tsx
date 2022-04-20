@@ -133,8 +133,8 @@ const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
           );
         })}
         {editMode ? (
-          <Button onPress={() => restoreServers()}>
-            Restore default server
+          <Button status={'primary-whisper'} onPress={() => restoreServers()}>
+            Restore default servers
           </Button>
         ) : null}
       </View>

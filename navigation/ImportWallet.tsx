@@ -97,7 +97,7 @@ const ImportWallet = () => {
             )}
             <View style={[layoutStyles.responsiveRowComponentWidth]}>
               <Button
-                status={'control'}
+                status={'primary-whisper'}
                 children="Next"
                 style={styles.button}
                 onPress={() => {
@@ -163,7 +163,7 @@ const ImportWallet = () => {
             )}
             <Button
               children="Next"
-              status={'control'}
+              status={'primary-whisper'}
               style={styles.button}
               onPressOut={async () => {
                 const walletList = await njs.wallet.WalletFile.ListWallets();
@@ -202,10 +202,10 @@ const ImportWallet = () => {
             </Text>
             <Text center key={'text'}>
               {'\n'}
-              You can now start using NavCash.
+              You can now start using Whisper Wallet.
             </Text>
             <Button
-              status={'control'}
+              status={'primary-whisper'}
               children="Finish"
               style={styles.button}
               onPress={() => {

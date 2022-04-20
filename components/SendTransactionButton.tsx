@@ -31,6 +31,7 @@ const SendTransactionButton = (props: any) => {
     <>
       <Loading loading={loading}></Loading>
       <Button
+        status={'primary-whisper'}
         activeOpacity={0.7}
         children="Send"
         onPress={() => {

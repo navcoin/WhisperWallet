@@ -49,7 +49,7 @@ const OnBoardingPage = memo(() => {
   });*/
   return (
     <Container style={styles.container}>
-      <View style={[{height: height}, {flex: 1}]}>
+      <View style={[{height: height}, {flex: 1, marginLeft: 16}]}>
         <Animated.ScrollView
           onScroll={scrollHandler}
           scrollEventThrottle={16}
@@ -73,31 +73,31 @@ const OnBoardingPage = memo(() => {
           children="Start using Whisper Wallet"
           style={{flex: 1}}
           onPress={() => {
-            Alert.alert(
-              'Security',
-              'Do you want to lock automatically the wallet when it goes to background?',
-              [
-                {
-                  text: 'Yes',
-                  onPress: () => {
-                    AsyncStorage.setItem('shownWelcome', 'true').then(() => {
+            AsyncStorage.setItem('shownWelcome', 'true').then(() => {
+              Alert.alert(
+                'Security',
+                'Do you want to lock automatically the wallet when it goes to background?',
+                [
+                  {
+                    text: 'Yes',
+                    onPress: () => {
                       setLockAfterBackground('true');
                       navigate('Intro');
-                    });
+                    },
                   },
-                },
-                {
-                  text: 'No',
-                  onPress: () => {
-                    AsyncStorage.setItem('shownWelcome', 'true').then(() => {
-                      navigate('Intro');
-                    });
+                  {
+                    text: 'No',
+                    onPress: () => {
+                      AsyncStorage.setItem('shownWelcome', 'true').then(() => {
+                        navigate('Intro');
+                      });
+                    },
                   },
-                },
-              ],
-            );
+                ],
+              );
+            });
           }}
-          status="primary"
+          status="primary-whisper"
         />
       </View>
     </Container>

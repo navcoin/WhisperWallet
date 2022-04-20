@@ -107,7 +107,6 @@ const CreateNewWallet = () => {
                 </View>
               );
             })}
-
             <View
               style={[
                 layoutStyles.responsiveRowComponentWidth,
@@ -115,7 +114,7 @@ const CreateNewWallet = () => {
               ]}>
               <Button
                 children="Next"
-                status={'control'}
+                status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={() => {
                   setLoading(true);
@@ -153,7 +152,7 @@ const CreateNewWallet = () => {
               style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
               <Button
                 children="Next"
-                status={'control'}
+                status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={() => setIndex(3)}
               />
@@ -194,9 +193,9 @@ const CreateNewWallet = () => {
                       autoCapitalize="none"
                       value={words[wordpos]}
                       onChangeText={(name: string) => {
-                        setWords(
-                          prev => (prev[wordpos] = name.toLowerCase().trim()),
-                        );
+                        let newWords = [...words];
+                        newWords[wordpos] = name.toLowerCase();
+                        setWords(newWords);
                       }}
                     />
                   </View>
@@ -216,7 +215,7 @@ const CreateNewWallet = () => {
               style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
               {/* <Button
               children="Back"
-              status={'control'}
+              status={'primary-whisper'}
               style={styles.button}
               onPress={() => {
                 setError('');
@@ -227,8 +226,18 @@ const CreateNewWallet = () => {
               <Button
                 children="Skip"
                 style={[styles.button, {marginRight: scale(20)}]}
-                status={'control'}
-                onPress={() => {
+              status={'primary-whisper'}
+              onPress={() => {
+                setIndex(4);
+              }}
+            />
+            <Button
+              children="Next"
+              status={'primary-whisper'}
+              style={styles.button}
+              onPressOut={() => {
+                if (words.join(' ') == mnemonic) {
+                  setError('');
                   setIndex(4);
                 }}
               />
@@ -254,19 +263,18 @@ const CreateNewWallet = () => {
             </Text>
             <Text center key={'text'}>
               {'\n'}
-              You can now start using NavCash.
+              You can now start using Whisper Wallet.
             </Text>
             <View
               style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
               <Button
                 children="Next"
-                status={'control'}
-                style={styles.button}
-                onPressOut={() => {
-                  navigate('Wallet');
-                }}
-              />
-            </View>
+              status={'primary-whisper'}
+              style={styles.button}
+              onPressOut={() => {
+                navigate('Wallet');
+              }}
+            />
           </View>
         ) : (
           <Text center>Wrong option</Text>

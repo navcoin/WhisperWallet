@@ -88,7 +88,9 @@ const AddStakingNodeScreen = () => {
             />
           </View>
 
-          <Button onPress={() => addNode()}>Add</Button>
+          <Button status={'primary-whisper'} onPress={() => addNode()}>
+            Add
+          </Button>
           {error ? (
             <Text style={[styles.errorText]} center>
               {error}

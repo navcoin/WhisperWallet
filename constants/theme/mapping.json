@@ -402,6 +402,9 @@
             "primary-blue": {
               "default": false
             },
+            "primary-whisper": {
+              "default": true
+            },
             "transparent": {
               "default": false
             }
@@ -467,6 +470,32 @@
               "secondary": {
                 "backgroundColor": "color-nav-pink",
                 "textColor": "text-blue-color",
+                "iconTintColor": "text-blue-color",
+                "borderColor": "transparent",
+                "state": {
+                  "focused": {
+                    "borderColor": "transparent",
+                    "backgroundColor": "color-basic-1000",
+                    "textColor": "text-white-color",
+                    "iconTintColor": "text-white-color"
+                  },
+                  "active": {
+                    "borderColor": "transparent",
+                    "backgroundColor": "color-basic-1000",
+                    "textColor": "text-white-color",
+                    "iconTintColor": "text-white-color"
+                  },
+                  "disabled": {
+                    "borderColor": "color-info-disabled-border",
+                    "backgroundColor": "color-info-disabled",
+                    "textColor": "text-disabled-color",
+                    "iconTintColor": "text-disabled-color"
+                  }
+                }
+              },
+              "primary-whisper": {
+                "backgroundColor": "color-xnav",
+                "textColor": "color-basic-700",
                 "iconTintColor": "text-blue-color",
                 "borderColor": "transparent",
                 "state": {

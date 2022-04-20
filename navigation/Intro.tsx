@@ -54,15 +54,15 @@ const Intro = memo(props => {
             marginRight={0}
             marginBottom={8}
             center>
-            Privacy in the palm of your hands.
+            Whisper Wallet
           </Text>
           <View style={styles.spacer} />
 
           {walletList.length > 0 ? (
             <Button
-              children="Open Wallet"
+              children="Open"
               style={[styles.wallet]}
-              status="control"
+              status="primary-whisper"
               onPress={() => {
                 navigate('OpenWallet');
               }}
@@ -71,7 +71,7 @@ const Intro = memo(props => {
             <></>
           )}
           <Button
-            children="New Wallet"
+            children="New"
             style={[styles.wallet]}
             status="control"
             onPress={() => {
@@ -79,14 +79,33 @@ const Intro = memo(props => {
             }}
           />
           <Button
-            children="Import Wallet"
+            children="Import"
             style={[styles.wallet]}
-            status="control"
+            status="primary-whisper"
             onPress={() => {
               navigate('ImportWallet');
             }}
           />
         </View>
+        ) : (
+          <></>
+        )}
+        <Button
+          children="New"
+          status="primary-whisper"
+          style={styles.wallet}
+          onPress={() => {
+            navigate('CreateNewWallet');
+          }}
+        />
+        <Button
+          children="Import"
+          style={styles.wallet}
+          status="primary-whisper"
+          onPress={() => {
+            navigate('ImportWallet');
+          }}
+        />
       </Content>
     </Container>
   );
