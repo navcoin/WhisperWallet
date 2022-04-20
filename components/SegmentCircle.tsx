@@ -98,6 +98,7 @@ const SegmentCircle = ({
         }
         return (
           <AnimatedCircularProgress
+            key={index}
             index={index}
             tintColor={segment.color || theme['color-patrick-blue-400']}
             size={svgWidth}
