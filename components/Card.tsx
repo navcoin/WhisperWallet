@@ -13,7 +13,7 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import useLayout from '../hooks/useLayout';
-import {scale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 interface Product {
   id: number;
@@ -32,7 +32,7 @@ const Card = ({
   x,
 }: CardProps) => {
   const {height, width, top} = useLayout();
-  const widthItem = width - 80;
+  const widthItem = width - scale(80);
 
   const styleText = useAnimatedStyle(() => {
     const translateX = interpolate(
@@ -62,7 +62,6 @@ const Card = ({
         style={[
           {
             width: widthItem,
-            height: height / 2.2,
             paddingRight: 16,
           },
         ]}>
@@ -71,8 +70,9 @@ const Card = ({
             source={image}
             style={{
               width: '90%',
-              maxWidth: 300,
-              maxHeight: 300,
+              marginVertical: verticalScale(50),
+              maxWidth: verticalScale(200),
+              maxHeight: verticalScale(200),
               height: undefined,
               aspectRatio: 1,
             }}

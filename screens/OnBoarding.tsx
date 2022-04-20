@@ -55,7 +55,10 @@ const OnBoardingPage = memo(() => {
           scrollEventThrottle={16}
           decelerationRate="fast"
           contentContainerStyle={styles.content}
-          snapToInterval={scale(width - 80)}
+          // snapToInterval={scale(width - 80)}
+          snapToOffsets={[...Array(OnBoarding.length)].map(
+            (x, i) => i * (width - scale(80)),
+          )}
           horizontal
           showsHorizontalScrollIndicator={true}>
           {OnBoarding.map((product, index) => (
