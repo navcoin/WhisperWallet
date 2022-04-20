@@ -47,9 +47,8 @@ const OpenWallet = () => {
           showsVerticalScrollIndicator={false}>
           {walletList.map((el, index) => {
             return (
-              <View style={[layoutStyles.responsiveColumnComponentWidth]}>
+              <View style={[layoutStyles.responsiveColumnComponentWidth]} key={el}>
                 <OptionCard
-                  key={el}
                   item={{text: el}}
                   index={index}
                   icon={'creditCard'}
