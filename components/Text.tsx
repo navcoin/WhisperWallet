@@ -70,7 +70,6 @@ export interface MyTextProps extends TextProps {
   underline?: boolean;
   bold?: boolean;
   italic?: boolean;
-  sizeMatters?: boolean;
 }
 const getLineHeight = (category: TextCategory): number => {
   let lineHeight: number;
@@ -181,7 +180,6 @@ export default memo(
     children,
     maxWidth,
     style,
-    sizeMatters = true,
     ...rest
   }: MyTextProps) => {
     let textAlign: 'left' | 'center' | 'right' | 'auto' | 'justify' | 'left';
@@ -237,9 +235,7 @@ export default memo(
       textDecorationLine: textDecorationLine,
       fontStyle: fontStyle,
     };
-    if (sizeMatters) {
-      defaultStyles.fontSize = getFontSize(category);
-    }
+    defaultStyles.fontSize = getFontSize(category);
 
     return (
       <Text
