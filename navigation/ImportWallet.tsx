@@ -192,7 +192,7 @@ const ImportWallet = () => {
             </Text>
             <Text center key={'text'}>
               {'\n'}
-              You can now start using NavCash.
+              You can now start using Whisper Wallet.
             </Text>
             <Button
               status={'primary-whisper'}

@@ -26,7 +26,7 @@ const CreateNewWallet = () => {
   const {njs} = useNjs();
   const {read} = useKeychain();
 
-  const [words, setWords] = useState([]);
+  const [words, setWords] = useState<string[]>([]);
 
   return (
     <Container useSafeArea>
@@ -180,7 +180,9 @@ const CreateNewWallet = () => {
                       autoCapitalize="none"
                       value={words[wordpos]}
                       onChangeText={(name: string) => {
-                        setWords(prev => (prev[wordpos] = name.toLowerCase()));
+                        let newWords = [...words];
+                        newWords[wordpos] = name.toLowerCase();
+                        setWords(newWords);
                       }}
                     />
                   </View>
@@ -236,7 +238,7 @@ const CreateNewWallet = () => {
             </Text>
             <Text center key={'text'}>
               {'\n'}
-              You can now start using NavCash.
+              You can now start using Whisper Wallet.
             </Text>
           </KeyboardAwareScrollView>
           <View style={{flexDirection: 'row', marginBottom: 24}}>
