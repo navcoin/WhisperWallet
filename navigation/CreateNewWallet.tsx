@@ -64,15 +64,9 @@ const CreateNewWallet = () => {
               ) : (
                 <></>
               )}
-            </View>
-            <View
-              style={[
-                layoutStyles.responsiveRowComponentWidth,
-                styles.bottomButtonWrapper,
-              ]}>
               <Button
                 children="Next"
-                status={'control'}
+                status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={async () => {
                   const walletList = await njs.wallet.WalletFile.ListWallets();
