@@ -16,6 +16,7 @@ import Mnemonic from '../components/Mnemonic';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
+import useLayout from '../hooks/useLayout';
 
 const CreateNewWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -26,22 +27,23 @@ const CreateNewWallet = () => {
   const [error, setError] = useState('');
   const [network, setNetwork] = useState('mainnet');
   const {njs} = useNjs();
+  const {height} = useLayout();
   const {read} = useKeychain();
 
-  const [words, setWords] = useState([]);
+  const [words, setWords] = useState<string[]>(new Array(12));
 
   return (
     <Container useSafeArea>
-      <Loading loading={loading} />
       <TopNavigationComponent title={'New Wallet'} />
-      <AnimatedStep style={styles.animatedStep} step={index} steps={5} />
+      <KeyboardAwareScrollView
+        contentContainerStyle={{flexGrow: 1}}
+        enableOnAndroid
+        showsVerticalScrollIndicator={false}>
+        <Loading loading={loading} />
+        <AnimatedStep style={styles.animatedStep} step={index} steps={5} />
 
-      {index == 0 ? (
-        <View style={styles.container}>
-          <KeyboardAwareScrollView
-            style={styles.content}
-            enableOnAndroid
-            showsVerticalScrollIndicator={false}>
+        {index == 0 ? (
+          <View style={[styles.container, styles.horizontalPadding24]}>
             <Text category="title4" center marginBottom={32}>
               Choose a name for the wallet
             </Text>
@@ -63,33 +65,28 @@ const CreateNewWallet = () => {
                 <></>
               )}
             </View>
-          </KeyboardAwareScrollView>
-          <View
-            style={[
-              layoutStyles.responsiveRowComponentWidth,
-              styles.bottomButtonWrapper,
-            ]}>
-            <Button
-              children="Next"
-              status={'control'}
-              style={styles.button}
-              onPressOut={async () => {
-                const walletList = await njs.wallet.WalletFile.ListWallets();
-                if (walletList.indexOf(walletName) > -1) {
-                  setError('There is already a wallet with that name.');
-                } else if (walletName) {
-                  setIndex(1);
-                }
-              }}
-            />
+            <View
+              style={[
+                layoutStyles.responsiveRowComponentWidth,
+                styles.bottomButtonWrapper,
+              ]}>
+              <Button
+                children="Next"
+                status={'control'}
+                style={styles.button}
+                onPressOut={async () => {
+                  const walletList = await njs.wallet.WalletFile.ListWallets();
+                  if (walletList.indexOf(walletName) > -1) {
+                    setError('There is already a wallet with that name.');
+                  } else if (walletName) {
+                    setIndex(1);
+                  }
+                }}
+              />
+            </View>
           </View>
-        </View>
-      ) : index == 1 ? (
-        <View style={styles.container}>
-          <KeyboardAwareScrollView
-            style={styles.content}
-            enableOnAndroid
-            showsVerticalScrollIndicator={false}>
+        ) : index == 1 ? (
+          <View style={[styles.container, styles.horizontalPadding24]}>
             <Text category="title4" center marginBottom={32}>
               Choose the network
             </Text>
@@ -110,59 +107,64 @@ const CreateNewWallet = () => {
                 </View>
               );
             })}
-          </KeyboardAwareScrollView>
-          <View
-            style={[
-              layoutStyles.responsiveRowComponentWidth,
-              styles.bottomButtonWrapper,
-            ]}>
-            <Button
-              children="Next"
-              status={'control'}
-              style={styles.button}
-              onPressOut={() => {
-                setLoading(true);
-                read(walletName)
-                  .then((password: string) => {
-                    createWallet(
-                      walletName,
-                      '',
-                      '',
-                      password,
-                      password,
-                      false,
-                      true,
-                      network,
-                      () => {
-                        setLoading(false);
-                        setIndex(2);
-                      },
-                    );
-                  })
-                  .catch((e: any) => {
-                    console.log(e);
-                    setLoading(false);
-                  });
-              }}
-            />
+
+            <View
+              style={[
+                layoutStyles.responsiveRowComponentWidth,
+                styles.bottomButtonWrapper,
+              ]}>
+              <Button
+                children="Next"
+                status={'control'}
+                style={styles.button}
+                onPressOut={() => {
+                  setLoading(true);
+                  read(walletName)
+                    .then((password: string) => {
+                      createWallet(
+                        walletName,
+                        '',
+                        '',
+                        password,
+                        password,
+                        false,
+                        true,
+                        network,
+                        () => {
+                          setLoading(false);
+                          setIndex(2);
+                        },
+                      );
+                    })
+                    .catch((e: any) => {
+                      console.log(e);
+                      setLoading(false);
+                    });
+                }}
+              />
+            </View>
           </View>
-        </View>
-      ) : index == 2 ? (
-        <View style={styles.container}>
-          <Mnemonic mnemonic={mnemonic} />
-          <View style={[styles.bottomButtonWrapper]}>
-            <Button
-              children="Next"
-              status={'control'}
-              style={styles.button}
-              onPressOut={() => setIndex(3)}
-            />
+        ) : index == 2 ? (
+          <View style={styles.container}>
+            <View style={{marginBottom: scale(90)}}>
+              <Mnemonic mnemonic={mnemonic} />
+            </View>
+            <View
+              style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
+              <Button
+                children="Next"
+                status={'control'}
+                style={styles.button}
+                onPressOut={() => setIndex(3)}
+              />
+            </View>
           </View>
-        </View>
-      ) : index == 3 ? (
-        <View style={styles.container}>
-          <KeyboardAwareScrollView>
-            <Text center style={{marginHorizontal: scale(12)}}>
+        ) : index == 3 ? (
+          <View style={styles.container}>
+            <Text
+              center
+              category={'footnote'}
+              style={{marginHorizontal: scale(12)}}>
               Confirm the words:
             </Text>
             <View
@@ -187,11 +189,14 @@ const CreateNewWallet = () => {
                     </Text>
                     <Input
                       key={'word' + wordpos}
+                      size="small"
                       style={{width: scale(120), padding: 0}}
                       autoCapitalize="none"
                       value={words[wordpos]}
                       onChangeText={(name: string) => {
-                        setWords(prev => (prev[wordpos] = name.toLowerCase()));
+                        setWords(
+                          prev => (prev[wordpos] = name.toLowerCase().trim()),
+                        );
                       }}
                     />
                   </View>
@@ -207,9 +212,9 @@ const CreateNewWallet = () => {
             ) : (
               <></>
             )}
-          </KeyboardAwareScrollView>
-          <View style={[styles.bottomButtonWrapper]}>
-            {/* <Button
+            <View
+              style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
+              {/* <Button
               children="Back"
               status={'control'}
               style={styles.button}
@@ -218,33 +223,32 @@ const CreateNewWallet = () => {
                 setIndex(2);
               }}
             /> */}
-            {/* //TODO: Make the top left corner back button go back to previous index instead */}
-            <Button
-              children="Skip"
-              style={[styles.button, {marginRight: scale(20)}]}
-              status={'control'}
-              onPress={() => {
-                setIndex(4);
-              }}
-            />
-            <Button
-              children="Next"
-              status={'control'}
-              style={styles.button}
-              onPressOut={() => {
-                if (words.join(' ') == mnemonic) {
-                  setError('');
+              {/* //TODO: Make the top left corner back button go back to previous index instead */}
+              <Button
+                children="Skip"
+                style={[styles.button, {marginRight: scale(20)}]}
+                status={'control'}
+                onPress={() => {
                   setIndex(4);
-                } else {
-                  setError('Wrong mnemonic.');
-                }
-              }}
-            />
+                }}
+              />
+              <Button
+                children="Next"
+                status={'control'}
+                style={styles.button}
+                onPressOut={() => {
+                  if (words.join(' ') == mnemonic) {
+                    setError('');
+                    setIndex(4);
+                  } else {
+                    setError('Wrong mnemonic.');
+                  }
+                }}
+              />
+            </View>
           </View>
-        </View>
-      ) : index == 4 ? (
-        <View style={styles.container}>
-          <KeyboardAwareScrollView>
+        ) : index == 4 ? (
+          <View style={styles.container}>
             <Text center key={'title'}>
               Congratulations!
             </Text>
@@ -252,21 +256,22 @@ const CreateNewWallet = () => {
               {'\n'}
               You can now start using NavCash.
             </Text>
-          </KeyboardAwareScrollView>
-          <View style={[styles.bottomButtonWrapper]}>
-            <Button
-              children="Next"
-              status={'control'}
-              style={styles.button}
-              onPressOut={() => {
-                navigate('Wallet');
-              }}
-            />
+            <View
+              style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
+              <Button
+                children="Next"
+                status={'control'}
+                style={styles.button}
+                onPressOut={() => {
+                  navigate('Wallet');
+                }}
+              />
+            </View>
           </View>
-        </View>
-      ) : (
-        <Text center>Wrong option</Text>
-      )}
+        ) : (
+          <Text center>Wrong option</Text>
+        )}
+      </KeyboardAwareScrollView>
     </Container>
   );
 };
@@ -301,12 +306,10 @@ const styles = StyleSheet.create({
   },
   bottomButtonWrapper: {
     flexDirection: 'row',
-    marginBottom: scale(24),
-    paddingHorizontal: scale(24),
+    bottom: scale(24),
+    position: 'absolute',
   },
-  content: {
-    marginHorizontal: scale(24),
-  },
+  horizontalPadding24: {marginHorizontal: scale(24)},
   flexRow: {
     flexDirection: 'row',
   },
