@@ -1,14 +1,16 @@
 import React from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Text from './Text';
 
 const Mnemonic = (props: {mnemonic: string}) => {
   return (
     <View style={[styles.mainWrapper]}>
-      <ScrollView style={[styles.innerWrapper]}>
-        <Text center style={{marginHorizontal: scale(24)}}>
+      <View style={[styles.innerWrapper]}>
+        <Text
+          category={'footnote'}
+          center
+          style={{marginHorizontal: scale(24)}}>
           The following words will allow you to recover your wallet in case you
           lose your device. Write them down in a safe place.
         </Text>
@@ -28,7 +30,7 @@ const Mnemonic = (props: {mnemonic: string}) => {
               })
             : null}
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -41,11 +43,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: verticalScale(32),
+    marginTop: verticalScale(16),
   },
   boxWord: {
     borderRadius: scale(16),
-    paddingVertical: verticalScale(20),
+    paddingBottom: verticalScale(20),
     width: scale(120),
   },
   mainWrapper: {
@@ -53,7 +55,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   innerWrapper: {
-    maxWidth: scale(360),
+    maxWidth: scale(380),
+    flex: 1,
     margin: 'auto',
     justifySelf: 'center',
   },
