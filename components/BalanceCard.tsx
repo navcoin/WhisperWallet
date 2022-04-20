@@ -73,7 +73,7 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
             ) : (
               <CurrencyText
                 category="footnote"
-                children={amount + pending_amount}
+                children={(amount + pending_amount).toFixed(8)}
                 marginTop={4}
                 type={type_id}
                 formatType={type_id}

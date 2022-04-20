@@ -81,16 +81,20 @@ const CurrencyText = memo(
       if (currency.substring(0, 4) == 'item') {
         textResult = parseInt(amount);
       } else {
-        try {
-          if (isNaN(parseFloat(amount))) {
-            textResult += numeral(parseFloat(amount.replace(',', ''))).format(
-              '0,0.00',
-            );
-          } else {
-            textResult += numeral(parseFloat(amount)).format('0,0.00');
+        if (parseFloat(amount) > 0 && parseFloat(amount) < 0.01) {
+          textResult += '<0.01';
+        } else {
+          try {
+            if (isNaN(parseFloat(amount))) {
+              textResult += numeral(parseFloat(amount.replace(',', ''))).format(
+                '0,0.00',
+              );
+            } else {
+              textResult += numeral(parseFloat(amount)).format('0,0.00');
+            }
+          } catch (e) {
+            console.log(e);
           }
-        } catch (e) {
-          console.log(e);
         }
       }
       return textResult + ` ${currency}`;
