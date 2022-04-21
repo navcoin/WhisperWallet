@@ -74,8 +74,8 @@ const OnBoardingPage = memo(() => {
           children="Start using Whisper Wallet"
           style={{flex: 1}}
           onPress={() => {
-            if (supportedType != SecurityAuthenticationTypes.MANUAL) {
-              AsyncStorage.setItem('shownWelcome', 'true').then(() => {
+            AsyncStorage.setItem('shownWelcome', 'true').then(() => {
+              if (supportedType != SecurityAuthenticationTypes.MANUAL) {
                 Alert.alert(
                   'Security',
                   'Do you want to lock automatically the wallet when it goes to background?',
@@ -99,8 +99,10 @@ const OnBoardingPage = memo(() => {
                     },
                   ],
                 );
-              });
-            }
+              } else {
+                navigate('Intro');
+              }
+            });
           }}
           status="primary-whisper"
         />
