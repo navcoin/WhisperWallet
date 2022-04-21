@@ -11,15 +11,14 @@ import Loading from '../components/Loading';
 import useNjs from '../hooks/useNjs';
 import {NetworkTypes} from '../constants/Type';
 import OptionCard from '../components/OptionCard';
-import useKeychain from '../utils/Keychain';
 import Mnemonic from '../components/Mnemonic';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
-import useLayout from '../hooks/useLayout';
+import useSecurity from '../hooks/useSecurity';
 
 const CreateNewWallet = () => {
-  const {goBack, navigate} = useNavigation();
+  const {navigate} = useNavigation();
   const [index, setIndex] = useState(0);
   const [walletName, setWalletName] = useState('');
   const {mnemonic, createWallet} = useWallet();
@@ -27,8 +26,7 @@ const CreateNewWallet = () => {
   const [error, setError] = useState('');
   const [network, setNetwork] = useState('mainnet');
   const {njs} = useNjs();
-  const {height} = useLayout();
-  const {read} = useKeychain();
+  const {readPassword} = useSecurity();
 
   const [words, setWords] = useState<string[]>(new Array(12));
 
@@ -112,7 +110,7 @@ const CreateNewWallet = () => {
                 style={styles.button}
                 onPressOut={() => {
                   setLoading(true);
-                  read(walletName)
+                  readPassword()
                     .then((password: string) => {
                       createWallet(
                         walletName,

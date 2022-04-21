@@ -8,12 +8,13 @@ import OptionCard from '../../components/OptionCard';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import useNjs from '../../hooks/useNjs';
-import useKeychain from '../../utils/Keychain';
 import Loading from '../../components/Loading';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {screenHeight} from '../../utils/layout';
 import {scale, verticalScale} from 'react-native-size-matters';
+import useSecurity from '../../hooks/useSecurity';
+import {SecurityAuthenticationTypes} from '../../contexts/SecurityContext';
 
 interface SettingsItem {
   title: string;
@@ -25,7 +26,7 @@ interface SettingsItem {
 
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const [loading, setLoading] = useState(false);
-  const {read} = useKeychain();
+  const {readPassword} = useSecurity();
   const {walletName, wallet, createWallet} = useWallet();
   const {njs} = useNjs();
 
@@ -36,6 +37,8 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     'lockAfterBackground',
     'false',
   );
+
+  const {supportedType} = useSecurity();
 
   const biometricsAlert = () => {
     let title = 'Your wallet is NOT locked when WhisperWallet goes background.';
@@ -93,7 +96,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     setLoading(true);
     wallet.Disconnect();
     wallet.CloseDb();
-    read(walletName).then((password: string) => {
+    readPassword().then((password: string) => {
       createWallet(
         walletName,
         '',
@@ -127,7 +130,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     {
       title: 'Biometrics Configuration',
       icon: 'eye',
-      show: true,
+      show: supportedType != SecurityAuthenticationTypes.MANUAL,
       onPress: () => biometricsAlert(),
     },
     {

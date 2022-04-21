@@ -23,7 +23,7 @@ interface OptionProps {
   item: ItemProps;
   index: number;
   selected: string;
-  id: string;
+  id?: string;
   color?: string;
   icon?: string;
   onPress?: () => void;

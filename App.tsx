@@ -2,7 +2,7 @@
  * NavCash - React Native App
  */
 
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StatusBar} from 'react-native';
 import {patchFlatListProps} from 'react-native-web-refresh-control';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,7 +20,6 @@ import {default as lightTheme} from './constants/theme/light.json';
 import {default as customTheme} from './constants/theme/appTheme.json';
 import {default as customMapping} from './constants/theme/mapping.json';
 import AppContainer from './navigation/AppContainer';
-// import SplashScreen from 'react-native-splash-screen';
 import RNBootSplash from 'react-native-bootsplash';
 
 import {ToastProvider} from 'react-native-toast-notifications';
@@ -32,11 +31,8 @@ import SQLite from 'react-native-sqlite-2';
 import setGlobalVars from 'indexeddbshim/dist/indexeddbshim-noninvasive';
 import useNjs from './hooks/useNjs';
 import useWin from './hooks/useWin';
-import useLockedScreen from './hooks/useLockedScreen';
-import useAsyncStorage from './hooks/useAsyncStorage';
-import LocalAuth from './utils/LocalAuth';
-import useWallet from './hooks/useWallet';
 import WalletProvider from './contexts/WalletProvider';
+import SecurityProvider from './contexts/SecurityProvider';
 const win = {};
 
 setGlobalVars(win, {win: SQLite});
@@ -121,26 +117,30 @@ const App = () => {
       <ThemeContext.Provider value={{theme, toggleTheme}}>
         <IconRegistry icons={[AssetIconsPack, EvaIconsPack]} />
         <ToastProvider offset={50} style={{borderRadius: 20, opacity: 0.8}}>
-          <WalletProvider>
-            <ApplicationProvider
-              {...eva}
-              theme={
-                theme === 'light'
-                  ? {...eva.light, ...customTheme, ...lightTheme}
-                  : {...eva.dark, ...customTheme, ...darkTheme}
-              }
-              /* @ts-ignore */
-              customMapping={customMapping}>
-              <SafeAreaProvider>
-                <StatusBar
-                  barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
-                  translucent={true}
-                  backgroundColor={'#00000000'}
-                />
-                <AppContainer loaded={loaded} shownWelcome={shownWelcome} />
-              </SafeAreaProvider>
-            </ApplicationProvider>
-          </WalletProvider>
+          <SecurityProvider>
+            <WalletProvider>
+              <ApplicationProvider
+                {...eva}
+                theme={
+                  theme === 'light'
+                    ? {...eva.light, ...customTheme, ...lightTheme}
+                    : {...eva.dark, ...customTheme, ...darkTheme}
+                }
+                /* @ts-ignore */
+                customMapping={customMapping}>
+                <SafeAreaProvider>
+                  <StatusBar
+                    barStyle={
+                      theme === 'dark' ? 'light-content' : 'dark-content'
+                    }
+                    translucent={true}
+                    backgroundColor={'#00000000'}
+                  />
+                  <AppContainer loaded={loaded} shownWelcome={shownWelcome} />
+                </SafeAreaProvider>
+              </ApplicationProvider>
+            </WalletProvider>
+          </SecurityProvider>
         </ToastProvider>
       </ThemeContext.Provider>
     </SafeAreaProvider>

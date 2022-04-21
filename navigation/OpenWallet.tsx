@@ -1,29 +1,24 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, Input, useTheme} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 
 import Text from '../components/Text';
 import Container from '../components/Container';
-import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
 import Loading from '../components/Loading';
 import useNjs from '../hooks/useNjs';
 import OptionCard from '../components/OptionCard';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import useKeychain from '../utils/Keychain';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
+import useSecurity from '../hooks/useSecurity';
 
 const OpenWallet = () => {
-  const {goBack, navigate} = useNavigation();
-  const {width, bottom} = useLayout();
-  const [walletName, setWalletName] = useState('');
+  const {navigate} = useNavigation();
   const {createWallet} = useWallet();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const {njs} = useNjs();
-  const {read} = useKeychain();
+  const {readPassword} = useSecurity();
 
   const [walletList, setWalletList] = useState<any>([]);
 
@@ -47,15 +42,16 @@ const OpenWallet = () => {
           showsVerticalScrollIndicator={false}>
           {walletList.map((el, index) => {
             return (
-              <View style={[layoutStyles.responsiveColumnComponentWidth]} key={el}>
+              <View
+                style={[layoutStyles.responsiveColumnComponentWidth]}
+                key={el}>
                 <OptionCard
                   item={{text: el}}
                   index={index}
                   icon={'creditCard'}
-                  selected={walletName}
                   onPress={() => {
                     setLoading(true);
-                    read(el)
+                    readPassword()
                       .then((password: string) => {
                         createWallet(
                           el,
@@ -81,14 +77,6 @@ const OpenWallet = () => {
             );
           })}
         </KeyboardAwareScrollView>
-
-        {error ? (
-          <Text style={{color: 'red', flex: 1}} center key={'error'}>
-            {error}
-          </Text>
-        ) : (
-          <></>
-        )}
       </View>
     </Container>
   );

@@ -3,22 +3,22 @@ import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import Container from '../../components/Container';
 import {ScreenProps} from '../../navigation/type';
-import useKeychain from '../../utils/Keychain';
 import Mnemonic from '../../components/Mnemonic';
 import Text from '../../components/Text';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
+import useSecurity from '../../hooks/useSecurity';
 
 const MnemonicScreen: React.FC<ScreenProps<'MnemonicScreen'>> = () => {
-  const {mnemonic: mnemonicSource, wallet, walletName} = useWallet();
-  const {read} = useKeychain();
+  const {mnemonic: mnemonicSource, wallet} = useWallet();
+  const {readPassword} = useSecurity();
 
   const [mnemonic, setMnemonic] = useState(mnemonicSource);
   useEffect(() => {
     if (mnemonic) {
       return;
     }
-    read(walletName).then(async (password: string) => {
+    readPassword().then(async (password: string) => {
       const updatedMnemonic: string = await wallet.db.GetMasterKey(
         'mnemonic',
         password,
