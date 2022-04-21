@@ -50,9 +50,9 @@ const OpenWallet = () => {
                   index={index}
                   icon={'creditCard'}
                   onPress={() => {
-                    setLoading(true);
                     readPassword()
                       .then((password: string) => {
+                        setLoading(true);
                         createWallet(
                           el,
                           '',

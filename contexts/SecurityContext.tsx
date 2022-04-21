@@ -1,10 +1,10 @@
 import {createContext} from 'react';
 
 export enum SecurityAuthenticationTypes {
-  KEYCHAIN,
-  LOCALAUTH,
-  MANUAL,
-  NONE,
+  KEYCHAIN = 'FaceId/Fingerprint',
+  LOCALAUTH = 'Unlock Code',
+  MANUAL = 'Manual Pin Code',
+  NONE = 'None',
 }
 
 export interface SecurityContextValue {

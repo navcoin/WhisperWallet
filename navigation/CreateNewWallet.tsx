@@ -109,9 +109,9 @@ const CreateNewWallet = () => {
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={() => {
-                  setLoading(true);
                   readPassword()
                     .then((password: string) => {
+                      setLoading(true);
                       createWallet(
                         walletName,
                         '',

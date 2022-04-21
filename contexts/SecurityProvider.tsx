@@ -12,6 +12,8 @@ import crypto from 'crypto';
 import useKeychain from '../utils/Keychain';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import LocalAuth from '../utils/LocalAuth';
+import {View} from 'react-native';
+import Container from '../components/Container';
 
 export const SecurityProvider = (props: any) => {
   const {read} = useKeychain();
@@ -35,13 +37,31 @@ export const SecurityProvider = (props: any) => {
     useState<SecurityAuthenticationTypes>(SecurityAuthenticationTypes.NONE);
 
   useEffect((): void => {
-    if (supportedBiometry !== null) {
-      setSupportedType(SecurityAuthenticationTypes.KEYCHAIN);
-    } else if (isPinOrFingerprintSet === true) {
-      setSupportedType(SecurityAuthenticationTypes.LOCALAUTH);
-    } else {
-      setSupportedType(SecurityAuthenticationTypes.MANUAL);
-    }
+    AsyncStorage.getItem('AuthenticationType').then(async val => {
+      if (!val) {
+        if (supportedBiometry !== null) {
+          AsyncStorage.setItem(
+            'AuthenticationType',
+            SecurityAuthenticationTypes.KEYCHAIN,
+          );
+          setSupportedType(SecurityAuthenticationTypes.KEYCHAIN);
+        } else if (isPinOrFingerprintSet === true) {
+          AsyncStorage.setItem(
+            'AuthenticationType',
+            SecurityAuthenticationTypes.LOCALAUTH,
+          );
+          setSupportedType(SecurityAuthenticationTypes.LOCALAUTH);
+        } else {
+          AsyncStorage.setItem(
+            'AuthenticationType',
+            SecurityAuthenticationTypes.MANUAL,
+          );
+          setSupportedType(SecurityAuthenticationTypes.MANUAL);
+        }
+      } else {
+        setSupportedType(val as SecurityAuthenticationTypes);
+      }
+    });
   }, [isPinOrFingerprintSet, supportedBiometry]);
 
   const Encrypt = (plain: string, key: string): string => {
