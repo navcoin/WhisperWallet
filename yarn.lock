@@ -21,10 +21,10 @@
     lodash "~3.10.0"
     prettier "^2.5.1"
 
-"@aguycalled/bitcore-lib@^0.15.97":
-  version "0.15.97"
-  resolved "https://registry.yarnpkg.com/@aguycalled/bitcore-lib/-/bitcore-lib-0.15.97.tgz#6a2721d432e6d026fc1aac0a81e6515804f94688"
-  integrity sha512-TXBmDGsOaEybnvGVs52IFaG7Ac54W4kdi/QBRJZvFzYaOyo+sDHWHKqWvf+jET/bcsZgceiXFm1UonSECsPZPw==
+"@aguycalled/bitcore-lib@^0.15.99":
+  version "0.15.99"
+  resolved "https://registry.yarnpkg.com/@aguycalled/bitcore-lib/-/bitcore-lib-0.15.99.tgz#bc206ddcc32752d07cfdeab0120c58f9e986c1d7"
+  integrity sha512-kw5VgnkUfi0GSItX6xE1TWhD5Kn02igIXfQoaffyK4dvZ6WkOihzFr7YQh1asrSDSkKGF6Bra9G5qYXwOMDy7g==
   dependencies:
     "@aguycalled/mcl-wasm" "^0.8.4"
     "@aguycalled/noble-bls12-381" "^1.2.1"
@@ -55,10 +55,10 @@
     "@aguycalled/bitcore-lib" "^0.15.77"
     unorm "^1.3.3"
 
-"@aguycalled/bitcore-p2p@^5.0.10":
-  version "5.0.10"
-  resolved "https://registry.yarnpkg.com/@aguycalled/bitcore-p2p/-/bitcore-p2p-5.0.10.tgz#cc23b7f407b13812ffd325ce495220c0634c4477"
-  integrity sha512-+eirwiAq0SZQcy5iBS++dMZKFkv/p4fHDL7XDfhTbCeCEHVnzH4LGTO8RX2EXtnWcYDpOPqFAfLvRjb5C5VvgQ==
+"@aguycalled/bitcore-p2p@^5.0.11":
+  version "5.0.11"
+  resolved "https://registry.yarnpkg.com/@aguycalled/bitcore-p2p/-/bitcore-p2p-5.0.11.tgz#94aafd0f0ae4f6c4a0f810773b28282b2525dbf8"
+  integrity sha512-wI+8V3Q0bhkZh/kks8fValpS1VE9zZDbL42GvzN6Vk6LspfUqT4POrLQSYLDztHVfjHzQnCR0Zn/Q/husa2OwA==
   dependencies:
     "@aguycalled/bitcore-lib" "^0.15.47"
     "@aguycalled/mcl-wasm" "^0.8.1"
@@ -4208,7 +4208,7 @@ buffer@^5.0.0, buffer@^5.2.0, buffer@^5.4.3, buffer@^5.5.0, buffer@^5.6.0:
     base64-js "^1.3.1"
     ieee754 "^1.1.13"
 
-buffers@bitpay/node-buffers#v0.1.2-bitpay:
+"buffers@github:bitpay/node-buffers#v0.1.2-bitpay":
   version "0.1.1"
   resolved "https://codeload.github.com/bitpay/node-buffers/tar.gz/04f4c4264e0d105db2b99b786843ed64f23230d8"
 
@@ -10105,12 +10105,12 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-navcoin-js@^1.1.66:
-  version "1.1.77"
-  resolved "https://registry.yarnpkg.com/navcoin-js/-/navcoin-js-1.1.77.tgz#88f581c818e087a54413a9c23008051cbaf65479"
-  integrity sha512-NZQI3lsKXQcc6sWQX8iqFynVwgAj0UQO5U9V16/oyzfNMt86KkmfjDwntTjramz7fVn3Uu7BMDLyfGq84V9jvw==
+navcoin-js@^1.1.83:
+  version "1.1.94"
+  resolved "https://registry.yarnpkg.com/navcoin-js/-/navcoin-js-1.1.94.tgz#ab8a822a81a1bbc3f9177ee609890de25bad7265"
+  integrity sha512-rxWieKyfTDNFl8jIXIAZCLc4+MUfms7XRUx2H8mkAc7sWppBLepzt6fKQJ2f+NmQKnQb/wZgU/D6VlHcfU5tjA==
   dependencies:
-    "@aguycalled/bitcore-lib" "^0.15.97"
+    "@aguycalled/bitcore-lib" "^0.15.99"
     "@aguycalled/bitcore-message" "^1.0.4"
     "@aguycalled/bitcore-mnemonic" "^1.5.2"
     "@aguycalled/dexie-encrypted" "^2.0.4"
@@ -12238,10 +12238,20 @@ react-native-crypto@^2.0.1, react-native-crypto@^2.2.0:
     public-encrypt "^4.0.0"
     randomfill "^1.0.3"
 
+react-native-device-info@^8.7.0:
+  version "8.7.0"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.7.0.tgz#0873d93950ac651b754f62965bb6f18059431c3c"
+  integrity sha512-Zr0JNHSEPy2RWObWwUp9npTEWSG5HyY+nR/mRkf6ZTU5zd8oskarnPcCxAgwYhJbvshHSZbZIDRxCVCskXSpEA==
+
 react-native-dialog-input@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/react-native-dialog-input/-/react-native-dialog-input-1.0.8.tgz#6813d3b158bbb85d83a94310f38695d9f2b02682"
   integrity sha512-W9YNMt6r+rUUMDEkOR1WMuGfSJw97ujB8H1xp8TjJTOnYVSlsf4aEP6t+J8tVk3XZaDcTawXgDjxH6E1WVWRog==
+
+react-native-encrypted-storage@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-encrypted-storage/-/react-native-encrypted-storage-4.0.2.tgz#c7d59b1d3ff2f80d572be3e85aaab3fdee16744a"
+  integrity sha512-vneDkHGDuTvLQjUBztqb2YI8QoH1zxdJonPGTS+g57lfJZff9fAjoLSSb6NgMBebpXFcK3I3sEresGyL+3AArw==
 
 react-native-eva-icons@^1.3.1:
   version "1.3.1"
