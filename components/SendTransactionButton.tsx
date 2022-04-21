@@ -36,9 +36,9 @@ const SendTransactionButton = (props: any) => {
         activeOpacity={0.7}
         children="Send"
         onPress={() => {
-          setLoading(true);
           readPassword()
             .then((password: string) => {
+              setLoading(true);
               createTransaction(
                 from.type_id,
                 to,
@@ -134,6 +134,8 @@ const SendTransactionButton = (props: any) => {
                 });
             })
             .catch(e => {
+              setLoading(false);
+
               bottomSheet.expand(
                 <BottomSheetView>
                   <Text center style={{paddingBottom: 16}}>
