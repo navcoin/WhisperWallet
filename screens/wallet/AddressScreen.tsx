@@ -11,6 +11,7 @@ import useWallet from '../../hooks/useWallet';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {verticalScale, scale} from 'react-native-size-matters';
+import {useToast} from 'react-native-toast-notifications';
 
 const AddressScreen = (props: any) => {
   const [addressType, setAddressType] = useState<BalanceFragment>(
@@ -20,6 +21,7 @@ const AddressScreen = (props: any) => {
   const {height} = useLayout();
   const {parsedAddresses} = useWallet();
   const theme = useTheme();
+  const toast = useToast();
 
   useEffect(() => {
     setAddress(
@@ -63,7 +65,11 @@ const AddressScreen = (props: any) => {
               {address}
             </Text>
           </View>
-          <TouchableOpacity onPress={() => Clipboard.setString(address)}>
+          <TouchableOpacity
+            onPress={() => {
+              toast.show('Address Copied');
+              Clipboard.setString(address);
+            }}>
             <Text
               center
               variants={'transparent'}
