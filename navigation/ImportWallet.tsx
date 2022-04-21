@@ -1,27 +1,27 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, Input, useTheme} from '@tsejerome/ui-kitten-components';
+import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 
 import Text from '../components/Text';
 import Container from '../components/Container';
 import AnimatedStep from '../components/AnimatedStep';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
 import Loading from '../components/Loading';
 import useNjs from '../hooks/useNjs';
 import {IsValidMnemonic} from '../utils/Mnemonic';
 import OptionCard from '../components/OptionCard';
 import {NetworkTypes, WalletTypes} from '../constants/Type';
-import useKeychain from '../utils/Keychain';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
+import useSecurity from '../hooks/useSecurity';
+import {useToast} from 'react-native-toast-notifications';
 
 const ImportWallet = () => {
-  const {goBack, navigate} = useNavigation();
-  const theme = useTheme();
+  const {navigate} = useNavigation();
+  const toast = useToast();
   const [index, setIndex] = useState(0);
   const [walletName, setWalletName] = useState('');
   const [mnemonic, setMnemonic] = useState('');
@@ -31,7 +31,7 @@ const ImportWallet = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const {njs} = useNjs();
-  const {read} = useKeychain();
+  const {readPassword} = useSecurity();
 
   return (
     <Container useSafeArea>
@@ -170,9 +170,9 @@ const ImportWallet = () => {
                 if (walletList.indexOf(walletName) > -1) {
                   setError('There is already a wallet with that name.');
                 } else if (walletName) {
-                  setLoading(true);
-                  read(walletName)
+                  readPassword()
                     .then((password: string) => {
+                      setLoading(true);
                       createWallet(
                         walletName,
                         mnemonic,
@@ -189,6 +189,8 @@ const ImportWallet = () => {
                       );
                     })
                     .catch((e: any) => {
+                      toast.hideAll();
+                      toast.show(e.toString());
                       setLoading(false);
                     });
                 }

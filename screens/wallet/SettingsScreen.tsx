@@ -15,6 +15,7 @@ import {screenHeight} from '../../utils/layout';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useSecurity from '../../hooks/useSecurity';
 import {SecurityAuthenticationTypes} from '../../contexts/SecurityContext';
+import {useToast} from 'react-native-toast-notifications';
 
 interface SettingsItem {
   title: string;
@@ -29,6 +30,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const {readPassword} = useSecurity();
   const {walletName, wallet, createWallet} = useWallet();
   const {njs} = useNjs();
+  const toast = useToast();
 
   const {navigate, goBack} =
     useNavigation<NavigationProp<RootStackParamList>>();
@@ -122,9 +124,21 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       icon: 'padLock',
       show: true,
       onPress: () => {
-        navigate('Wallet', {
-          screen: 'MnemonicScreen',
-        });
+        readPassword()
+          .then(async (password: string) => {
+            const updatedMnemonic: string = await wallet.db.GetMasterKey(
+              'mnemonic',
+              password,
+            );
+            navigate('Wallet', {
+              screen: 'MnemonicScreen',
+              params: {mnemonic: updatedMnemonic},
+            });
+          })
+          .catch(e => {
+            toast.hideAll();
+            toast.show(e.toString());
+          });
       },
     },
     {

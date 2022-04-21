@@ -12,6 +12,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import useSecurity from '../hooks/useSecurity';
+import {useToast} from 'react-native-toast-notifications';
 
 const OpenWallet = () => {
   const {navigate} = useNavigation();
@@ -19,6 +20,7 @@ const OpenWallet = () => {
   const [loading, setLoading] = useState(false);
   const {njs} = useNjs();
   const {readPassword} = useSecurity();
+  const toast = useToast();
 
   const [walletList, setWalletList] = useState<any>([]);
 
@@ -69,6 +71,8 @@ const OpenWallet = () => {
                         );
                       })
                       .catch((e: any) => {
+                        toast.hideAll();
+                        toast.show(e.toString());
                         setLoading(false);
                       });
                   }}

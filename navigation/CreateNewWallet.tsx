@@ -16,6 +16,7 @@ import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useSecurity from '../hooks/useSecurity';
+import {useToast} from 'react-native-toast-notifications';
 
 const CreateNewWallet = () => {
   const {navigate} = useNavigation();
@@ -27,6 +28,7 @@ const CreateNewWallet = () => {
   const [network, setNetwork] = useState('mainnet');
   const {njs} = useNjs();
   const {readPassword} = useSecurity();
+  const toast = useToast();
 
   const [words, setWords] = useState<string[]>(new Array(12));
 
@@ -130,6 +132,8 @@ const CreateNewWallet = () => {
                     .catch((e: any) => {
                       console.log(e);
                       setLoading(false);
+                      toast.hideAll();
+                      toast.show(e.toString());
                     });
                 }}
               />
