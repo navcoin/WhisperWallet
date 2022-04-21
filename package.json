@@ -8,7 +8,7 @@
     "start": "expo start --dev-client",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "generate-splash": "npx react-native generate-bootsplash 'assets/logos/splash/default.png' --background-color '#36454F' --assets-path 'assets/logos/splash' --logo-width=200 ",
+    "generate-splash": "npx react-native generate-bootsplash 'assets/logos/splash/default.png' --background-color '#1F2933' --assets-path 'assets/logos/splash' --logo-width=200 ",
     "postinstall": "patch-package;rm -rf ./node_modules/@aguycalled/bitcore-lib/node_modules/react-native-mcl"
   },
   "dependencies": {
