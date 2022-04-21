@@ -71,7 +71,11 @@ const OpenWallet = () => {
                         },
                       );
                     })
-                    .catch((e: any) => {
+                    .catch((e: Error) => {
+                      console.log('error on reading');
+                      console.log(e.message);
+                      console.log(e.name);
+                      console.log('error on reading');
                       setLoading(false);
                     });
                 }}
