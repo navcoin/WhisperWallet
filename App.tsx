@@ -117,30 +117,28 @@ const App = () => {
       <ThemeContext.Provider value={{theme, toggleTheme}}>
         <IconRegistry icons={[AssetIconsPack, EvaIconsPack]} />
         <ToastProvider offset={50} style={{borderRadius: 20, opacity: 0.8}}>
-          <SecurityProvider>
-            <WalletProvider>
-              <ApplicationProvider
-                {...eva}
-                theme={
-                  theme === 'light'
-                    ? {...eva.light, ...customTheme, ...lightTheme}
-                    : {...eva.dark, ...customTheme, ...darkTheme}
-                }
-                /* @ts-ignore */
-                customMapping={customMapping}>
-                <SafeAreaProvider>
-                  <StatusBar
-                    barStyle={
-                      theme === 'dark' ? 'light-content' : 'dark-content'
-                    }
-                    translucent={true}
-                    backgroundColor={'#00000000'}
-                  />
+          <ApplicationProvider
+            {...eva}
+            theme={
+              theme === 'light'
+                ? {...eva.light, ...customTheme, ...lightTheme}
+                : {...eva.dark, ...customTheme, ...darkTheme}
+            }
+            /* @ts-ignore */
+            customMapping={customMapping}>
+            <SafeAreaProvider>
+              <StatusBar
+                barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+                translucent={true}
+                backgroundColor={'#00000000'}
+              />
+              <WalletProvider>
+                <SecurityProvider>
                   <AppContainer loaded={loaded} shownWelcome={shownWelcome} />
-                </SafeAreaProvider>
-              </ApplicationProvider>
-            </WalletProvider>
-          </SecurityProvider>
+                </SecurityProvider>
+              </WalletProvider>
+            </SafeAreaProvider>
+          </ApplicationProvider>
         </ToastProvider>
       </ThemeContext.Provider>
     </SafeAreaProvider>

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   SecurityAuthenticationTypes,
   SecurityContext,
@@ -7,15 +7,66 @@ import {
 import * as Keychain from 'react-native-keychain';
 import * as DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import PINCode, {hasUserSetPinCode} from '@haskkor/react-native-pincode';
+import PINCode from '@haskkor/react-native-pincode';
 import crypto from 'crypto';
 import useKeychain from '../utils/Keychain';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import LocalAuth from '../utils/LocalAuth';
-import {View} from 'react-native';
+import {Text} from '@tsejerome/ui-kitten-components';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import Container from '../components/Container';
+import {scale} from 'react-native-size-matters';
+import useLockedScreen from '../hooks/useLockedScreen';
+import useAsyncStorage from '../hooks/useAsyncStorage';
+import useWallet from '../hooks/useWallet';
+import {AppState} from 'react-native';
 
 export const SecurityProvider = (props: any) => {
+  const {lockedScreen, setLockedScreen} = useLockedScreen();
+  const [lockAfterBackground, setLockAfterBackground] = useAsyncStorage(
+    'lockAfterBackground',
+    'false',
+  );
+
+  const {refreshWallet} = useWallet();
+
+  const appState = useRef(AppState.currentState);
+
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+  useEffect(() => {
+    if (appStateVisible == 'active' && lockedScreen) {
+      LocalAuth((error: any) => {
+        if (!error) {
+          setLockedScreen(false);
+        } else {
+          setLockedScreen(true);
+        }
+      });
+    }
+  }, [appStateVisible]);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      DeviceInfo.isPinOrFingerprintSet().then(setIsPinOrFingerprintSet);
+      Keychain.getSupportedBiometryType({}).then(setSupportedBiometry);
+      if (appState.current.match(/background/) && nextAppState === 'active') {
+        if (refreshWallet) {
+          refreshWallet();
+        }
+        if (lockAfterBackground === 'true') {
+          setLockedScreen(true);
+        }
+      }
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [refreshWallet, lockAfterBackground, setLockedScreen]);
+
   const {read} = useKeychain();
 
   const [isPinOrFingerprintSet, setIsPinOrFingerprintSet] = useState<
@@ -36,6 +87,8 @@ export const SecurityProvider = (props: any) => {
   const [supportedType, setSupportedType] =
     useState<SecurityAuthenticationTypes>(SecurityAuthenticationTypes.NONE);
 
+  const [error, setError] = useState<string | undefined>(undefined);
+
   useEffect((): void => {
     AsyncStorage.getItem('AuthenticationType').then(async val => {
       if (!val) {
@@ -45,21 +98,43 @@ export const SecurityProvider = (props: any) => {
             SecurityAuthenticationTypes.KEYCHAIN,
           );
           setSupportedType(SecurityAuthenticationTypes.KEYCHAIN);
+          setError(undefined);
         } else if (isPinOrFingerprintSet === true) {
           AsyncStorage.setItem(
             'AuthenticationType',
             SecurityAuthenticationTypes.LOCALAUTH,
           );
           setSupportedType(SecurityAuthenticationTypes.LOCALAUTH);
+          setError(undefined);
         } else {
           AsyncStorage.setItem(
             'AuthenticationType',
             SecurityAuthenticationTypes.MANUAL,
           );
           setSupportedType(SecurityAuthenticationTypes.MANUAL);
+          setError(undefined);
         }
       } else {
-        setSupportedType(val as SecurityAuthenticationTypes);
+        if (
+          supportedBiometry === null &&
+          val == SecurityAuthenticationTypes.KEYCHAIN
+        ) {
+          // Keychain not available anymore
+          setError(
+            'Your previous authentication method is not available anymore. Please enroll your biometrics on your device again or reinstall the app.',
+          );
+        } else if (
+          isPinOrFingerprintSet !== true &&
+          val == SecurityAuthenticationTypes.LOCALAUTH
+        ) {
+          // LocalAuth not available anymore
+          setError(
+            'Your previous authentication method is not available anymore. Please add a PIN code lock to your device or reinstall the app.',
+          );
+        } else {
+          setSupportedType(val as SecurityAuthenticationTypes);
+          setError(undefined);
+        }
       }
     });
   }, [isPinOrFingerprintSet, supportedBiometry]);
@@ -182,45 +257,65 @@ export const SecurityProvider = (props: any) => {
 
   return (
     <SecurityContext.Provider value={securityContext}>
-      {setManualPin ? (
-        <PINCode
-          status={'choose'}
-          passwordLength={6}
-          styleMainContainer={{backgroundColor: '#1F2933'}}
-          stylePinCodeTextTitle={{fontFamily: 'Overpass-Bold'}}
-          stylePinCodeTextSubtitle={{fontFamily: 'Overpass-Bold'}}
-          stylePinCodeDeleteButtonText={{fontFamily: 'Overpass-Bold'}}
-          stylePinCodeTextButtonCircle={{fontFamily: 'Overpass-Bold'}}
-          stylePinCodeButtonCircle={{backgroundColor: '#1F2933'}}
-          colorPassword={'#fff'}
-          subtitleChoose={'to protect the access to your wallet'}
-          storePin={async (pin: string) => {
-            setManualPin(pin);
-            setSetManualPin(undefined);
-          }}
-        />
-      ) : askManualPin ? (
-        <PINCode
-          status={'enter'}
-          passwordLength={6}
-          touchIDDisabled={true}
-          styleMainContainer={{backgroundColor: '#1F2933'}}
-          stylePinCodeTextTitle={{fontFamily: 'Overpass-Bold'}}
-          stylePinCodeTextSubtitle={{fontFamily: 'Overpass-Bold'}}
-          stylePinCodeDeleteButtonText={{fontFamily: 'Overpass-Bold'}}
-          stylePinCodeTextButtonCircle={{fontFamily: 'Overpass-Bold'}}
-          stylePinCodeButtonCircle={{backgroundColor: '#1F2933'}}
-          colorPassword={'#fff'}
-          subtitleChoose={'to access your wallet'}
-          endProcessFunction={async (pin: string) => {
-            askManualPin(pin);
-            setAskManualPin(undefined);
-          }}
-        />
+      {error ? (
+        <Container
+          useSafeArea
+          style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Icon
+            name={'warning'}
+            size={scale(32)}
+            color={'#fff'}
+            style={{opacity: 1, marginBottom: scale(32)}}
+          />
+          <Text style={{textAlign: 'center', paddingHorizontal: scale(32)}}>
+            {error}
+          </Text>
+        </Container>
       ) : (
-        <></>
+        <>
+          {setManualPin ? (
+            <PINCode
+              status={'choose'}
+              passwordLength={6}
+              styleMainContainer={{backgroundColor: '#1F2933'}}
+              stylePinCodeTextTitle={{fontFamily: 'Overpass-Bold'}}
+              stylePinCodeTextSubtitle={{fontFamily: 'Overpass-Bold'}}
+              stylePinCodeDeleteButtonText={{fontFamily: 'Overpass-Bold'}}
+              stylePinCodeTextButtonCircle={{fontFamily: 'Overpass-Bold'}}
+              stylePinCodeButtonCircle={{backgroundColor: '#1F2933'}}
+              colorPassword={'#fff'}
+              subtitleChoose={'to protect the access to your wallet'}
+              storePin={async (pin: string) => {
+                setManualPin(pin);
+                setSetManualPin(undefined);
+              }}
+            />
+          ) : askManualPin ? (
+            <PINCode
+              status={'enter'}
+              passwordLength={6}
+              touchIDDisabled={true}
+              styleMainContainer={{backgroundColor: '#1F2933'}}
+              stylePinCodeTextTitle={{fontFamily: 'Overpass-Bold'}}
+              stylePinCodeTextSubtitle={{fontFamily: 'Overpass-Bold'}}
+              stylePinCodeDeleteButtonText={{fontFamily: 'Overpass-Bold'}}
+              stylePinCodeTextButtonCircle={{fontFamily: 'Overpass-Bold'}}
+              stylePinCodeButtonCircle={{backgroundColor: '#1F2933'}}
+              stylePinCodeDeleteButtonColorHideUnderlay={'#fff'}
+              stylePinCodeDeleteButtonColorShowUnderlay={'#fff'}
+              colorPassword={'#fff'}
+              subtitleChoose={'to access your wallet'}
+              endProcessFunction={async (pin: string) => {
+                askManualPin(pin);
+                setAskManualPin(undefined);
+              }}
+            />
+          ) : (
+            <></>
+          )}
+          {props.children}
+        </>
       )}
-      {props.children}
     </SecurityContext.Provider>
   );
 };
