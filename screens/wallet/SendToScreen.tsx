@@ -48,7 +48,7 @@ const SendToScreen = (props: any) => {
   );
   const [memo, setMemo] = useState('');
   const {bottom} = useSafeAreaInsets();
-  const [amountInString, setAmount] = useState('0');
+  const [amountInString, setAmount] = useState('');
   const [showMemo, setShowMemo] = useState(false);
   const [subtractFee, setSubtractFee] = useState(false);
   const {bitcore, accounts, tokens, nfts, walletName, balances} = useWallet();
@@ -238,11 +238,7 @@ const SendToScreen = (props: any) => {
                       status={'transparent'}
                       style={styles.flex1}
                       value={amountInString}
-                      onFocus={event => {
-                        if (amountInString === '0') {
-                          setAmount('');
-                        }
-                      }}
+                      placeholder={'0'}
                       onChangeText={(text: string) => {
                         let t = 0;
                         let res = text.replace(/\./g, match =>
