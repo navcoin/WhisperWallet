@@ -67,6 +67,7 @@ export const BottomSheetProvider = (props: any) => {
           ref={bottomSheetRef}
           enablePanDownToClose={true}
           handleStyle={styles.handleStyle}
+          backgroundStyle={styles.backgroundStyle}
           animateOnMount={true}
           backdropComponent={props => (
             <BottomSheetBackdrop
@@ -84,6 +85,19 @@ export const BottomSheetProvider = (props: any) => {
     </BottomSheetContext.Provider>
   );
 };
+
+export default BottomSheetProvider;
+
+const themedStyles = StyleService.create({
+  handleStyle: {
+    backgroundColor: 'background-basic-color-3',
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+  },
+  backgroundStyle: {
+    backgroundColor: 'background-basic-color-3',
+  },
+});
 
 /*const BottomSheetProvider = (props: any) => {
   const [content, setBottomContent] = useState(<></>);
@@ -138,13 +152,3 @@ export const BottomSheetProvider = (props: any) => {
     </>
   );
 };*/
-
-export default BottomSheetProvider;
-
-const themedStyles = StyleService.create({
-  handleStyle: {
-    backgroundColor: 'background-basic-color-3',
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-  },
-});
