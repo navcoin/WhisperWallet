@@ -5,7 +5,7 @@
     <item>
         <bitmap
                 android:gravity="center"
-                android:src="@drawable/splash_image" />
+                android:src="@drawable/bootsplash_logo" />
     </item>
 
 </layer-list>
