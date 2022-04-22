@@ -238,6 +238,11 @@ const SendToScreen = (props: any) => {
                       status={'transparent'}
                       style={styles.flex1}
                       value={amountInString}
+                      onFocus={event => {
+                        if (amountInString === '0') {
+                          setAmount('');
+                        }
+                      }}
                       onChangeText={(text: string) => {
                         let t = 0;
                         let res = text.replace(/\./g, match =>
