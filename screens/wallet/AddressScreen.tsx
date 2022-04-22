@@ -67,14 +67,16 @@ const AddressScreen = (props: any) => {
           </View>
           <TouchableOpacity
             onPress={() => {
+              toast.hideAll();
               toast.show('Address Copied');
               Clipboard.setString(address);
             }}>
             <Text
               center
+              underline
               variants={'transparent'}
               style={{marginTop: verticalScale(32)}}>
-              Tap to copy
+              Tap here to copy address
             </Text>
           </TouchableOpacity>
           <View style={{height: verticalScale(40)}} />
