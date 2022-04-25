@@ -11,7 +11,6 @@ import Button from '../components/Button';
 import {Images} from '../assets/images';
 import {RootStackParamList} from './type';
 import useNjs from '../hooks/useNjs';
-import useSecurity from '../hooks/useSecurity';
 
 const Intro = memo(props => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
