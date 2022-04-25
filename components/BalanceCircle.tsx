@@ -48,6 +48,10 @@ const BalanceCircle = memo(() => {
         });
       }, 10);
     }
+    
+    return () => {
+      BackgroundTimer.stopBackgroundTimer();
+    };
   }, [connected]);
 
   useEffect(() => {
