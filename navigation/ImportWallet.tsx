@@ -50,7 +50,7 @@ const ImportWallet = () => {
 
             {WalletTypes.map((el, index) => {
               return (
-                <View style={[layoutStyles.responsiveColumnComponentWidth]}>
+                <View style={[layoutStyles.responsiveColumnComponentWidth]} key={el[1]}>
                   <OptionCard
                     item={{text: el[1]}}
                     index={index}
