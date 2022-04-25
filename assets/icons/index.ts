@@ -28,6 +28,7 @@ export const Icons = {
   search16: require('./ic_search16.png'),
   addNew: require('./ic_addnew.png'),
   menu: require('./ic_menu-2.png'),
+  menuBtn: require('./menu.png'),
   fire: require('./ic_fire.png'),
   chat: require('./ic_chat.png'),
   edit: require('./ic_edit.png'),

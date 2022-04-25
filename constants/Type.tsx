@@ -49,13 +49,13 @@ export enum View_Types_Enum {
 }
 
 export enum Connection_Stats_Enum {
-  Connecting = 'connecting',
-  Connected = 'connected',
-  Syncing = 'syncing',
-  Synced = 'synced',
-  Disconnected = 'disconnected',
-  NoServers = 'noservers',
-  Bootstrapping = 'bootstrapping',
+  Connecting = 'Connecting',
+  Connected = 'Connected',
+  Syncing = 'Syncing',
+  Synced = 'Sync',
+  Disconnected = 'Disconnected',
+  NoServers = 'No servers',
+  Bootstrapping = 'Bootstrapping',
 }
 
 export enum Connection_Stats_Text {
