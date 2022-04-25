@@ -64,7 +64,7 @@ const MainWalletScreen = () => {
               style={{
                 width: scale(8),
                 borderRadius: scale(4),
-                marginLeft: scale(8),
+                marginLeft: scale(12),
                 height: scale(8),
                 backgroundColor: dotColor,
                 alignSelf: 'center',
