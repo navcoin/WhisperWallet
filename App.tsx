@@ -78,7 +78,9 @@ const currentJSErrorHandler = (e: Error | string, isFatal: boolean) => {
     {
       text: 'Close',
       onPress: () => {
-        RNRestart.Restart();
+        if (!__DEV__) {
+          RNRestart.Restart();
+        }
       },
     },
   ]);
