@@ -86,7 +86,8 @@ const CreateNewWallet = () => {
             </Text>
             {NetworkTypes.map((el, index) => {
               return (
-                <View style={[layoutStyles.responsiveColumnComponentWidth]}
+                <View
+                  style={[layoutStyles.responsiveColumnComponentWidth]}
                   key={el[0]}>
                   <OptionCard
                     key={el[0]}
@@ -113,7 +114,6 @@ const CreateNewWallet = () => {
                 style={styles.button}
                 onPressOut={() => {
                   readPassword()
-                  read(walletName)
                     .then((password: string) => {
                       setLoading('Creating wallet keys...');
                       createWallet(
