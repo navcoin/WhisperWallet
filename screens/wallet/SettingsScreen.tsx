@@ -90,7 +90,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   };
 
   const resyncWallet = () => {
-    setLoading('Restarting wallet...');
+    setLoading('Restarting...');
     wallet.Disconnect();
     wallet.CloseDb();
     read(walletName).then((password: string) => {

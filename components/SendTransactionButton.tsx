@@ -104,7 +104,7 @@ const SendTransactionButton = (props: any) => {
                     <SwipeButton
                       goBackToStart={true}
                       onComplete={() => {
-                        setLoading('Broadcasting transaction...');
+                        setLoading('Broadcasting...');
                         sendTransaction(tx.tx).then(() => {
                           setLoading(undefined);
                           collapse();
