@@ -2,11 +2,12 @@
  * NavCash - React Native App
  */
 
-import React, {useEffect, useRef, useState} from 'react';
-import {StatusBar} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Alert, StatusBar} from 'react-native';
 import {patchFlatListProps} from 'react-native-web-refresh-control';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import RNRestart from 'react-native-restart';
 import ThemeContext from './ThemeContext';
 import * as eva from '@eva-design/eva';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
@@ -32,11 +33,13 @@ import SQLite from 'react-native-sqlite-2';
 import setGlobalVars from 'indexeddbshim/dist/indexeddbshim-noninvasive';
 import useNjs from './hooks/useNjs';
 import useWin from './hooks/useWin';
-import useLockedScreen from './hooks/useLockedScreen';
 import useAsyncStorage from './hooks/useAsyncStorage';
-import LocalAuth from './utils/LocalAuth';
-import useWallet from './hooks/useWallet';
 import WalletProvider from './contexts/WalletProvider';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
+import {sendErrorCrashEmail, sendMessageEmail} from './utils/sendMail';
 const win = {};
 
 setGlobalVars(win, {win: SQLite});
@@ -45,13 +48,80 @@ win.indexedDB.__useShim();
 const njs = require('navcoin-js');
 const P2pPool = require('@aguycalled/bitcore-p2p').Pool;
 
+const currentJSErrorHandler = (e: Error, isFatal: boolean) => {
+  Alert.alert(
+    'Unexpected error occurred',
+    `
+        Error: ${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}
+        Please close the app and start again!
+        `,
+    [
+      {
+        text: 'Send report to team',
+        onPress: () => {
+          sendErrorCrashEmail(e, isFatal);
+          RNRestart.Restart();
+        },
+      },
+      {
+        text: 'Close',
+        onPress: () => {
+          RNRestart.Restart();
+        },
+      },
+    ],
+  );
+};
+
+setJSExceptionHandler(currentJSErrorHandler, true);
+
+setNativeExceptionHandler(async errorString => {
+  console.log('setNativeExceptionHandler');
+  console.log(errorString);
+  await AsyncStorage.setItem('crashErrorRecords', errorString);
+});
+
 const App = () => {
   const [theme, setTheme] = React.useState<'light' | 'dark'>('dark');
   const [loaded, setLoaded] = useState(false);
   const {setNjs, setP2pPool} = useNjs();
   const {setWin} = useWin();
 
+  const [crashErrorRecords, setCrashErrorRecords] = useAsyncStorage(
+    'crashErrorRecords',
+    '',
+  );
+
   const [shownWelcome, setShownWelcome] = useState('false');
+
+  const previousNativeErrorHandler = (errorMessage: string) => {
+    Alert.alert(
+      'There was an unexpected error occurred in the previous app launch',
+      'Do you want to send a report to Whisper Team?',
+      [
+        {
+          text: 'Send Report',
+          onPress: () => {
+            sendMessageEmail(errorMessage);
+            setCrashErrorRecords('');
+          },
+        },
+        {
+          text: 'Close',
+          onPress: () => {
+            setCrashErrorRecords('');
+          },
+        },
+      ],
+    );
+  };
+
+  const checkIfAppHadCrashed = async () => {
+    if (!crashErrorRecords.length) {
+      return;
+    }
+    previousNativeErrorHandler(crashErrorRecords);
+  };
 
   useEffect(() => {
     AsyncStorage.getItem('shownWelcome').then(itemValue => {
@@ -113,6 +183,8 @@ const App = () => {
       setTimeout(() => {
         RNBootSplash.hide({fade: true});
       }, 1000);
+
+      checkIfAppHadCrashed();
     });
   }, []);
 
