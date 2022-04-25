@@ -20,7 +20,7 @@ const OpenWallet = () => {
   const {width, bottom} = useLayout();
   const [walletName, setWalletName] = useState('');
   const {createWallet} = useWallet();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
   const {njs} = useNjs();
   const {read} = useKeychain();
@@ -35,7 +35,7 @@ const OpenWallet = () => {
 
   return (
     <Container useSafeArea>
-      <Loading loading={loading} />
+      <Loading loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Open Wallet'} />
       <View style={styles.container}>
         <Text category="title4" center marginBottom={32}>
@@ -47,16 +47,18 @@ const OpenWallet = () => {
           showsVerticalScrollIndicator={false}>
           {walletList.map((el, index) => {
             return (
-              <View style={[layoutStyles.responsiveColumnComponentWidth]} key={el}>
+              <View
+                style={[layoutStyles.responsiveColumnComponentWidth]}
+                key={el}>
                 <OptionCard
                   item={{text: el}}
                   index={index}
                   icon={'creditCard'}
                   selected={walletName}
                   onPress={() => {
-                    setLoading(true);
                     read(el)
                       .then((password: string) => {
+                        setLoading('Loading wallet...');
                         createWallet(
                           el,
                           '',
@@ -67,13 +69,13 @@ const OpenWallet = () => {
                           true,
                           'mainnet',
                           () => {
-                            setLoading(false);
+                            setLoading(undefined);
                             navigate('Wallet');
                           },
                         );
                       })
                       .catch((e: any) => {
-                        setLoading(false);
+                        setLoading(undefined);
                       });
                   }}
                 />

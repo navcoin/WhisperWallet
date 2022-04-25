@@ -23,7 +23,7 @@ const CreateNewWallet = () => {
   const [index, setIndex] = useState(0);
   const [walletName, setWalletName] = useState('');
   const {mnemonic, createWallet} = useWallet();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
   const [network, setNetwork] = useState('mainnet');
   const {njs} = useNjs();
@@ -39,7 +39,7 @@ const CreateNewWallet = () => {
         contentContainerStyle={{flexGrow: 1}}
         enableOnAndroid
         showsVerticalScrollIndicator={false}>
-        <Loading loading={loading} />
+        <Loading loading={!!loading} text={loading} />
         <AnimatedStep style={styles.animatedStep} step={index} steps={5} />
 
         {index == 0 ? (
@@ -111,7 +111,7 @@ const CreateNewWallet = () => {
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={() => {
-                  setLoading(true);
+                  setLoading('Creating wallet keys...');
                   read(walletName)
                     .then((password: string) => {
                       createWallet(
@@ -124,14 +124,14 @@ const CreateNewWallet = () => {
                         true,
                         network,
                         () => {
-                          setLoading(false);
+                          setLoading(undefined);
                           setIndex(2);
                         },
                       );
                     })
                     .catch((e: any) => {
                       console.log(e);
-                      setLoading(false);
+                      setLoading(undefined);
                     });
                 }}
               />

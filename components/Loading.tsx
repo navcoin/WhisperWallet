@@ -1,5 +1,7 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {StyleSheet, View, Modal, ActivityIndicator} from 'react-native';
+import Text from './Text';
+import {BlurView} from '@react-native-community/blur';
 
 const Loading = (props: any) => {
   const {loading, ...attributes} = props;
@@ -7,37 +9,46 @@ const Loading = (props: any) => {
   return (
     <Modal
       transparent={true}
+      statusBarTranslucent={true}
       animationType={'none'}
-      visible={loading}
-      onRequestClose={() => {
-        console.log('close modal');
-      }}>
-      <View style={styles.modalBackground}>
-        <View style={styles.activityIndicatorWrapper}>
-          {props.text ? <Text>{props.text}</Text> : <></>}
+      visible={loading}>
+      <BlurView
+        style={styles.absolute}
+        blurType="dark"
+        blurAmount={10}
+        reducedTransparencyFallbackColor="white">
+        <View style={styles.contentContainer}>
+          {props.text ? (
+            <Text center style={styles.item}>
+              {props.text}
+            </Text>
+          ) : (
+            <></>
+          )}
           <ActivityIndicator animating={loading} />
         </View>
-      </View>
+      </BlurView>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  modalBackground: {
-    flex: 1,
-    alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    backgroundColor: '#00000040',
+  item: {
+    paddingHorizontal: 16,
+    marginBottom: 16,
   },
-  activityIndicatorWrapper: {
-    backgroundColor: '#FFFFFF',
-    height: 100,
-    width: 100,
-    borderRadius: 10,
-    display: 'flex',
+  contentContainer: {
+    backgroundColor: 'background-basic-color-6',
+    flex: 1,
+    paddingTop: 8,
+    padding: 20,
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
+  },
+  absolute: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
