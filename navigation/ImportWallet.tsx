@@ -28,14 +28,14 @@ const ImportWallet = () => {
   const [network, setNetwork] = useState('mainnet');
   const [type, setType] = useState('');
   const {createWallet} = useWallet();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
   const {njs} = useNjs();
   const {readPassword} = useSecurity();
 
   return (
     <Container useSafeArea>
-      <Loading loading={loading} />
+      <Loading loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Import Wallet'} />
       <AnimatedStep style={styles.animatedStep} step={index} />
 
@@ -51,7 +51,7 @@ const ImportWallet = () => {
 
             {WalletTypes.map((el, index) => {
               return (
-                <View style={[layoutStyles.responsiveColumnComponentWidth]}>
+                <View style={[layoutStyles.responsiveColumnComponentWidth]} key={el[1]}>
                   <OptionCard
                     item={{text: el[1]}}
                     index={index}
@@ -172,7 +172,7 @@ const ImportWallet = () => {
                 } else if (walletName) {
                   readPassword()
                     .then((password: string) => {
-                      setLoading(true);
+                      setLoading('Creating wallet keys...');
                       createWallet(
                         walletName,
                         mnemonic,
@@ -183,7 +183,7 @@ const ImportWallet = () => {
                         true,
                         network,
                         () => {
-                          setLoading(false);
+                          setLoading(undefined);
                           setIndex(4);
                         },
                       );
@@ -191,7 +191,7 @@ const ImportWallet = () => {
                     .catch((e: any) => {
                       toast.hideAll();
                       toast.show(e.toString());
-                      setLoading(false);
+                      setLoading(undefined);
                     });
                 }
               }}

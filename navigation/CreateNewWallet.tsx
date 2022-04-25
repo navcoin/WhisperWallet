@@ -23,7 +23,7 @@ const CreateNewWallet = () => {
   const [index, setIndex] = useState(0);
   const [walletName, setWalletName] = useState('');
   const {mnemonic, createWallet} = useWallet();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
   const [network, setNetwork] = useState('mainnet');
   const {njs} = useNjs();
@@ -39,7 +39,7 @@ const CreateNewWallet = () => {
         contentContainerStyle={{flexGrow: 1}}
         enableOnAndroid
         showsVerticalScrollIndicator={false}>
-        <Loading loading={loading} />
+        <Loading loading={!!loading} text={loading} />
         <AnimatedStep style={styles.animatedStep} step={index} steps={5} />
 
         {index == 0 ? (
@@ -86,7 +86,8 @@ const CreateNewWallet = () => {
             </Text>
             {NetworkTypes.map((el, index) => {
               return (
-                <View style={[layoutStyles.responsiveColumnComponentWidth]}>
+                <View style={[layoutStyles.responsiveColumnComponentWidth]}
+                  key={el[0]}>
                   <OptionCard
                     key={el[0]}
                     id={el[0]}
@@ -112,8 +113,9 @@ const CreateNewWallet = () => {
                 style={styles.button}
                 onPressOut={() => {
                   readPassword()
+                  read(walletName)
                     .then((password: string) => {
-                      setLoading(true);
+                      setLoading('Creating wallet keys...');
                       createWallet(
                         walletName,
                         '',
@@ -124,14 +126,14 @@ const CreateNewWallet = () => {
                         true,
                         network,
                         () => {
-                          setLoading(false);
+                          setLoading(undefined);
                           setIndex(2);
                         },
                       );
                     })
                     .catch((e: any) => {
                       console.log(e);
-                      setLoading(false);
+                      setLoading(undefined);
                       toast.hideAll();
                       toast.show(e.toString());
                     });

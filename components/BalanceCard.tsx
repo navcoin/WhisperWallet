@@ -56,7 +56,7 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
                   tintColor:
                     type_id == Balance_Types_Enum.Staking
                       ? theme['color-staking']
-                      : 'none',
+                      : undefined,
                   width: scale(32),
                   height: scale(32),
                 }}

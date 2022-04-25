@@ -17,7 +17,8 @@ import {useToast} from 'react-native-toast-notifications';
 const OpenWallet = () => {
   const {navigate} = useNavigation();
   const {createWallet} = useWallet();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<string | undefined>(undefined);
+  const [error, setError] = useState('');
   const {njs} = useNjs();
   const {readPassword} = useSecurity();
   const toast = useToast();
@@ -32,7 +33,7 @@ const OpenWallet = () => {
 
   return (
     <Container useSafeArea>
-      <Loading loading={loading} />
+      <Loading loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Open Wallet'} />
       <View style={styles.container}>
         <Text category="title4" center marginBottom={32}>
@@ -54,7 +55,7 @@ const OpenWallet = () => {
                   onPress={() => {
                     readPassword()
                       .then((password: string) => {
-                        setLoading(true);
+                        setLoading('Loading wallet...');
                         createWallet(
                           el,
                           '',
@@ -65,7 +66,7 @@ const OpenWallet = () => {
                           true,
                           'mainnet',
                           () => {
-                            setLoading(false);
+                            setLoading(undefined);
                             navigate('Wallet');
                           },
                         );
@@ -73,7 +74,7 @@ const OpenWallet = () => {
                       .catch((e: any) => {
                         toast.hideAll();
                         toast.show(e.toString());
-                        setLoading(false);
+                        setLoading(undefined);
                       });
                   }}
                 />
