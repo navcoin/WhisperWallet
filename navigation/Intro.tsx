@@ -35,7 +35,6 @@ const Intro = memo(props => {
       setWalletList(list);
     });
   };
-
   return (
     <Container style={styles.container}>
       <Content style={styles.content}>

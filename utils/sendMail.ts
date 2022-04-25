@@ -8,22 +8,16 @@ type EmailOptions = {
   bcc?: Email;
 };
 
-export async function sendErrorCrashEmail(e: Error, isFatal: boolean) {
+export async function sendErrorCrashEmail(
+  e: Error | string,
+  isFatal: boolean = true,
+) {
+  let error = typeof e === 'string' ? e : `${e.name} ${e.message}`;
   sendEmail(
     'tsejerome1997@gmail.com',
     'My Whisper Wallet crashed!',
     `Hello Whisper Development Team, <br>My Whisper Wallet got some issues. <br>Here is my The error is as below: <br>Error: 
-    ${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}`,
-  ).then(() => {
-    console.log('Your message was successfully sent!');
-  });
-}
-export async function sendMessageEmail(e: string) {
-  sendEmail(
-    'tsejerome1997@gmail.com',
-    'My Whisper Wallet crashed!',
-    `Hello Whisper Development Team, <br>My Whisper Wallet got some issues. <br>Here is my The error is as below: <br>Error: 
-    ${e}`,
+    ${isFatal ? 'Fatal:' : ''} ${error}`,
   ).then(() => {
     console.log('Your message was successfully sent!');
   });

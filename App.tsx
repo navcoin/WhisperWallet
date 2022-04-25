@@ -40,6 +40,7 @@ import {
   setNativeExceptionHandler,
 } from 'react-native-exception-handler';
 import {sendErrorCrashEmail, sendMessageEmail} from './utils/sendMail';
+import Clipboard from '@react-native-community/clipboard';
 const win = {};
 
 setGlobalVars(win, {win: SQLite});
@@ -48,29 +49,39 @@ win.indexedDB.__useShim();
 const njs = require('navcoin-js');
 const P2pPool = require('@aguycalled/bitcore-p2p').Pool;
 
-const currentJSErrorHandler = (e: Error, isFatal: boolean) => {
-  Alert.alert(
-    'Unexpected error occurred',
-    `
-        Error: ${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}
-        Please close the app and start again!
-        `,
-    [
-      {
-        text: 'Send report to team',
-        onPress: () => {
-          sendErrorCrashEmail(e, isFatal);
-          RNRestart.Restart();
-        },
+const currentJSErrorHandler = (e: Error | string, isFatal: boolean) => {
+  let errorMsg: string = '';
+  if (typeof e === 'string') {
+    errorMsg = `Error: ${isFatal ? 'Fatal:' : ''} ${e}
+    Please close the app and start again!`;
+  }
+  if (typeof e === 'object') {
+    errorMsg = `Error: ${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}
+    Please close the app and start again!`;
+  }
+
+  Alert.alert('Unexpected error occurred', errorMsg, [
+    {
+      text: 'Send report via Email',
+      onPress: () => {
+        sendErrorCrashEmail(e, isFatal);
+        RNRestart.Restart();
       },
-      {
-        text: 'Close',
-        onPress: () => {
-          RNRestart.Restart();
-        },
+    },
+    {
+      text: 'Copy Error',
+      onPress: () => {
+        Clipboard.setString(errorMsg);
+        RNRestart.Restart();
       },
-    ],
-  );
+    },
+    {
+      text: 'Close',
+      onPress: () => {
+        RNRestart.Restart();
+      },
+    },
+  ]);
 };
 
 setJSExceptionHandler(currentJSErrorHandler, true);
@@ -100,9 +111,16 @@ const App = () => {
       'Do you want to send a report to Whisper Team?',
       [
         {
-          text: 'Send Report',
+          text: 'Send Report via Email',
           onPress: () => {
-            sendMessageEmail(errorMessage);
+            sendErrorCrashEmail(errorMessage, true);
+            setCrashErrorRecords('');
+          },
+        },
+        {
+          text: 'Copy Error',
+          onPress: () => {
+            Clipboard.setString(errorMessage);
             setCrashErrorRecords('');
           },
         },
