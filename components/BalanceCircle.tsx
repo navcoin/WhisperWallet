@@ -133,13 +133,11 @@ const BalanceCircle = memo(() => {
         </Text>
       ) : !firstSyncCompleted && connected == Connection_Stats_Enum.Syncing ? (
         <Text style={{position: 'absolute', textAlign: 'center'}}>
-          Synchronizing...{'\n'}
           {syncProgress}%
         </Text>
       ) : !firstSyncCompleted &&
         connected == Connection_Stats_Enum.Bootstrapping ? (
         <Text style={{position: 'absolute', textAlign: 'center'}}>
-          Bootstrapping...{'\n'}
           {bootstrapProgress} txs in queue
         </Text>
       ) : (
