@@ -86,7 +86,8 @@ const CreateNewWallet = () => {
             </Text>
             {NetworkTypes.map((el, index) => {
               return (
-                <View style={[layoutStyles.responsiveColumnComponentWidth]}>
+                <View style={[layoutStyles.responsiveColumnComponentWidth]}
+                  key={el[0]}>
                   <OptionCard
                     key={el[0]}
                     id={el[0]}
