@@ -24,7 +24,7 @@ interface SettingsItem {
 }
 
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<string | undefined>(undefined);
   const {read} = useKeychain();
   const {walletName, wallet, createWallet} = useWallet();
   const {njs} = useNjs();
@@ -90,7 +90,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   };
 
   const resyncWallet = () => {
-    setLoading(true);
+    setLoading('Restarting...');
     wallet.Disconnect();
     wallet.CloseDb();
     read(walletName).then((password: string) => {
@@ -104,7 +104,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
         true,
         '',
         () => {
-          setLoading(false);
+          setLoading(undefined);
           goBack();
         },
       );
@@ -172,7 +172,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
 
   return (
     <Container useSafeArea>
-      <Loading loading={loading} />
+      <Loading loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Settings'} />
       <ScrollView style={styles.contentWrapper}>
         {items.map((item, index) => {
