@@ -9,30 +9,35 @@ import OnBoarding from '../screens/OnBoarding';
 import Wallet from '../screens/Wallet';
 import OpenWallet from './OpenWallet';
 import ImportWallet from './ImportWallet';
+import AskPinScreen from '../screens/wallet/AskPinScreen';
+import SecurityProvider from '../contexts/SecurityProvider';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const AppContainer = (props: any) => {
   return props.loaded ? (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}
-        initialRouteName={
-          props.shownWelcome === 'true' ? 'Intro' : 'OnBoarding'
-        }>
-        <Stack.Screen name="Intro" component={Intro} />
-        <Stack.Screen name="OnBoarding" component={OnBoarding} />
-        <Stack.Screen name="CreateNewWallet" component={CreateNewWallet} />
-        <Stack.Screen name="OpenWallet" component={OpenWallet} />
-        <Stack.Screen name="ImportWallet" component={ImportWallet} />
-        <Stack.Screen
-          name="Wallet"
-          component={Wallet}
-          options={{gestureEnabled: false}}
-        />
-      </Stack.Navigator>
+      <SecurityProvider>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+          initialRouteName={
+            props.shownWelcome === 'true' ? 'Intro' : 'OnBoarding'
+          }>
+          <Stack.Screen name="Intro" component={Intro} />
+          <Stack.Screen name="AskPinScreen" component={AskPinScreen} />
+          <Stack.Screen name="OnBoarding" component={OnBoarding} />
+          <Stack.Screen name="CreateNewWallet" component={CreateNewWallet} />
+          <Stack.Screen name="OpenWallet" component={OpenWallet} />
+          <Stack.Screen name="ImportWallet" component={ImportWallet} />
+          <Stack.Screen
+            name="Wallet"
+            component={Wallet}
+            options={{gestureEnabled: false}}
+          />
+        </Stack.Navigator>
+      </SecurityProvider>
     </NavigationContainer>
   ) : (
     <Loading />

@@ -7,7 +7,6 @@ import {
 import * as Keychain from 'react-native-keychain';
 import * as DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import PINCode from '@haskkor/react-native-pincode';
 import crypto from 'crypto';
 import useKeychain from '../utils/Keychain';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -20,6 +19,7 @@ import useLockedScreen from '../hooks/useLockedScreen';
 import useAsyncStorage from '../hooks/useAsyncStorage';
 import useWallet from '../hooks/useWallet';
 import {AppState} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 export const SecurityProvider = (props: any) => {
   const {lockedScreen, setLockedScreen} = useLockedScreen();
@@ -27,6 +27,7 @@ export const SecurityProvider = (props: any) => {
     'lockAfterBackground',
     'false',
   );
+  const {navigate} = useNavigation();
 
   const {refreshWallet} = useWallet();
 
@@ -213,12 +214,14 @@ export const SecurityProvider = (props: any) => {
           setSetManualPin(() => pin => {
             res(pin);
           });
+          navigate('AskPinScreen');
         });
       } else {
         return await new Promise(res => {
           setAskManualPin(() => pin => {
             res(pin);
           });
+          navigate('AskPinScreen');
         });
       }
     } else {
@@ -251,8 +254,19 @@ export const SecurityProvider = (props: any) => {
     () => ({
       supportedType,
       readPassword,
+      setManualPin,
+      setSetManualPin,
+      askManualPin,
+      setAskManualPin,
     }),
-    [readPassword, supportedType],
+    [
+      readPassword,
+      supportedType,
+      setManualPin,
+      askManualPin,
+      setSetManualPin,
+      setAskManualPin,
+    ],
   );
 
   return (
@@ -260,7 +274,16 @@ export const SecurityProvider = (props: any) => {
       {error ? (
         <Container
           useSafeArea
-          style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            width: '100%',
+            height: '100%',
+          }}>
           <Icon
             name={'warning'}
             size={scale(32)}
@@ -272,50 +295,9 @@ export const SecurityProvider = (props: any) => {
           </Text>
         </Container>
       ) : (
-        <>
-          {setManualPin ? (
-            <PINCode
-              status={'choose'}
-              passwordLength={6}
-              styleMainContainer={{backgroundColor: '#1F2933'}}
-              stylePinCodeTextTitle={{fontFamily: 'Overpass-Bold'}}
-              stylePinCodeTextSubtitle={{fontFamily: 'Overpass-Bold'}}
-              stylePinCodeDeleteButtonText={{fontFamily: 'Overpass-Bold'}}
-              stylePinCodeTextButtonCircle={{fontFamily: 'Overpass-Bold'}}
-              stylePinCodeButtonCircle={{backgroundColor: '#1F2933'}}
-              colorPassword={'#fff'}
-              subtitleChoose={'to protect the access to your wallet'}
-              storePin={async (pin: string) => {
-                setManualPin(pin);
-                setSetManualPin(undefined);
-              }}
-            />
-          ) : askManualPin ? (
-            <PINCode
-              status={'enter'}
-              passwordLength={6}
-              touchIDDisabled={true}
-              styleMainContainer={{backgroundColor: '#1F2933'}}
-              stylePinCodeTextTitle={{fontFamily: 'Overpass-Bold'}}
-              stylePinCodeTextSubtitle={{fontFamily: 'Overpass-Bold'}}
-              stylePinCodeDeleteButtonText={{fontFamily: 'Overpass-Bold'}}
-              stylePinCodeTextButtonCircle={{fontFamily: 'Overpass-Bold'}}
-              stylePinCodeButtonCircle={{backgroundColor: '#1F2933'}}
-              stylePinCodeDeleteButtonColorHideUnderlay={'#fff'}
-              stylePinCodeDeleteButtonColorShowUnderlay={'#fff'}
-              colorPassword={'#fff'}
-              subtitleChoose={'to access your wallet'}
-              endProcessFunction={async (pin: string) => {
-                askManualPin(pin);
-                setAskManualPin(undefined);
-              }}
-            />
-          ) : (
-            <></>
-          )}
-          {props.children}
-        </>
+        <></>
       )}
+      {props.children}
     </SecurityContext.Provider>
   );
 };

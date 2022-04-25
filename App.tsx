@@ -32,7 +32,6 @@ import setGlobalVars from 'indexeddbshim/dist/indexeddbshim-noninvasive';
 import useNjs from './hooks/useNjs';
 import useWin from './hooks/useWin';
 import WalletProvider from './contexts/WalletProvider';
-import SecurityProvider from './contexts/SecurityProvider';
 const win = {};
 
 setGlobalVars(win, {win: SQLite});
@@ -133,9 +132,7 @@ const App = () => {
                 backgroundColor={'#00000000'}
               />
               <WalletProvider>
-                <SecurityProvider>
-                  <AppContainer loaded={loaded} shownWelcome={shownWelcome} />
-                </SecurityProvider>
+                <AppContainer loaded={loaded} shownWelcome={shownWelcome} />
               </WalletProvider>
             </SafeAreaProvider>
           </ApplicationProvider>

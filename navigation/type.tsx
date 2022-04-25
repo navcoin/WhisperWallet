@@ -25,6 +25,7 @@ export type RootStackParamList = {
   OnBoarding: undefined;
   OpenWallet: undefined;
   ImportWallet: undefined;
+  AskPinScreen: undefined;
   Wallet: NavigatorScreenParams<WalletParamList>;
 };
 

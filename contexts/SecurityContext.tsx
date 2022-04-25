@@ -10,6 +10,10 @@ export enum SecurityAuthenticationTypes {
 export interface SecurityContextValue {
   supportedType: SecurityAuthenticationTypes;
   readPassword(): Promise<string>;
+  setManualPin: any;
+  setSetManualPin: any;
+  askManualPin: any;
+  setAskManualPin: any;
 }
 
 export const SecurityContext = createContext<SecurityContextValue | undefined>(
