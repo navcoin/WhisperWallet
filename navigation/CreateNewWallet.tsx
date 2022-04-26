@@ -81,7 +81,7 @@ const CreateNewWallet = () => {
                 <></>
               )}
               <Button
-                children="Next"
+                children="Continue"
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={async () => {
@@ -125,7 +125,7 @@ const CreateNewWallet = () => {
                 styles.bottomButtonWrapper,
               ]}>
               <Button
-                children="Next"
+                children="Continue"
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={() => {
@@ -163,7 +163,7 @@ const CreateNewWallet = () => {
             <View
               style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
               <Button
-                children="Next"
+                children="Continue"
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={() => setIndex(3)}
@@ -234,7 +234,7 @@ const CreateNewWallet = () => {
                 }}
               />
               <Button
-                children="Next"
+                children="Continue"
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={() => {
@@ -255,12 +255,12 @@ const CreateNewWallet = () => {
             </Text>
             <Text center key={'text'}>
               {'\n'}
-              You can now start using Whisper Wallet.
+              You can now start using Whisper.
             </Text>
             <View
               style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
               <Button
-                children="Next"
+                children="Continue"
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={() => {

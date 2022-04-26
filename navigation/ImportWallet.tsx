@@ -116,7 +116,7 @@ const ImportWallet = () => {
             <View style={[layoutStyles.responsiveRowComponentWidth]}>
               <Button
                 status={'primary-whisper'}
-                children="Next"
+                children="Continue"
                 style={styles.button}
                 onPress={() => {
                   if (IsValidMnemonic(mnemonic, type)) {
@@ -182,7 +182,7 @@ const ImportWallet = () => {
               <></>
             )}
             <Button
-              children="Next"
+              children="Continue"
               status={'primary-whisper'}
               style={styles.button}
               onPressOut={async () => {
@@ -222,7 +222,7 @@ const ImportWallet = () => {
             </Text>
             <Text center key={'text'}>
               {'\n'}
-              You can now start using Whisper Wallet.
+              You can now start using Whisper.
             </Text>
             <Button
               status={'primary-whisper'}
