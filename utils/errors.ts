@@ -13,24 +13,33 @@ const promptErrorToaster = (
       type: 'error',
       text1:
         'Something went wrong in the previous session. Tap for more details.',
-      onPress: () => cb ? cb() : {},
+      onPress: () => {
+        if (cb) {
+          cb()
+        }
+      },
     });
     return;
   }
   Toast.show({
     type: 'error',
     text1: 'Something went wrong. Tap for more details.',
-    onPress: () => cb ? cb() : {},
+    onPress: () => {
+      if (cb) {
+        cb()
+      }
+    },
   });
 };
 
 const errorTextParser = (e: Error | string, isFatal: boolean) => {
-  let errorMsg: string = '';
+  let errorMsg: string = `The error encountered is as below:
+  `;
   if (typeof e === 'string') {
-    errorMsg = `Error: ${isFatal ? 'Fatal:' : ''} ${e}`;
+    errorMsg += `${isFatal ? 'Fatal:' : ''} ${e}`;
   }
   if (typeof e === 'object') {
-    errorMsg = `Error: ${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}`;
+    errorMsg += `${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}`;
   }
   return errorMsg;
 

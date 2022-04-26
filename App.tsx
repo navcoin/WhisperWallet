@@ -88,7 +88,7 @@ const App = () => {
       setErrorModalContent(errorMsg);
     });
   };
-  setJSExceptionHandler(JSLeveErrorPrompt);
+  setJSExceptionHandler(JSLeveErrorPrompt, true);
 
   setNativeExceptionHandler(async errorString => {
     console.log('setNativeExceptionHandler');
@@ -182,9 +182,10 @@ const App = () => {
                 backgroundColor={'#00000000'}
               />
               <AppContainer loaded={loaded} shownWelcome={shownWelcome} />
-              {errorModalContent ? (
-                <ErrorModal errorText={errorModalContent} />
-              ) : null}
+              <ErrorModal
+                errorText={errorModalContent}
+                reset={() => setErrorModalContent('')}
+              />
               <Toast config={toastConfig} />
             </SafeAreaProvider>
           </ApplicationProvider>
