@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View, Modal as RawModal} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
 import Toast from 'react-native-toast-message';
+import toastConfig from './Toast';
 
 const Modal = (props: any) => {
   const {children, visible} = props;
@@ -16,7 +17,7 @@ const Modal = (props: any) => {
         blurType="dark"
         blurAmount={10}
         reducedTransparencyFallbackColor="white">
-        <Toast />
+        <Toast config={toastConfig} />
         <View style={styles.contentContainer}>
           {!!children ? children : <></>}
         </View>
