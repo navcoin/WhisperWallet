@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {BackHandler, StyleSheet, View} from 'react-native';
 import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
@@ -17,6 +17,11 @@ import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
 
+function useArrayRef() {
+  const refs = [];
+  return [refs, el => el && refs.push(el)];
+}
+
 const CreateNewWallet = () => {
   const {goBack, navigate} = useNavigation();
   const [index, setIndex] = useState(0);
@@ -27,6 +32,7 @@ const CreateNewWallet = () => {
   const [network, setNetwork] = useState('mainnet');
   const {njs} = useNjs();
   const {read} = useKeychain();
+  const [elements, ref] = useArrayRef();
 
   const [words, setWords] = useState<string[]>(new Array(12));
 
@@ -199,12 +205,17 @@ const CreateNewWallet = () => {
                       {wordpos + 1}
                     </Text>
                     <Input
+                      ref={ref}
                       textAlign={'center'}
                       key={'word' + wordpos}
                       size="small"
                       style={{width: scale(120), padding: 0}}
                       autoCapitalize="none"
                       value={words[wordpos]}
+                      onSubmitEditing={() => {
+                        if (elements[wordpos + 1])
+                          elements[wordpos + 1].focus();
+                      }}
                       onChangeText={(name: string) => {
                         let newWords = [...words];
                         newWords[wordpos] = name.toLowerCase();
