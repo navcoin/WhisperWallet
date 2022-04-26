@@ -9,8 +9,8 @@ type EmailOptions = {
   bcc?: Email;
 };
 
-const getDeviceInfo = () => {
-  let os = DeviceInfo.getBaseOs();
+const getDeviceInfo = async () => {
+  let os = await DeviceInfo.getBaseOs();
   let brand = DeviceInfo.getBrand();
   let systemVersion = DeviceInfo.getSystemVersion();
   let model = DeviceInfo.getModel();
@@ -22,11 +22,11 @@ export async function sendErrorCrashEmail(
   isFatal: boolean = true,
 ) {
   let error = typeof e === 'string' ? e : `${e.name} ${e.message}`;
-  let deviceInfo = getDeviceInfo();
+  let deviceInfo = await getDeviceInfo();
   sendEmail(
     'dev@whisperwallet.net',
     'My Whisper Wallet crashed!',
-    `Hello Whisper Development Team, <br>My Whisper Wallet got some issues. <br><br>Here is my device info:<br>OS:${deviceInfo.os}<br>Version:${deviceInfo.systemVersion}<br>Brand:${deviceInfo.brand}<br>Model:${deviceInfo.model}<br><br><br>.The error is as below: <br>Error: 
+    `Hello Whisper Development Team, <br>My Whisper Wallet got some issues. <br><br>Here is my device info:<br>OS:${deviceInfo.os}<br>Version:${deviceInfo.systemVersion}<br>Brand:${deviceInfo.brand}<br>Model:${deviceInfo.model}<br><br><br>The error is as below: <br> 
     ${isFatal ? 'Fatal:' : ''} ${error}`,
   ).then(() => {
     console.log('Your message was successfully sent!');
