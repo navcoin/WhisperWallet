@@ -1,13 +1,12 @@
-import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Button, Input, useTheme} from '@tsejerome/ui-kitten-components';
+import React, {useCallback, useEffect, useState} from 'react';
+import {BackHandler, StyleSheet, View} from 'react-native';
+import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 
 import Text from '../components/Text';
 import Container from '../components/Container';
 import AnimatedStep from '../components/AnimatedStep';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
 import Loading from '../components/Loading';
 import useNjs from '../hooks/useNjs';
@@ -20,7 +19,7 @@ import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
 
 const ImportWallet = () => {
-  const {navigate} = useNavigation();
+  const {navigate, goBack} = useNavigation();
   const [index, setIndex] = useState(0);
   const [walletName, setWalletName] = useState('');
   const [mnemonic, setMnemonic] = useState('');
@@ -32,10 +31,27 @@ const ImportWallet = () => {
   const {njs} = useNjs();
   const {read} = useKeychain();
 
+  const onBackPress = useCallback(() => {
+    if (index == 0) {
+      goBack();
+    } else {
+      setIndex(index - 1);
+    }
+    return true;
+  }, [index]);
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    };
+  }, []);
+
   return (
     <Container useSafeArea>
       <Loading loading={!!loading} text={loading} />
-      <TopNavigationComponent title={'Import Wallet'} />
+      <TopNavigationComponent title={'Import Wallet'} pressBack={onBackPress} />
       <AnimatedStep style={styles.animatedStep} step={index} />
 
       <View style={styles.container}>
@@ -50,7 +66,9 @@ const ImportWallet = () => {
 
             {WalletTypes.map((el, index) => {
               return (
-                <View style={[layoutStyles.responsiveColumnComponentWidth]} key={el[1]}>
+                <View
+                  style={[layoutStyles.responsiveColumnComponentWidth]}
+                  key={el[1]}>
                   <OptionCard
                     item={{text: el[1]}}
                     index={index}

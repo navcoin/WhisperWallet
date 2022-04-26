@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {BackHandler, StyleSheet, View} from 'react-native';
 import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 import Text from '../components/Text';
@@ -16,7 +16,6 @@ import Mnemonic from '../components/Mnemonic';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
-import useLayout from '../hooks/useLayout';
 
 const CreateNewWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -27,14 +26,30 @@ const CreateNewWallet = () => {
   const [error, setError] = useState('');
   const [network, setNetwork] = useState('mainnet');
   const {njs} = useNjs();
-  const {height} = useLayout();
   const {read} = useKeychain();
 
   const [words, setWords] = useState<string[]>(new Array(12));
 
+  const onBackPress = useCallback(() => {
+    if (index == 0) {
+      goBack();
+    } else {
+      setIndex(index - 1);
+    }
+    return true;
+  }, [index]);
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    };
+  }, []);
+
   return (
     <Container useSafeArea>
-      <TopNavigationComponent title={'New Wallet'} />
+      <TopNavigationComponent title={'New Wallet'} pressBack={onBackPress} />
       <KeyboardAwareScrollView
         contentContainerStyle={{flexGrow: 1}}
         enableOnAndroid
@@ -54,7 +69,7 @@ const CreateNewWallet = () => {
                 value={walletName}
                 onChangeText={(name: string) => {
                   setError('');
-                  setWalletName(name);
+                  setWalletName(name.trim());
                 }}
               />
               {error ? (
@@ -86,7 +101,8 @@ const CreateNewWallet = () => {
             </Text>
             {NetworkTypes.map((el, index) => {
               return (
-                <View style={[layoutStyles.responsiveColumnComponentWidth]}
+                <View
+                  style={[layoutStyles.responsiveColumnComponentWidth]}
                   key={el[0]}>
                   <OptionCard
                     key={el[0]}

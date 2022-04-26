@@ -38,9 +38,6 @@ const OpenWallet = () => {
       <Loading loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Open Wallet'} />
       <View style={styles.container}>
-        <Text category="title4" center marginBottom={32}>
-          Select which wallet you want to open:
-        </Text>
         <KeyboardAwareScrollView
           style={styles.content}
           enableOnAndroid
