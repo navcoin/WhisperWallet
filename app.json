@@ -1,5 +1,5 @@
 {
-  "name": "Whisper Wallet",
+  "name": "Whisper",
   "android": {
     "package": "net.whisperwallet.wallet"
   },
