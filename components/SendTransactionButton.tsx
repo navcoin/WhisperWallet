@@ -121,7 +121,7 @@ const SendTransactionButton = (props: any) => {
                 bottomSheet.expand(
                   <BottomSheetView>
                     <Text center style={{paddingBottom: 16}}>
-                      ERROR
+                      Unable to create transaction
                     </Text>
                     <Text center style={{paddingBottom: 16}}>
                       {e.message}
