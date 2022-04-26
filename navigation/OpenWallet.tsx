@@ -16,22 +16,13 @@ import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 
 const OpenWallet = () => {
-  const {goBack, navigate} = useNavigation();
-  const {width, bottom} = useLayout();
-  const [walletName, setWalletName] = useState('');
-  const {createWallet} = useWallet();
+  const {navigate} = useNavigation();
+  const [walletName] = useState('');
+  const {createWallet, walletsList} = useWallet();
   const [loading, setLoading] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
   const {njs} = useNjs();
   const {read} = useKeychain();
-
-  const [walletList, setWalletList] = useState<any>([]);
-
-  useEffect(() => {
-    njs.wallet.WalletFile.ListWallets().then(list => {
-      setWalletList(list);
-    });
-  }, []);
 
   return (
     <Container useSafeArea>
@@ -43,7 +34,7 @@ const OpenWallet = () => {
           enableOnAndroid
           keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}>
-          {walletList.map((el, index) => {
+          {walletsList.sort().map((el, index) => {
             return (
               <View
                 style={[layoutStyles.responsiveColumnComponentWidth]}

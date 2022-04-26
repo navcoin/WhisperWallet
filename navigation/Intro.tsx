@@ -12,27 +12,12 @@ import {Images} from '../assets/images';
 import {RootStackParamList} from './type';
 import useNjs from '../hooks/useNjs';
 import useKeychain from '../utils/Keychain';
+import useWallet from '../hooks/useWallet';
 
 const Intro = memo(props => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
   const styles = useStyleSheet(themedStyles);
-  const [walletList, setWalletList] = useState<any>([]);
-  const {njs} = useNjs();
-
-  useEffect(() => {
-    refreshWalletList();
-    const willFocusSubscription = props.navigation.addListener('focus', () => {
-      refreshWalletList();
-    });
-
-    return willFocusSubscription;
-  });
-
-  const refreshWalletList = () => {
-    njs.wallet.WalletFile.ListWallets().then(list => {
-      setWalletList(list);
-    });
-  };
+  const {walletsList} = useWallet();
 
   return (
     <Container style={styles.container}>
@@ -72,7 +57,7 @@ const Intro = memo(props => {
               navigate('ImportWallet');
             }}
           />
-          {walletList.length > 0 ? (
+          {walletsList.length > 0 ? (
             <Button
               children="Open wallet"
               style={[styles.wallet]}
