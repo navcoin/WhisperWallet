@@ -8,7 +8,7 @@ const promptErrorToaster = (
   isPreviousSession: boolean = false,
   cb?: () => void
 ) => {
-  if (!isPreviousSession) {
+  if (isPreviousSession) {
     Toast.show({
       type: 'error',
       text1:
