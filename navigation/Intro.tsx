@@ -7,20 +7,17 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import Text from '../components/Text';
 import Content from '../components/Content';
 import Container from '../components/Container';
-import Button from '../components/Button';
+import {Button} from '@tsejerome/ui-kitten-components';
 import {Images} from '../assets/images';
 import {RootStackParamList} from './type';
 import useNjs from '../hooks/useNjs';
 import useKeychain from '../utils/Keychain';
-import {layoutStyles, maxComponentWidth} from '../utils/layout';
-import Loading from '../components/Loading';
 
 const Intro = memo(props => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
   const styles = useStyleSheet(themedStyles);
   const [walletList, setWalletList] = useState<any>([]);
   const {njs} = useNjs();
-  const {read} = useKeychain();
 
   useEffect(() => {
     refreshWalletList();
