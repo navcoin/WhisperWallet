@@ -52,13 +52,29 @@ const Intro = memo(props => {
             marginRight={0}
             marginBottom={8}
             center>
-            Whisper Wallet
+            Whisper
           </Text>
           <View style={styles.spacer} />
 
+          <Button
+            children="New wallet"
+            style={[styles.wallet]}
+            status="primary-whisper"
+            onPress={() => {
+              navigate('CreateNewWallet');
+            }}
+          />
+          <Button
+            children="Import wallet"
+            style={[styles.wallet]}
+            status="primary-whisper"
+            onPress={() => {
+              navigate('ImportWallet');
+            }}
+          />
           {walletList.length > 0 ? (
             <Button
-              children="Open"
+              children="Open wallet"
               style={[styles.wallet]}
               status="primary-whisper"
               onPress={() => {
@@ -68,22 +84,6 @@ const Intro = memo(props => {
           ) : (
             <></>
           )}
-          <Button
-            children="New"
-            style={[styles.wallet]}
-            status="primary-whisper"
-            onPress={() => {
-              navigate('CreateNewWallet');
-            }}
-          />
-          <Button
-            children="Import"
-            style={[styles.wallet]}
-            status="primary-whisper"
-            onPress={() => {
-              navigate('ImportWallet');
-            }}
-          />
         </View>
       </Content>
     </Container>
