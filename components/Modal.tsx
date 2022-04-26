@@ -1,16 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Modal as RawModal} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
-
-export enum ModalType {
-  'LoadingModal' = 'LoadingModal',
-  'InfoModal' = 'InfoModal',
-}
-
-interface ModalProps {
-  children: JSX.Element;
-  visible: boolean;
-}
+import Toast from 'react-native-toast-message';
 
 const Modal = (props: any) => {
   const {children, visible} = props;
@@ -25,6 +16,7 @@ const Modal = (props: any) => {
         blurType="dark"
         blurAmount={10}
         reducedTransparencyFallbackColor="white">
+        <Toast />
         <View style={styles.contentContainer}>
           {!!children ? children : <></>}
         </View>
