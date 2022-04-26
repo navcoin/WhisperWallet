@@ -22,20 +22,20 @@ const SendTransactionButton = (props: any) => {
   const {walletName, from, to, amount, memo, subtractFee} = props;
   const {createTransaction, sendTransaction, wallet} = useWallet();
   const {read} = useKeychain();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<string | undefined>(undefined);
   const bottomSheet = useBottomSheet();
   const {goBack} = useNavigation<NavigationProp<RootStackParamList>>();
   const {collapse} = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
   return (
     <>
-      <Loading loading={loading}></Loading>
+      <Loading loading={!!loading} text={loading}></Loading>
       <Button
         status={'primary-whisper'}
         activeOpacity={0.7}
         children="Send"
         onPress={() => {
-          setLoading(true);
+          setLoading('Creating transaction...');
           read(walletName).then((password: string) => {
             createTransaction(
               from.type_id,
@@ -49,7 +49,7 @@ const SendTransactionButton = (props: any) => {
               props.nftId,
             )
               .then((tx: any) => {
-                setLoading(false);
+                setLoading(undefined);
                 bottomSheet.expand(
                   <BottomSheetView>
                     <TopNavigation title="Confirm Transaction" />
@@ -104,9 +104,9 @@ const SendTransactionButton = (props: any) => {
                     <SwipeButton
                       goBackToStart={true}
                       onComplete={() => {
-                        setLoading(true);
+                        setLoading('Broadcasting...');
                         sendTransaction(tx.tx).then(() => {
-                          setLoading(false);
+                          setLoading(undefined);
                           collapse();
                           goBack();
                         });
@@ -128,7 +128,7 @@ const SendTransactionButton = (props: any) => {
                     </Text>
                   </BottomSheetView>,
                 );
-                setLoading(false);
+                setLoading(undefined);
               });
           });
         }}

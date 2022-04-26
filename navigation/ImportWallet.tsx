@@ -20,22 +20,21 @@ import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
 
 const ImportWallet = () => {
-  const {goBack, navigate} = useNavigation();
-  const theme = useTheme();
+  const {navigate} = useNavigation();
   const [index, setIndex] = useState(0);
   const [walletName, setWalletName] = useState('');
   const [mnemonic, setMnemonic] = useState('');
   const [network, setNetwork] = useState('mainnet');
   const [type, setType] = useState('');
   const {createWallet} = useWallet();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
   const {njs} = useNjs();
   const {read} = useKeychain();
 
   return (
     <Container useSafeArea>
-      <Loading loading={loading} />
+      <Loading loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Import Wallet'} />
       <AnimatedStep style={styles.animatedStep} step={index} />
 
@@ -51,7 +50,7 @@ const ImportWallet = () => {
 
             {WalletTypes.map((el, index) => {
               return (
-                <View style={[layoutStyles.responsiveColumnComponentWidth]}>
+                <View style={[layoutStyles.responsiveColumnComponentWidth]} key={el[1]}>
                   <OptionCard
                     item={{text: el[1]}}
                     index={index}
@@ -170,9 +169,9 @@ const ImportWallet = () => {
                 if (walletList.indexOf(walletName) > -1) {
                   setError('There is already a wallet with that name.');
                 } else if (walletName) {
-                  setLoading(true);
                   read(walletName)
                     .then((password: string) => {
+                      setLoading('Creating wallet keys...');
                       createWallet(
                         walletName,
                         mnemonic,
@@ -183,13 +182,13 @@ const ImportWallet = () => {
                         true,
                         network,
                         () => {
-                          setLoading(false);
+                          setLoading(undefined);
                           setIndex(4);
                         },
                       );
                     })
                     .catch((e: any) => {
-                      setLoading(false);
+                      setLoading(undefined);
                     });
                 }
               }}

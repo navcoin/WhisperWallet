@@ -55,6 +55,7 @@ const AssetIconsPack: IconPack<ImageProps | SvgProps> = {
     search16: createIcon(Icons.search16),
     addNew: createIcon(Icons.addNew),
     menu: createIcon(Icons.menu),
+    menuBtn: createIcon(Icons.menuBtn),
     fire: createIcon(Icons.fire),
     chat: createIcon(Icons.chat),
     edit: createIcon(Icons.edit),
