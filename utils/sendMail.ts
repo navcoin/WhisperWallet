@@ -24,7 +24,7 @@ export async function sendErrorCrashEmail(
   let error = typeof e === 'string' ? e : `${e.name} ${e.message}`;
   let deviceInfo = getDeviceInfo();
   sendEmail(
-    'tsejerome1997@gmail.com',
+    'dev@whisperwallet.net',
     'My Whisper Wallet crashed!',
     `Hello Whisper Development Team, <br>My Whisper Wallet got some issues. <br><br>Here is my device info:<br>OS:${deviceInfo.os}<br>Version:${deviceInfo.systemVersion}<br>Brand:${deviceInfo.brand}<br>Model:${deviceInfo.model}<br><br><br>.The error is as below: <br>Error: 
     ${isFatal ? 'Fatal:' : ''} ${error}`,

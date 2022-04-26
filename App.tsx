@@ -65,21 +65,21 @@ const currentJSErrorHandler = (e: Error | string, isFatal: boolean) => {
       text: 'Send report via Email',
       onPress: () => {
         sendErrorCrashEmail(e, isFatal);
-        RNRestart.Restart();
+        // setTimeout(() => RNRestart.Restart(), 10000);
       },
     },
     {
       text: 'Copy Error',
       onPress: () => {
         Clipboard.setString(errorMsg);
-        RNRestart.Restart();
+        // setTimeout(() => RNRestart.Restart(), 10000);
       },
     },
     {
       text: 'Close',
       onPress: () => {
         if (!__DEV__) {
-          RNRestart.Restart();
+          // setTimeout(() => RNRestart.Restart(), 10000);
         }
       },
     },
