@@ -2096,6 +2096,13 @@
   dependencies:
     merge-options "^3.0.4"
 
+"@react-native-community/blur@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/blur/-/blur-3.6.0.tgz#31c9e0f2770519c9b5c4f99418f192246f0d4db8"
+  integrity sha512-GtDBhpX2pQcjl4VopOC8FktrVufrEfYRwVeMQ2WWckqKIv2BdwvlvWvj88L1WmEdBr9UNcm3rtgz+d+YXkmirA==
+  dependencies:
+    prop-types "^15.5.10"
+
 "@react-native-community/cli-debugger-ui@^6.0.0-rc.0":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-debugger-ui/-/cli-debugger-ui-6.0.0.tgz#ef9eb1268d85c1bd3caf2c4d36dc350bb080f254"
@@ -10625,10 +10632,10 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-navcoin-js@^1.1.94:
-  version "1.1.94"
-  resolved "https://registry.yarnpkg.com/navcoin-js/-/navcoin-js-1.1.94.tgz#ab8a822a81a1bbc3f9177ee609890de25bad7265"
-  integrity sha512-rxWieKyfTDNFl8jIXIAZCLc4+MUfms7XRUx2H8mkAc7sWppBLepzt6fKQJ2f+NmQKnQb/wZgU/D6VlHcfU5tjA==
+navcoin-js@^1.1.96:
+  version "1.1.96"
+  resolved "https://registry.yarnpkg.com/navcoin-js/-/navcoin-js-1.1.96.tgz#ecb4f0fecec64499d4292b78b0f23c9e8185fd83"
+  integrity sha512-vssLd1VDVQEFs3cpyoJyuKP+2dm8o7YGe2jCbT8w4cT+cl1OTrhs3ozR6XUMBrUPPO3hh922zhQSMV0xj0BmBQ==
   dependencies:
     "@aguycalled/bitcore-lib" "^0.15.99"
     "@aguycalled/bitcore-message" "^1.0.4"
@@ -13114,10 +13121,10 @@ react-native-tcp@^3.3.2:
     process "^0.11.9"
     util "^0.10.3"
 
-react-native-toast-notifications@^3.2.3:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/react-native-toast-notifications/-/react-native-toast-notifications-3.2.3.tgz#495f8472f3b9cdbad211c3f9144c5f23a3d33ca3"
-  integrity sha512-fxIQNAp6xN7inGRb/apE71EyqrW9pPIxnzZ7Cacv1XwLtz0bP1zkC4WvPfpxijZg73fhGi0vHMR/7WJez7PYyw==
+react-native-toast-message@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-toast-message/-/react-native-toast-message-2.1.5.tgz#550acb9c6c0f1ee49c6b57b65a56d34e297eb723"
+  integrity sha512-mk3rELtBEhrhWBCN6CTaw0gypgL9ZNauX3xx1LUs4uee9vc0pVsghrKxO57vroUCcNL2hDeZSLJWdQNMCkGeaQ==
 
 react-native-udp@^2.7.0:
   version "2.7.0"

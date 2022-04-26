@@ -8,6 +8,7 @@
     "start": "expo start --dev-client",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "dev-ios": "npx react-native run-ios --simulator=\"iPhone 13 Pro\"",
     "generate-splash": "npx react-native generate-bootsplash 'assets/logos/splash/default.png' --background-color '#1F2933' --assets-path 'assets/logos/splash' --logo-width=200 ",
     "postinstall": "patch-package;rm -rf ./node_modules/@aguycalled/bitcore-lib/node_modules/react-native-mcl"
   },
@@ -76,7 +77,7 @@
     "react-native-sqlite-2": "^3.5.0",
     "react-native-svg": "^12.3.0",
     "react-native-tcp-socket": "^5.5.0",
-    "react-native-toast-notifications": "^3.2.3",
+    "react-native-toast-message": "^2.1.5",
     "react-native-web-refresh-control": "^1.1.0",
     "react-spring": "^9.4.2",
     "readable-stream": "^1.0.33",

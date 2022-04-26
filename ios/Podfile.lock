@@ -233,6 +233,8 @@ PODS:
     - glog
   - react-native-background-timer (2.4.1):
     - React-Core
+  - react-native-blur (0.8.0):
+    - React
   - react-native-camera (4.2.1):
     - React-Core
     - react-native-camera/RCT (= 4.2.1)
@@ -407,6 +409,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-background-timer (from `../node_modules/react-native-background-timer`)
+  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-mcl (from `../node_modules/react-native-mcl`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
@@ -504,6 +507,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-background-timer:
     :path: "../node_modules/react-native-background-timer"
+  react-native-blur:
+    :path: "../node_modules/@react-native-community/blur"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
   react-native-mcl:
@@ -604,6 +609,7 @@ SPEC CHECKSUMS:
   React-jsinspector: d0374f7509d407d2264168b6d0fad0b54e300b85
   React-logger: 933f80c97c633ee8965d609876848148e3fef438
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
+  react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-mcl: f46f5176c97294a269e8c188ee199b4c1e762167
   react-native-pager-view: b1914469643f40042e65d78cbf3d3dfebd6fb0d9
@@ -641,4 +647,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 3447a3845589ec87b8baa05c4aa3c41e89ec0d05
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.3
