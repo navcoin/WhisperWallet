@@ -25,7 +25,17 @@ export async function sendErrorCrashEmail(
   sendEmail(
     'dev@whisperwallet.net',
     'My Whisper Wallet crashed!',
-    `Hello Whisper Development Team, <br>My Whisper Wallet got some issues. <br><br>Here is my device info:<br>OS:${deviceInfo.os}<br>Version:${deviceInfo.systemVersion}<br>Brand:${deviceInfo.brand}<br>Model:${deviceInfo.model}<br><br><br>The error is as below: <br> 
+    `Hello Whisper Development Team, 
+    My Whisper Wallet got some issues.
+    
+    Here is my device info:
+    OS:${deviceInfo.os}
+    Version:${deviceInfo.systemVersion}
+    Brand:${deviceInfo.brand}
+    Model:${deviceInfo.model}
+    
+    
+    The error is as below: 
     ${isFatal ? 'Fatal:' : ''} ${e}`,
   ).then(() => {
     console.log('Your message was successfully sent!');
