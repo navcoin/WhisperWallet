@@ -55,7 +55,7 @@ const CreateNewWallet = () => {
 
   return (
     <Container useSafeArea>
-      <TopNavigationComponent title={'New Wallet'} pressBack={onBackPress} />
+      <TopNavigationComponent title={'New wallet'} pressBack={onBackPress} />
       <KeyboardAwareScrollView
         contentContainerStyle={{flexGrow: 1}}
         enableOnAndroid
@@ -67,7 +67,7 @@ const CreateNewWallet = () => {
         {index == 0 ? (
           <View style={[styles.container, styles.horizontalPadding24]}>
             <Text category="title4" center marginBottom={32}>
-              Choose a name for the wallet
+              Choose a name
             </Text>
             <View style={[styles.layout]}>
               <Input

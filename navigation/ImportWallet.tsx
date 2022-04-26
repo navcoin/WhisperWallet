@@ -51,7 +51,7 @@ const ImportWallet = () => {
   return (
     <Container useSafeArea>
       <Loading loading={!!loading} text={loading} />
-      <TopNavigationComponent title={'Import Wallet'} pressBack={onBackPress} />
+      <TopNavigationComponent title={'Import wallet'} pressBack={onBackPress} />
       <AnimatedStep style={styles.animatedStep} step={index} />
 
       <View style={styles.container}>

@@ -36,7 +36,7 @@ const AddressScreen = (props: any) => {
 
   return (
     <Container>
-      <TopNavigationComponent title={addressType.destination_id + ' Address'} />
+      <TopNavigationComponent title={addressType.destination_id + ' address'} />
       <Container
         style={{
           flex: 1,

@@ -27,7 +27,7 @@ const OpenWallet = () => {
   return (
     <Container useSafeArea>
       <Loading loading={!!loading} text={loading} />
-      <TopNavigationComponent title={'Open Wallet'} />
+      <TopNavigationComponent title={'Open wallet'} />
       <View style={styles.container}>
         <KeyboardAwareScrollView
           style={styles.content}
