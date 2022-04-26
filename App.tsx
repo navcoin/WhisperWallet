@@ -109,8 +109,8 @@ const App = () => {
 
   const previousNativeErrorHandler = (errorMessage: string) => {
     Alert.alert(
-      'There was an unexpected error occurred in the previous app launch',
-      'Do you want to send a report to Whisper Team?',
+      'There was an unexpected error during the previous session.',
+      'Do you want to send a report to the Whisper development team?',
       [
         {
           text: 'Send Report via Email',
