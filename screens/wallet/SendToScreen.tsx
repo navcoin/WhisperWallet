@@ -139,7 +139,7 @@ const SendToScreen = (props: any) => {
                   ...el,
                   text:
                     el.name +
-                    ' Account (' +
+                    ' account (' +
                     el.spendable_amount +
                     ' ' +
                     el.currency +
