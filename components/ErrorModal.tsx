@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Clipboard, StyleSheet, View} from 'react-native';
+import {Clipboard, StyleSheet, View} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import Toast from 'react-native-toast-message';
 import {sendErrorCrashEmail} from '../utils/sendMail';
 import Button from './Button';
-import Modal, {ModalType} from './Modal';
+import Modal from './Modal';
 import Text from './Text';
 
 const ErrorModal = (props: any) => {

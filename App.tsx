@@ -3,11 +3,10 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {Alert, StatusBar} from 'react-native';
+import {StatusBar} from 'react-native';
 import {patchFlatListProps} from 'react-native-web-refresh-control';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import RNRestart from 'react-native-restart';
 import ThemeContext from './ThemeContext';
 import * as eva from '@eva-design/eva';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
@@ -21,7 +20,6 @@ import {default as lightTheme} from './constants/theme/light.json';
 import {default as customTheme} from './constants/theme/appTheme.json';
 import {default as customMapping} from './constants/theme/mapping.json';
 import AppContainer from './navigation/AppContainer';
-// import SplashScreen from 'react-native-splash-screen';
 import RNBootSplash from 'react-native-bootsplash';
 
 patchFlatListProps();
@@ -37,12 +35,9 @@ import {
   setJSExceptionHandler,
   setNativeExceptionHandler,
 } from 'react-native-exception-handler';
-import {sendErrorCrashEmail, sendMessageEmail} from './utils/sendMail';
-import Clipboard from '@react-native-community/clipboard';
+
 import Toast from 'react-native-toast-message';
 import toastConfig from './components/Toast';
-import Loading from './components/Loading';
-import Modal from './components/Modal';
 import ErrorModal from './components/ErrorModal';
 import {errorTextParser, promptErrorToaster} from './utils/errors';
 const win = {};

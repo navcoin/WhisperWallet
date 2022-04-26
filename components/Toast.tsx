@@ -1,12 +1,6 @@
 import {useTheme} from '@tsejerome/ui-kitten-components';
 import React from 'react';
-import {View, Text} from 'react-native';
-import Toast, {
-  BaseToast,
-  BaseToastProps,
-  ErrorToast,
-  InfoToast,
-} from 'react-native-toast-message';
+import {BaseToast, BaseToastProps} from 'react-native-toast-message';
 
 enum ToastType {
   'success' = 'success',

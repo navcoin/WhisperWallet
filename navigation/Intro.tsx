@@ -12,15 +12,12 @@ import {Images} from '../assets/images';
 import {RootStackParamList} from './type';
 import useNjs from '../hooks/useNjs';
 import useKeychain from '../utils/Keychain';
-import {layoutStyles, maxComponentWidth} from '../utils/layout';
-import Loading from '../components/Loading';
 
 const Intro = memo(props => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
   const styles = useStyleSheet(themedStyles);
   const [walletList, setWalletList] = useState<any>([]);
   const {njs} = useNjs();
-  const {read} = useKeychain();
 
   useEffect(() => {
     refreshWalletList();
