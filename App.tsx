@@ -24,8 +24,6 @@ import AppContainer from './navigation/AppContainer';
 // import SplashScreen from 'react-native-splash-screen';
 import RNBootSplash from 'react-native-bootsplash';
 
-import {ToastProvider} from 'react-native-toast-notifications';
-
 patchFlatListProps();
 
 import SQLite from 'react-native-sqlite-2';
@@ -41,6 +39,12 @@ import {
 } from 'react-native-exception-handler';
 import {sendErrorCrashEmail, sendMessageEmail} from './utils/sendMail';
 import Clipboard from '@react-native-community/clipboard';
+import Toast from 'react-native-toast-message';
+import toastConfig from './components/Toast';
+import Loading from './components/Loading';
+import Modal from './components/Modal';
+import ErrorModal from './components/ErrorModal';
+import {errorTextParser, promptErrorToaster} from './utils/errors';
 const win = {};
 
 setGlobalVars(win, {win: SQLite});
@@ -48,51 +52,6 @@ setGlobalVars(win, {win: SQLite});
 win.indexedDB.__useShim();
 const njs = require('navcoin-js');
 const P2pPool = require('@aguycalled/bitcore-p2p').Pool;
-
-const currentJSErrorHandler = (e: Error | string, isFatal: boolean) => {
-  let errorMsg: string = '';
-  if (typeof e === 'string') {
-    errorMsg = `Error: ${isFatal ? 'Fatal:' : ''} ${e}
-    Please close the app and start again!`;
-  }
-  if (typeof e === 'object') {
-    errorMsg = `Error: ${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}
-    Please close the app and start again!`;
-  }
-
-  Alert.alert('Unexpected error occurred', errorMsg, [
-    {
-      text: 'Send report via Email',
-      onPress: () => {
-        sendErrorCrashEmail(e, isFatal);
-        // setTimeout(() => RNRestart.Restart(), 10000);
-      },
-    },
-    {
-      text: 'Copy Error',
-      onPress: () => {
-        Clipboard.setString(errorMsg);
-        // setTimeout(() => RNRestart.Restart(), 10000);
-      },
-    },
-    {
-      text: 'Close',
-      onPress: () => {
-        if (!__DEV__) {
-          // setTimeout(() => RNRestart.Restart(), 10000);
-        }
-      },
-    },
-  ]);
-};
-
-setJSExceptionHandler(currentJSErrorHandler, true);
-
-setNativeExceptionHandler(async errorString => {
-  console.log('setNativeExceptionHandler');
-  console.log(errorString);
-  await AsyncStorage.setItem('crashErrorRecords', errorString);
-});
 
 const App = () => {
   const [theme, setTheme] = React.useState<'light' | 'dark'>('dark');
@@ -106,34 +65,14 @@ const App = () => {
   );
 
   const [shownWelcome, setShownWelcome] = useState('false');
+  const [errorModalContent, setErrorModalContent] = useState('');
 
   const previousNativeErrorHandler = (errorMessage: string) => {
-    Alert.alert(
-      'There was an unexpected error during the previous session.',
-      'Do you want to send a report to the Whisper development team?',
-      [
-        {
-          text: 'Send Report via Email',
-          onPress: () => {
-            sendErrorCrashEmail(errorMessage, true);
-            setCrashErrorRecords('');
-          },
-        },
-        {
-          text: 'Copy Error',
-          onPress: () => {
-            Clipboard.setString(errorMessage);
-            setCrashErrorRecords('');
-          },
-        },
-        {
-          text: 'Close',
-          onPress: () => {
-            setCrashErrorRecords('');
-          },
-        },
-      ],
-    );
+    setCrashErrorRecords('');
+    promptErrorToaster(errorMessage, true, true, () => {
+      const errorMsg = errorTextParser(errorMessage, true);
+      setErrorModalContent(errorMsg);
+    });
   };
 
   const checkIfAppHadCrashed = async () => {
@@ -142,6 +81,20 @@ const App = () => {
     }
     previousNativeErrorHandler(crashErrorRecords);
   };
+
+  const JSLeveErrorPrompt = (error: Error | string, isFatal: boolean) => {
+    promptErrorToaster(error, isFatal, false, () => {
+      const errorMsg = errorTextParser(error, isFatal);
+      setErrorModalContent(errorMsg);
+    });
+  };
+  setJSExceptionHandler(JSLeveErrorPrompt);
+
+  setNativeExceptionHandler(async errorString => {
+    console.log('setNativeExceptionHandler');
+    console.log(errorString);
+    await AsyncStorage.setItem('crashErrorRecords', errorString);
+  });
 
   useEffect(() => {
     AsyncStorage.getItem('shownWelcome').then(itemValue => {
@@ -212,28 +165,30 @@ const App = () => {
     <SafeAreaProvider>
       <ThemeContext.Provider value={{theme, toggleTheme}}>
         <IconRegistry icons={[AssetIconsPack, EvaIconsPack]} />
-        <ToastProvider offset={50} style={{borderRadius: 20, opacity: 0.8}}>
-          <WalletProvider>
-            <ApplicationProvider
-              {...eva}
-              theme={
-                theme === 'light'
-                  ? {...eva.light, ...customTheme, ...lightTheme}
-                  : {...eva.dark, ...customTheme, ...darkTheme}
-              }
-              /* @ts-ignore */
-              customMapping={customMapping}>
-              <SafeAreaProvider>
-                <StatusBar
-                  barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
-                  translucent={true}
-                  backgroundColor={'#00000000'}
-                />
-                <AppContainer loaded={loaded} shownWelcome={shownWelcome} />
-              </SafeAreaProvider>
-            </ApplicationProvider>
-          </WalletProvider>
-        </ToastProvider>
+        <WalletProvider>
+          <ApplicationProvider
+            {...eva}
+            theme={
+              theme === 'light'
+                ? {...eva.light, ...customTheme, ...lightTheme}
+                : {...eva.dark, ...customTheme, ...darkTheme}
+            }
+            /* @ts-ignore */
+            customMapping={customMapping}>
+            <SafeAreaProvider>
+              <StatusBar
+                barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+                translucent={true}
+                backgroundColor={'#00000000'}
+              />
+              <AppContainer loaded={loaded} shownWelcome={shownWelcome} />
+              {errorModalContent ? (
+                <ErrorModal errorText={errorModalContent} />
+              ) : null}
+              <Toast config={toastConfig} />
+            </SafeAreaProvider>
+          </ApplicationProvider>
+        </WalletProvider>
       </ThemeContext.Provider>
     </SafeAreaProvider>
   );

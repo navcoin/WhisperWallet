@@ -18,16 +18,15 @@ const getDeviceInfo = async () => {
 }
 
 export async function sendErrorCrashEmail(
-  e: Error | string,
+  e: string,
   isFatal: boolean = true,
 ) {
-  let error = typeof e === 'string' ? e : `${e.name} ${e.message}`;
   let deviceInfo = await getDeviceInfo();
   sendEmail(
     'dev@whisperwallet.net',
     'My Whisper Wallet crashed!',
     `Hello Whisper Development Team, <br>My Whisper Wallet got some issues. <br><br>Here is my device info:<br>OS:${deviceInfo.os}<br>Version:${deviceInfo.systemVersion}<br>Brand:${deviceInfo.brand}<br>Model:${deviceInfo.model}<br><br><br>The error is as below: <br> 
-    ${isFatal ? 'Fatal:' : ''} ${error}`,
+    ${isFatal ? 'Fatal:' : ''} ${e}`,
   ).then(() => {
     console.log('Your message was successfully sent!');
   });
