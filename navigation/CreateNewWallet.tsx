@@ -199,6 +199,7 @@ const CreateNewWallet = () => {
                       {wordpos + 1}
                     </Text>
                     <Input
+                      textAlign={'center'}
                       key={'word' + wordpos}
                       size="small"
                       style={{width: scale(120), padding: 0}}
