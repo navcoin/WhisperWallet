@@ -235,6 +235,7 @@ const SendToScreen = (props: any) => {
                     <Input
                       ref={amountInputRef}
                       keyboardType={'decimal-pad'}
+                      returnKeyType={'done'}
                       status={'transparent'}
                       style={styles.flex1}
                       value={amountInString}

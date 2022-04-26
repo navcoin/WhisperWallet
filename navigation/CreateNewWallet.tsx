@@ -74,6 +74,7 @@ const CreateNewWallet = () => {
                 autoFocus={true}
                 style={[layoutStyles.responsiveRowComponentWidth, styles.flex1]}
                 value={walletName}
+                autoCapitalize="none"
                 onChangeText={(name: string) => {
                   setError('');
                   setWalletName(name.trim());
