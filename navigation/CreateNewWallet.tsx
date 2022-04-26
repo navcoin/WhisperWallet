@@ -53,6 +53,7 @@ const CreateNewWallet = () => {
       <KeyboardAwareScrollView
         contentContainerStyle={{flexGrow: 1}}
         enableOnAndroid
+        keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}>
         <Loading loading={!!loading} text={loading} />
         <AnimatedStep style={styles.animatedStep} step={index} steps={5} />

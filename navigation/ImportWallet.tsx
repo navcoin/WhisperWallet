@@ -59,6 +59,7 @@ const ImportWallet = () => {
           <KeyboardAwareScrollView
             style={styles.content}
             enableOnAndroid
+            keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}>
             <Text category="title4" center marginBottom={32}>
               Choose the wallet type
@@ -132,6 +133,7 @@ const ImportWallet = () => {
           <KeyboardAwareScrollView
             style={styles.content}
             enableOnAndroid
+            keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}>
             <Text category="title4" center marginBottom={32}>
               Choose the network
@@ -156,6 +158,7 @@ const ImportWallet = () => {
           <KeyboardAwareScrollView
             style={styles.content}
             enableOnAndroid
+            keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}>
             <Text category="title4" center marginBottom={32}>
               Choose a name for the wallet

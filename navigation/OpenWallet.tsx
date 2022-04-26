@@ -41,6 +41,7 @@ const OpenWallet = () => {
         <KeyboardAwareScrollView
           style={styles.content}
           enableOnAndroid
+          keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}>
           {walletList.map((el, index) => {
             return (
