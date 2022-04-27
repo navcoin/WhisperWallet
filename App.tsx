@@ -38,10 +38,12 @@ import {
 
 import Toast from 'react-native-toast-message';
 import toastConfig from './components/Toast';
-import ErrorModal from './components/ErrorModal';
 import {errorTextParser, promptErrorToaster} from './utils/errors';
 import Loading from './components/Loading';
 import ModalProvider from './contexts/ModalProvider';
+import {useModal} from './hooks/useModal';
+import Text from './components/Text';
+import {ModalPortal} from 'react-native-modals';
 const win = {};
 
 setGlobalVars(win, {win: SQLite});
@@ -50,11 +52,12 @@ win.indexedDB.__useShim();
 const njs = require('navcoin-js');
 const P2pPool = require('@aguycalled/bitcore-p2p').Pool;
 
-const App = () => {
-  const [theme, setTheme] = React.useState<'light' | 'dark'>('dark');
+const App = (props: {theme: string}) => {
+  const {theme} = props;
   const [loaded, setLoaded] = useState(false);
   const {setNjs, setP2pPool} = useNjs();
   const {setWin} = useWin();
+  const {openModal, closeModal} = useModal();
 
   const [crashErrorRecords, setCrashErrorRecords] = useAsyncStorage(
     'crashErrorRecords',
@@ -62,13 +65,12 @@ const App = () => {
   );
 
   const [shownWelcome, setShownWelcome] = useState('false');
-  const [errorModalContent, setErrorModalContent] = useState('');
 
   const previousNativeErrorHandler = (errorMessage: string) => {
     setCrashErrorRecords('');
     promptErrorToaster(errorMessage, true, true, () => {
       const errorMsg = errorTextParser(errorMessage, true);
-      setErrorModalContent(errorMsg);
+      openModal('error', errorMsg);
     });
   };
 
@@ -82,7 +84,13 @@ const App = () => {
   const JSLeveErrorPrompt = (error: Error | string, isFatal: boolean) => {
     promptErrorToaster(error, isFatal, false, () => {
       const errorMsg = errorTextParser(error, isFatal);
-      setErrorModalContent(errorMsg);
+      console.log('before openingModal');
+      openModal(
+        'error',
+        <Text center style={{color: 'white'}}>
+          errorMsg
+        </Text>,
+      );
     });
   };
   setJSExceptionHandler(JSLeveErrorPrompt, true);
@@ -99,21 +107,12 @@ const App = () => {
         setShownWelcome(itemValue);
       }
     });
+    setTimeout(() => {
+      promptErrorToaster('asd', false, false);
+    }, 1000);
   }, []);
 
-  const toggleTheme = () => {
-    const nextTheme = theme === 'light' ? 'dark' : 'light';
-    AsyncStorage.setItem('theme', nextTheme).then(() => {
-      setTheme(nextTheme);
-    });
-  };
-
   useEffect(() => {
-    AsyncStorage.getItem('theme').then(value => {
-      if (value === 'light' || value === 'dark') {
-        setTheme(value);
-      }
-    });
     njs.wallet.Init().then(async () => {
       setNjs(njs);
       setWin(win);
@@ -159,39 +158,57 @@ const App = () => {
   }, []);
 
   return (
+    <WalletProvider>
+      <StatusBar
+        barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+        translucent={true}
+        backgroundColor={'#00000000'}
+      />
+      <AppContainer loaded={loaded} shownWelcome={shownWelcome} />
+      <Toast config={toastConfig} />
+    </WalletProvider>
+  );
+};
+
+const AppWrapper = () => {
+  const [theme, setTheme] = React.useState<'light' | 'dark'>('dark');
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    AsyncStorage.setItem('theme', nextTheme).then(() => {
+      setTheme(nextTheme);
+    });
+  };
+
+  useEffect(() => {
+    AsyncStorage.getItem('theme').then(value => {
+      if (value === 'light' || value === 'dark') {
+        setTheme(value);
+      }
+    });
+  }, []);
+  return (
     <SafeAreaProvider>
       <ThemeContext.Provider value={{theme, toggleTheme}}>
         <IconRegistry icons={[AssetIconsPack, EvaIconsPack]} />
-        <WalletProvider>
-          <ApplicationProvider
-            {...eva}
-            theme={
-              theme === 'light'
-                ? {...eva.light, ...customTheme, ...lightTheme}
-                : {...eva.dark, ...customTheme, ...darkTheme}
-            }
-            /* @ts-ignore */
-            customMapping={customMapping}>
-            <SafeAreaProvider>
-              <StatusBar
-                barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
-                translucent={true}
-                backgroundColor={'#00000000'}
-              />
-              <ModalProvider>
-                <AppContainer loaded={loaded} shownWelcome={shownWelcome} />
-                {/* <ErrorModal
-                errorText={errorModalContent}
-                reset={() => setErrorModalContent('')}
-              /> */}
-              </ModalProvider>
-              <Toast config={toastConfig} />
-            </SafeAreaProvider>
-          </ApplicationProvider>
-        </WalletProvider>
+        <ApplicationProvider
+          {...eva}
+          theme={
+            theme === 'light'
+              ? {...eva.light, ...customTheme, ...lightTheme}
+              : {...eva.dark, ...customTheme, ...darkTheme}
+          }
+          /* @ts-ignore */
+          customMapping={customMapping}>
+          <ModalProvider>
+            <App theme={theme} />
+            {/* <ErrorModal errorText="asdads" /> */}
+          </ModalProvider>
+          <ModalPortal />
+        </ApplicationProvider>
       </ThemeContext.Provider>
     </SafeAreaProvider>
   );
 };
 
-export default App;
+export default AppWrapper;
