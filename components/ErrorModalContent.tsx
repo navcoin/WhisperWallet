@@ -7,18 +7,17 @@ import Button from './Button';
 import Modal from './Modal';
 import Text from './Text';
 
-const ErrorModal = (props: any) => {
-  const {errorText, reset} = props;
-  const [visible, setVisibility] = useState(errorText.length);
-  useEffect(() => {
-    setVisibility(!!errorText.length);
-  }, [errorText]);
+const ErrorModalContent = (props: {
+  errorText: string;
+  closeModal: () => void;
+}) => {
+  const {errorText, closeModal} = props;
   const buttonOptions = [
     {
       text: 'Send report via email',
       onPress: () => {
         sendErrorCrashEmail(errorText, errorText.includes('Fatal'));
-        reset();
+        closeModal();
       },
     },
     {
@@ -29,34 +28,37 @@ const ErrorModal = (props: any) => {
           type: 'success',
           text1: 'Error Copied!',
         });
-        reset();
+        closeModal();
       },
     },
     {
       text: 'Close',
       onPress: () => {
-        reset();
+        closeModal();
       },
     },
   ];
   return (
-    <Modal visible={visible}>
-      {errorText ? (
+    <>
+      <Text>wow</Text>
+      {/* {errorText ? (
         <Text category="title4" center style={styles.item}>
           {errorText}
+          errorText
         </Text>
       ) : null}
       <View style={[styles.buttonGroup]}>
         {buttonOptions.map((option, index) => (
           <Button
             key={index}
+            status={'primary-whisper'}
             style={[styles.button]}
             children={option.text}
             onPress={() => option.onPress()}
           />
         ))}
-      </View>
-    </Modal>
+      </View> */}
+    </>
   );
 };
 
@@ -75,4 +77,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ErrorModal;
+export default ErrorModalContent;

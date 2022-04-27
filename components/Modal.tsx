@@ -28,7 +28,7 @@ const Modal = (props: any) => {
 
 const styles = StyleSheet.create({
   contentContainer: {
-    backgroundColor: 'background-basic-color-6',
+    backgroundColor: 'transparent',
     flex: 1,
     paddingTop: 8,
     padding: 20,

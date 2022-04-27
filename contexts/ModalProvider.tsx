@@ -1,4 +1,3 @@
-import Modal from '../components/Modal';
 import React, {
   ReactElement,
   useCallback,
@@ -10,17 +9,25 @@ import React, {
 import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {ModalContextValue, ModalContext} from './ModalContext';
 import Text from '../components/Text';
-import {View, Modal as RawModal} from 'react-native';
+import {View} from 'react-native';
+import {Modal} from 'react-native-modals';
 import {BlurView} from '@react-native-community/blur';
 import Toast from 'react-native-toast-message';
 import toastConfig from '../components/Toast';
+import ErrorModalContent from '../components/ErrorModalContent';
+
+interface ModalProviderProp {
+  initChildren: Element | string;
+  visible: boolean;
+}
 
 export const ModalProvider = (props: any) => {
   const ModalRef = useRef<typeof Modal>(null);
-  const [visibile, setVisibility] = useState(false);
+  const [visible, setVisibility] = useState(false);
+  const [children, setChildren] = useState<Element>();
 
   const styles = useStyleSheet(themedStyles);
-  const {children, visible} = props;
+  const {initChildren} = props;
 
   useEffect(() => {
     // if (content) {
@@ -33,8 +40,24 @@ export const ModalProvider = (props: any) => {
   const modalContext: ModalContextValue = useMemo(
     () => ({
       getRef: ModalRef?.current,
-      setVisibility: b => {
-        setVisibility(b);
+      openModal: (
+        type: string,
+        newChildren: Element | string | null = null,
+      ) => {
+        console.log('openingModal');
+        setVisibility(true);
+        if (type === 'error') {
+          console.log('type is error');
+          setChildren(
+            <ErrorModalContent
+              errorText={newChildren as string}
+              closeModal={() => setVisibility(false)}
+            />,
+          );
+        }
+      },
+      closeModal: () => {
+        setVisibility(false);
       },
     }),
     [ModalRef],
@@ -42,26 +65,7 @@ export const ModalProvider = (props: any) => {
 
   return (
     <ModalContext.Provider value={modalContext}>
-      <View style={{width: 100, height: 100}}></View>
-      {props.childern}
-      {false && props.children && (
-        <RawModal
-          transparent={true}
-          statusBarTranslucent={true}
-          animationType={'none'}
-          visible={visible}>
-          <BlurView
-            style={styles.absolute}
-            blurType="dark"
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white">
-            <Toast config={toastConfig} />
-            <View style={styles.contentContainer}>
-              {!!children ? children : <></>}
-            </View>
-          </BlurView>
-        </RawModal>
-      )}
+      {visible ? <Modal>{children}</Modal> : props.children}
       {/* <Modal visible={visibile}>{props.children}</Modal> */}
     </ModalContext.Provider>
   );
@@ -71,7 +75,7 @@ export default ModalProvider;
 
 const themedStyles = StyleService.create({
   contentContainer: {
-    backgroundColor: 'background-basic-color-6',
+    backgroundColor: 'red',
     flex: 1,
     paddingTop: 8,
     padding: 20,
@@ -80,6 +84,7 @@ const themedStyles = StyleService.create({
   },
   absolute: {
     flex: 1,
+    backgroundColor: 'green',
     justifyContent: 'center',
     alignItems: 'center',
   },
