@@ -47,8 +47,9 @@ const ErrorModal = (props: any) => {
         </Text>
       ) : null}
       <View style={[styles.buttonGroup]}>
-        {buttonOptions.map(option => (
+        {buttonOptions.map((option, index) => (
           <Button
+            key={index}
             style={[styles.button]}
             children={option.text}
             onPress={() => option.onPress()}

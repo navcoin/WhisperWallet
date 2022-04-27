@@ -40,6 +40,8 @@ import Toast from 'react-native-toast-message';
 import toastConfig from './components/Toast';
 import ErrorModal from './components/ErrorModal';
 import {errorTextParser, promptErrorToaster} from './utils/errors';
+import Loading from './components/Loading';
+import ModalProvider from './contexts/ModalProvider';
 const win = {};
 
 setGlobalVars(win, {win: SQLite});
@@ -176,11 +178,13 @@ const App = () => {
                 translucent={true}
                 backgroundColor={'#00000000'}
               />
-              <AppContainer loaded={loaded} shownWelcome={shownWelcome} />
-              <ErrorModal
+              <ModalProvider>
+                <AppContainer loaded={loaded} shownWelcome={shownWelcome} />
+                {/* <ErrorModal
                 errorText={errorModalContent}
                 reset={() => setErrorModalContent('')}
-              />
+              /> */}
+              </ModalProvider>
               <Toast config={toastConfig} />
             </SafeAreaProvider>
           </ApplicationProvider>
