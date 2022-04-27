@@ -9,7 +9,7 @@ import AnimatedStep from '../components/AnimatedStep';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
-import Loading from '../components/Loading';
+import LoadingModalContent from '../components/LoadingModalContent';
 import useNjs from '../hooks/useNjs';
 import {IsValidMnemonic} from '../utils/Mnemonic';
 import OptionCard from '../components/OptionCard';
@@ -34,7 +34,7 @@ const ImportWallet = () => {
 
   return (
     <Container useSafeArea>
-      <Loading loading={!!loading} text={loading} />
+      <LoadingModalContent loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Import Wallet'} />
       <AnimatedStep style={styles.animatedStep} step={index} />
 
@@ -50,7 +50,9 @@ const ImportWallet = () => {
 
             {WalletTypes.map((el, index) => {
               return (
-                <View style={[layoutStyles.responsiveColumnComponentWidth]} key={el[1]}>
+                <View
+                  style={[layoutStyles.responsiveColumnComponentWidth]}
+                  key={el[1]}>
                   <OptionCard
                     item={{text: el[1]}}
                     index={index}

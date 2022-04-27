@@ -6,7 +6,7 @@ import {
   useStyleSheet,
 } from '@tsejerome/ui-kitten-components';
 import React, {useState} from 'react';
-import Loading from './Loading';
+import LoadingModalContent from './LoadingModalContent';
 import useKeychain from '../utils/Keychain';
 import useWallet from '../hooks/useWallet';
 import {useBottomSheet} from '../hooks/useBottomSheet';
@@ -29,7 +29,9 @@ const SendTransactionButton = (props: any) => {
   const styles = useStyleSheet(themedStyles);
   return (
     <>
-      <Loading loading={!!loading} text={loading}></Loading>
+      <LoadingModalContent
+        loading={!!loading}
+        text={loading}></LoadingModalContent>
       <Button
         status={'primary-whisper'}
         activeOpacity={0.7}

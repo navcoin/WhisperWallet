@@ -1,20 +1,7 @@
-import React, {
-  ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {ModalContextValue, ModalContext} from './ModalContext';
-import Text from '../components/Text';
-import {View} from 'react-native';
 import Modal from '../components/Modal';
-import {BlurView} from '@react-native-community/blur';
-import Toast from 'react-native-toast-message';
-import toastConfig from '../components/Toast';
-import ErrorModal from '../components/ErrorModal';
 
 interface ModalProviderProp {
   initChildren: Element | string;
@@ -29,21 +16,13 @@ export const ModalProvider = (props: any) => {
   const styles = useStyleSheet(themedStyles);
   const {initChildren} = props;
 
-  useEffect(() => {
-    // if (content) {
-    //   ModalRef.current?.expand();
-    // } else {
-    //   ModalRef.current?.collapse();
-    // }
-  }, []);
-
   const modalContext: ModalContextValue = useMemo(
     () => ({
       getRef: ModalRef?.current,
-      openModal: (newChildren: Element | string | null = null) => {
+      openModal: (newChildren: Element) => {
         console.log('openingModal');
         setVisibility(true);
-        setChildren(<ErrorModal errorText={newChildren as string} />);
+        setChildren(newChildren);
       },
       closeModal: () => {
         setVisibility(false);
@@ -55,8 +34,8 @@ export const ModalProvider = (props: any) => {
 
   return (
     <ModalContext.Provider value={modalContext}>
+      {props.children}
       {visible ? <Modal>{children}</Modal> : initChildren}
-      {/* <Modal visible={visibile}>{props.children}</Modal> */}
     </ModalContext.Provider>
   );
 };

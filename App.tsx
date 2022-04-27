@@ -39,12 +39,9 @@ import {
 import Toast from 'react-native-toast-message';
 import toastConfig from './components/Toast';
 import {errorTextParser, promptErrorToaster} from './utils/errors';
-import Loading from './components/Loading';
 import ModalProvider from './contexts/ModalProvider';
 import {useModal} from './hooks/useModal';
-import Text from './components/Text';
-import {ModalPortal} from 'react-native-modals';
-import ErrorModal from './components/ErrorModal';
+import ErrorModalContent from './components/ErrorModalContent';
 const win = {};
 
 setGlobalVars(win, {win: SQLite});
@@ -71,7 +68,7 @@ const App = (props: {theme: string}) => {
     setCrashErrorRecords('');
     promptErrorToaster(errorMessage, true, true, () => {
       const errorMsg = errorTextParser(errorMessage, true);
-      openModal(<ErrorModal errorText={errorMsg}></ErrorModal>);
+      openModal(<ErrorModalContent errorText={errorMsg}></ErrorModalContent>);
     });
   };
 
@@ -86,7 +83,7 @@ const App = (props: {theme: string}) => {
     promptErrorToaster(error, isFatal, false, () => {
       const errorMsg = errorTextParser(error, isFatal);
       console.log('before openingModal');
-      openModal(<ErrorModal errorText={errorMsg}></ErrorModal>);
+      openModal(<ErrorModalContent errorText={errorMsg}></ErrorModalContent>);
     });
   };
   setJSExceptionHandler(JSLeveErrorPrompt, true);
@@ -199,7 +196,6 @@ const AppWrapper = () => {
           <ModalProvider>
             <App theme={theme} />
             {/* <ErrorModal errorText="asdads" /> */}
-            <ModalPortal />
           </ModalProvider>
         </ApplicationProvider>
       </ThemeContext.Provider>

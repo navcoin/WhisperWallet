@@ -7,7 +7,7 @@ import Text from '../components/Text';
 import Container from '../components/Container';
 import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
-import Loading from '../components/Loading';
+import LoadingModalContent from '../components/LoadingModalContent';
 import useNjs from '../hooks/useNjs';
 import OptionCard from '../components/OptionCard';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -35,7 +35,7 @@ const OpenWallet = () => {
 
   return (
     <Container useSafeArea>
-      <Loading loading={!!loading} text={loading} />
+      <LoadingModalContent loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Open Wallet'} />
       <View style={styles.container}>
         <Text category="title4" center marginBottom={32}>

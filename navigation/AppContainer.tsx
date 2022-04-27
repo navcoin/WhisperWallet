@@ -5,7 +5,7 @@ import {RootStackParamList} from './type';
 import {AppState} from 'react-native';
 import Intro from './Intro';
 import CreateNewWallet from './CreateNewWallet';
-import Loading from '../components/Loading';
+import LoadingModalContent from '../components/LoadingModalContent';
 import OnBoarding from '../screens/OnBoarding';
 import Wallet from '../screens/Wallet';
 import OpenWallet from './OpenWallet';
@@ -85,7 +85,7 @@ const AppContainer = (props: any) => {
       </Stack.Navigator>
     </NavigationContainer>
   ) : (
-    <Loading />
+    <LoadingModalContent />
   );
 };
 export default AppContainer;

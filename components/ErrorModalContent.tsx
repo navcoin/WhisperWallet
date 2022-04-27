@@ -33,12 +33,13 @@ const ErrorModalContent = (props: {errorText: string}) => {
     {
       text: 'Close',
       onPress: () => {
+        console.log('asdasd');
         closeModal();
       },
     },
   ];
   return (
-    <Modal>
+    <>
       {errorText ? (
         <Text category="title4" center style={styles.item}>
           {errorText}
@@ -56,7 +57,7 @@ const ErrorModalContent = (props: {errorText: string}) => {
           />
         ))}
       </View>
-    </Modal>
+    </>
   );
 };
 

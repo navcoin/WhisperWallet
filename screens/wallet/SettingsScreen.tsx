@@ -9,7 +9,7 @@ import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import useNjs from '../../hooks/useNjs';
 import useKeychain from '../../utils/Keychain';
-import Loading from '../../components/Loading';
+import LoadingModalContent from '../../components/LoadingModalContent';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {screenHeight} from '../../utils/layout';
@@ -172,7 +172,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
 
   return (
     <Container useSafeArea>
-      <Loading loading={!!loading} text={loading} />
+      <LoadingModalContent loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Settings'} />
       <ScrollView style={styles.contentWrapper}>
         {items.map((item, index) => {

@@ -12,12 +12,16 @@ import {Images} from '../assets/images';
 import {RootStackParamList} from './type';
 import useNjs from '../hooks/useNjs';
 import useKeychain from '../utils/Keychain';
+import LoadingModalContent from '../components/LoadingModalContent';
+import LoadingModal from '../components/LoadingModalContent';
+import {useModal} from '../hooks/useModal';
 
 const Intro = memo(props => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
   const styles = useStyleSheet(themedStyles);
   const [walletList, setWalletList] = useState<any>([]);
   const {njs} = useNjs();
+  const {openModal} = useModal();
 
   useEffect(() => {
     refreshWalletList();
@@ -72,7 +76,10 @@ const Intro = memo(props => {
             style={[styles.wallet]}
             status="primary-whisper"
             onPress={() => {
-              navigate('CreateNewWallet');
+              openModal(<LoadingModal loading />);
+              setTimeout(() => {
+                navigate('CreateNewWallet');
+              }, 5000);
             }}
           />
           <Button
@@ -83,6 +90,7 @@ const Intro = memo(props => {
               navigate('ImportWallet');
             }}
           />
+          {/* <Loading loading={true} /> */}
         </View>
       </Content>
     </Container>

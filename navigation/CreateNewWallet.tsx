@@ -7,7 +7,7 @@ import Container from '../components/Container';
 import AnimatedStep from '../components/AnimatedStep';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useWallet from '../hooks/useWallet';
-import Loading from '../components/Loading';
+import LoadingModalContent from '../components/LoadingModalContent';
 import useNjs from '../hooks/useNjs';
 import {NetworkTypes} from '../constants/Type';
 import OptionCard from '../components/OptionCard';
@@ -39,7 +39,7 @@ const CreateNewWallet = () => {
         contentContainerStyle={{flexGrow: 1}}
         enableOnAndroid
         showsVerticalScrollIndicator={false}>
-        <Loading loading={!!loading} text={loading} />
+        <LoadingModalContent loading={!!loading} text={loading} />
         <AnimatedStep style={styles.animatedStep} step={index} steps={5} />
 
         {index == 0 ? (
@@ -86,7 +86,8 @@ const CreateNewWallet = () => {
             </Text>
             {NetworkTypes.map((el, index) => {
               return (
-                <View style={[layoutStyles.responsiveColumnComponentWidth]}
+                <View
+                  style={[layoutStyles.responsiveColumnComponentWidth]}
                   key={el[0]}>
                   <OptionCard
                     key={el[0]}
