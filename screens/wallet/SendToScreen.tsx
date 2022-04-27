@@ -244,7 +244,7 @@ const SendToScreen = (props: any) => {
                         let res = text.replace(/\./g, match =>
                           ++t === 2 ? '' : match,
                         );
-                        setAmount(res.trim());
+                        setAmount(res.trim().replace(',', '.'));
                       }}
                     />
                     <View
