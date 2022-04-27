@@ -85,12 +85,7 @@ const App = (props: {theme: string}) => {
     promptErrorToaster(error, isFatal, false, () => {
       const errorMsg = errorTextParser(error, isFatal);
       console.log('before openingModal');
-      openModal(
-        'error',
-        <Text center style={{color: 'white'}}>
-          errorMsg
-        </Text>,
-      );
+      openModal('error', errorMsg);
     });
   };
   setJSExceptionHandler(JSLeveErrorPrompt, true);
