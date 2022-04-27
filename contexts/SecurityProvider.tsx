@@ -18,8 +18,9 @@ import {scale} from 'react-native-size-matters';
 import useLockedScreen from '../hooks/useLockedScreen';
 import useAsyncStorage from '../hooks/useAsyncStorage';
 import useWallet from '../hooks/useWallet';
-import {AppState} from 'react-native';
+import {AppState, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 
 export const SecurityProvider = (props: any) => {
   const {lockedScreen, setLockedScreen} = useLockedScreen();
@@ -47,10 +48,41 @@ export const SecurityProvider = (props: any) => {
     }
   }, [appStateVisible]);
 
+  /*
+   * isPinOrFingerprintSet will be true if the device's screen is locked
+   * with a fingerprint or unlock pin code.
+   * supportedBiometry will refer to the biometry supported by the device.
+   */
+  const UpdateFeatures = async () => {
+    if (Platform.OS == 'ios') {
+      await new Promise((res, rej) => {
+        AsyncStorage.getItem('RequestedFaceId')
+          .then(async val => {
+            if (!val) {
+              const faceIdPermission = await check(PERMISSIONS.IOS.FACE_ID);
+              if (faceIdPermission !== RESULTS.GRANTED) {
+                await request(PERMISSIONS.IOS.FACE_ID);
+                await AsyncStorage.setItem('RequestFaceId', 'true');
+              }
+            }
+            res(true);
+          })
+          .catch(rej);
+      });
+    }
+
+    DeviceInfo.isPinOrFingerprintSet().then(setIsPinOrFingerprintSet);
+    Keychain.getSupportedBiometryType({}).then(setSupportedBiometry);
+  };
+
   useEffect(() => {
+    /*
+     * When the app status changes (because it was in the background, and comes back
+     * to the foreground), we need to update whether the biometry or phone's lock code
+     * settings have changed.
+     */
     const subscription = AppState.addEventListener('change', nextAppState => {
-      DeviceInfo.isPinOrFingerprintSet().then(setIsPinOrFingerprintSet);
-      Keychain.getSupportedBiometryType({}).then(setSupportedBiometry);
+      UpdateFeatures();
       if (appState.current.match(/background/) && nextAppState === 'active') {
         if (refreshWallet) {
           refreshWallet();
@@ -63,6 +95,10 @@ export const SecurityProvider = (props: any) => {
       setAppStateVisible(appState.current);
     });
 
+    /*
+     * Need to remove the susbcription when the component is unmounted
+     * */
+
     return () => {
       subscription.remove();
     };
@@ -74,13 +110,22 @@ export const SecurityProvider = (props: any) => {
     boolean | undefined
   >(undefined);
 
-  const [supportedBiometry, setSupportedBiometry] =
-    useState<Keychain.BIOMETRY_TYPE | null>(null);
+  const [supportedBiometry, setSupportedBiometry] = useState<
+    Keychain.BIOMETRY_TYPE | null | number
+  >(0);
 
   useEffect((): void => {
-    DeviceInfo.isPinOrFingerprintSet().then(setIsPinOrFingerprintSet);
-    Keychain.getSupportedBiometryType({}).then(setSupportedBiometry);
+    /*
+     * We need to update the set of avialable features when the component
+     * is mounted for an initial state.
+     */
+    UpdateFeatures();
   }, []);
+
+  /*
+   * setManualPin and askManualPin are the callback functions when a manual
+   * pin code is set or introduced by the user
+   */
 
   const [setManualPin, setSetManualPin] = useState<any>(() => {});
   const [askManualPin, setAskManualPin] = useState<any>(() => {});
@@ -90,7 +135,20 @@ export const SecurityProvider = (props: any) => {
 
   const [error, setError] = useState<string | undefined>(undefined);
 
+  /*
+   * Whenever the authentication type or the supported biometry changes we need to:
+   * - If there was previously no supported type set, we set it based on
+   *   the device capabilities:
+   *   - If biometry is supported, we can use the Keychain
+   *   - If biometry is not supported, but a pin code is set, we can use the LocalAuth
+   *   - Otherwise the pin is introduced manually by the user.
+   * - If we already set an auth type before, we must detect if the new capabilities
+   *   differ from the type used, making it obsolete and showing an error to the
+   *   user.
+   */
+
   useEffect((): void => {
+    if (supportedBiometry === 0) return;
     AsyncStorage.getItem('AuthenticationType').then(async val => {
       if (!val) {
         if (supportedBiometry !== null) {
@@ -140,6 +198,10 @@ export const SecurityProvider = (props: any) => {
     });
   }, [isPinOrFingerprintSet, supportedBiometry]);
 
+  /*
+   * Encrypts a plaintext with a key, returning a ciphertext
+   */
+
   const Encrypt = (plain: string, key: string): string => {
     const iv = Buffer.from(DeviceInfo.getUniqueId(), 'utf8').slice(0, 16);
     const aes = crypto.createCipheriv(
@@ -151,6 +213,10 @@ export const SecurityProvider = (props: any) => {
     ciphertext = Buffer.concat([iv, ciphertext, aes.final()]);
     return ciphertext.toString('base64');
   };
+
+  /*
+   * Decrypts a ciphertext using a key, returning a plaintext
+   */
 
   const Decrypt = (cypher: string, key: string): string => {
     const ciphertextBytes = Buffer.from(cypher, 'base64');
@@ -166,6 +232,10 @@ export const SecurityProvider = (props: any) => {
     return plaintextBytes.toString();
   };
 
+  /*
+   * Generates a random key and stores it in the encrypted storage.
+   */
+
   const writeEncrypedStorage = useCallback(async (suffix: string): void => {
     try {
       await EncryptedStorage.setItem(
@@ -176,6 +246,10 @@ export const SecurityProvider = (props: any) => {
       console.log(e);
     }
   }, []);
+
+  /*
+   * Reads the key stored in the encrypted storage
+   */
 
   const readEncrytedStorage = async (suffix: string): Promise<string> => {
     try {
@@ -203,6 +277,16 @@ export const SecurityProvider = (props: any) => {
     }
   };
 
+  /*
+   * This function will return the pin (key) which will be used for encrypting
+   * or decrypting the wallet password.
+   *
+   * Depending on the authentication type, it will use the Keychain, LocalAuth
+   * or manual pin. In all the three methods, if a key does not exist, it will
+   * generate it and store it, or ask it from the user if the manual pin mode
+   * is to be used.
+   */
+
   const readPin = useCallback(async (): Promise<string> => {
     if (supportedType == SecurityAuthenticationTypes.KEYCHAIN) {
       return await read('whisperMasterKey');
@@ -225,9 +309,17 @@ export const SecurityProvider = (props: any) => {
         });
       }
     } else {
+      /*
+       * Empty key if no authentication is used
+       */
       return '';
     }
   }, [supportedType, setSetManualPin, setAskManualPin]);
+
+  /*
+   * This function will read the key using the appropriate method, use it to
+   * decrypt the wallet password and return it for its use.
+   */
 
   const readPassword = useCallback(async (): Promise<string> => {
     return new Promise((res, rej) => {
