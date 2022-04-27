@@ -26,7 +26,7 @@ const Intro = memo(props => {
     });
 
     return willFocusSubscription;
-  });
+  }, []);
 
   const refreshWalletList = () => {
     njs.wallet.WalletFile.ListWallets().then(list => {

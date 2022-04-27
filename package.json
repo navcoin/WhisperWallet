@@ -62,6 +62,7 @@
     "react-native-keychain": "^8.0.0",
     "react-native-level-fs": "^3.0.1",
     "react-native-mcl": "^0.1.15",
+    "react-native-modals": "^0.22.3",
     "react-native-os": "^1.2.6",
     "react-native-pager-view": "^5.4.9",
     "react-native-permissions": "^3.2.0",

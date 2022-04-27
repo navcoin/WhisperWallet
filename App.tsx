@@ -44,6 +44,7 @@ import ModalProvider from './contexts/ModalProvider';
 import {useModal} from './hooks/useModal';
 import Text from './components/Text';
 import {ModalPortal} from 'react-native-modals';
+import ErrorModal from './components/ErrorModal';
 const win = {};
 
 setGlobalVars(win, {win: SQLite});
@@ -70,7 +71,7 @@ const App = (props: {theme: string}) => {
     setCrashErrorRecords('');
     promptErrorToaster(errorMessage, true, true, () => {
       const errorMsg = errorTextParser(errorMessage, true);
-      openModal('error', errorMsg);
+      openModal(<ErrorModal errorText={errorMsg}></ErrorModal>);
     });
   };
 
@@ -85,7 +86,7 @@ const App = (props: {theme: string}) => {
     promptErrorToaster(error, isFatal, false, () => {
       const errorMsg = errorTextParser(error, isFatal);
       console.log('before openingModal');
-      openModal('error', errorMsg);
+      openModal(<ErrorModal errorText={errorMsg}></ErrorModal>);
     });
   };
   setJSExceptionHandler(JSLeveErrorPrompt, true);
@@ -144,10 +145,6 @@ const App = (props: {theme: string}) => {
       njs.wallet.WalletFile.SetBackend(win.indexedDB, win.IDBKeyRange);
       setLoaded(true);
 
-      setTimeout(() => {
-        RNBootSplash.hide({fade: true});
-      }, 1000);
-
       checkIfAppHadCrashed();
     });
   }, []);
@@ -167,7 +164,11 @@ const App = (props: {theme: string}) => {
 
 const AppWrapper = () => {
   const [theme, setTheme] = React.useState<'light' | 'dark'>('dark');
-
+  useEffect(() => {
+    setTimeout(() => {
+      RNBootSplash.hide({fade: true});
+    }, 1000);
+  }, []);
   const toggleTheme = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
     AsyncStorage.setItem('theme', nextTheme).then(() => {
@@ -198,8 +199,8 @@ const AppWrapper = () => {
           <ModalProvider>
             <App theme={theme} />
             {/* <ErrorModal errorText="asdads" /> */}
+            <ModalPortal />
           </ModalProvider>
-          <ModalPortal />
         </ApplicationProvider>
       </ThemeContext.Provider>
     </SafeAreaProvider>

@@ -2,16 +2,15 @@ import React, {useEffect, useState} from 'react';
 import {Clipboard, StyleSheet, View} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import Toast from 'react-native-toast-message';
+import {useModal} from '../hooks/useModal';
 import {sendErrorCrashEmail} from '../utils/sendMail';
 import Button from './Button';
 import Modal from './Modal';
 import Text from './Text';
 
-const ErrorModalContent = (props: {
-  errorText: string;
-  closeModal: () => void;
-}) => {
-  const {errorText, closeModal} = props;
+const ErrorModalContent = (props: {errorText: string}) => {
+  const {errorText} = props;
+  const {closeModal} = useModal();
   const buttonOptions = [
     {
       text: 'Send report via email',
@@ -39,9 +38,8 @@ const ErrorModalContent = (props: {
     },
   ];
   return (
-    <>
-      <Text>wow</Text>
-      {/* {errorText ? (
+    <Modal>
+      {errorText ? (
         <Text category="title4" center style={styles.item}>
           {errorText}
           errorText
@@ -57,8 +55,8 @@ const ErrorModalContent = (props: {
             onPress={() => option.onPress()}
           />
         ))}
-      </View> */}
-    </>
+      </View>
+    </Modal>
   );
 };
 

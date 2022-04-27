@@ -14,7 +14,7 @@ const promptErrorToaster = (
       text1:
         'Something went wrong in the previous session. Tap for more details.',
       onPress: () => {
-        if (cb) {
+        if (!!cb) {
           cb()
         }
       },
@@ -25,7 +25,7 @@ const promptErrorToaster = (
     type: 'error',
     text1: 'Something went wrong. Tap for more details.',
     onPress: () => {
-      if (cb) {
+      if (!!cb) {
         cb()
       }
     },
