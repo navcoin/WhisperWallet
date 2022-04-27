@@ -14,6 +14,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useKeychain from '../utils/Keychain';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
+import {useModal} from '../hooks/useModal';
 
 const OpenWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -26,6 +27,7 @@ const OpenWallet = () => {
   const {read} = useKeychain();
 
   const [walletList, setWalletList] = useState<any>([]);
+  const {openModal, closeModal} = useModal();
 
   useEffect(() => {
     njs.wallet.WalletFile.ListWallets().then(list => {
@@ -33,9 +35,15 @@ const OpenWallet = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (loading) {
+      openModal(<LoadingModalContent loading={!!loading} text={loading} />);
+      return;
+    }
+    closeModal();
+  }, [loading]);
   return (
     <Container useSafeArea>
-      <LoadingModalContent loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Open Wallet'} />
       <View style={styles.container}>
         <Text category="title4" center marginBottom={32}>

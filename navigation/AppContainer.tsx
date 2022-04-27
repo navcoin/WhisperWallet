@@ -2,7 +2,7 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import createStackNavigator from './createStackNavigator';
 import {RootStackParamList} from './type';
-import {AppState} from 'react-native';
+import {AppState, View} from 'react-native';
 import Intro from './Intro';
 import CreateNewWallet from './CreateNewWallet';
 import LoadingModalContent from '../components/LoadingModalContent';
@@ -16,11 +16,13 @@ import useWallet from '../hooks/useWallet';
 import {useEffect, useRef, useState} from 'react';
 import LocalAuth from '../utils/LocalAuth';
 import {BlurView} from 'expo';
+import {useModal} from '../hooks/useModal';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const AppContainer = (props: any) => {
   const {lockedScreen, setLockedScreen} = useLockedScreen();
+  const {openModal, closeModal} = useModal();
   const [lockAfterBackground, setLockAfterBackground] = useAsyncStorage(
     'lockAfterBackground',
     'false',
@@ -63,6 +65,14 @@ const AppContainer = (props: any) => {
     };
   }, [refreshWallet, lockAfterBackground, setLockedScreen]);
 
+  useEffect(() => {
+    if (!props.loaded) {
+      openModal(<LoadingModalContent loading={true} />);
+      return;
+    }
+    closeModal();
+  }, [props.loaded]);
+
   return props.loaded ? (
     <NavigationContainer>
       <Stack.Navigator
@@ -85,7 +95,7 @@ const AppContainer = (props: any) => {
       </Stack.Navigator>
     </NavigationContainer>
   ) : (
-    <LoadingModalContent />
+    <View />
   );
 };
 export default AppContainer;

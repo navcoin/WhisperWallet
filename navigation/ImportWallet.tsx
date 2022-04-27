@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Input, useTheme} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
@@ -18,6 +18,7 @@ import useKeychain from '../utils/Keychain';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
+import {useModal} from '../hooks/useModal';
 
 const ImportWallet = () => {
   const {navigate} = useNavigation();
@@ -31,10 +32,18 @@ const ImportWallet = () => {
   const [error, setError] = useState('');
   const {njs} = useNjs();
   const {read} = useKeychain();
+  const {openModal, closeModal} = useModal();
+
+  useEffect(() => {
+    if (loading) {
+      openModal(<LoadingModalContent loading={!!loading} text={loading} />);
+      return;
+    }
+    closeModal();
+  }, [loading]);
 
   return (
     <Container useSafeArea>
-      <LoadingModalContent loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Import Wallet'} />
       <AnimatedStep style={styles.animatedStep} step={index} />
 

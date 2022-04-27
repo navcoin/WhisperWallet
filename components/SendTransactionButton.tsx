@@ -5,7 +5,7 @@ import {
   TopNavigation,
   useStyleSheet,
 } from '@tsejerome/ui-kitten-components';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import LoadingModalContent from './LoadingModalContent';
 import useKeychain from '../utils/Keychain';
 import useWallet from '../hooks/useWallet';
@@ -17,6 +17,7 @@ import SwipeButton from '../components/SwipeButton';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/type';
 import {Balance_Types_Enum, Destination_Types_Enum} from '../constants/Type';
+import {useModal} from '../hooks/useModal';
 
 const SendTransactionButton = (props: any) => {
   const {walletName, from, to, amount, memo, subtractFee} = props;
@@ -27,11 +28,17 @@ const SendTransactionButton = (props: any) => {
   const {goBack} = useNavigation<NavigationProp<RootStackParamList>>();
   const {collapse} = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
+  const {openModal, closeModal} = useModal();
+
+  useEffect(() => {
+    if (loading) {
+      openModal(<LoadingModalContent loading={!!loading} text={loading} />);
+      return;
+    }
+    closeModal();
+  }, [loading]);
   return (
     <>
-      <LoadingModalContent
-        loading={!!loading}
-        text={loading}></LoadingModalContent>
       <Button
         status={'primary-whisper'}
         activeOpacity={0.7}

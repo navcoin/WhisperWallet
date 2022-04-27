@@ -76,10 +76,8 @@ const Intro = memo(props => {
             style={[styles.wallet]}
             status="primary-whisper"
             onPress={() => {
-              openModal(<LoadingModal loading />);
-              setTimeout(() => {
-                navigate('CreateNewWallet');
-              }, 5000);
+              // openModal(<LoadingModal loading />);
+              navigate('CreateNewWallet');
             }}
           />
           <Button
@@ -90,7 +88,6 @@ const Intro = memo(props => {
               navigate('ImportWallet');
             }}
           />
-          {/* <Loading loading={true} /> */}
         </View>
       </Content>
     </Container>

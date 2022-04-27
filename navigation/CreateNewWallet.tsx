@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
@@ -17,6 +17,7 @@ import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useLayout from '../hooks/useLayout';
+import {useModal} from '../hooks/useModal';
 
 const CreateNewWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -29,8 +30,17 @@ const CreateNewWallet = () => {
   const {njs} = useNjs();
   const {height} = useLayout();
   const {read} = useKeychain();
+  const {openModal, closeModal} = useModal();
 
   const [words, setWords] = useState<string[]>(new Array(12));
+
+  useEffect(() => {
+    if (loading) {
+      openModal(<LoadingModalContent loading={!!loading} text={loading} />);
+      return;
+    }
+    closeModal();
+  }, [loading]);
 
   return (
     <Container useSafeArea>
@@ -39,7 +49,6 @@ const CreateNewWallet = () => {
         contentContainerStyle={{flexGrow: 1}}
         enableOnAndroid
         showsVerticalScrollIndicator={false}>
-        <LoadingModalContent loading={!!loading} text={loading} />
         <AnimatedStep style={styles.animatedStep} step={index} steps={5} />
 
         {index == 0 ? (
