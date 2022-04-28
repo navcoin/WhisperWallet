@@ -92,4 +92,7 @@ export const Icons = {
   money: require('./money.png'),
   nav: require('./nav-color.png'),
   xnav: require('./xnav-color.png'),
+  biometrics: require('./biometrics.png'),
+  unsecure: require('./unsecure.png'),
+  pincode: require('./pincode.png'),
 };

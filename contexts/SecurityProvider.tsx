@@ -132,6 +132,8 @@ export const SecurityProvider = (props: any) => {
 
   const [supportedType, setSupportedType] =
     useState<SecurityAuthenticationTypes>(SecurityAuthenticationTypes.NONE);
+  const [currentAuthenticationType, setCurrentAuthenticationType] =
+    useState<SecurityAuthenticationTypes>(SecurityAuthenticationTypes.NONE);
 
   const [error, setError] = useState<string | undefined>(undefined);
 
@@ -156,6 +158,7 @@ export const SecurityProvider = (props: any) => {
             'AuthenticationType',
             SecurityAuthenticationTypes.KEYCHAIN,
           );
+          setCurrentAuthenticationType(SecurityAuthenticationTypes.KEYCHAIN);
           setSupportedType(SecurityAuthenticationTypes.KEYCHAIN);
           setError(undefined);
         } else if (isPinOrFingerprintSet === true) {
@@ -163,14 +166,16 @@ export const SecurityProvider = (props: any) => {
             'AuthenticationType',
             SecurityAuthenticationTypes.LOCALAUTH,
           );
+          setCurrentAuthenticationType(SecurityAuthenticationTypes.LOCALAUTH);
           setSupportedType(SecurityAuthenticationTypes.LOCALAUTH);
           setError(undefined);
         } else {
           AsyncStorage.setItem(
             'AuthenticationType',
-            SecurityAuthenticationTypes.MANUAL,
+            SecurityAuthenticationTypes.MANUAL_4,
           );
-          setSupportedType(SecurityAuthenticationTypes.MANUAL);
+          setCurrentAuthenticationType(SecurityAuthenticationTypes.MANUAL_4);
+          setSupportedType(SecurityAuthenticationTypes.MANUAL_4);
           setError(undefined);
         }
       } else {
@@ -191,6 +196,7 @@ export const SecurityProvider = (props: any) => {
             'Your previous authentication method is not available anymore. Please add a PIN code lock to your device or reinstall the app.',
           );
         } else {
+          setCurrentAuthenticationType(val as SecurityAuthenticationTypes);
           setSupportedType(val as SecurityAuthenticationTypes);
           setError(undefined);
         }
@@ -288,24 +294,34 @@ export const SecurityProvider = (props: any) => {
    */
 
   const readPin = useCallback(async (): Promise<string> => {
-    if (supportedType == SecurityAuthenticationTypes.KEYCHAIN) {
+    let authType = (await AsyncStorage.getItem(
+      'AuthenticationType',
+    )) as unknown as SecurityAuthenticationTypes;
+    if (authType == SecurityAuthenticationTypes.KEYCHAIN) {
       return await read('whisperMasterKey');
     } else if (supportedType == SecurityAuthenticationTypes.LOCALAUTH) {
       return await readEncrytedStorage('whisperMasterKey');
-    } else if (supportedType == SecurityAuthenticationTypes.MANUAL) {
+    } else if (
+      authType == SecurityAuthenticationTypes.MANUAL ||
+      authType == SecurityAuthenticationTypes.MANUAL_4
+    ) {
       if (!(await AsyncStorage.getItem('walletKey'))) {
         return await new Promise(res => {
           setSetManualPin(() => pin => {
             res(pin);
           });
-          navigate('AskPinScreen');
+          navigate('AskPinScreen', {
+            pinLength: authType == SecurityAuthenticationTypes.MANUAL ? 6 : 4,
+          });
         });
       } else {
         return await new Promise(res => {
           setAskManualPin(() => pin => {
             res(pin);
           });
-          navigate('AskPinScreen');
+          navigate('AskPinScreen', {
+            pinLength: authType == SecurityAuthenticationTypes.MANUAL ? 6 : 4,
+          });
         });
       }
     } else {
@@ -340,6 +356,49 @@ export const SecurityProvider = (props: any) => {
     });
   }, [supportedType]);
 
+  /*
+   * Changes the authentication mode to the one specified.
+   *
+   * The logic is:
+   *  - Decrypt password using current method
+   *  - Change the method
+   *  - Re-encrypt with the new method
+   */
+
+  const changeMode = useCallback(
+    async (newMode: SecurityAuthenticationTypes): Promise<boolean> => {
+      let prevType =
+        (await AsyncStorage.getItem('AuthenticationType')) ||
+        SecurityAuthenticationTypes.NONE;
+      return new Promise((res, rej) => {
+        AsyncStorage.getItem('walletKey')
+          .then(async val => {
+            if (!val) {
+              // There is no key written, we just reject
+              rej('No wallet key found');
+            } else {
+              let key = Decrypt(val, await readPin());
+              await AsyncStorage.setItem('AuthenticationType', newMode);
+              await AsyncStorage.removeItem('walletKey');
+              let newPin = await readPin();
+              let encryptedKey = Encrypt(key, newPin);
+              await AsyncStorage.setItem('walletKey', encryptedKey);
+              setCurrentAuthenticationType(newMode);
+              res(true);
+            }
+          })
+          .catch(async e => {
+            await AsyncStorage.setItem('AuthenticationType', prevType);
+            setCurrentAuthenticationType(
+              prevType as SecurityAuthenticationTypes,
+            );
+            rej(e);
+          });
+      });
+    },
+    [supportedType],
+  );
+
   // Context accessible through useSecurity hook
 
   const securityContext: SecurityContextValue = useMemo(
@@ -350,6 +409,8 @@ export const SecurityProvider = (props: any) => {
       setSetManualPin,
       askManualPin,
       setAskManualPin,
+      changeMode,
+      currentAuthenticationType,
     }),
     [
       readPassword,
@@ -358,6 +419,8 @@ export const SecurityProvider = (props: any) => {
       askManualPin,
       setSetManualPin,
       setAskManualPin,
+      changeMode,
+      currentAuthenticationType,
     ],
   );
 

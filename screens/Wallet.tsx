@@ -14,6 +14,7 @@ import {BackHandler} from 'react-native';
 import {useCallback} from 'react';
 import StakingNodeScreen from './wallet/StakingNodeScreen';
 import AddStakingNodeScreen from './wallet/AddStakingNodeScreen';
+import BottomSheetProvider from '../contexts/BottomSheetProvider';
 
 const Stack = createStackNavigator<WalletParamList>();
 
@@ -32,33 +33,38 @@ const Wallet = ({navigation}) => {
   }, []);
 
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-      initialRouteName={'MainWalletScreen'}>
-      <Stack.Screen
-        name={'MainWalletScreen'}
-        component={MainWalletScreen}
-        listeners={{
-          blur: _onBlur,
-          focus: _onFocus,
+    <BottomSheetProvider>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
         }}
-      />
-      <Stack.Screen name={'SendToScreen'} component={SendToScreen} />
-      <Stack.Screen name={'AddressScreen'} component={AddressScreen} />
-      <Stack.Screen name={'HistoryScreen'} component={HistoryScreen} />
-      <Stack.Screen name={'ViewTxScreen'} component={ViewTxScreen} />
-      <Stack.Screen name={'SettingsScreen'} component={SettingsScreen} />
-      <Stack.Screen name={'MnemonicScreen'} component={MnemonicScreen} />
-      <Stack.Screen name={'StakingNodeScreen'} component={StakingNodeScreen} />
-      <Stack.Screen name={'ServersScreen'} component={ServersScreen} />
-      <Stack.Screen name={'AddServerScreen'} component={AddServerScreen} />
-      <Stack.Screen
-        name={'AddStakingNodeScreen'}
-        component={AddStakingNodeScreen}
-      />
-    </Stack.Navigator>
+        initialRouteName={'MainWalletScreen'}>
+        <Stack.Screen
+          name={'MainWalletScreen'}
+          component={MainWalletScreen}
+          listeners={{
+            blur: _onBlur,
+            focus: _onFocus,
+          }}
+        />
+        <Stack.Screen name={'SendToScreen'} component={SendToScreen} />
+        <Stack.Screen name={'AddressScreen'} component={AddressScreen} />
+        <Stack.Screen name={'HistoryScreen'} component={HistoryScreen} />
+        <Stack.Screen name={'ViewTxScreen'} component={ViewTxScreen} />
+        <Stack.Screen name={'SettingsScreen'} component={SettingsScreen} />
+        <Stack.Screen name={'MnemonicScreen'} component={MnemonicScreen} />
+        <Stack.Screen
+          name={'StakingNodeScreen'}
+          component={StakingNodeScreen}
+        />
+        <Stack.Screen name={'ServersScreen'} component={ServersScreen} />
+        <Stack.Screen name={'AddServerScreen'} component={AddServerScreen} />
+        <Stack.Screen
+          name={'AddStakingNodeScreen'}
+          component={AddStakingNodeScreen}
+        />
+      </Stack.Navigator>
+    </BottomSheetProvider>
   );
 };
 export default Wallet;

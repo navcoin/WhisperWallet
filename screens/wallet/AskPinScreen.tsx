@@ -1,7 +1,6 @@
 import React from 'react';
 import Container from '../../components/Container';
 import {ScreenProps} from '../../navigation/type';
-import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import useSecurity from '../../hooks/useSecurity';
 import PINCode from '@haskkor/react-native-pincode';
@@ -16,7 +15,7 @@ const AskPinScreen: React.FC<ScreenProps<'AskPinScreen'>> = (props: any) => {
       {setManualPin ? (
         <PINCode
           status={'choose'}
-          passwordLength={6}
+          passwordLength={props.route.params.pinLength}
           styleMainContainer={{backgroundColor: '#1F2933'}}
           stylePinCodeTextTitle={{fontFamily: 'Overpass-Bold'}}
           stylePinCodeTextSubtitle={{fontFamily: 'Overpass-Bold'}}
@@ -34,7 +33,7 @@ const AskPinScreen: React.FC<ScreenProps<'AskPinScreen'>> = (props: any) => {
       ) : askManualPin ? (
         <PINCode
           status={'enter'}
-          passwordLength={6}
+          passwordLength={props.route.params.pinLength}
           touchIDDisabled={true}
           styleMainContainer={{backgroundColor: '#1F2933'}}
           stylePinCodeTextTitle={{fontFamily: 'Overpass-Bold'}}

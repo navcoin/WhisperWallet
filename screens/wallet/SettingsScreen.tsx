@@ -1,8 +1,8 @@
 import useWallet from '../../hooks/useWallet';
-import React, {useState} from 'react';
-import {StyleSheet, View, Alert, ScrollView} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Alert, ScrollView, StyleSheet, View} from 'react-native';
 import Container from '../../components/Container';
-import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Animation_Types_Enum} from '../../constants/Type';
 import OptionCard from '../../components/OptionCard';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
@@ -16,6 +16,8 @@ import {scale, verticalScale} from 'react-native-size-matters';
 import useSecurity from '../../hooks/useSecurity';
 import {SecurityAuthenticationTypes} from '../../contexts/SecurityContext';
 import {useToast} from 'react-native-toast-notifications';
+import {useBottomSheet} from '../../hooks/useBottomSheet';
+import BottomSheetOptions from '../../components/BottomSheetOptions';
 
 interface SettingsItem {
   title: string;
@@ -31,6 +33,38 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const {walletName, wallet, createWallet} = useWallet();
   const {njs} = useNjs();
   const toast = useToast();
+  const bottomSheet = useBottomSheet();
+  const {changeMode, supportedType, currentAuthenticationType} = useSecurity();
+  const [authTypes, setAuthTypes] = useState<any>([]);
+
+  useEffect(() => {
+    let deviceAuth = [];
+    if (
+      supportedType == SecurityAuthenticationTypes.KEYCHAIN ||
+      supportedType == SecurityAuthenticationTypes.LOCALAUTH
+    ) {
+      deviceAuth = [{text: supportedType, icon: 'biometrics'}];
+    }
+
+    deviceAuth.push(
+      {
+        text: SecurityAuthenticationTypes.MANUAL_4,
+        icon: 'pincode',
+      },
+      {
+        text: SecurityAuthenticationTypes.MANUAL,
+        icon: 'pincode',
+      },
+      {
+        text: SecurityAuthenticationTypes.NONE,
+        icon: 'unsecure',
+      },
+    );
+
+    deviceAuth = deviceAuth.filter(el => el.text != currentAuthenticationType);
+
+    setAuthTypes(deviceAuth);
+  }, [supportedType, currentAuthenticationType]);
 
   const {navigate, goBack} =
     useNavigation<NavigationProp<RootStackParamList>>();
@@ -39,8 +73,6 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     'lockAfterBackground',
     'false',
   );
-
-  const {supportedType} = useSecurity();
 
   const biometricsAlert = () => {
     let title = 'Your wallet is NOT locked when WhisperWallet goes background.';
@@ -146,6 +178,23 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       icon: 'eye',
       show: supportedType != SecurityAuthenticationTypes.MANUAL,
       onPress: () => biometricsAlert(),
+    },
+    {
+      title: 'Security: ' + currentAuthenticationType,
+      icon: 'padLock',
+      show: true,
+      onPress: () => {
+        bottomSheet.expand(
+          <BottomSheetOptions
+            title={'Select a new authentication mode'}
+            options={authTypes}
+            bottomSheetRef={bottomSheet.getRef}
+            onSelect={(el: any) => {
+              changeMode(el.text);
+            }}
+          />,
+        );
+      },
     },
     {
       title: 'Setup Staking Nodes',
