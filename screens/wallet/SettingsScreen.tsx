@@ -170,6 +170,16 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       show: true,
       onPress: () => leaveWallet(),
     },
+    {
+      title: 'Error Logs',
+      icon: 'search',
+      show: true,
+      onPress: () => {
+        navigate('Wallet', {
+          screen: 'ErrorLogsScreen',
+        });
+      },
+    },
   ];
 
   useEffect(() => {

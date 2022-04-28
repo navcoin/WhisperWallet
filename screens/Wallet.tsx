@@ -14,6 +14,7 @@ import {BackHandler} from 'react-native';
 import {useCallback} from 'react';
 import StakingNodeScreen from './wallet/StakingNodeScreen';
 import AddStakingNodeScreen from './wallet/AddStakingNodeScreen';
+import ErrorLogsScreen from './wallet/ErrorLogsScreen';
 
 const Stack = createStackNavigator<WalletParamList>();
 
@@ -54,6 +55,7 @@ const Wallet = ({navigation}) => {
       <Stack.Screen name={'StakingNodeScreen'} component={StakingNodeScreen} />
       <Stack.Screen name={'ServersScreen'} component={ServersScreen} />
       <Stack.Screen name={'AddServerScreen'} component={AddServerScreen} />
+      <Stack.Screen name={'ErrorLogsScreen'} component={ErrorLogsScreen} />
       <Stack.Screen
         name={'AddStakingNodeScreen'}
         component={AddStakingNodeScreen}

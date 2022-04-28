@@ -51,4 +51,5 @@ export type WalletParamList = {
   StakingNodeScreen: undefined;
   AddServerScreen: AddServerScreenProps;
   AddStakingNodeScreen: undefined;
+  ErrorLogsScreen: undefined;
 };
