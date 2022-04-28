@@ -9,7 +9,7 @@ import {useBetween} from 'use-between';
  * If we want to do that we better use the asyncStorageManager.ts
  */
 
-function useAsyncStorageHook(key: string, initialValue: string) {
+function useAsyncStorageHook(key: string, initialValue: any) {
   const [storedValue, setStoredValue] = useState(initialValue);
   useEffect(() => {
     AsyncStorage.getItem(key)
@@ -27,7 +27,8 @@ function useAsyncStorageHook(key: string, initialValue: string) {
   return [storedValue, setValue];
 }
 
-const useAsyncStorageMemoized = memoize((key: string, initialValue: string) => {
+/*
+const useAsyncStorageMemoized = memoize((key: string, initialValue: any) => {
   // Thanks to the memoization tool, we got all the closure parameters we need.
   return () =>
     // Parameterized shared hook here.
@@ -36,4 +37,9 @@ const useAsyncStorageMemoized = memoize((key: string, initialValue: string) => {
 
 export default (key: string, initialValue: string) => {
   return useBetween(useAsyncStorageMemoized(key, initialValue));
+};
+*/
+
+export default (key: string, initialValue: any) => {
+  return useAsyncStorageHook(key, initialValue);
 };
