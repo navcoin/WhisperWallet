@@ -60,7 +60,6 @@ const ErrorModalContent = (props: {
         <ScrollView style={{maxHeight: verticalScale(screenHeight * 0.3)}}>
           <Text category="title4" center style={styles.item}>
             {`The error encountered is as below:\n${errorText}`}
-            errorText
           </Text>
         </ScrollView>
       ) : null}
