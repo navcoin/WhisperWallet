@@ -62,7 +62,7 @@ export const SecurityProvider = (props: any) => {
               const faceIdPermission = await check(PERMISSIONS.IOS.FACE_ID);
               if (faceIdPermission !== RESULTS.GRANTED) {
                 await request(PERMISSIONS.IOS.FACE_ID);
-                await AsyncStorage.setItem('RequestFaceId', 'true');
+                await AsyncStorage.setItem('RequestedFaceId', 'true');
               }
             }
             res(true);
