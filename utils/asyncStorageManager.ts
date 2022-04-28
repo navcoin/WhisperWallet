@@ -5,6 +5,12 @@ export enum AsyncStoredItems {
   TEMP_ERROR_RECORDS = 'temporary_error_records',
 }
 
+/* 
+ * The following fns are built such that we can still use Async Storage outside of Components
+ * Note that in this way, we won't know about any updates on the async storage value, 
+ * If we want to do that we better use useAsyncStorage
+ */
+
 export const getAsyncStorage = async (key: AsyncStoredItems) => {
   const v = await AsyncStorage.getItem(key);
   if (v) return JSON.parse(v)

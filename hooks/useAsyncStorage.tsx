@@ -3,6 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import memoize from 'memoizee';
 import {useBetween} from 'use-between';
 
+/*
+ * The following hook us built such that we can keep track of AsyncStorage updates within Components
+ * Note that we won't be able to use useAsyncStorage in the functions outside of components,
+ * If we want to do that we better use the asyncStorageManager.ts
+ */
+
 function useAsyncStorageHook(key: string, initialValue: string) {
   const [storedValue, setStoredValue] = useState(initialValue);
   useEffect(() => {
