@@ -122,14 +122,6 @@ export const SecurityProvider = (props: any) => {
     UpdateFeatures();
   }, []);
 
-  /*
-   * setManualPin and askManualPin are the callback functions when a manual
-   * pin code is set or introduced by the user
-   */
-
-  const [setManualPin, setSetManualPin] = useState<any>(() => {});
-  const [askManualPin, setAskManualPin] = useState<any>(() => {});
-
   const [supportedType, setSupportedType] =
     useState<SecurityAuthenticationTypes>(SecurityAuthenticationTypes.NONE);
   const [currentAuthenticationType, setCurrentAuthenticationType] =
@@ -293,44 +285,49 @@ export const SecurityProvider = (props: any) => {
    * is to be used.
    */
 
-  const readPin = useCallback(async (): Promise<string> => {
-    let authType = (await AsyncStorage.getItem(
-      'AuthenticationType',
-    )) as unknown as SecurityAuthenticationTypes;
-    if (authType == SecurityAuthenticationTypes.KEYCHAIN) {
-      return await read('whisperMasterKey');
-    } else if (supportedType == SecurityAuthenticationTypes.LOCALAUTH) {
-      return await readEncrytedStorage('whisperMasterKey');
-    } else if (
-      authType == SecurityAuthenticationTypes.MANUAL ||
-      authType == SecurityAuthenticationTypes.MANUAL_4
-    ) {
-      if (!(await AsyncStorage.getItem('walletKey'))) {
-        return await new Promise(res => {
-          setSetManualPin(() => pin => {
-            res(pin);
+  const readPin = useCallback(
+    async (authType_?: SecurityAuthenticationTypes): Promise<string> => {
+      let authType = authType_
+        ? authType_
+        : ((await AsyncStorage.getItem(
+            'AuthenticationType',
+          )) as unknown as SecurityAuthenticationTypes);
+      if (authType == SecurityAuthenticationTypes.KEYCHAIN) {
+        return await read('whisperMasterKey');
+      } else if (authType == SecurityAuthenticationTypes.LOCALAUTH) {
+        return await readEncrytedStorage('whisperMasterKey');
+      } else if (
+        authType == SecurityAuthenticationTypes.MANUAL ||
+        authType == SecurityAuthenticationTypes.MANUAL_4
+      ) {
+        if (authType_ || !(await AsyncStorage.getItem('walletKey'))) {
+          return await new Promise(res => {
+            navigate('AskPinScreen', {
+              pinLength: authType == SecurityAuthenticationTypes.MANUAL ? 6 : 4,
+              setManualPin: pin => {
+                res(pin);
+              },
+            });
           });
-          navigate('AskPinScreen', {
-            pinLength: authType == SecurityAuthenticationTypes.MANUAL ? 6 : 4,
+        } else {
+          return await new Promise(res => {
+            navigate('AskPinScreen', {
+              pinLength: authType == SecurityAuthenticationTypes.MANUAL ? 6 : 4,
+              askManualPin: pin => {
+                res(pin);
+              },
+            });
           });
-        });
+        }
       } else {
-        return await new Promise(res => {
-          setAskManualPin(() => pin => {
-            res(pin);
-          });
-          navigate('AskPinScreen', {
-            pinLength: authType == SecurityAuthenticationTypes.MANUAL ? 6 : 4,
-          });
-        });
+        /*
+         * Empty key if no authentication is used
+         */
+        return '';
       }
-    } else {
-      /*
-       * Empty key if no authentication is used
-       */
-      return '';
-    }
-  }, [supportedType, setSetManualPin, setAskManualPin]);
+    },
+    [supportedType],
+  );
 
   /*
    * This function will read the key using the appropriate method, use it to
@@ -370,6 +367,7 @@ export const SecurityProvider = (props: any) => {
       let prevType =
         (await AsyncStorage.getItem('AuthenticationType')) ||
         SecurityAuthenticationTypes.NONE;
+      let prevWalletKey = (await AsyncStorage.getItem('walletKey')) || '';
       return new Promise((res, rej) => {
         AsyncStorage.getItem('walletKey')
           .then(async val => {
@@ -378,17 +376,18 @@ export const SecurityProvider = (props: any) => {
               rej('No wallet key found');
             } else {
               let key = Decrypt(val, await readPin());
-              await AsyncStorage.setItem('AuthenticationType', newMode);
-              await AsyncStorage.removeItem('walletKey');
-              let newPin = await readPin();
+              let newPin = await readPin(newMode);
               let encryptedKey = Encrypt(key, newPin);
+              await AsyncStorage.setItem('AuthenticationType', newMode);
               await AsyncStorage.setItem('walletKey', encryptedKey);
               setCurrentAuthenticationType(newMode);
               res(true);
             }
           })
           .catch(async e => {
+            console.log(e);
             await AsyncStorage.setItem('AuthenticationType', prevType);
+            await AsyncStorage.setItem('walletKey', prevWalletKey);
             setCurrentAuthenticationType(
               prevType as SecurityAuthenticationTypes,
             );
@@ -405,23 +404,10 @@ export const SecurityProvider = (props: any) => {
     () => ({
       supportedType,
       readPassword,
-      setManualPin,
-      setSetManualPin,
-      askManualPin,
-      setAskManualPin,
       changeMode,
       currentAuthenticationType,
     }),
-    [
-      readPassword,
-      supportedType,
-      setManualPin,
-      askManualPin,
-      setSetManualPin,
-      setAskManualPin,
-      changeMode,
-      currentAuthenticationType,
-    ],
+    [readPassword, supportedType, changeMode, currentAuthenticationType],
   );
 
   return (

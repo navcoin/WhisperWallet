@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import Container from '../../components/Container';
 import {ScreenProps} from '../../navigation/type';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
-import useSecurity from '../../hooks/useSecurity';
 import PINCode from '@haskkor/react-native-pincode';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -10,8 +9,7 @@ import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import {Button, StyleService, Text} from '@tsejerome/ui-kitten-components';
 
 const AskPinScreen: React.FC<ScreenProps<'AskPinScreen'>> = (props: any) => {
-  const {setManualPin, setSetManualPin, askManualPin, setAskManualPin} =
-    useSecurity();
+  const {setManualPin, askManualPin, pinLength} = props.route.params;
   const {goBack} = useNavigation();
   const [showInstructions, setShowInstructions] = useState(true);
   return (
@@ -42,9 +40,9 @@ const AskPinScreen: React.FC<ScreenProps<'AskPinScreen'>> = (props: any) => {
                 paddingHorizontal: scale(32),
               }}>
               In the next screen you are going to be asked to introduce a new{' '}
-              {props.route.params.pinLength}-digit PIN code. {'\n\n'}This code
-              will be asked anytime: {'\n\n'}- A wallet is opened, deleted or
-              resynced {'\n\n'}- Access to the private keys is required {'\n\n'}
+              {pinLength}-digit PIN code. {'\n\n'}This code will be asked
+              anytime: {'\n\n'}- A wallet is opened, deleted or resynced{' '}
+              {'\n\n'}- Access to the private keys is required {'\n\n'}
             </Text>
             <Button
               style={[styles.wallet]}
@@ -55,7 +53,7 @@ const AskPinScreen: React.FC<ScreenProps<'AskPinScreen'>> = (props: any) => {
         ) : (
           <PINCode
             status={'choose'}
-            passwordLength={props.route.params.pinLength}
+            passwordLength={pinLength}
             styleMainContainer={{backgroundColor: '#1F2933'}}
             stylePinCodeTextTitle={{fontFamily: 'Overpass-Bold'}}
             stylePinCodeTextSubtitle={{fontFamily: 'Overpass-Bold'}}
@@ -67,14 +65,13 @@ const AskPinScreen: React.FC<ScreenProps<'AskPinScreen'>> = (props: any) => {
             storePin={async (pin: string) => {
               setManualPin(pin);
               goBack();
-              setSetManualPin(undefined);
             }}
           />
         )
       ) : askManualPin ? (
         <PINCode
           status={'enter'}
-          passwordLength={props.route.params.pinLength}
+          passwordLength={pinLength}
           touchIDDisabled={true}
           styleMainContainer={{backgroundColor: '#1F2933'}}
           stylePinCodeTextTitle={{fontFamily: 'Overpass-Bold'}}
@@ -89,7 +86,6 @@ const AskPinScreen: React.FC<ScreenProps<'AskPinScreen'>> = (props: any) => {
           endProcessFunction={async (pin: string) => {
             askManualPin(pin);
             goBack();
-            setAskManualPin(undefined);
           }}
         />
       ) : (

@@ -11,10 +11,6 @@ export enum SecurityAuthenticationTypes {
 export interface SecurityContextValue {
   supportedType: SecurityAuthenticationTypes;
   readPassword(): Promise<string>;
-  setManualPin: any;
-  setSetManualPin: any;
-  askManualPin: any;
-  setAskManualPin: any;
   changeMode(newMode: SecurityAuthenticationTypes): Promise<boolean>;
   currentAuthenticationType: SecurityAuthenticationTypes;
 }
