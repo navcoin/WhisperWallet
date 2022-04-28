@@ -23,7 +23,6 @@ import AppContainer from './navigation/AppContainer';
 import RNBootSplash from 'react-native-bootsplash';
 
 patchFlatListProps();
-
 import SQLite from 'react-native-sqlite-2';
 
 import setGlobalVars from 'indexeddbshim/dist/indexeddbshim-noninvasive';
@@ -38,10 +37,16 @@ import {
 
 import Toast from 'react-native-toast-message';
 import toastConfig from './components/Toast';
-import {errorTextParser, promptErrorToaster} from './utils/errors';
+import {
+  errorTextParser,
+  promptErrorToaster,
+  saveGlobalErrorRecord,
+  saveTemporaryErrorRecord,
+} from './utils/errors';
 import ModalProvider from './contexts/ModalProvider';
 import {useModal} from './hooks/useModal';
 import ErrorModalContent from './components/ErrorModalContent';
+import {AsyncStoredItems} from './utils/asyncStorageManager';
 const win = {};
 
 setGlobalVars(win, {win: SQLite});
@@ -57,29 +62,33 @@ const App = (props: {theme: string}) => {
   const {setWin} = useWin();
   const {openModal, closeModal} = useModal();
 
-  const [crashErrorRecords, setCrashErrorRecords] = useAsyncStorage(
-    'crashErrorRecords',
+  const [promptPreviousError, setPromptPreviousError] = useAsyncStorage(
+    AsyncStoredItems.PROMPT_ERROR_ON_NEXT_LAUNCH,
+    '',
+  );
+  const [temporaryErrorRecords, setTemporaryErrorRecords] = useAsyncStorage(
+    AsyncStoredItems.TEMP_ERROR_RECORDS,
     '',
   );
 
   const [shownWelcome, setShownWelcome] = useState('false');
 
-  const previousNativeErrorHandler = (errorMessage: string) => {
-    setCrashErrorRecords('');
+  const checkIfAppHadPreviousNativeErrorHandler = async () => {
+    if (!promptPreviousError) {
+      return;
+    }
+    setPromptPreviousError(false);
+    if (!temporaryErrorRecords.length) return;
+    const errorMessage = temporaryErrorRecords[0];
     promptErrorToaster(errorMessage, true, true, () => {
       const errorMsg = errorTextParser(errorMessage, true);
       openModal(<ErrorModalContent errorText={errorMsg}></ErrorModalContent>);
     });
   };
 
-  const checkIfAppHadCrashed = async () => {
-    if (!crashErrorRecords.length) {
-      return;
-    }
-    previousNativeErrorHandler(crashErrorRecords);
-  };
-
-  const JSLeveErrorPrompt = (error: Error | string, isFatal: boolean) => {
+  const JSLeveErrorPrompt = async (error: Error | string, isFatal: boolean) => {
+    await saveGlobalErrorRecord(errorTextParser(error, isFatal));
+    await saveTemporaryErrorRecord(errorTextParser(error, isFatal));
     promptErrorToaster(error, isFatal, false, () => {
       const errorMsg = errorTextParser(error, isFatal);
       console.log('before openingModal');
@@ -91,6 +100,8 @@ const App = (props: {theme: string}) => {
   setNativeExceptionHandler(async errorString => {
     console.log('setNativeExceptionHandler');
     console.log(errorString);
+    await saveGlobalErrorRecord(errorTextParser(errorString, true));
+    await saveTemporaryErrorRecord(errorTextParser(errorString, true));
     await AsyncStorage.setItem('crashErrorRecords', errorString);
   });
 
@@ -139,7 +150,7 @@ const App = (props: {theme: string}) => {
       njs.wallet.WalletFile.SetBackend(win.indexedDB, win.IDBKeyRange);
       setLoaded(true);
 
-      checkIfAppHadCrashed();
+      checkIfAppHadPreviousNativeErrorHandler();
     });
   }, []);
 
@@ -192,7 +203,6 @@ const AppWrapper = () => {
           customMapping={customMapping}>
           <ModalProvider>
             <App theme={theme} />
-            {/* <ErrorModal errorText="asdads" /> */}
           </ModalProvider>
         </ApplicationProvider>
       </ThemeContext.Provider>

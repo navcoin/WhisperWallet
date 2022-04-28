@@ -30,8 +30,6 @@ const promptErrorToaster = (
   isPreviousSession: boolean = false,
   cb?: () => void
 ) => {
-  saveGlobalErrorRecord(errorTextParser(e, isFatal))
-  saveTemporaryErrorRecord(errorTextParser(e, isFatal))
   if (isPreviousSession) {
     Toast.show({
       type: 'error',
@@ -60,8 +58,7 @@ const promptErrorToaster = (
  * Change an Error object to a single string
  */
 const errorTextParser = (e: Error | string, isFatal: boolean) => {
-  let errorMsg: string = `The error encountered is as below:
-  `;
+  let errorMsg: string = ``;
   if (typeof e === 'string') {
     errorMsg += `${isFatal ? 'Fatal:' : ''} ${e}`;
   }
@@ -87,4 +84,7 @@ const errorGroupParser = (errors: string[]) => {
 
 
 
-export { promptErrorToaster, errorTextParser, cleanTemporaryErrorRecord, errorGroupParser }
+export {
+  promptErrorToaster, errorTextParser, errorGroupParser,
+  cleanTemporaryErrorRecord, saveTemporaryErrorRecord, saveGlobalErrorRecord
+}
