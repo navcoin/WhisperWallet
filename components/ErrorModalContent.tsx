@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
-import {scale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 import Toast from 'react-native-toast-message';
 import {useModal} from '../hooks/useModal';
 import {cleanTemporaryErrorRecord} from '../utils/errors';
@@ -9,6 +9,7 @@ import {sendErrorCrashEmail} from '../utils/sendMail';
 import Button from './Button';
 import Modal from './Modal';
 import Text from './Text';
+import {screenHeight} from '../utils/layout';
 
 const ErrorModalContent = (props: {errorText: string}) => {
   const {errorText} = props;
@@ -45,10 +46,12 @@ const ErrorModalContent = (props: {errorText: string}) => {
   return (
     <>
       {errorText ? (
-        <Text category="title4" center style={styles.item}>
-          {errorText}
-          errorText
-        </Text>
+        <ScrollView style={{maxHeight: verticalScale(screenHeight * 0.3)}}>
+          <Text category="title4" center style={styles.item}>
+            {`The error encountered is as below:\n${errorText}`}
+            errorText
+          </Text>
+        </ScrollView>
       ) : null}
       <View style={[styles.buttonGroup]}>
         {buttonOptions.map((option, index) => (
