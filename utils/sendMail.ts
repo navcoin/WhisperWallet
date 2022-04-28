@@ -1,6 +1,8 @@
 import qs from 'qs';
 import { Linking } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
+import { getAsyncStorage, AsyncStoredItems } from './asyncStorageManager';
+import { errorGroupParser } from './errors';
 
 type Email = string | string[];
 
@@ -17,12 +19,12 @@ const getDeviceInfo = async () => {
   return { model, os, brand, systemVersion }
 }
 
-export async function sendErrorCrashEmail(
-  e: string,
-  isFatal: boolean = true,
-) {
+export async function sendErrorCrashEmail() {
   let deviceInfo = await getDeviceInfo();
-  sendEmail(
+  const tempRecords: string[] = await getAsyncStorage(AsyncStoredItems.TEMP_ERROR_RECORDS)
+
+
+  await sendEmail(
     'dev@whisperwallet.net',
     'My Whisper Wallet crashed!',
     `Hello Whisper Development Team, 
@@ -36,7 +38,8 @@ export async function sendErrorCrashEmail(
     
     
     The error is as below: 
-    ${isFatal ? 'Fatal:' : ''} ${e}`,
+    ${errorGroupParser(tempRecords)}
+    `,
   ).then(() => {
     console.log('Your message was successfully sent!');
   });

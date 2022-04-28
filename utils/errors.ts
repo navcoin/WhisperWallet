@@ -1,6 +1,28 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert, Clipboard } from "react-native";
 import Toast from "react-native-toast-message";
+import { AsyncStoredItems, getAsyncStorage, removeAsyncStorage, setAsyncStorage } from "./asyncStorageManager";
 import { sendErrorCrashEmail } from "./sendMail";
+
+const saveGlobalErrorRecord = async (newError: string) => {
+  let globalRecords = await getAsyncStorage(AsyncStoredItems.GLOBAL_ERROR_RECORDS)
+  if (!globalRecords) globalRecords = [];
+  const temp = `${new Date().toISOString()} 
+  ${newError}`;
+  await setAsyncStorage(AsyncStoredItems.GLOBAL_ERROR_RECORDS, [temp, ...globalRecords])
+}
+
+const saveTemporaryErrorRecord = async (newError: string) => {
+  let tempRecords = await getAsyncStorage(AsyncStoredItems.TEMP_ERROR_RECORDS)
+  if (!tempRecords) tempRecords = [];
+  const temp = `${new Date().toISOString()} 
+  ${newError}`;
+  await setAsyncStorage(AsyncStoredItems.TEMP_ERROR_RECORDS, [temp, ...tempRecords])
+}
+
+const cleanTemporaryErrorRecord = async () => {
+  await removeAsyncStorage(AsyncStoredItems.TEMP_ERROR_RECORDS)
+}
 
 const promptErrorToaster = (
   e: Error | string,
@@ -8,6 +30,8 @@ const promptErrorToaster = (
   isPreviousSession: boolean = false,
   cb?: () => void
 ) => {
+  saveGlobalErrorRecord(errorTextParser(e, isFatal))
+  saveTemporaryErrorRecord(errorTextParser(e, isFatal))
   if (isPreviousSession) {
     Toast.show({
       type: 'error',
@@ -32,6 +56,9 @@ const promptErrorToaster = (
   });
 };
 
+/* 
+ * Change an Error object to a single string
+ */
 const errorTextParser = (e: Error | string, isFatal: boolean) => {
   let errorMsg: string = `The error encountered is as below:
   `;
@@ -42,7 +69,22 @@ const errorTextParser = (e: Error | string, isFatal: boolean) => {
     errorMsg += `${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}`;
   }
   return errorMsg;
-
 };
 
-export { promptErrorToaster, errorTextParser }
+/* 
+ * Parsing an array of error string into one single string
+ */
+const errorGroupParser = (errors: string[]) => {
+  let result = ``;
+  errors.map((err, index) => {
+    result += `${err}`
+    if (index < errors.length - 1) {
+      result += `\n\n\n`;
+    }
+  })
+  return result;
+}
+
+
+
+export { promptErrorToaster, errorTextParser, cleanTemporaryErrorRecord, errorGroupParser }

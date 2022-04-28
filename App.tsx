@@ -100,9 +100,6 @@ const App = (props: {theme: string}) => {
         setShownWelcome(itemValue);
       }
     });
-    setTimeout(() => {
-      promptErrorToaster('asd', false, false);
-    }, 1000);
   }, []);
 
   useEffect(() => {

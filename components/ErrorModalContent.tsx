@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Clipboard, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import {scale} from 'react-native-size-matters';
 import Toast from 'react-native-toast-message';
 import {useModal} from '../hooks/useModal';
+import {cleanTemporaryErrorRecord} from '../utils/errors';
 import {sendErrorCrashEmail} from '../utils/sendMail';
 import Button from './Button';
 import Modal from './Modal';
@@ -14,26 +16,28 @@ const ErrorModalContent = (props: {errorText: string}) => {
   const buttonOptions = [
     {
       text: 'Send report via email',
-      onPress: () => {
-        sendErrorCrashEmail(errorText, errorText.includes('Fatal'));
+      onPress: async () => {
+        await sendErrorCrashEmail();
+        await cleanTemporaryErrorRecord();
         closeModal();
       },
     },
     {
       text: 'Copy error',
-      onPress: () => {
+      onPress: async () => {
         Clipboard.setString(errorText);
         Toast.show({
           type: 'success',
           text1: 'Error Copied!',
         });
+        await cleanTemporaryErrorRecord();
         closeModal();
       },
     },
     {
       text: 'Close',
-      onPress: () => {
-        console.log('asdasd');
+      onPress: async () => {
+        await cleanTemporaryErrorRecord();
         closeModal();
       },
     },

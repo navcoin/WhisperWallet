@@ -11,9 +11,6 @@ import Button from '../components/Button';
 import {Images} from '../assets/images';
 import {RootStackParamList} from './type';
 import useNjs from '../hooks/useNjs';
-import useKeychain from '../utils/Keychain';
-import LoadingModalContent from '../components/LoadingModalContent';
-import LoadingModal from '../components/LoadingModalContent';
 import {useModal} from '../hooks/useModal';
 
 const Intro = memo(props => {
