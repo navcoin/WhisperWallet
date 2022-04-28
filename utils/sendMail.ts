@@ -19,7 +19,7 @@ const getDeviceInfo = async () => {
   return { model, os, brand, systemVersion }
 }
 
-export async function sendErrorCrashEmail() {
+export async function sendErrorCrashEmail(particularError?: string) {
   let deviceInfo = await getDeviceInfo();
   const tempRecords: string[] = await getAsyncStorage(AsyncStoredItems.TEMP_ERROR_RECORDS)
 
@@ -38,7 +38,7 @@ export async function sendErrorCrashEmail() {
     
     
     The error is as below: 
-    ${errorGroupParser(tempRecords)}
+    ${particularError || errorGroupParser(tempRecords)}
     `,
   ).then(() => {
     console.log('Your message was successfully sent!');

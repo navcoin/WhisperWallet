@@ -4,41 +4,52 @@ import Clipboard from '@react-native-community/clipboard';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Toast from 'react-native-toast-message';
 import {useModal} from '../hooks/useModal';
-import {cleanTemporaryErrorRecord} from '../utils/errors';
+import {cleanTemporaryErrorRecord, errorGroupParser} from '../utils/errors';
 import {sendErrorCrashEmail} from '../utils/sendMail';
 import Button from './Button';
 import Modal from './Modal';
 import Text from './Text';
 import {screenHeight} from '../utils/layout';
+import {AsyncStoredItems} from '../utils/asyncStorageManager';
+import useAsyncStorage from '../hooks/useAsyncStorage';
 
-const ErrorModalContent = (props: {errorText: string}) => {
-  const {errorText} = props;
+const ErrorModalContent = (props: {
+  errorText: string;
+  focusOneError?: boolean;
+}) => {
+  const {errorText, focusOneError = false} = props;
   const {closeModal} = useModal();
+  const [tempErrorRecords, setErrorRecords] = useAsyncStorage(
+    AsyncStoredItems.TEMP_ERROR_RECORDS,
+    null,
+  );
   const buttonOptions = [
     {
       text: 'Send report via email',
       onPress: async () => {
-        await sendErrorCrashEmail();
-        await cleanTemporaryErrorRecord();
+        await sendErrorCrashEmail(focusOneError ? errorText : undefined);
+        if (!focusOneError) await cleanTemporaryErrorRecord();
         closeModal();
       },
     },
     {
       text: 'Copy error',
       onPress: async () => {
-        Clipboard.setString(errorText);
+        Clipboard.setString(
+          focusOneError ? errorText : errorGroupParser(tempErrorRecords),
+        );
         Toast.show({
           type: 'success',
           text1: 'Error Copied!',
         });
-        await cleanTemporaryErrorRecord();
+        if (!focusOneError) await cleanTemporaryErrorRecord();
         closeModal();
       },
     },
     {
       text: 'Close',
       onPress: async () => {
-        await cleanTemporaryErrorRecord();
+        if (!focusOneError) await cleanTemporaryErrorRecord();
         closeModal();
       },
     },
