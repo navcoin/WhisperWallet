@@ -181,7 +181,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     },
     {
       title: 'Security: ' + currentAuthenticationType,
-      icon: 'padLock',
+      icon: 'pincode',
       show: true,
       onPress: () => {
         bottomSheet.expand(
