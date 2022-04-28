@@ -23,7 +23,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useModal} from '../../hooks/useModal';
 import ErrorModalContent from '../../components/ErrorModalContent';
-import {scale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 const ErrorLogsScreen = (props: any) => {
   const {openModal} = useModal();
@@ -31,25 +31,13 @@ const ErrorLogsScreen = (props: any) => {
     AsyncStoredItems.GLOBAL_ERROR_RECORDS,
     null,
   );
-  // const sss = async () => {
-  //   const asd = await getAsyncStorage(AsyncStoredItems.GLOBAL_ERROR_RECORDS);
-  //   let b = '';
-  //   console.log('starting');
-  //   console.log(global_error_records);
-  //   console.log('global_error_records');
-
-  //   setEr(b);
-  // };
-  // useEffect(() => {
-  //   sss();
-  // }, []);
 
   return (
     <Container useSafeArea>
       <TopNavigationComponent title={'Error Logs'} />
       <ScrollView style={[styles.container]}>
         {errorRecords === null ? (
-          <ActivityIndicator animating />
+          <ActivityIndicator style={{marginTop: verticalScale(24)}} animating />
         ) : errorRecords.length ? (
           errorRecords.map((eachError: string, index: number) => {
             return (
