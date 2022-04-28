@@ -76,24 +76,38 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     navigate('Intro');
   };
 
-  const deleteWallet = () => {
-    Alert.alert('Delete Wallet', 'Are you sure to delete ' + walletName, [
-      {
-        text: 'Delete',
-        onPress: () => disconnectWallet(true),
-      },
-      {
-        text: 'Cancel',
-        onPress: () => {},
-      },
-    ]);
+const deleteWallet = () => {
+    Alert.alert(
+      'Delete Wallet',
+      'The coins stored on the wallet "' +
+        walletName +
+        '" will be lost and only accessible again using a valid backup.\n\nPlease be sure your seed words are correctly backed up.\n\nAre you sure you want to delete this wallet?',
+      [
+        {
+          text: 'Delete',
+          onPress: () => {
+            read(walletName).then((password: string) => {
+              disconnectWallet(true);
+            });
+          },
+        },
+        {
+          text: 'Cancel',
+          onPress: () => {},
+        },
+      ],
+    );
   };
 
   const resyncWallet = () => {
-    setLoading('Restarting...');
-    wallet.Disconnect();
-    wallet.CloseDb();
+    try {
+      wallet.Disconnect();
+      wallet.CloseDb();
+    } catch (e) {}
+
     read(walletName).then((password: string) => {
+      setLoading('Restarting...');
+
       createWallet(
         walletName,
         '',
