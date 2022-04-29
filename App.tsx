@@ -98,8 +98,6 @@ const App = (props: {theme: string}) => {
   setJSExceptionHandler(JSLeveErrorPrompt, true);
 
   setNativeExceptionHandler(async errorString => {
-    console.log('setNativeExceptionHandler');
-    console.log(errorString);
     await saveGlobalErrorRecord(errorTextParser(errorString, true));
     await saveTemporaryErrorRecord(errorTextParser(errorString, true));
     await AsyncStorage.setItem('crashErrorRecords', errorString);
