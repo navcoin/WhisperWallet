@@ -1,29 +1,17 @@
-import useWallet from '../../hooks/useWallet';
-import BigList from 'react-native-big-list';
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, ScrollView, ActivityIndicator} from 'react-native';
+import React from 'react';
+import {View, StyleSheet, ScrollView} from 'react-native';
 import Container from '../../components/Container';
-import Transaction from '../../components/Transaction';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {
-  Connection_Stats_Enum,
-  Connection_Stats_Text,
-} from '../../constants/Type';
 import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
-import useLayout from '../../hooks/useLayout';
-import {RootStackParamList} from '../../navigation/type';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import {
   AsyncStoredItems,
-  getAsyncStorage,
 } from '../../utils/asyncStorageManager';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useModal} from '../../hooks/useModal';
 import ErrorModalContent from '../../components/ErrorModalContent';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {scale} from 'react-native-size-matters';
 
 const ErrorLogsScreen = (props: any) => {
   const {openModal} = useModal();
@@ -36,9 +24,7 @@ const ErrorLogsScreen = (props: any) => {
     <Container useSafeArea>
       <TopNavigationComponent title={'Error Logs'} />
       <ScrollView style={[styles.container]}>
-        {errorRecords === null ? (
-          <ActivityIndicator style={{marginTop: verticalScale(24)}} animating />
-        ) : errorRecords.length ? (
+        {errorRecords?.length ? (
           errorRecords.map((eachError: string, index: number) => {
             return (
               <OptionCard
