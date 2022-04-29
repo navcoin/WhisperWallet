@@ -122,6 +122,8 @@ const App = (props: {theme: string}) => {
 
   useEffect(() => {
     njs.wallet.Init().then(async () => {
+      njs.wallet.WalletFile.SetBackend(win.indexedDB, win.IDBKeyRange);
+
       setNjs(njs);
       setWin(win);
       setP2pPool(
@@ -154,7 +156,6 @@ const App = (props: {theme: string}) => {
         }),
       );
 
-      njs.wallet.WalletFile.SetBackend(win.indexedDB, win.IDBKeyRange);
       setWalletLoaded(true);
 
       checkIfAppHadPreviousNativeErrorHandler();
