@@ -104,14 +104,12 @@ const App = (props: {theme: string}) => {
     await saveTemporaryErrorRecord(errorTextParser(errorString, true));
     await AsyncStorage.setItem('crashErrorRecords', errorString);
   });
-
+  
   useEffect(() => {
     AsyncStorage.getItem('shownWelcome').then(itemValue => {
-      setTimeout(() => {
-        if (itemValue == 'true' || itemValue == 'false') {
-          setShownWelcome(itemValue);
-        }
-      }, 5000);
+      if (itemValue == 'true' || itemValue == 'false') {
+        setShownWelcome(itemValue);
+      }
     });
   }, []);
 
