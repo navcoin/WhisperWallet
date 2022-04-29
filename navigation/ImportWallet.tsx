@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, Input, useTheme} from '@ui-kitten/components';
+import {Button, Input, useTheme} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 
 import Text from '../components/Text';
@@ -15,25 +15,26 @@ import {IsValidMnemonic} from '../utils/Mnemonic';
 import OptionCard from '../components/OptionCard';
 import {NetworkTypes, WalletTypes} from '../constants/Type';
 import useKeychain from '../utils/Keychain';
+import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 const ImportWallet = () => {
-  const {goBack, navigate} = useNavigation();
-  const theme = useTheme();
+  const {navigate} = useNavigation();
   const [index, setIndex] = useState(0);
   const [walletName, setWalletName] = useState('');
   const [mnemonic, setMnemonic] = useState('');
   const [network, setNetwork] = useState('mainnet');
   const [type, setType] = useState('');
   const {createWallet} = useWallet();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
   const {njs} = useNjs();
   const {read} = useKeychain();
 
   return (
     <Container useSafeArea>
-      <Loading loading={loading} />
+      <Loading loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Import Wallet'} />
       <AnimatedStep style={styles.animatedStep} step={index} />
 
@@ -49,24 +50,32 @@ const ImportWallet = () => {
 
             {WalletTypes.map((el, index) => {
               return (
-                <OptionCard
-                  item={{text: el[1]}}
-                  index={index}
-                  icon={'creditCard'}
-                  onPress={() => {
-                    setType(el[0]);
-                    setIndex(1);
-                  }}
-                />
+                <View style={[layoutStyles.responsiveColumnComponentWidth]} key={el[1]}>
+                  <OptionCard
+                    item={{text: el[1]}}
+                    index={index}
+                    icon={'creditCard'}
+                    onPress={() => {
+                      setType(el[0]);
+                      setIndex(1);
+                    }}
+                  />
+                </View>
               );
             })}
           </KeyboardAwareScrollView>
         ) : index === 1 ? (
-          <KeyboardAwareScrollView>
-            <Text center style={{marginHorizontal: 12, marginBottom: 24}}>
+          <View>
+            <Text
+              center
+              style={{marginHorizontal: scale(12), marginBottom: scale(24)}}>
               Type the recovery words.
             </Text>
-            <View style={styles.layout}>
+            <View
+              style={[
+                layoutStyles.responsiveColumnComponentWidth,
+                styles.layout,
+              ]}>
               <Input
                 multiline={true}
                 numberOfLines={3}
@@ -79,15 +88,15 @@ const ImportWallet = () => {
               />
             </View>
             {error ? (
-              <Text style={{color: 'red', flex: 1}} center>
+              <Text style={{color: 'red'}} center>
                 {error}
               </Text>
             ) : (
               <></>
             )}
-            <View style={styles.layout}>
+            <View style={[layoutStyles.responsiveRowComponentWidth]}>
               <Button
-                status={'control'}
+                status={'primary-whisper'}
                 children="Next"
                 style={styles.button}
                 onPress={() => {
@@ -100,7 +109,7 @@ const ImportWallet = () => {
                 }}
               />
             </View>
-          </KeyboardAwareScrollView>
+          </View>
         ) : index === 2 ? (
           <KeyboardAwareScrollView
             style={styles.content}
@@ -153,16 +162,16 @@ const ImportWallet = () => {
             )}
             <Button
               children="Next"
-              status={'control'}
+              status={'primary-whisper'}
               style={styles.button}
               onPressOut={async () => {
                 const walletList = await njs.wallet.WalletFile.ListWallets();
                 if (walletList.indexOf(walletName) > -1) {
                   setError('There is already a wallet with that name.');
                 } else if (walletName) {
-                  setLoading(true);
                   read(walletName)
                     .then((password: string) => {
+                      setLoading('Creating wallet keys...');
                       createWallet(
                         walletName,
                         mnemonic,
@@ -173,13 +182,13 @@ const ImportWallet = () => {
                         true,
                         network,
                         () => {
-                          setLoading(false);
+                          setLoading(undefined);
                           setIndex(4);
                         },
                       );
                     })
                     .catch((e: any) => {
-                      setLoading(false);
+                      setLoading(undefined);
                     });
                 }
               }}
@@ -195,7 +204,7 @@ const ImportWallet = () => {
               You can now start using Whisper Wallet.
             </Text>
             <Button
-              status={'control'}
+              status={'primary-whisper'}
               children="Finish"
               style={styles.button}
               onPress={() => {
@@ -215,62 +224,62 @@ export default ImportWallet;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 32,
+    marginTop: verticalScale(32),
     flex: 1,
   },
   flex1: {
     flex: 1,
   },
   tabBar: {
-    marginHorizontal: 80,
+    marginHorizontal: scale(80),
   },
   bottom: {
     position: 'absolute',
-    bottom: 0,
+    bottom: scale(0),
     width: '100%',
   },
   topNav: {
-    marginHorizontal: 12,
+    marginHorizontal: scale(12),
   },
   input01: {
     flex: 1,
-    marginRight: 16,
+    marginRight: scale(16),
   },
   inputPhone: {
-    marginVertical: 20,
+    marginVertical: verticalScale(20),
   },
   content: {
-    marginHorizontal: 24,
+    marginHorizontal: scale(24),
   },
   flexRow: {
     flexDirection: 'row',
   },
   box: {
-    borderRadius: 12,
-    padding: 16,
-    width: 120,
+    borderRadius: scale(12),
+    padding: scale(16),
+    width: scale(120),
   },
   boxConfirm: {
-    margin: 4,
-    width: 120,
+    margin: scale(4),
+    width: scale(120),
   },
   boxWord: {
-    borderRadius: 16,
-    margin: 4,
-    padding: 16,
-    width: 120,
+    borderRadius: scale(16),
+    margin: scale(4),
+    padding: scale(16),
+    width: scale(120),
   },
   animatedStep: {
-    marginTop: 28,
+    marginTop: scale(28),
   },
   layout: {
     flexDirection: 'row',
-    marginBottom: 24,
-    marginHorizontal: 24,
+    marginBottom: verticalScale(24),
+    paddingHorizontal: scale(24),
   },
   button: {
-    marginTop: 24,
-    marginHorizontal: 12,
+    marginTop: verticalScale(24),
+    marginHorizontal: scale(24),
     flex: 1,
   },
 });

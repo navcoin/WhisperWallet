@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, View} from 'react-native';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
-import {useTheme} from '@ui-kitten/components';
+import {useTheme} from '@tsejerome/ui-kitten-components';
 
 const SegmentCircle = ({
   segmentsSource,
@@ -98,6 +98,7 @@ const SegmentCircle = ({
         }
         return (
           <AnimatedCircularProgress
+            key={index}
             index={index}
             tintColor={segment.color || theme['color-patrick-blue-400']}
             size={svgWidth}

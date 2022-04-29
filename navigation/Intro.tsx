@@ -1,11 +1,13 @@
 import React, {memo, useEffect, useState} from 'react';
 import {Image, View} from 'react-native';
-import {StyleService, useStyleSheet, Button} from '@ui-kitten/components';
+import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
+import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 import Text from '../components/Text';
 import Content from '../components/Content';
 import Container from '../components/Container';
+import Button from '../components/Button';
 import {Images} from '../assets/images';
 import {RootStackParamList} from './type';
 import useWallet from '../hooks/useWallet';
@@ -17,53 +19,55 @@ const Intro = memo(props => {
 
   return (
     <Container style={styles.container}>
-      <Image
-        source={Images.logo}
-        /* @ts-ignore */
-        style={styles.icon}
-      />
-
-      <View style={styles.spacer} />
-
       <Content style={styles.content}>
-        <Text
-          category="header"
-          marginTop={16}
-          marginRight={0}
-          marginBottom={8}
-          center>
-          Whisper Wallet
-        </Text>
-        <View style={styles.spacer} />
+        <View style={{alignItems: 'center'}}>
+          <Image
+            source={Images.logo}
+            /* @ts-ignore */
+            style={styles.icon}
+          />
 
-        {walletsList.length > 0 ? (
+          <View style={styles.spacer} />
+
+          <Text
+            category="header"
+            marginTop={16}
+            marginRight={0}
+            marginBottom={8}
+            center>
+            Whisper Wallet
+          </Text>
+          <View style={styles.spacer} />
+
+          {walletsList.length > 0 ? (
+            <Button
+              children="Open"
+              style={[styles.wallet]}
+              status="primary-whisper"
+              onPress={() => {
+                navigate('OpenWallet');
+              }}
+            />
+          ) : (
+            <></>
+          )}
           <Button
-            children="Open"
-            style={styles.wallet}
+            children="New"
+            style={[styles.wallet]}
             status="primary-whisper"
             onPress={() => {
-              navigate('OpenWallet');
+              navigate('CreateNewWallet');
             }}
           />
-        ) : (
-          <></>
-        )}
-        <Button
-          children="New"
-          status="primary-whisper"
-          style={styles.wallet}
-          onPress={() => {
-            navigate('CreateNewWallet');
-          }}
-        />
-        <Button
-          children="Import"
-          style={styles.wallet}
-          status="primary-whisper"
-          onPress={() => {
-            navigate('ImportWallet');
-          }}
-        />
+          <Button
+            children="Import"
+            style={[styles.wallet]}
+            status="primary-whisper"
+            onPress={() => {
+              navigate('ImportWallet');
+            }}
+          />
+        </View>
       </Content>
     </Container>
   );
@@ -77,34 +81,36 @@ const themedStyles = StyleService.create({
     alignItems: 'center',
   },
   icon: {
-    width: 250,
-    height: 250,
-    marginTop: 48,
+    width: verticalScale(250),
+    height: verticalScale(250),
+    marginTop: verticalScale(48),
+    alignSelf: 'center',
   },
   iconArrow: {
     tintColor: 'color-primary-100',
-    marginRight: 8,
+    marginRight: scale(8),
   },
   input: {
-    marginVertical: 24,
+    marginVertical: verticalScale(24),
   },
   wallet: {
-    marginTop: 8,
-    marginBottom: 16,
+    marginTop: verticalScale(8),
+    marginBottom: verticalScale(16),
+    width: moderateScale(250, 0.5),
   },
   content: {
-    marginHorizontal: 40,
+    marginHorizontal: scale(40),
   },
   btnImage: {
     justifyContent: 'space-between',
-    marginTop: 48,
+    marginTop: scale(48),
     flex: 1,
   },
   spacer: {
-    marginTop: 32,
+    marginTop: verticalScale(32),
   },
   btnText: {
-    marginTop: 24,
+    marginTop: verticalScale(24),
     textAlign: 'center',
   },
 });

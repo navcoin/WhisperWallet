@@ -10,7 +10,7 @@ import {
   Select,
   SelectItem,
   TopNavigationAction,
-} from '@ui-kitten/components';
+} from '@tsejerome/ui-kitten-components';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {ServerOption} from '../../constants/Type';
@@ -23,20 +23,7 @@ import {validateIp, validatePort} from '../../utils/server';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
-
-const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
-  <Icon width={20} height={20} {...props} name={props.name} />
-);
-
-const renderRightActions = (editMode: boolean, onPress: () => void) => (
-  <React.Fragment>
-    <TopNavigationAction
-      style={{padding: 20}}
-      icon={TopRightIcon({name: editMode ? 'check' : 'edit'})}
-      onPress={onPress}
-    />
-  </React.Fragment>
-);
+import {scale, verticalScale} from 'react-native-size-matters';
 
 const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
   const {walletName, wallet} = useWallet();
@@ -159,7 +146,9 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
             </Text>
             <Text category="headline">{wallet.network}</Text>
           </View>
-          <Button onPress={() => addServer()}>Add</Button>
+          <Button status={'primary-whisper'} onPress={() => addServer()}>
+            Add
+          </Button>
           {error ? (
             <Text style={[styles.errorText]} center>
               {error}
@@ -177,24 +166,24 @@ export default gestureHandlerRootHOC(AddServerScreen);
 
 const styles = StyleSheet.create({
   inputCard: {
-    borderRadius: 12,
-    marginTop: 24,
-    marginHorizontal: 24,
-    paddingVertical: 24,
-    paddingHorizontal: 16,
+    borderRadius: scale(12),
+    marginTop: verticalScale(24),
+    marginHorizontal: scale(12),
+    paddingVertical: verticalScale(24),
+    paddingHorizontal: scale(16),
   },
   inputGroup: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: verticalScale(20),
   },
   inputField: {
     flex: 1,
     flexWrap: 'wrap',
   },
   inputTitle: {
-    marginRight: 16,
+    marginRight: scale(16),
   },
-  errorText: {color: 'red', flex: 1, marginTop: 24},
+  errorText: {color: 'red', flex: 1, marginTop: verticalScale(24)},
 });

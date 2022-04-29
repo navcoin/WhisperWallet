@@ -1,5 +1,11 @@
 import React from 'react';
-import {Image, View, StyleSheet, ImageSourcePropType} from 'react-native';
+import {
+  Image,
+  View,
+  StyleSheet,
+  ImageSourcePropType,
+  ScrollView,
+} from 'react-native';
 import Text from './Text';
 import Animated, {
   Extrapolate,
@@ -7,6 +13,7 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import useLayout from '../hooks/useLayout';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 interface Product {
   id: number;
@@ -25,7 +32,7 @@ const Card = ({
   x,
 }: CardProps) => {
   const {height, width, top} = useLayout();
-  const widthItem = width - 80;
+  const widthItem = width - scale(80);
 
   const styleText = useAnimatedStyle(() => {
     const translateX = interpolate(
@@ -47,12 +54,14 @@ const Card = ({
   });
 
   return (
-    <View style={{width: widthItem, paddingTop: top}}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+      style={{width: widthItem, paddingTop: top}}>
       <Animated.View
         style={[
           {
             width: widthItem,
-            height: height / 2.2,
             paddingRight: 16,
           },
         ]}>
@@ -61,38 +70,42 @@ const Card = ({
             source={image}
             style={{
               width: '90%',
-              maxWidth: 300,
-              maxHeight: 300,
+              marginVertical: verticalScale(50),
+              maxWidth: verticalScale(200),
+              maxHeight: verticalScale(200),
               height: undefined,
               aspectRatio: 1,
             }}
           />
         </View>
       </Animated.View>
-      <Animated.View style={[styleText, styles.textView]}>
-        <Text marginTop={48} category="title1">
+      <Animated.View style={[styleText, styles.textView, styles.spacer]}>
+        <Text marginTop={48} category="title1" center>
           {title}
         </Text>
-        <Text marginTop={16} category="call-out" status="placeholder">
+        <Text marginTop={16} category="call-out" status="placeholder" center>
           {description}
         </Text>
       </Animated.View>
-    </View>
+    </ScrollView>
   );
 };
 
 export default Card;
+const bottomButtonHeight = scale(32 + 64);
+const spaceBetweenButtonAndContent = scale(16);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   textView: {
-    marginRight: 32,
+    marginRight: scale(32),
   },
   image: {
-    borderRadius: 16,
+    borderRadius: scale(16),
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  spacer: {paddingBottom: spaceBetweenButtonAndContent + bottomButtonHeight},
 });

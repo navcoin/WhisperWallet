@@ -3,12 +3,15 @@ import {View} from 'react-native';
 import React, {memo, useEffect, useState} from 'react';
 import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
-import {useTheme, Text} from '@ui-kitten/components';
+import {useTheme} from '@tsejerome/ui-kitten-components';
 import {Connection_Stats_Enum} from '../constants/Type';
 import CurrencyText from './CurrencyText';
+import Text from './Text';
+import {verticalScale} from 'react-native-size-matters';
+import BackgroundTimer from 'react-native-background-timer';
 
 const BalanceCircle = memo(() => {
-  const {width} = useLayout();
+  const {height} = useLayout();
   const {
     syncProgress,
     bootstrapProgress,
@@ -29,24 +32,26 @@ const BalanceCircle = memo(() => {
   ]);
   const [totalBalance, setTotalBalance] = useState(0);
   const [rotation, setRotation] = useState(180);
-  const [timer, setTimer] = useState<any>(undefined);
 
   useEffect(() => {
     if (
       connected != Connection_Stats_Enum.Connecting &&
       connected != Connection_Stats_Enum.Bootstrapping
     ) {
+      BackgroundTimer.stopBackgroundTimer();
       setRotation(180);
-      clearInterval(timer);
     } else {
-      setTimer(
-        setInterval(() => {
-          setRotation(prev => {
-            return prev + 2;
-          });
-        }, 10),
-      );
+      BackgroundTimer.stopBackgroundTimer();
+      BackgroundTimer.runBackgroundTimer(() => {
+        setRotation(prev => {
+          return (prev + 2) % 360;
+        });
+      }, 10);
     }
+    
+    return () => {
+      BackgroundTimer.stopBackgroundTimer();
+    };
   }, [connected]);
 
   useEffect(() => {
@@ -82,11 +87,16 @@ const BalanceCircle = memo(() => {
       style={{
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 16,
+        marginBottom: verticalScale(16),
       }}>
       <SegmentCircle
-        initialRotation={rotation}
-        radius={width / 2 - 100}
+        radius={(height * 0.6) / 2 / 2}
+        initialRotation={
+          connected != Connection_Stats_Enum.Connecting &&
+          connected != Connection_Stats_Enum.Bootstrapping
+            ? 180
+            : rotation
+        }
         background={
           connected == Connection_Stats_Enum.Connecting ||
           connected == Connection_Stats_Enum.Syncing ||
@@ -127,19 +137,17 @@ const BalanceCircle = memo(() => {
         </Text>
       ) : !firstSyncCompleted && connected == Connection_Stats_Enum.Syncing ? (
         <Text style={{position: 'absolute', textAlign: 'center'}}>
-          Synchronizing...{'\n'}
           {syncProgress}%
         </Text>
       ) : !firstSyncCompleted &&
         connected == Connection_Stats_Enum.Bootstrapping ? (
         <Text style={{position: 'absolute', textAlign: 'center'}}>
-          Bootstrapping...{'\n'}
           {bootstrapProgress} txs in queue
         </Text>
       ) : (
         <View style={{position: 'absolute'}}>
           <Text style={{textAlign: 'center'}}>Balance:</Text>
-          <CurrencyText children={totalBalance} />
+          <CurrencyText children={totalBalance.toFixed(8)} />
         </View>
       )}
     </View>

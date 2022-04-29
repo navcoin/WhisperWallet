@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, Input, useTheme} from '@ui-kitten/components';
+import {Button, Input, useTheme} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 
 import Text from '../components/Text';
@@ -12,6 +12,7 @@ import useNjs from '../hooks/useNjs';
 import OptionCard from '../components/OptionCard';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useKeychain from '../utils/Keychain';
+import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 
 const OpenWallet = () => {
@@ -19,7 +20,7 @@ const OpenWallet = () => {
   const {width, bottom} = useLayout();
   const [walletName, setWalletName] = useState('');
   const {createWallet} = useWallet();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
   const {njs} = useNjs();
   const {read} = useKeychain();
@@ -34,7 +35,7 @@ const OpenWallet = () => {
 
   return (
     <Container useSafeArea>
-      <Loading loading={loading} />
+      <Loading loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Open Wallet'} />
       <View style={styles.container}>
         <Text category="title4" center marginBottom={32}>
@@ -46,36 +47,39 @@ const OpenWallet = () => {
           showsVerticalScrollIndicator={false}>
           {walletList.map((el, index) => {
             return (
-              <OptionCard
-                key={el}
-                item={{text: el}}
-                index={index}
-                icon={'creditCard'}
-                selected={walletName}
-                onPress={() => {
-                  setLoading(true);
-                  read(el)
-                    .then((password: string) => {
-                      createWallet(
-                        el,
-                        '',
-                        '',
-                        password,
-                        password,
-                        false,
-                        true,
-                        'mainnet',
-                        () => {
-                          setLoading(false);
-                          navigate('Wallet');
-                        },
-                      );
-                    })
-                    .catch((e: any) => {
-                      setLoading(false);
-                    });
-                }}
-              />
+              <View
+                style={[layoutStyles.responsiveColumnComponentWidth]}
+                key={el}>
+                <OptionCard
+                  item={{text: el}}
+                  index={index}
+                  icon={'creditCard'}
+                  selected={walletName}
+                  onPress={() => {
+                    read(el)
+                      .then((password: string) => {
+                        setLoading('Loading wallet...');
+                        createWallet(
+                          el,
+                          '',
+                          '',
+                          password,
+                          password,
+                          false,
+                          true,
+                          'mainnet',
+                          () => {
+                            setLoading(undefined);
+                            navigate('Wallet');
+                          },
+                        );
+                      })
+                      .catch((e: any) => {
+                        setLoading(undefined);
+                      });
+                  }}
+                />
+              </View>
             );
           })}
         </KeyboardAwareScrollView>

@@ -8,7 +8,11 @@ import Animated, {
   useDerivedValue,
 } from 'react-native-reanimated';
 import {toRad} from 'react-native-redash';
-import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
+import {
+  StyleService,
+  useStyleSheet,
+  useTheme,
+} from '@tsejerome/ui-kitten-components';
 import NavigationAction from './NavigationAction';
 import ProgressBar from 'react-native-progress/Bar';
 

@@ -231,6 +231,8 @@ PODS:
   - React-jsinspector (0.66.4)
   - React-logger (0.66.4):
     - glog
+  - react-native-background-timer (2.4.1):
+    - React-Core
   - react-native-camera (4.2.1):
     - React-Core
     - react-native-camera/RCT (= 4.2.1)
@@ -321,9 +323,11 @@ PODS:
     - React-Core
   - RNCClipboard (1.5.1):
     - React-Core
-  - RNCPicker (2.4.0):
+  - RNCPicker (2.4.1):
     - React-Core
-  - RNGestureHandler (2.3.2):
+  - RNDeviceInfo (8.7.0):
+    - React-Core
+  - RNGestureHandler (2.4.0):
     - React-Core
   - RNKeychain (8.0.0):
     - React-Core
@@ -398,6 +402,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-mcl (from `../node_modules/react-native-mcl`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
@@ -420,6 +425,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNOS (from `../node_modules/react-native-os`)
@@ -490,6 +496,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-background-timer:
+    :path: "../node_modules/react-native-background-timer"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
   react-native-mcl:
@@ -534,6 +542,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/clipboard"
   RNCPicker:
     :path: "../node_modules/@react-native-picker/picker"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNKeychain:
@@ -583,6 +593,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 94ce921e1d8ce7023366873ec371f3441383b396
   React-jsinspector: d0374f7509d407d2264168b6d0fad0b54e300b85
   React-logger: 933f80c97c633ee8965d609876848148e3fef438
+  react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-mcl: f46f5176c97294a269e8c188ee199b4c1e762167
   react-native-pager-view: b1914469643f40042e65d78cbf3d3dfebd6fb0d9
@@ -604,8 +615,9 @@ SPEC CHECKSUMS:
   RNBootSplash: de2c568373a9c79a66e9918b8929eb6c9a35246f
   RNCAsyncStorage: 005c0e2f09575360f142d0d1f1f15e4ec575b1af
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
-  RNCPicker: 6d5d64e7b90c240c779ee0938ec433c11e2dd758
-  RNGestureHandler: 6e757e487a4834e7280e98e9bac66d2d9c575e9c
+  RNCPicker: abc646b53a3d28ccfa3232c927a0ca52e0cf024d
+  RNDeviceInfo: 36286df381fcaf1933ff9d2d3c34ba2abeb2d8d8
+  RNGestureHandler: 50e6ffee79932d14ea747d4ea4cc99aac0f24e86
   RNKeychain: 4f63aada75ebafd26f4bc2c670199461eab85d94
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796

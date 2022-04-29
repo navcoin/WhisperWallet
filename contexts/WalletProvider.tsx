@@ -43,6 +43,7 @@ export const WalletProvider = (props: any) => {
       name: 'Public',
       amount: 0,
       pending_amount: 0,
+      spendable_amount: 0,
       type_id: Balance_Types_Enum.Nav,
       destination_id: Destination_Types_Enum.PublicWallet,
       currency: 'NAV',
@@ -51,6 +52,7 @@ export const WalletProvider = (props: any) => {
       name: 'Private',
       amount: 0,
       pending_amount: 0,
+      spendable_amount: 0,
       type_id: Balance_Types_Enum.xNav,
       destination_id: Destination_Types_Enum.PrivateWallet,
       currency: 'xNAV',
@@ -59,6 +61,7 @@ export const WalletProvider = (props: any) => {
       name: 'Staking',
       amount: 0,
       pending_amount: 0,
+      spendable_amount: 0,
       type_id: Balance_Types_Enum.Staking,
       destination_id: Destination_Types_Enum.StakingWallet,
       currency: 'NAV',
@@ -146,8 +149,10 @@ export const WalletProvider = (props: any) => {
       let accs = [
         {
           name: 'Public',
-          amount: balances.nav.confirmed / 1e8,
-          pending_amount: balances.nav.pending / 1e8,
+          amount: (balances.nav.confirmed || 0) / 1e8,
+          pending_amount: (balances.nav.pending || 0) / 1e8,
+          spendable_amount:
+            (balances.nav.confirmed + balances.nav.pending || 0) / 1e8,
           type_id: Balance_Types_Enum.Nav,
           destination_id: Destination_Types_Enum.PublicWallet,
           currency: 'NAV',
@@ -155,8 +160,9 @@ export const WalletProvider = (props: any) => {
         },
         {
           name: 'Private',
-          amount: balances.xnav.confirmed / 1e8,
-          pending_amount: balances.xnav.pending / 1e8,
+          amount: (balances.xnav.confirmed || 0) / 1e8,
+          pending_amount: (balances.xnav.pending || 0) / 1e8,
+          spendable_amount: (balances.xnav.confirmed || 0) / 1e8,
           type_id: Balance_Types_Enum.xNav,
           destination_id: Destination_Types_Enum.PrivateWallet,
           currency: 'xNAV',
@@ -169,8 +175,12 @@ export const WalletProvider = (props: any) => {
         if (!label) label = address.substring(0, 8) + '...';
         accs.push({
           name: label + ' Staking',
-          amount: addresses.staking[address].staking.confirmed / 1e8,
-          pending_amount: addresses.staking[address].staking.pending / 1e8,
+          amount: (addresses.staking[address].staking.confirmed || 0) / 1e8,
+          pending_amount:
+            (addresses.staking[address].staking.pending || 0) / 1e8,
+          spendable_amount:
+            (addresses.staking[address].staking.confirmed +
+              addresses.staking[address].staking.pending || 0) / 1e8,
           type_id: Balance_Types_Enum.Staking,
           destination_id: Destination_Types_Enum.StakingWallet,
           address: address,
@@ -186,6 +196,7 @@ export const WalletProvider = (props: any) => {
           name: balances.tokens[tokenId].name,
           amount: (balances.tokens[tokenId].confirmed || 0) / 1e8,
           pending_amount: (balances.tokens[tokenId].pending || 0) / 1e8,
+          spendable_amount: (balances.tokens[tokenId].confirmed || 0) / 1e8,
           type_id: Balance_Types_Enum.PrivateToken,
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
@@ -197,11 +208,13 @@ export const WalletProvider = (props: any) => {
       let nft = [];
 
       for (let tokenId in balances.nfts) {
-        console.log(balances.nfts[tokenId]);
         nft.push({
           name: balances.nfts[tokenId].name,
-          amount: Object.keys(balances.nfts[tokenId].confirmed).length,
-          pending_amount: Object.keys(balances.nfts[tokenId].pending).length,
+          amount: Object.keys(balances.nfts[tokenId].confirmed).length || 0,
+          pending_amount:
+            Object.keys(balances.nfts[tokenId].pending).length || 0,
+          spendable_amount:
+            Object.keys(balances.nfts[tokenId].confirmed).length || 0,
           type_id: Balance_Types_Enum.Nft,
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
@@ -245,8 +258,6 @@ export const WalletProvider = (props: any) => {
         wallet.Disconnect();
       }
 
-      console.log('walletfile', name, password, spendingPassword);
-
       const walletFile = new njs.wallet.WalletFile({
         file: name,
         mnemonic: mnemonic_,
@@ -272,7 +283,6 @@ export const WalletProvider = (props: any) => {
 
       walletFile.on('loaded', async () => {
         console.log('loaded');
-        console.log(walletFile.type);
         walletFile.GetBalance().then(setBalances);
         walletFile.GetHistory().then(setHistory);
         njs.wallet.WalletFile.ListWallets().then(setWalletsList);
@@ -300,6 +310,7 @@ export const WalletProvider = (props: any) => {
 
       walletFile.on('new_tx', async () => {
         console.log('new_tx');
+        setBalances(await walletFile.GetBalance());
         setHistory(await walletFile.GetHistory());
         setAddresses(await walletFile.GetAllAddresses());
       });
@@ -331,7 +342,7 @@ export const WalletProvider = (props: any) => {
       });
 
       walletFile.Load({
-        bootstrap: njs.wallet.xNavBootstrap,
+        //bootstrap: njs.wallet.xNavBootstrap,
       });
     },
     [njs, wallet],
@@ -362,14 +373,8 @@ export const WalletProvider = (props: any) => {
           let fee = 0;
 
           for (let c of candidates) {
-            console.log(
-              'candidate fee',
-              parseInt(BigInt(c.fee.words).toString()),
-            );
             fee += parseInt(BigInt(c.fee.words).toString());
           }
-
-          console.log('using', fee);
 
           let obj =
             from == 'token' || from == 'nft'
@@ -436,7 +441,6 @@ export const WalletProvider = (props: any) => {
             0x1,
             fromAddress,
           );
-          console.log(ret);
           res(ret);
         } else if (from == 'cold_staking') {
           let ret = await wallet.NavCreateTransaction(
@@ -449,7 +453,6 @@ export const WalletProvider = (props: any) => {
             0x2,
             fromAddress,
           );
-          console.log(ret);
           res(ret);
         } else {
           console.log('unknown wallet type', from);

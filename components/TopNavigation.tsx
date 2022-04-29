@@ -4,8 +4,9 @@ import {
   TopNavigation,
   TopNavigationAction,
   TopNavigationProps,
-} from '@ui-kitten/components';
+} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
+import {verticalScale, scale} from 'react-native-size-matters';
 
 interface TopNavigationProps_ extends TopNavigationProps {
   hideBack?: boolean | undefined;
@@ -19,8 +20,10 @@ const TopNavigationComponent = memo((props: TopNavigationProps_) => {
       accessoryLeft={
         !props.hideBack ? (
           <TopNavigationAction
-            style={{padding: 20}}
-            icon={<Icon width={20} height={20} name={'leftArrow'} />}
+            style={{padding: scale(20)}}
+            icon={
+              <Icon width={scale(20)} height={scale(20)} name={'leftArrow'} />
+            }
             onPress={goBack}
           />
         ) : (

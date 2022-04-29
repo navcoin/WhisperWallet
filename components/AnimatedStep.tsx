@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, StyleProp, ViewStyle} from 'react-native';
-import {useTheme} from '@ui-kitten/components';
+import {useTheme} from '@tsejerome/ui-kitten-components';
+import {scale} from 'react-native-size-matters';
 import Animated, {
   interpolate,
   interpolateColor,
@@ -44,7 +45,7 @@ const AnimatedStep = ({step, steps = 4, style}: AnimatedStepProps) => {
           [
             theme['color-basic-1300'],
             theme['color-basic-1300'],
-            theme['color-nav-pink'],
+            theme['color-xnav'],
           ],
         );
 
@@ -57,7 +58,7 @@ const AnimatedStep = ({step, steps = 4, style}: AnimatedStepProps) => {
         const backgroundColor = interpolateColor(
           progress.value,
           [0, 1],
-          [theme['color-basic-1300'], theme['color-nav-pink']],
+          [theme['color-basic-1300'], theme['color-xnav']],
         );
 
         const widthX = interpolate(progress.value, [0, 1], [0, width]);
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingHorizontal: 64,
+    paddingHorizontal: scale(64),
   },
   step: {
     flexDirection: 'row',
@@ -116,9 +117,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   dot: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
+    width: scale(16),
+    height: scale(16),
+    borderRadius: scale(8),
   },
   line: {
     height: 2,

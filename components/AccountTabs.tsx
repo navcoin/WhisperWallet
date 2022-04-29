@@ -8,9 +8,10 @@ import {Balance_Types_Enum, BalanceFragment} from '../constants/Type';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import BottomSheetMenu from './BottomSheetMenu';
 import useWallet from '../hooks/useWallet';
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import BottomSheetOptions from './BottomSheetOptions';
 import {useNavigation} from '@react-navigation/native';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 const AccountsTab = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -158,7 +159,7 @@ const AccountsTab = () => {
         tabs={['Accounts', 'Tokens', 'NFTs']}
         selectedIndex={selectedTab}
         onChange={setSelectedTab}
-        style={{marginHorizontal: 16}}
+        style={{marginHorizontal: scale(16)}}
       />
       <ScrollView
         refreshControl={
@@ -169,7 +170,7 @@ const AccountsTab = () => {
             titleColor="#fff"
           />
         }>
-        <Content style={{paddingTop: 24}}>
+        <Content style={{paddingTop: verticalScale(24)}}>
           {selectedTab == 0 ? (
             accounts.map((el, i) => {
               return (
@@ -188,7 +189,7 @@ const AccountsTab = () => {
           ) : selectedTab == 1 ? (
             <Text marginBottom={16} center>
               {tokens.length == 0
-                ? 'You have no private tokens yet.'
+                ? 'No private tokens found'
                 : tokens.map((el, i) => {
                     return (
                       <View style={styles.item} key={i}>
@@ -198,7 +199,8 @@ const AccountsTab = () => {
                           onPress={() => {
                             setAccount(el);
                             expandMenuToken(el);
-                          }}></BalanceCard>
+                          }}
+                        />
                       </View>
                     );
                   })}
@@ -206,7 +208,7 @@ const AccountsTab = () => {
           ) : selectedTab == 2 ? (
             <Text center marginBottom={16}>
               {nfts.length == 0
-                ? 'You have no private NFTs yet.'
+                ? 'No private NFTs found'
                 : nfts.map((el, i) => {
                     return (
                       <View style={styles.item} key={i}>
@@ -216,7 +218,8 @@ const AccountsTab = () => {
                           onPress={() => {
                             setAccount(el);
                             expandMenuToken(el);
-                          }}></BalanceCard>
+                          }}
+                        />
                       </View>
                     );
                   })}{' '}
@@ -234,7 +237,7 @@ export default AccountsTab;
 
 const themedStyles = StyleService.create({
   item: {
-    paddingHorizontal: 16,
-    marginBottom: 16,
+    paddingHorizontal: scale(16),
+    marginBottom: verticalScale(16),
   },
 });

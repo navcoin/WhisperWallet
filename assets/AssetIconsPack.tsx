@@ -1,8 +1,9 @@
 import React from 'react';
 import {Image, ImageProps, ImageSourcePropType, StyleSheet} from 'react-native';
-import {IconPack, IconProvider} from '@ui-kitten/components';
+import {IconPack, IconProvider} from '@tsejerome/ui-kitten-components';
 import {SvgProps} from 'react-native-svg';
 import {Icons} from './icons';
+import {scale} from 'react-native-size-matters';
 
 const createIcon = (source: ImageSourcePropType): IconProvider<ImageProps> => {
   return {
@@ -19,8 +20,8 @@ const createIcon = (source: ImageSourcePropType): IconProvider<ImageProps> => {
 
 const styles = StyleSheet.create({
   icon: {
-    width: 24,
-    height: 24,
+    width: scale(24),
+    height: scale(24),
   },
 });
 
@@ -54,6 +55,7 @@ const AssetIconsPack: IconPack<ImageProps | SvgProps> = {
     search16: createIcon(Icons.search16),
     addNew: createIcon(Icons.addNew),
     menu: createIcon(Icons.menu),
+    menuBtn: createIcon(Icons.menuBtn),
     fire: createIcon(Icons.fire),
     chat: createIcon(Icons.chat),
     edit: createIcon(Icons.edit),

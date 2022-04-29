@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
-import {useTheme, Layout} from '@ui-kitten/components';
+import {useTheme, Layout} from '@tsejerome/ui-kitten-components';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -8,6 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import Text from './Text';
+import {verticalScale, scale} from 'react-native-size-matters';
 
 interface Props {
   style?: ViewStyle;
@@ -79,20 +80,20 @@ export default FrequencyTab;
 
 const styles = StyleSheet.create({
   container: {
-    height: 44,
+    height: verticalScale(44),
     flexDirection: 'row',
     overflow: 'hidden',
     alignSelf: 'center',
-    borderBottomWidth: 1,
+    borderBottomWidth: verticalScale(1),
     borderBottomColor: '#3E4C59',
   },
   boxAni: {
-    height: 2,
+    height: verticalScale(2),
     position: 'absolute',
-    borderRadius: 20,
+    borderRadius: scale(20),
     bottom: 0,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
+    borderTopLeftRadius: scale(12),
+    borderTopRightRadius: scale(12),
   },
   btn: {
     flex: 1,
