@@ -115,7 +115,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
 
   const items: SettingsItem[] = [
     {
-      title: 'Show Mnemonic',
+      title: 'Show mnemonic',
       icon: 'padLock',
       show: true,
       onPress: () => {
@@ -125,13 +125,13 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       },
     },
     {
-      title: 'Biometrics Configuration',
+      title: 'Biometrics configuration',
       icon: 'eye',
       show: true,
       onPress: () => biometricsAlert(),
     },
     {
-      title: 'Staking Nodes',
+      title: 'Staking nodes',
       icon: 'factory',
       show: true,
       onPress: () => {
@@ -141,7 +141,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       },
     },
     {
-      title: 'Electrum Servers',
+      title: 'Electrum servers',
       icon: 'book',
       show: true,
       onPress: () => {
@@ -151,19 +151,19 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       },
     },
     {
-      title: 'Clear History and Resync',
+      title: 'Clear history and resync',
       icon: 'refresh',
       show: true,
       onPress: () => resyncWallet(),
     },
     {
-      title: 'Delete Wallet',
+      title: 'Delete wallet',
       icon: 'cancel',
       show: true,
       onPress: () => deleteWallet(),
     },
     {
-      title: 'Close Wallet',
+      title: 'Close wallet',
       icon: 'undo',
       show: true,
       onPress: () => leaveWallet(),
