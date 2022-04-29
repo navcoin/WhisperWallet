@@ -20,7 +20,7 @@ import {default as lightTheme} from './constants/theme/light.json';
 import {default as customTheme} from './constants/theme/appTheme.json';
 import {default as customMapping} from './constants/theme/mapping.json';
 import AppContainer from './navigation/AppContainer';
-import RNBootSplash from 'react-native-bootsplash';
+import RNBootSplash, {getVisibilityStatus} from 'react-native-bootsplash';
 
 patchFlatListProps();
 import SQLite from 'react-native-sqlite-2';
@@ -57,6 +57,7 @@ const P2pPool = require('@aguycalled/bitcore-p2p').Pool;
 
 const App = (props: {theme: string}) => {
   const {theme} = props;
+  const [walletLoaded, setWalletLoaded] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const {setNjs, setP2pPool} = useNjs();
   const {setWin} = useWin();
@@ -71,7 +72,7 @@ const App = (props: {theme: string}) => {
     '',
   );
 
-  const [shownWelcome, setShownWelcome] = useState('false');
+  const [shownWelcome, setShownWelcome] = useState(null);
 
   const checkIfAppHadPreviousNativeErrorHandler = async () => {
     if (!promptPreviousError) {
@@ -91,7 +92,6 @@ const App = (props: {theme: string}) => {
     await saveTemporaryErrorRecord(errorTextParser(error, isFatal));
     promptErrorToaster(error, isFatal, false, () => {
       const errorMsg = errorTextParser(error, isFatal);
-      console.log('before openingModal');
       openModal(<ErrorModalContent errorText={errorMsg}></ErrorModalContent>);
     });
   };
@@ -107,11 +107,20 @@ const App = (props: {theme: string}) => {
 
   useEffect(() => {
     AsyncStorage.getItem('shownWelcome').then(itemValue => {
-      if (itemValue == 'true' || itemValue == 'false') {
-        setShownWelcome(itemValue);
-      }
+      setTimeout(() => {
+        if (itemValue == 'true' || itemValue == 'false') {
+          setShownWelcome(itemValue);
+        }
+      }, 5000);
     });
   }, []);
+
+  useEffect(() => {
+    if (walletLoaded && shownWelcome !== null) {
+      setLoaded(true);
+      RNBootSplash.hide({fade: true});
+    }
+  }, [shownWelcome, walletLoaded]);
 
   useEffect(() => {
     njs.wallet.Init().then(async () => {
@@ -148,7 +157,7 @@ const App = (props: {theme: string}) => {
       );
 
       njs.wallet.WalletFile.SetBackend(win.indexedDB, win.IDBKeyRange);
-      setLoaded(true);
+      setWalletLoaded(true);
 
       checkIfAppHadPreviousNativeErrorHandler();
     });
@@ -169,11 +178,6 @@ const App = (props: {theme: string}) => {
 
 const AppWrapper = () => {
   const [theme, setTheme] = React.useState<'light' | 'dark'>('dark');
-  useEffect(() => {
-    setTimeout(() => {
-      RNBootSplash.hide({fade: true});
-    }, 1000);
-  }, []);
   const toggleTheme = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
     AsyncStorage.setItem('theme', nextTheme).then(() => {

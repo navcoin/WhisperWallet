@@ -65,22 +65,14 @@ const AppContainer = (props: any) => {
     };
   }, [refreshWallet, lockAfterBackground, setLockedScreen]);
 
-  useEffect(() => {
-    if (!props.loaded) {
-      openModal(<LoadingModalContent loading={true} />);
-      return;
-    }
-    closeModal();
-  }, [props.loaded]);
-
-  return props.loaded ? (
+  return props.loaded && props.shownWelcome !== null ? (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
         }}
         initialRouteName={
-          props.shownWelcome === 'true' ? 'Intro' : 'OnBoarding'
+          props.shownWelcome == 'true' ? 'Intro' : 'OnBoarding'
         }>
         <Stack.Screen name="Intro" component={Intro} />
         <Stack.Screen name="OnBoarding" component={OnBoarding} />
