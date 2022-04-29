@@ -10,6 +10,7 @@ import {verticalScale, scale} from 'react-native-size-matters';
 
 interface TopNavigationProps_ extends TopNavigationProps {
   hideBack?: boolean | undefined;
+  pressBack?: () => void;
 }
 
 const TopNavigationComponent = memo((props: TopNavigationProps_) => {
@@ -24,7 +25,7 @@ const TopNavigationComponent = memo((props: TopNavigationProps_) => {
             icon={
               <Icon width={scale(20)} height={scale(20)} name={'leftArrow'} />
             }
-            onPress={goBack}
+            onPress={props.pressBack ? props.pressBack : goBack}
           />
         ) : (
           <></>

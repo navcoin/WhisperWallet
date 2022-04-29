@@ -139,7 +139,7 @@ const SendToScreen = (props: any) => {
                   ...el,
                   text:
                     el.name +
-                    ' Wallet (' +
+                    ' account (' +
                     el.spendable_amount +
                     ' ' +
                     el.currency +
@@ -159,7 +159,7 @@ const SendToScreen = (props: any) => {
                 }
                 return (
                   el.name +
-                  ' Wallet (' +
+                  ' account (' +
                   el.spendable_amount +
                   ' ' +
                   el.currency +
@@ -235,6 +235,7 @@ const SendToScreen = (props: any) => {
                     <Input
                       ref={amountInputRef}
                       keyboardType={'decimal-pad'}
+                      returnKeyType={'done'}
                       status={'transparent'}
                       style={styles.flex1}
                       value={amountInString}

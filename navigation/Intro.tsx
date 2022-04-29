@@ -7,9 +7,14 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import Text from '../components/Text';
 import Content from '../components/Content';
 import Container from '../components/Container';
-import Button from '../components/Button';
+import {Button} from '@tsejerome/ui-kitten-components';
 import {Images} from '../assets/images';
 import {RootStackParamList} from './type';
+<<<<<<< HEAD
+=======
+import useNjs from '../hooks/useNjs';
+import useKeychain from '../utils/Keychain';
+>>>>>>> origin/main
 import useWallet from '../hooks/useWallet';
 
 const Intro = memo(props => {
@@ -35,13 +40,29 @@ const Intro = memo(props => {
             marginRight={0}
             marginBottom={8}
             center>
-            Whisper Wallet
+            Whisper
           </Text>
           <View style={styles.spacer} />
 
+          <Button
+            children="New wallet"
+            style={[styles.wallet]}
+            status="primary-whisper"
+            onPress={() => {
+              navigate('CreateNewWallet');
+            }}
+          />
+          <Button
+            children="Import wallet"
+            style={[styles.wallet]}
+            status="primary-whisper"
+            onPress={() => {
+              navigate('ImportWallet');
+            }}
+          />
           {walletsList.length > 0 ? (
             <Button
-              children="Open"
+              children="Open wallet"
               style={[styles.wallet]}
               status="primary-whisper"
               onPress={() => {
@@ -51,22 +72,6 @@ const Intro = memo(props => {
           ) : (
             <></>
           )}
-          <Button
-            children="New"
-            style={[styles.wallet]}
-            status="primary-whisper"
-            onPress={() => {
-              navigate('CreateNewWallet');
-            }}
-          />
-          <Button
-            children="Import"
-            style={[styles.wallet]}
-            status="primary-whisper"
-            onPress={() => {
-              navigate('ImportWallet');
-            }}
-          />
         </View>
       </Content>
     </Container>

@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {BackHandler, StyleSheet, View} from 'react-native';
 import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 import Text from '../components/Text';
@@ -16,7 +16,11 @@ import Mnemonic from '../components/Mnemonic';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
-import useLayout from '../hooks/useLayout';
+
+function useArrayRef() {
+  const refs = [];
+  return [refs, el => el && refs.push(el)];
+}
 
 const CreateNewWallet = () => {
   const {goBack, navigate} = useNavigation();
@@ -27,17 +31,35 @@ const CreateNewWallet = () => {
   const [error, setError] = useState('');
   const [network, setNetwork] = useState('mainnet');
   const {njs} = useNjs();
-  const {height} = useLayout();
   const {read} = useKeychain();
+  const [elements, ref] = useArrayRef();
 
   const [words, setWords] = useState<string[]>(new Array(12));
 
+  const onBackPress = useCallback(() => {
+    if (index == 0) {
+      goBack();
+    } else {
+      setIndex(index - 1);
+    }
+    return true;
+  }, [index]);
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    };
+  }, []);
+
   return (
     <Container useSafeArea>
-      <TopNavigationComponent title={'New Wallet'} />
+      <TopNavigationComponent title={'New wallet'} pressBack={onBackPress} />
       <KeyboardAwareScrollView
         contentContainerStyle={{flexGrow: 1}}
         enableOnAndroid
+        keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}>
         <Loading loading={!!loading} text={loading} />
         <AnimatedStep style={styles.animatedStep} step={index} steps={5} />
@@ -45,16 +67,17 @@ const CreateNewWallet = () => {
         {index == 0 ? (
           <View style={[styles.container, styles.horizontalPadding24]}>
             <Text category="title4" center marginBottom={32}>
-              Choose a name for the wallet
+              Choose a name
             </Text>
             <View style={[styles.layout]}>
               <Input
                 autoFocus={true}
                 style={[layoutStyles.responsiveRowComponentWidth, styles.flex1]}
                 value={walletName}
+                autoCapitalize="none"
                 onChangeText={(name: string) => {
                   setError('');
-                  setWalletName(name);
+                  setWalletName(name.trim());
                 }}
               />
               {error ? (
@@ -65,7 +88,7 @@ const CreateNewWallet = () => {
                 <></>
               )}
               <Button
-                children="Next"
+                children="Continue"
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={async () => {
@@ -86,7 +109,8 @@ const CreateNewWallet = () => {
             </Text>
             {NetworkTypes.map((el, index) => {
               return (
-                <View style={[layoutStyles.responsiveColumnComponentWidth]}
+                <View
+                  style={[layoutStyles.responsiveColumnComponentWidth]}
                   key={el[0]}>
                   <OptionCard
                     key={el[0]}
@@ -108,7 +132,7 @@ const CreateNewWallet = () => {
                 styles.bottomButtonWrapper,
               ]}>
               <Button
-                children="Next"
+                children="Continue"
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={() => {
@@ -146,7 +170,7 @@ const CreateNewWallet = () => {
             <View
               style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
               <Button
-                children="Next"
+                children="Continue"
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={() => setIndex(3)}
@@ -182,11 +206,17 @@ const CreateNewWallet = () => {
                       {wordpos + 1}
                     </Text>
                     <Input
+                      ref={ref}
+                      textAlign={'center'}
                       key={'word' + wordpos}
                       size="small"
                       style={{width: scale(120), padding: 0}}
                       autoCapitalize="none"
                       value={words[wordpos]}
+                      onSubmitEditing={() => {
+                        if (elements[wordpos + 1])
+                          elements[wordpos + 1].focus();
+                      }}
                       onChangeText={(name: string) => {
                         let newWords = [...words];
                         newWords[wordpos] = name.toLowerCase();
@@ -217,7 +247,7 @@ const CreateNewWallet = () => {
                 }}
               />
               <Button
-                children="Next"
+                children="Continue"
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={() => {
@@ -238,12 +268,12 @@ const CreateNewWallet = () => {
             </Text>
             <Text center key={'text'}>
               {'\n'}
-              You can now start using Whisper Wallet.
+              You can now start using Whisper.
             </Text>
             <View
               style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
               <Button
-                children="Next"
+                children="Continue"
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={() => {

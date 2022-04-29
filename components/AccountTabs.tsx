@@ -78,7 +78,7 @@ const AccountsTab = () => {
               },
             },
             {
-              text: 'Move to other wallet',
+              text: 'Move to another account',
               icon: 'exchange',
               skipCollapse: true,
               onPress: () => {
@@ -176,7 +176,7 @@ const AccountsTab = () => {
               return (
                 <View style={styles.item} key={i}>
                   <BalanceCard
-                    item={{...el, name: el.name + ' Wallet'}}
+                    item={{...el, name: el.name + ' account'}}
                     index={i}
                     onPress={() => {
                       setAccount(el);
