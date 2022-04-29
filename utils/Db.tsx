@@ -1,5 +1,7 @@
 import * as events from 'events';
 import * as crypto from 'crypto';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import SQLite, {encodeName} from 'react-native-sqlcipher-2';
 
 import Realm from 'realm';
 
@@ -40,38 +42,6 @@ const SettingSchema = {
   },
 };
 
-const TxSchema = {
-  name: 'Tx',
-  primaryKey: 'hash',
-  properties: {
-    hash: 'string',
-    txid: 'string',
-    hex: 'string',
-    height: 'int',
-    pos: 'int',
-  },
-};
-
-const TxKeysInputSchema = {
-  name: 'TxKeysInput',
-  properties: {
-    txid: 'string',
-    vout: 'int',
-    outputKey: 'string?',
-    spendingKey: 'string?',
-    script: 'string?',
-  },
-};
-
-const TxKeysOutputSchema = {
-  name: 'TxKeysOutput',
-  properties: {
-    outputKey: 'string?',
-    spendingKey: 'string?',
-    script: 'string?',
-  },
-};
-
 const TxKeysSchema = {
   name: 'TxKeys',
   primaryKey: 'hash',
@@ -90,7 +60,7 @@ const StakingAddressSchema = {
     address: 'string',
     addressVoting: 'string',
     hash: 'string',
-    hashVoting: 'string',
+    hashVoting: 'string?',
   },
 };
 
@@ -120,13 +90,13 @@ const OutPointSchema = {
   properties: {
     id: 'string',
     out: 'string',
-    spentIn: 'string',
+    spentIn: 'string?',
     amount: 'int',
-    label: 'string',
+    label: 'string?',
     type: 'int',
     spendingPk: 'string',
-    stakingPk: 'string',
-    votingPk: 'string',
+    stakingPk: 'string?',
+    votingPk: 'string?',
     hashId: 'string',
   },
 };
@@ -139,7 +109,19 @@ const ScriptHistorySchema = {
     scriptHash: 'string',
     tx_hash: 'string',
     height: 'int',
-    fetched: 'int',
+    fetched: 'int?',
+  },
+};
+
+const TxSchema = {
+  name: 'Tx',
+  primaryKey: 'hash',
+  properties: {
+    hash: 'string',
+    txid: 'string',
+    hex: 'string',
+    height: 'int',
+    pos: 'int',
   },
 };
 
@@ -157,7 +139,7 @@ const TokenSchema = {
   primaryKey: 'id',
   properties: {
     id: 'string',
-    metadata: 'string',
+    metadata: 'string?',
   },
 };
 
@@ -180,7 +162,7 @@ const NameSchema = {
   properties: {
     name: 'string',
     height: 'int',
-    //data: 'object',
+    data: 'string',
   },
 };
 
@@ -234,6 +216,26 @@ export default class Db extends events.EventEmitter {
 
     this.db = undefined;
     let self = this;
+
+    if (!Realm.exists({path: filename})) {
+      AsyncStorage.getItem('walletList').then(value => {
+        let prevList = [];
+        if (value !== null) {
+          try {
+            prevList = JSON.parse(value);
+          } catch (e) {
+            prevList = [];
+          }
+        }
+        prevList.push({
+          name: filename,
+          creation: Math.floor(new Date().getTime() / 1000),
+        });
+        AsyncStorage.setItem('walletList', JSON.stringify(prevList));
+      });
+    }
+
+    DB.openDatabase({name: filename, key: key});
 
     Realm.open({
       path: filename,
@@ -289,8 +291,16 @@ export default class Db extends events.EventEmitter {
     return ciphertext.toString('base64');
   }
 
-  static async ListWallets(): Promise<string[]> {
-    return ['dada'];
+  static async ListWallets() {
+    try {
+      let value = JSON.parse(
+        (await AsyncStorage.getItem('walletList')) || '[]',
+      );
+      return value.map(el => el.name);
+    } catch (e) {
+      console.log(e);
+      return [];
+    }
   }
 
   static async RemoveWallet(filename: string) {
@@ -298,18 +308,33 @@ export default class Db extends events.EventEmitter {
       Realm.deleteFile({
         path: filename,
       });
+      let value = await AsyncStorage.getItem('walletList');
+      let prevList = [];
+      if (value !== null) {
+        try {
+          prevList = JSON.parse(value);
+        } catch (e) {}
+      }
+      await AsyncStorage.setItem(
+        'walletList',
+        JSON.stringify(prevList.filter(el => el.name != filename)),
+      );
       return true;
     } catch (e) {
       return false;
     }
   }
 
-  async GetPoolSize(type: AddressTypes) {
+  async GetPoolSize(type: AddressTypes, change?: number) {
     if (!this.db) return;
 
     const keys = this.db
       .objects('Key')
-      .filtered(`type == ${type} && used == 0`);
+      .filtered(
+        change
+          ? `type == ${type} && used == 0 && change == ${change}`
+          : `type == ${type} && used == 0`,
+      );
     return keys.length;
   }
 
@@ -351,16 +376,20 @@ export default class Db extends events.EventEmitter {
     let key;
     let self = this;
 
-    this.db.write(() => {
-      key = self.db?.create(
-        'EncryptedSetting',
-        {
-          key: 'masterKey_' + type,
-          value: value,
-        },
-        'modified',
-      );
-    });
+    try {
+      this.db.write(() => {
+        key = self.db?.create(
+          'EncryptedSetting',
+          {
+            key: 'masterKey_' + type,
+            value: value,
+          },
+          'all',
+        );
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
     return !!key;
   }
@@ -371,16 +400,20 @@ export default class Db extends events.EventEmitter {
     let key;
     let self = this;
 
-    this.db.write(() => {
-      key = self.db?.create(
-        'Setting',
-        {
-          key: 'counter_' + index,
-          value: value,
-        },
-        'modified',
-      );
-    });
+    try {
+      this.db.write(() => {
+        key = self.db?.create(
+          'Setting',
+          {
+            key: 'counter_' + index,
+            value: value.toString(),
+          },
+          'all',
+        );
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
     return !!key;
   }
@@ -425,21 +458,25 @@ export default class Db extends events.EventEmitter {
     let key;
     let self = this;
 
-    this.db.write(() => {
-      key = self.db?.create(
-        'Key',
-        {
-          hash: hashId,
-          value: value.toString(),
-          type: type,
-          address: address,
-          used: 0,
-          change: change ? 1 : 0,
-          path: path,
-        },
-        'modified',
-      );
-    });
+    try {
+      this.db.write(() => {
+        key = self.db?.create(
+          'Key',
+          {
+            hash: hashId,
+            value: value.toString(),
+            type: type,
+            address: address,
+            used: 0,
+            change: change ? 1 : 0,
+            path: path,
+          },
+          'all',
+        );
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
     return !!key;
   }
@@ -482,16 +519,20 @@ export default class Db extends events.EventEmitter {
     let setting;
     let self = this;
 
-    this.db.write(() => {
-      setting = self.db?.create(
-        'Setting',
-        {
-          key: key,
-          value: value.toString(),
-        },
-        'modified',
-      );
-    });
+    try {
+      this.db.write(() => {
+        setting = self.db?.create(
+          'Setting',
+          {
+            key: key,
+            value: value.toString(),
+          },
+          'all',
+        );
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
     return !!setting;
   }
@@ -499,7 +540,7 @@ export default class Db extends events.EventEmitter {
   async GetValue(key: string) {
     if (!this.db) return;
 
-    let ret = this.db.objectForPrimaryKey('EncryptedSetting', key);
+    let ret = this.db.objectForPrimaryKey('Setting', key);
 
     if (ret) return ret.value;
 
@@ -509,13 +550,16 @@ export default class Db extends events.EventEmitter {
   async GetNavAddresses() {
     if (!this.db) return [];
 
-    return this.db.objects('Key').filtered(`type == ${AddressTypes.NAV}`);
+    let ret = this.db.objects('Key').filtered(`type == ${AddressTypes.NAV}`);
+
+    return Object.keys(ret).map(key => ret[key]);
   }
 
   async GetStakingAddresses() {
     if (!this.db) return [];
 
-    return this.db.objects('StakingAddress');
+    let ret = this.db.objects('StakingAddress');
+    return Object.keys(ret).map(key => ret[key]);
   }
 
   async AddStakingAddress(
@@ -529,19 +573,23 @@ export default class Db extends events.EventEmitter {
     let item;
     let self = this;
 
-    this.db.write(() => {
-      item = self.db?.create(
-        'StakingAdress',
-        {
-          id: address + '_' + address2,
-          address: address,
-          addressVoting: address2,
-          hash: hash,
-          hashVoting: pk2,
-        },
-        'modified',
-      );
-    });
+    try {
+      this.db.write(() => {
+        item = self.db?.create(
+          'StakingAddress',
+          {
+            id: address + '_' + address2,
+            address: address,
+            addressVoting: address2,
+            hash: hash,
+            hashVoting: pk2,
+          },
+          'all',
+        );
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
     return !!item;
   }
@@ -549,17 +597,19 @@ export default class Db extends events.EventEmitter {
   async GetStakingAddress(address: string, address2: string) {
     if (!this.db) return;
 
-    return this.db
+    let ret = this.db
       .objects('StakingAddress')
       .filtered(`address == '${address}' && addressVoting == '${address2}'`);
+
+    return Object.keys(ret).map(key => ret[key])[0];
   }
 
   async GetStatusForScriptHash(s: string) {
     if (!this.db) return;
 
-    let ret = this.db.objects('Status').filtered(`scriptHash == '${s}'`)[0];
+    let ret = this.db.objects('Status').filtered(`scriptHash == '${s}'`);
 
-    return ret?.status;
+    return Object.keys(ret).map(key => ret[key])[0]?.status;
   }
 
   async SetStatusForScriptHash(s: string, st: string) {
@@ -568,16 +618,20 @@ export default class Db extends events.EventEmitter {
     let item;
     let self = this;
 
-    this.db.write(() => {
-      item = self.db?.create(
-        'Status',
-        {
-          scriptHash: s,
-          status: st,
-        },
-        'modified',
-      );
-    });
+    try {
+      this.db.write(() => {
+        item = self.db?.create(
+          'Status',
+          {
+            scriptHash: s,
+            status: st,
+          },
+          'all',
+        );
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
     return !!item;
   }
@@ -588,19 +642,23 @@ export default class Db extends events.EventEmitter {
     let item;
     let self = this;
 
-    this.dbTx.write(() => {
-      for (let d of documents) {
-        item = self.dbTx?.create(
-          'TxKeys',
-          {
-            ...d,
-            vin: JSON.stringify(d.vin),
-            vout: JSON.stringify(d.vout),
-          },
-          'modified',
-        );
-      }
+    documents = documents.map(el => {
+      return {
+        ...el,
+        vin: JSON.stringify(el.vin),
+        vout: JSON.stringify(el.vout),
+      };
     });
+
+    try {
+      this.dbTx.write(() => {
+        for (let d of documents) {
+          item = self.dbTx?.create('TxKeys', d);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
     return !!item;
   }
@@ -613,7 +671,11 @@ export default class Db extends events.EventEmitter {
 
     this.db.write(() => {
       for (let d of documents) {
-        item = self.db?.create('ScriptHistory', d, 'modified');
+        try {
+          item = self.db?.create('ScriptHistory', d, 'all');
+        } catch (e) {
+          console.log(e);
+        }
       }
     });
 
@@ -627,30 +689,37 @@ export default class Db extends events.EventEmitter {
 
     let self = this;
 
-    for (var i in types) {
-      let type = types[i];
-      this.db.write(() => {
-        self.db?.delete(self.db?.objects(type));
-      });
+    try {
+      for (var i in types) {
+        let type = types[i];
+        this.db.write(() => {
+          self.db?.delete(self.db?.objects(type));
+        });
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 
   async GetXNavReceivingAddresses(all: boolean) {
     if (!this.db) return [];
 
-    return this.db.objects('Key').filtered(`type == ${AddressTypes.XNAV}`);
+    let ret = this.db.objects('Key').filtered(`type == ${AddressTypes.XNAV}`);
+    return Object.keys(ret).map(key => ret[key]);
   }
 
   async GetNavReceivingAddresses(all: boolean) {
     if (!this.db) return [];
 
-    return this.db.objects('Key').filtered(`type == ${AddressTypes.NAV}`);
+    let ret = this.db.objects('Key').filtered(`type == ${AddressTypes.NAV}`);
+    return Object.keys(ret).map(key => ret[key]);
   }
 
   async GetNavAddress(address) {
     if (!this.db) return;
 
     let ret = this.db.objects('Key').filtered(`address == '${address}'`);
+    ret = Object.keys(ret).map(key => ret[key]);
 
     return ret[0];
   }
@@ -658,9 +727,11 @@ export default class Db extends events.EventEmitter {
   async GetPendingTxs(downloaded = 0) {
     if (!this.db) return [];
 
-    return this.db
+    let ret = this.db
       .objects('ScriptHistory')
       .filtered(`fetched == ${downloaded}`);
+
+    return Object.keys(ret).map(key => ret[key]);
   }
 
   async CleanScriptHashHistory(
@@ -672,15 +743,19 @@ export default class Db extends events.EventEmitter {
 
     let self = this;
 
-    this.db.write(() => {
-      self.db?.delete(
-        self.db
-          ?.objects('ScriptHistory')
-          .filtered(
-            `(height >= ${upperLimit} || height <= ${lowerLimit}) && scriptHash == '${scriptHash}'`,
-          ),
-      );
-    });
+    try {
+      this.db.write(() => {
+        self.db?.delete(
+          self.db
+            ?.objects('ScriptHistory')
+            .filtered(
+              `(height >= ${upperLimit} || height <= ${lowerLimit}) && scriptHash == '${scriptHash}'`,
+            ),
+        );
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async AddScriptHashHistory(
@@ -694,19 +769,23 @@ export default class Db extends events.EventEmitter {
     let self = this;
     let item;
 
-    this.db.write(() => {
-      item = self.db?.create(
-        'ScriptHistory',
-        {
-          id: scriptHash + '_' + hash,
-          scriptHash: scriptHash,
-          tx_hash: hash,
-          height: height,
-          fetched: fetched ? 1 : 0,
-        },
-        'modified',
-      );
-    });
+    try {
+      this.db.write(() => {
+        item = self.db?.create(
+          'ScriptHistory',
+          {
+            id: scriptHash + '_' + hash,
+            scriptHash: scriptHash,
+            tx_hash: hash,
+            height: height,
+            fetched: fetched ? 1 : 0,
+          },
+          'all',
+        );
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
     return !!item;
   }
@@ -717,16 +796,20 @@ export default class Db extends events.EventEmitter {
     let self = this;
     let item;
 
-    this.db.write(() => {
-      item = self.db?.create(
-        'Label',
-        {
-          address: address,
-          name: name,
-        },
-        'modified',
-      );
-    });
+    try {
+      this.db.write(() => {
+        item = self.db?.create(
+          'Label',
+          {
+            address: address,
+            name: name,
+          },
+          'all',
+        );
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
     return !!item;
   }
@@ -737,17 +820,21 @@ export default class Db extends events.EventEmitter {
     let self = this;
     let item;
 
-    this.db.write(() => {
-      item = self.db?.create(
-        'Name',
-        {
-          name: name,
-          height: height,
-          data: data,
-        },
-        'modified',
-      );
-    });
+    try {
+      this.db.write(() => {
+        item = self.db?.create(
+          'Name',
+          {
+            name: name,
+            height: height,
+            data: data ? JSON.stringify(data) : '',
+          },
+          'all',
+        );
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
     return !!item;
   }
@@ -755,7 +842,14 @@ export default class Db extends events.EventEmitter {
   async GetName(name: string) {
     if (!this.db) return;
 
-    return this.db.objectForPrimaryKey('Name', name);
+    let ret = this.db.objectForPrimaryKey('Name', name);
+
+    if (!ret) return;
+
+    return {
+      ...ret,
+      data: ret?.data ? JSON.parse(ret?.data) : {},
+    };
   }
 
   async AddTokenInfo(
@@ -771,20 +865,24 @@ export default class Db extends events.EventEmitter {
     let self = this;
     let item;
 
-    this.db.write(() => {
-      item = self.db?.create(
-        'Token',
-        {
-          id: id,
-          name: name,
-          code: code,
-          supply: supply,
-          version: version,
-          key: key,
-        },
-        'modified',
-      );
-    });
+    try {
+      this.db.write(() => {
+        item = self.db?.create(
+          'Token',
+          {
+            id: id,
+            name: name,
+            code: code,
+            supply: supply,
+            version: version,
+            key: key,
+          },
+          'all',
+        );
+      });
+    } catch (e) {
+      console.log('AddTokenInfo', e);
+    }
 
     return !!item;
   }
@@ -801,16 +899,20 @@ export default class Db extends events.EventEmitter {
     let self = this;
     let item;
 
-    this.db.write(() => {
-      item = self.db?.create(
-        'Nft',
-        {
-          id: id + '-' + nftid,
-          metadata: metadata,
-        },
-        'modified',
-      );
-    });
+    try {
+      this.db.write(() => {
+        item = self.db?.create(
+          'Nft',
+          {
+            id: id + '-' + nftid,
+            metadata: metadata,
+          },
+          'all',
+        );
+      });
+    } catch (e) {
+      console.log('AddTokenInfo', e);
+    }
 
     return !!item;
   }
@@ -824,13 +926,15 @@ export default class Db extends events.EventEmitter {
   async GetMyNames() {
     if (!this.db) return;
 
-    return this.db.objects('Name');
+    let ret = this.db.objects('Name');
+    return Object.keys(ret).map(key => ret[key]);
   }
 
   async GetMyTokens() {
     if (!this.db) return;
 
-    return this.db.objects('Token');
+    let ret = this.db.objects('Token');
+    return Object.keys(ret).map(key => ret[key]);
   }
 
   async GetLabel(address: string) {
@@ -843,9 +947,10 @@ export default class Db extends events.EventEmitter {
   async GetScriptHashHistory(scriptHash: string) {
     if (!this.db) return [];
 
-    return this.db
+    let ret = this.db
       .objects('ScriptHistory')
       .filtered(`scriptHash == '${scriptHash}'`);
+    return Object.keys(ret).map(key => ret[key]);
   }
 
   async MarkAsFetched(hash: string) {
@@ -853,28 +958,27 @@ export default class Db extends events.EventEmitter {
 
     let self = this;
 
-    this.db.write(() => {
-      self.db
-        .objects('ScriptHistory')
-        .filtered(`tx_hash == '${hash}'`)
-        .forEach(el => {
+    try {
+      let objs = self.db.objects('ScriptHistory');
+      objs = objs.filtered(`tx_hash == '${hash}'`);
+      let array = [];
+      for (let i = 0; i < objs.length; i++) {
+        array.push(objs[i]);
+      }
+      this.db.write(() => {
+        for (let el of array) {
           el.fetched = 1;
-        });
-    });
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async GetWalletHistory() {
     if (!this.db) return [];
 
-    let history = this.db.objects('WalletTx').map(el => {
-      return {
-        ...el,
-        memos: JSON.parse(el.memos),
-        strdzeel: JSON.parse(el.strdzeel),
-        addresses_in: JSON.parse(el.addresses_in),
-        addresses_out: JSON.parse(el.addresses_out),
-      };
-    });
+    let history = this.db.objects('WalletTx');
 
     let confirmed = history.filtered('height > 0');
     let unconfirmed = history.filtered('confirmed == 0 || height <= 0');
@@ -889,7 +993,19 @@ export default class Db extends events.EventEmitter {
       return b.height - a.height;
     });
 
-    return ret;
+    if (ret.length == 0) return [];
+
+    ret = ret.map(el => {
+      return {
+        ...el,
+        memos: el?.memos ? JSON.parse(el?.memos) : [],
+        strdzeel: el?.strdzeel ? JSON.parse(el?.strdzeel) : {},
+        addresses_in: el?.addresses_in ? JSON.parse(el?.addresses_in) : {},
+        addresses_out: el?.addresses_out ? JSON.parse(el?.addresses_out) : {},
+      };
+    });
+
+    return Object.keys(ret).map(key => ret[key]);
   }
 
   async AddWalletTx(
@@ -914,30 +1030,34 @@ export default class Db extends events.EventEmitter {
     let self = this;
     let item;
 
-    this.db.write(() => {
-      item = self.db?.create(
-        'WalletTx',
-        {
-          id: hash + '_' + type,
-          hash: hash,
-          amount: amount,
-          type: type,
-          confirmed: confirmed ? 1 : 0,
-          height: height,
-          pos: pos,
-          timestamp: timestamp,
-          memos: JSON.stringify(memos),
-          strdzeel: JSON.stringify(strdzeel),
-          addresses_in: JSON.stringify(addresses_in),
-          addresses_out: JSON.stringify(addresses_out),
-          token_name: name,
-          token_code: code,
-          token_id: tokenId,
-          nft_id: tokenNftId,
-        },
-        'modified',
-      );
-    });
+    try {
+      this.db.write(() => {
+        item = self.db?.create(
+          'WalletTx',
+          {
+            id: hash + '_' + type,
+            hash: hash,
+            amount: amount,
+            type: type,
+            confirmed: confirmed ? 1 : 0,
+            height: height,
+            pos: pos,
+            timestamp: timestamp,
+            memos: JSON.stringify(memos),
+            strdzeel: JSON.stringify(strdzeel),
+            addresses_in: JSON.stringify(addresses_in),
+            addresses_out: JSON.stringify(addresses_out),
+            token_name: name,
+            token_code: code,
+            token_id: tokenId,
+            nft_id: tokenNftId,
+          },
+          'all',
+        );
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
     return !!item;
   }
@@ -949,19 +1069,23 @@ export default class Db extends events.EventEmitter {
       .objects('OutPoint')
       .filtered(`spentIn == ''` + (forBalance ? ` || spentIn == '0:0'` : ''));
 
-    return ret;
+    return Object.keys(ret).map(key => ret[key]);
   }
 
   async GetCandidates(network: string) {
     if (!this.dbTx) return;
 
-    return this.dbTx.objects('Candidate').filtered(`network == '${network}'`);
+    let ret = this.dbTx
+      .objects('Candidate')
+      .filtered(`network == '${network}'`);
+    return Object.keys(ret).map(key => ret[key]);
   }
 
   async GetTxs() {
     if (!this.dbTx) return;
 
-    return this.dbTx.objects('Tx');
+    let ret = this.dbTx.objects('Tx');
+    return Object.keys(ret).map(key => ret[key]);
   }
 
   async GetTx(hash) {
@@ -987,20 +1111,28 @@ export default class Db extends events.EventEmitter {
     let self = this;
     let item;
 
-    this.db.write(() => {
-      item = self.db?.create('OutPoint', {
-        id: outPoint,
-        out: out,
-        spentIn: spentIn,
-        amount: amount,
-        label: label,
-        type: type,
-        spendingPk: spendingPk,
-        stakingPk: stakingPk,
-        votingPk: votingPk,
-        hashId: hashId,
+    try {
+      this.db.write(() => {
+        item = self.db?.create(
+          'OutPoint',
+          {
+            id: outPoint,
+            out: out,
+            spentIn: spentIn,
+            amount: amount,
+            label: label,
+            type: type,
+            spendingPk: spendingPk,
+            stakingPk: stakingPk,
+            votingPk: votingPk,
+            hashId: hashId,
+          },
+          'all',
+        );
       });
-    });
+    } catch (e) {
+      console.log(e);
+    }
 
     return !!item;
   }
@@ -1016,14 +1148,18 @@ export default class Db extends events.EventEmitter {
 
     let self = this;
 
-    this.db.write(() => {
-      self?.db
-        ?.objects('OutPoint')
-        .filtered(`id == '${outPoint}'`)
-        .forEach(el => {
-          el.spentIn = spentIn;
-        });
-    });
+    try {
+      this.db.write(() => {
+        self?.db
+          ?.objects('OutPoint')
+          .filtered(`id == '${outPoint}'`)
+          .forEach(el => {
+            el.spentIn = spentIn;
+          });
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async SetTxHeight(hash: string, height: number, pos: number) {
@@ -1031,15 +1167,16 @@ export default class Db extends events.EventEmitter {
 
     let self = this;
 
-    this.db.write(() => {
-      self?.db
-        ?.objects('Tx')
-        .filtered(`hash == '${hash}'`)
-        .forEach(el => {
-          el.height = height;
-          el.pos = pos;
-        });
-    });
+    try {
+      this.db.write(() => {
+        let el = self?.db?.objectForPrimaryKey('Tx', hash);
+
+        el.height = height;
+        el.pos = pos;
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async UseNavAddress(address: string) {
@@ -1047,14 +1184,18 @@ export default class Db extends events.EventEmitter {
 
     let self = this;
 
-    this.db.write(() => {
-      self?.db
-        ?.objects('Key')
-        .filtered(`address == '${address}'`)
-        .forEach(el => {
-          el.used = 1;
-        });
-    });
+    try {
+      this.db.write(() => {
+        self?.db
+          ?.objects('Key')
+          .filtered(`address == '${address}'`)
+          .forEach(el => {
+            el.used = 1;
+          });
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async UseXNavAddress(hashId: string) {
@@ -1062,14 +1203,15 @@ export default class Db extends events.EventEmitter {
 
     let self = this;
 
-    this.db.write(() => {
-      self?.db
-        ?.objects('Key')
-        .filtered(`hash == '${hashId}'`)
-        .forEach(el => {
-          el.used = 1;
-        });
-    });
+    try {
+      this.db.write(() => {
+        let el = self?.db?.objectForPrimaryKey('Key', hashId);
+
+        el.used = 1;
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async AddTx(tx) {
@@ -1081,25 +1223,31 @@ export default class Db extends events.EventEmitter {
 
     try {
       self.dbTx?.write(() => {
-        self.dbTx?.create('Tx', tx);
+        self.dbTx?.create('Tx', tx, 'all');
       });
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async AddTxKeys(tx) {
     if (!this.dbTx) return;
 
-    tx.hash = tx.txidkeys;
+    if (!tx.hash) tx.hash = tx.txidkeys;
     let self = this;
 
     try {
-      self.dbTx?.write(() => {
-        self.dbTx?.create('TxKeys', {
-          ...tx,
-          vin: JSON.stringify(tx.vin),
-          vout: JSON.stringify(tx.vout),
+      let ret = this.dbTx.objectForPrimaryKey('TxKeys', tx.hash);
+
+      if (!ret) {
+        self.dbTx?.write(() => {
+          self.dbTx?.create('TxKeys', {
+            ...tx,
+            vin: JSON.stringify(tx.vin),
+            vout: JSON.stringify(tx.vout),
+          });
         });
-      });
+      }
     } catch (e) {}
   }
 
@@ -1109,17 +1257,30 @@ export default class Db extends events.EventEmitter {
     let self = this;
 
     try {
-      self.dbTx?.write(() => {
-        self.dbTx?.create('Candidate', {
-          network: network,
-          tx: candidate.tx.toString(),
-          fee: candidate.fee,
-          input:
-            candidate.tx.inputs[0].prevTxId.toString('hex') +
-            ':' +
-            candidate.tx.inputs[0].outputIndex,
+      let ret = this.dbTx.objectForPrimaryKey(
+        'Candidate',
+        candidate.tx.inputs[0].prevTxId.toString('hex') +
+          ':' +
+          candidate.tx.inputs[0].outputIndex,
+      );
+
+      if (!ret) {
+        self.dbTx?.write(() => {
+          self.dbTx?.create(
+            'Candidate',
+            {
+              network: network,
+              tx: candidate.tx.toString(),
+              fee: candidate.fee,
+              input:
+                candidate.tx.inputs[0].prevTxId.toString('hex') +
+                ':' +
+                candidate.tx.inputs[0].outputIndex,
+            },
+            'all',
+          );
         });
-      });
+      }
     } catch (e) {}
   }
 
@@ -1128,16 +1289,27 @@ export default class Db extends events.EventEmitter {
 
     let self = this;
 
-    this.dbTx.write(() => {
-      self.dbTx?.delete(self.dbTx.objectForPrimaryKey('Candidate', input));
-    });
+    try {
+      this.dbTx.write(() => {
+        self.dbTx?.delete(self.dbTx.objectForPrimaryKey('Candidate', input));
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async GetTxKeys(hash: string) {
     if (!this.dbTx) return;
 
     let ret = this.dbTx.objectForPrimaryKey('TxKeys', hash);
-    return {...ret, vin: JSON.parse(ret?.vin), vout: JSON.parse(ret?.vout)};
+
+    if (!ret) return;
+
+    return {
+      ...ret,
+      vin: ret?.vin ? JSON.parse(ret?.vin) : [],
+      vout: ret?.vout ? JSON.parse(ret?.vout) : [],
+    };
   }
 }
 
