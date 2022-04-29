@@ -20,7 +20,7 @@ import {default as lightTheme} from './constants/theme/light.json';
 import {default as customTheme} from './constants/theme/appTheme.json';
 import {default as customMapping} from './constants/theme/mapping.json';
 import AppContainer from './navigation/AppContainer';
-import RNBootSplash, {getVisibilityStatus} from 'react-native-bootsplash';
+import RNBootSplash from 'react-native-bootsplash';
 
 patchFlatListProps();
 import SQLite from 'react-native-sqlite-2';
