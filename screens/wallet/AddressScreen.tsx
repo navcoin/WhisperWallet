@@ -25,7 +25,7 @@ const AddressScreen = (props: any) => {
 
   useEffect(() => {
     setAddress(
-      parsedAddresses.filter(
+      parsedAddresses.sort((a,b) => {return a.used-b.used}).filter(
         el =>
           el.type_id == addressType.destination_id &&
           (!addressType.address ||
