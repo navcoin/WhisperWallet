@@ -74,15 +74,15 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
       !newServer?.proto ||
       !newServer?.type
     ) {
-      setError('Please input  server details.');
+      setError('Please input server details.');
       return;
     }
     if (newServer.host && !validateIp(newServer.host)) {
-      setError('Invalid Server');
+      setError('Invalid server');
       return;
     }
     if (newServer.port && !validatePort(newServer.port)) {
-      setError('Invalid Port');
+      setError('Invalid port');
       return;
     }
     props.route.params.addServer(newServer, () => {

@@ -16,34 +16,24 @@ import {useToast} from 'react-native-toast-notifications';
 
 const OpenWallet = () => {
   const {navigate} = useNavigation();
-  const {createWallet} = useWallet();
+  const {createWallet, walletsList} = useWallet();
   const [loading, setLoading] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
   const {njs} = useNjs();
   const {readPassword} = useSecurity();
   const toast = useToast();
 
-  const [walletList, setWalletList] = useState<any>([]);
-
-  useEffect(() => {
-    njs.wallet.WalletFile.ListWallets().then(list => {
-      setWalletList(list);
-    });
-  }, []);
-
   return (
     <Container useSafeArea>
       <Loading loading={!!loading} text={loading} />
-      <TopNavigationComponent title={'Open Wallet'} />
+      <TopNavigationComponent title={'Open wallet'} />
       <View style={styles.container}>
-        <Text category="title4" center marginBottom={32}>
-          Select which wallet you want to open:
-        </Text>
         <KeyboardAwareScrollView
           style={styles.content}
           enableOnAndroid
+          keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}>
-          {walletList.map((el, index) => {
+          {walletsList.sort().map((el, index) => {
             return (
               <View
                 style={[layoutStyles.responsiveColumnComponentWidth]}

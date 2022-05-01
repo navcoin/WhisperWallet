@@ -11,7 +11,6 @@ import {
 } from '../../constants/Type';
 import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
-import useLayout from '../../hooks/useLayout';
 import {RootStackParamList} from '../../navigation/type';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
@@ -94,7 +93,7 @@ const HistoryScreen = (props: any) => {
 
   return (
     <Container useSafeArea>
-      <TopNavigationComponent title={'Wallet History'} />
+      <TopNavigationComponent title={'Transactions'} />
       {loadingStatusText === Connection_Stats_Text.Synced &&
       history.filter((el: any) => condition(el)).length ? (
         <BigList
@@ -106,10 +105,9 @@ const HistoryScreen = (props: any) => {
       {loadingStatusText === Connection_Stats_Text.Synced &&
       history.filter((el: any) => condition(el)).length === 0 ? (
         <View style={[styles.emptyView]}>
-          <Text style={[styles.text]}>There are no transactions yet!</Text>
+          <Text style={[styles.text]}>No transactions found</Text>
           <View style={[styles.cardWrapper]}>
             <OptionCard
-              key={1}
               id={'1'}
               index={1}
               item={{text: 'Show receiving address'}}

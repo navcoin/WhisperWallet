@@ -70,6 +70,8 @@ const App = () => {
       }
     });
     njs.wallet.Init().then(async () => {
+      njs.wallet.WalletFile.SetBackend(win.indexedDB, win.IDBKeyRange);
+
       setNjs(njs);
       setWin(win);
       setP2pPool(
@@ -102,7 +104,6 @@ const App = () => {
         }),
       );
 
-      njs.wallet.WalletFile.SetBackend(win.indexedDB, win.IDBKeyRange);
       setLoaded(true);
 
       setTimeout(() => {

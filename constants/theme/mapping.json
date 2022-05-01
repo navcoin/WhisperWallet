@@ -507,7 +507,7 @@
                   },
                   "active": {
                     "borderColor": "transparent",
-                    "backgroundColor": "color-basic-1000",
+                    "backgroundColor": "color-staking",
                     "textColor": "text-white-color",
                     "iconTintColor": "text-white-color"
                   },
