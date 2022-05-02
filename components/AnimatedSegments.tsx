@@ -173,6 +173,30 @@ export const AnimatedSegments: FC<CircularProgressProps> = ({
 
   const FADE_DELAY = 1000;
 
+  const calcArc = (startAng, endA) => {
+    'worklet';
+
+    let endAngle = endA;
+    var start = {
+      x: cx - r * Math.cos(startAng * (Math.PI / 180)),
+      y: -r * Math.sin(startAng * (Math.PI / 180)) + cy,
+    };
+    var end = {
+      x: cx - r * Math.cos(endAngle * (Math.PI / 180)),
+      y: -r * Math.sin(endAngle * (Math.PI / 180)) + cy,
+    };
+    var largeArcFlag = startAng - endA >= 180 ? '1' : '0';
+
+    var d =
+      end.x == start.x && end.y == start.y
+        ? `M ${cx} ${cy} m ${-r} 0 a ${r} ${r} 0 1 0 ${
+            r * 2
+          } 0 a ${r} ${r} 0 1 0 ${-r * 2} 0`
+        : `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`;
+
+    return d;
+  };
+
   const arcProgress = useDerivedValue(() => {
     let startAng = progressStartAngle.value;
     let endA = progressVisible
@@ -204,73 +228,19 @@ export const AnimatedSegments: FC<CircularProgressProps> = ({
   const arcNavBalance = useDerivedValue(() => {
     let startAng = 360 - navBalanceStartAngle.value;
     let endA = startAng - navBalanceEndAngle.value;
-    let endAngle = endA;
-    var start = {
-      x: cx - r * Math.cos(startAng * (Math.PI / 180)),
-      y: -r * Math.sin(startAng * (Math.PI / 180)) + cy,
-    };
-    var end = {
-      x: cx - r * Math.cos(endAngle * (Math.PI / 180)),
-      y: -r * Math.sin(endAngle * (Math.PI / 180)) + cy,
-    };
-    var largeArcFlag = startAng - endA >= 180 ? '1' : '0';
-
-    var d =
-      end.x == start.x && end.y == start.y
-        ? `M ${cx} ${cy} m ${-r} 0 a ${r} ${r} 0 1 0 ${
-            r * 2
-          } 0 a ${r} ${r} 0 1 0 ${-r * 2} 0`
-        : `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`;
-
-    return d;
+    return calcArc(startAng, endA);
   }, [navBalanceStartAngle.value, navBalanceEndAngle.value]);
 
   const arcXnavBalance = useDerivedValue(() => {
     let startAng = 360 - xnavBalanceStartAngle.value;
     let endA = startAng - xnavBalanceEndAngle.value;
-    let endAngle = endA;
-    var start = {
-      x: cx - r * Math.cos(startAng * (Math.PI / 180)),
-      y: -r * Math.sin(startAng * (Math.PI / 180)) + cy,
-    };
-    var end = {
-      x: cx - r * Math.cos(endAngle * (Math.PI / 180)),
-      y: -r * Math.sin(endAngle * (Math.PI / 180)) + cy,
-    };
-    var largeArcFlag = startAng - endA >= 180 ? '1' : '0';
-
-    var d =
-      end.x == start.x && end.y == start.y
-        ? `M ${cx} ${cy} m ${-r} 0 a ${r} ${r} 0 1 0 ${
-            r * 2
-          } 0 a ${r} ${r} 0 1 0 ${-r * 2} 0`
-        : `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`;
-
-    return d;
+    return calcArc(startAng, endA);
   }, [xnavBalanceStartAngle.value, xnavBalanceEndAngle.value]);
 
   const arcStakingBalance = useDerivedValue(() => {
     let startAng = 360 - stakingBalanceStartAngle.value;
     let endA = startAng - stakingBalanceEndAngle.value;
-    let endAngle = endA;
-    var start = {
-      x: cx - r * Math.cos(startAng * (Math.PI / 180)),
-      y: -r * Math.sin(startAng * (Math.PI / 180)) + cy,
-    };
-    var end = {
-      x: cx - r * Math.cos(endAngle * (Math.PI / 180)),
-      y: -r * Math.sin(endAngle * (Math.PI / 180)) + cy,
-    };
-    var largeArcFlag = startAng - endA >= 180 ? '1' : '0';
-
-    var d =
-      end.x == start.x && end.y == start.y
-        ? `M ${cx} ${cy} m ${-r} 0 a ${r} ${r} 0 1 0 ${
-            r * 2
-          } 0 a ${r} ${r} 0 1 0 ${-r * 2} 0`
-        : `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`;
-
-    return d;
+    return calcArc(startAng, endA);
   }, [stakingBalanceStartAngle.value, stakingBalanceEndAngle.value]);
 
   const progressAnimatedProps = useAnimatedProps(() => {
