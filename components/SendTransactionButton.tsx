@@ -146,7 +146,6 @@ const SendTransactionButton = (props: any) => {
                 </BottomSheetView>,
               );
             });
-          });
         }}
       />
     </>
