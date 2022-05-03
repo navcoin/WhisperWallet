@@ -193,21 +193,19 @@ const AppWrapper = () => {
     <SafeAreaProvider>
       <ThemeContext.Provider value={{theme, toggleTheme}}>
         <IconRegistry icons={[AssetIconsPack, EvaIconsPack]} />
-        <ToastProvider offset={50} style={{borderRadius: 20, opacity: 0.8}}>
-          <ApplicationProvider
-            {...eva}
-            theme={
-              theme === 'light'
-                ? {...eva.light, ...customTheme, ...lightTheme}
-                : {...eva.dark, ...customTheme, ...darkTheme}
-            }
-            /* @ts-ignore */
-            customMapping={customMapping}>
-            <ModalProvider>
-              <App theme={theme} />
-            </ModalProvider>
-          </ApplicationProvider>
-        </ToastProvider>
+        <ApplicationProvider
+          {...eva}
+          theme={
+            theme === 'light'
+              ? {...eva.light, ...customTheme, ...lightTheme}
+              : {...eva.dark, ...customTheme, ...darkTheme}
+          }
+          /* @ts-ignore */
+          customMapping={customMapping}>
+          <ModalProvider>
+            <App theme={theme} />
+          </ModalProvider>
+        </ApplicationProvider>
       </ThemeContext.Provider>
     </SafeAreaProvider>
   );
