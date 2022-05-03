@@ -109,6 +109,8 @@ const App = (props: {theme: string}) => {
     AsyncStorage.getItem('shownWelcome').then(itemValue => {
       if (itemValue == 'true' || itemValue == 'false') {
         setShownWelcome(itemValue);
+      } else {
+        setShownWelcome('false');
       }
     });
   }, []);
