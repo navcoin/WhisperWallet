@@ -15,6 +15,7 @@ import {useCallback} from 'react';
 import StakingNodeScreen from './wallet/StakingNodeScreen';
 import AddStakingNodeScreen from './wallet/AddStakingNodeScreen';
 import BottomSheetProvider from '../contexts/BottomSheetProvider';
+import ErrorLogsScreen from './wallet/ErrorLogsScreen';
 
 const Stack = createStackNavigator<WalletParamList>();
 
@@ -59,6 +60,7 @@ const Wallet = ({navigation}) => {
         />
         <Stack.Screen name={'ServersScreen'} component={ServersScreen} />
         <Stack.Screen name={'AddServerScreen'} component={AddServerScreen} />
+        <Stack.Screen name={'ErrorLogsScreen'} component={ErrorLogsScreen} />
         <Stack.Screen
           name={'AddStakingNodeScreen'}
           component={AddStakingNodeScreen}
