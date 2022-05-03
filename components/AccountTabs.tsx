@@ -18,7 +18,7 @@ const AccountsTab = () => {
   const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
   );
-  const {accounts, tokens, nfts, refreshWallet} = useWallet();
+  const {accounts, tokens, nfts, refreshWallet, connected} = useWallet();
   const bottomSheet = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
   const {navigate} = useNavigation();
@@ -148,9 +148,13 @@ const AccountsTab = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await refreshWallet();
-    setRefreshing(false);
+    if (!(connected == Connection_Stats_Enum.Connecting ||
+        connected == Connection_Stats_Enum.Bootstrapping ||
+        connected == Connection_Stats_Enum.Syncing)) {
+      setRefreshing(true);
+      await refreshWallet();
+      setRefreshing(false);
+    }
   }, []);
 
   return (
