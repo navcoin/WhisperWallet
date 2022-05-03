@@ -49,6 +49,7 @@ const promptErrorToaster = (
       type: 'error',
       text1:
         'Something went wrong in the previous session. Tap for more details.',
+      autoHide: false,
       onPress: () => {
         if (!!cb) {
           cb();
@@ -60,6 +61,7 @@ const promptErrorToaster = (
   Toast.show({
     type: 'error',
     text1: 'Something went wrong. Tap for more details.',
+    autoHide: false,
     onPress: () => {
       if (!!cb) {
         cb();
