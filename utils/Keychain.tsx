@@ -14,7 +14,7 @@ const useKeychain = () => {
     accessible: isEmulatorSync()
       ? undefined
       : Keychain.ACCESSIBLE.AFTER_FIRST_UNLOCK,
-    storage: Keychain.STORAGE_TYPE.RSA,
+    storage: Keychain.STORAGE_TYPE.AES,
   });
 
   //const appBundleId = await DeviceInfo.getBundleId();
