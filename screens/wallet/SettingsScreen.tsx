@@ -15,7 +15,6 @@ import {screenHeight} from '../../utils/layout';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useSecurity from '../../hooks/useSecurity';
 import {SecurityAuthenticationTypes} from '../../contexts/SecurityContext';
-import {useToast} from 'react-native-toast-notifications';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
 import BottomSheetOptions from '../../components/BottomSheetOptions';
 import {useModal} from '../../hooks/useModal';
