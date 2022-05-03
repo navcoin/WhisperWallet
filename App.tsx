@@ -47,7 +47,6 @@ import ModalProvider from './contexts/ModalProvider';
 import {useModal} from './hooks/useModal';
 import ErrorModalContent from './components/ErrorModalContent';
 import {AsyncStoredItems} from './utils/asyncStorageManager';
-import SecurityProvider from './contexts/SecurityProvider';
 const win = {};
 
 setGlobalVars(win, {win: SQLite});

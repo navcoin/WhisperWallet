@@ -1,5 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Alert, Clipboard} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {
   AsyncStoredItems,
@@ -7,8 +5,6 @@ import {
   removeAsyncStorage,
   setAsyncStorage,
 } from './asyncStorageManager';
-import {sendErrorCrashEmail} from './sendMail';
-import {useModal} from '../hooks/useModal';
 
 const saveGlobalErrorRecord = async (newError: string) => {
   let globalRecords = await getAsyncStorage(

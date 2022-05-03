@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-import Text from '../components/Text';
 import Container from '../components/Container';
 import useWallet from '../hooks/useWallet';
 import LoadingModalContent from '../components/LoadingModalContent';

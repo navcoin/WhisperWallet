@@ -1,22 +1,13 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {View, TouchableOpacity} from 'react-native';
 import {
   useTheme,
-  Icon,
   Layout,
   useStyleSheet,
   StyleService,
 } from '@tsejerome/ui-kitten-components';
 
 import Text from './Text';
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetView,
-  useBottomSheetDynamicSnapPoints,
-} from '@gorhom/bottom-sheet';
-import BottomSheetMenu from './BottomSheetMenu';
-import {Balance_Types_Enum} from '../constants/Type';
 import BottomSheetOptions from './BottomSheetOptions';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import {scale, verticalScale} from 'react-native-size-matters';

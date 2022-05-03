@@ -7,7 +7,6 @@ import {
 } from '@tsejerome/ui-kitten-components';
 import React, {useState, useEffect} from 'react';
 import LoadingModalContent from './LoadingModalContent';
-import useKeychain from '../utils/Keychain';
 import useWallet from '../hooks/useWallet';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import Text from './Text';

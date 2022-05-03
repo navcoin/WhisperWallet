@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -7,7 +7,6 @@ import {useModal} from '../hooks/useModal';
 import {cleanTemporaryErrorRecord, errorGroupParser} from '../utils/errors';
 import {sendErrorCrashEmail} from '../utils/sendMail';
 import Button from './Button';
-import Modal from './Modal';
 import Text from './Text';
 import {screenHeight} from '../utils/layout';
 import {AsyncStoredItems} from '../utils/asyncStorageManager';

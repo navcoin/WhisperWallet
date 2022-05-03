@@ -4,7 +4,7 @@ import {RefreshControl, ScrollView, View} from 'react-native';
 import BalanceCard from './BalanceCard';
 import Text from './Text';
 import React, {useCallback, useState} from 'react';
-import {Balance_Types_Enum, BalanceFragment} from '../constants/Type';
+import {BalanceFragment} from '../constants/Type';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import BottomSheetMenu from './BottomSheetMenu';
 import useWallet from '../hooks/useWallet';
@@ -148,9 +148,13 @@ const AccountsTab = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
-    if (!(connected == Connection_Stats_Enum.Connecting ||
+    if (
+      !(
+        connected == Connection_Stats_Enum.Connecting ||
         connected == Connection_Stats_Enum.Bootstrapping ||
-        connected == Connection_Stats_Enum.Syncing)) {
+        connected == Connection_Stats_Enum.Syncing
+      )
+    ) {
       setRefreshing(true);
       await refreshWallet();
       setRefreshing(false);
