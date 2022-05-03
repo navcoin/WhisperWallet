@@ -47,6 +47,7 @@ import ModalProvider from './contexts/ModalProvider';
 import {useModal} from './hooks/useModal';
 import ErrorModalContent from './components/ErrorModalContent';
 import {AsyncStoredItems} from './utils/asyncStorageManager';
+import SecurityProvider from './contexts/SecurityProvider';
 const win = {};
 
 setGlobalVars(win, {win: SQLite});
@@ -81,6 +82,7 @@ const App = (props: {theme: string}) => {
     setPromptPreviousError(false);
     if (!temporaryErrorRecords.length) return;
     const errorMessage = temporaryErrorRecords[0];
+    closeModal();
     promptErrorToaster(errorMessage, true, true, () => {
       const errorMsg = errorTextParser(errorMessage, true);
       openModal(<ErrorModalContent errorText={errorMsg}></ErrorModalContent>);
@@ -90,6 +92,7 @@ const App = (props: {theme: string}) => {
   const JSLeveErrorPrompt = async (error: Error | string, isFatal: boolean) => {
     await saveGlobalErrorRecord(errorTextParser(error, isFatal));
     await saveTemporaryErrorRecord(errorTextParser(error, isFatal));
+    closeModal();
     promptErrorToaster(error, isFatal, false, () => {
       const errorMsg = errorTextParser(error, isFatal);
       openModal(<ErrorModalContent errorText={errorMsg}></ErrorModalContent>);

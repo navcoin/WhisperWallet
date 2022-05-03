@@ -164,6 +164,7 @@ const CreateNewWallet = () => {
                       );
                     })
                     .catch((e: any) => {
+                      setLoading(undefined);
                       promptErrorToaster(e.toString(), false, false, () => {
                         const errorMsg = errorTextParser(e.toString(), false);
                         openModal(
@@ -171,7 +172,6 @@ const CreateNewWallet = () => {
                             errorText={errorMsg}></ErrorModalContent>,
                         );
                       });
-                      setLoading(undefined);
                     });
                 }}
               />
