@@ -102,7 +102,7 @@ const App = (props: {theme: string}) => {
     await saveTemporaryErrorRecord(errorTextParser(errorString, true));
     await AsyncStorage.setItem('crashErrorRecords', errorString);
   });
-  
+
   useEffect(() => {
     AsyncStorage.getItem('shownWelcome').then(itemValue => {
       if (itemValue == 'true' || itemValue == 'false') {

@@ -1,13 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Button, Input, useTheme} from '@tsejerome/ui-kitten-components';
+import React, {useCallback, useEffect, useState} from 'react';
+import {BackHandler, StyleSheet, View} from 'react-native';
+import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 
 import Text from '../components/Text';
 import Container from '../components/Container';
 import AnimatedStep from '../components/AnimatedStep';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
 import LoadingModalContent from '../components/LoadingModalContent';
 import useNjs from '../hooks/useNjs';
@@ -21,7 +20,7 @@ import {scale, verticalScale} from 'react-native-size-matters';
 import {useModal} from '../hooks/useModal';
 
 const ImportWallet = () => {
-  const {navigate} = useNavigation();
+  const {navigate, goBack} = useNavigation();
   const [index, setIndex] = useState(0);
   const [walletName, setWalletName] = useState('');
   const [mnemonic, setMnemonic] = useState('');
@@ -42,9 +41,26 @@ const ImportWallet = () => {
     closeModal();
   }, [loading]);
 
+  const onBackPress = useCallback(() => {
+    if (index == 0) {
+      goBack();
+    } else {
+      setIndex(index - 1);
+    }
+    return true;
+  }, [index]);
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    };
+  }, []);
+
   return (
     <Container useSafeArea>
-      <TopNavigationComponent title={'Import Wallet'} />
+      <TopNavigationComponent title={'Import wallet'} pressBack={onBackPress} />
       <AnimatedStep style={styles.animatedStep} step={index} />
 
       <View style={styles.container}>
@@ -52,6 +68,7 @@ const ImportWallet = () => {
           <KeyboardAwareScrollView
             style={styles.content}
             enableOnAndroid
+            keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}>
             <Text category="title4" center marginBottom={32}>
               Choose the wallet type
@@ -108,7 +125,7 @@ const ImportWallet = () => {
             <View style={[layoutStyles.responsiveRowComponentWidth]}>
               <Button
                 status={'primary-whisper'}
-                children="Next"
+                children="Continue"
                 style={styles.button}
                 onPress={() => {
                   if (IsValidMnemonic(mnemonic, type)) {
@@ -125,6 +142,7 @@ const ImportWallet = () => {
           <KeyboardAwareScrollView
             style={styles.content}
             enableOnAndroid
+            keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}>
             <Text category="title4" center marginBottom={32}>
               Choose the network
@@ -149,6 +167,7 @@ const ImportWallet = () => {
           <KeyboardAwareScrollView
             style={styles.content}
             enableOnAndroid
+            keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}>
             <Text category="title4" center marginBottom={32}>
               Choose a name for the wallet
@@ -172,7 +191,7 @@ const ImportWallet = () => {
               <></>
             )}
             <Button
-              children="Next"
+              children="Continue"
               status={'primary-whisper'}
               style={styles.button}
               onPressOut={async () => {
@@ -212,7 +231,7 @@ const ImportWallet = () => {
             </Text>
             <Text center key={'text'}>
               {'\n'}
-              You can now start using Whisper Wallet.
+              You can now start using Whisper.
             </Text>
             <Button
               status={'primary-whisper'}

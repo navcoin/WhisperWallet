@@ -34,7 +34,7 @@ static void InitializeFlipper(UIApplication *application) {
 
   RCTBridge *bridge = [self.reactDelegate createBridgeWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [self.reactDelegate createRootViewWithBridge:bridge
-                                                   moduleName:@"Whisper Wallet"
+                                                   moduleName:@"Whisper"
                                             initialProperties:nil];
 
   if (@available(iOS 13.0, *)) {

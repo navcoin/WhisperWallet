@@ -78,7 +78,7 @@ const AccountsTab = () => {
               },
             },
             {
-              text: 'Move to other wallet',
+              text: 'Move to another account',
               icon: 'exchange',
               skipCollapse: true,
               onPress: () => {
@@ -176,7 +176,7 @@ const AccountsTab = () => {
               return (
                 <View style={styles.item} key={i}>
                   <BalanceCard
-                    item={{...el, name: el.name + ' Wallet'}}
+                    item={{...el, name: el.name + ' account'}}
                     index={i}
                     onPress={() => {
                       setAccount(el);
@@ -189,7 +189,7 @@ const AccountsTab = () => {
           ) : selectedTab == 1 ? (
             <Text marginBottom={16} center>
               {tokens.length == 0
-                ? 'You have no private tokens yet.'
+                ? 'No private tokens found'
                 : tokens.map((el, i) => {
                     return (
                       <View style={styles.item} key={i}>
@@ -208,7 +208,7 @@ const AccountsTab = () => {
           ) : selectedTab == 2 ? (
             <Text center marginBottom={16}>
               {nfts.length == 0
-                ? 'You have no private NFTs yet.'
+                ? 'No private NFTs found'
                 : nfts.map((el, i) => {
                     return (
                       <View style={styles.item} key={i}>

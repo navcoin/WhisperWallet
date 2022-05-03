@@ -12,7 +12,7 @@
 
     <!-- BootTheme should inherit from Theme.SplashScreen -->
     <style name="BootTheme" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_image</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/splash_image</item>
         <item name="windowSplashScreenBackground">@color/bootsplash_background</item>
         <item name="windowSplashScreenAnimationDuration">3000</item>
         <item name="postSplashScreenTheme">@style/AppTheme</item>

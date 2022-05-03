@@ -170,7 +170,7 @@ export const WalletProvider = (props: any) => {
         let label = addresses.staking[address].label?.name;
         if (!label) label = address.substring(0, 8) + '...';
         accs.push({
-          name: label + ' Staking',
+          name: label + ' staking',
           amount: (addresses.staking[address].staking.confirmed || 0) / 1e8,
           pending_amount:
             (addresses.staking[address].staking.pending || 0) / 1e8,

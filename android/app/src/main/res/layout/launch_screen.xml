@@ -10,5 +10,5 @@
         android:contentDescription="Splashscreen"
         android:scaleType="center"
         android:background="@color/splashprimary"
-        android:src="@drawable/splashscreen"/>
+        android:src="@mipmap/splash_image"/>
 </RelativeLayout>

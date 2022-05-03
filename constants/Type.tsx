@@ -14,10 +14,10 @@ export enum Balance_Types_Enum {
 }
 
 export enum Destination_Types_Enum {
-  PublicWallet = 'My Public Wallet',
-  PrivateWallet = 'My Private Wallet',
-  StakingWallet = 'My Staking Wallet',
-  Address = 'Navcoin Address',
+  PublicWallet = 'My public wallet',
+  PrivateWallet = 'My private wallet',
+  StakingWallet = 'My staking wallet',
+  Address = 'Navcoin address',
 }
 
 export interface AddressFragment {

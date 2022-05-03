@@ -71,22 +71,13 @@ const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
     ]);
   };
 
-  const summaryText = `${walletName} is currently using ${
-    wallet.network
-  } network. ${
-    editMode
-      ? 'If you want to switch to other networks, please create another wallet.'
-      : ''
-  }`;
   return (
     <Container useSafeArea>
       <TopNavigationComponent
         accessoryRight={renderRightActions(editMode, () => saveServers())}
-        title={'Setup Electrum Servers'}
+        title={'Setup Electrum servers'}
       />
-      <View>
-        <Text style={[styles.summary]}>{summaryText}</Text>
-      </View>
+
       <View style={[styles.serversWrapper]}>
         {editMode ? (
           <OptionCard

@@ -24,7 +24,7 @@ const AddressScreen = (props: any) => {
 
   useEffect(() => {
     setAddress(
-      parsedAddresses.filter(
+      parsedAddresses.sort((a,b) => {return a.used-b.used}).filter(
         el =>
           el.type_id == addressType.destination_id &&
           (!addressType.address ||
@@ -35,7 +35,7 @@ const AddressScreen = (props: any) => {
 
   return (
     <Container>
-      <TopNavigationComponent title={addressType.destination_id + ' Address'} />
+      <TopNavigationComponent title={addressType.destination_id + ' address'} />
       <Container
         style={{
           flex: 1,
