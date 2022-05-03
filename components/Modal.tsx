@@ -1,44 +1,34 @@
 import React from 'react';
-import {StyleSheet, View, Modal, ActivityIndicator} from 'react-native';
-import Text from './Text';
+import {StyleSheet, View, Modal as RawModal} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
+import Toast from 'react-native-toast-message';
+import toastConfig from './Toast';
 
-const Loading = (props: any) => {
-  const {loading, ...attributes} = props;
-
+const Modal = (props: any) => {
+  const {children, visible} = props;
   return (
-    <Modal
+    <RawModal
       transparent={true}
       statusBarTranslucent={true}
       animationType={'none'}
-      visible={loading}>
+      visible={visible}>
       <BlurView
         style={styles.absolute}
         blurType="dark"
         blurAmount={10}
         reducedTransparencyFallbackColor="white">
+        <Toast config={toastConfig} />
         <View style={styles.contentContainer}>
-          {props.text ? (
-            <Text center style={styles.item}>
-              {props.text}
-            </Text>
-          ) : (
-            <></>
-          )}
-          <ActivityIndicator animating={loading} />
+          {!!children ? children : <></>}
         </View>
       </BlurView>
-    </Modal>
+    </RawModal>
   );
 };
 
 const styles = StyleSheet.create({
-  item: {
-    paddingHorizontal: 16,
-    marginBottom: 16,
-  },
   contentContainer: {
-    backgroundColor: 'background-basic-color-6',
+    backgroundColor: 'transparent',
     flex: 1,
     paddingTop: 8,
     padding: 20,
@@ -52,4 +42,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Loading;
+export default Modal;

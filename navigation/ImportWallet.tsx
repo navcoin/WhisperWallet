@@ -8,7 +8,7 @@ import Container from '../components/Container';
 import AnimatedStep from '../components/AnimatedStep';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useWallet from '../hooks/useWallet';
-import Loading from '../components/Loading';
+import LoadingModalContent from '../components/LoadingModalContent';
 import useNjs from '../hooks/useNjs';
 import {IsValidMnemonic} from '../utils/Mnemonic';
 import OptionCard from '../components/OptionCard';
@@ -17,6 +17,7 @@ import useKeychain from '../utils/Keychain';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
+import {useModal} from '../hooks/useModal';
 
 const ImportWallet = () => {
   const {navigate, goBack} = useNavigation();
@@ -30,6 +31,15 @@ const ImportWallet = () => {
   const [error, setError] = useState('');
   const {njs} = useNjs();
   const {read} = useKeychain();
+  const {openModal, closeModal} = useModal();
+
+  useEffect(() => {
+    if (loading) {
+      openModal(<LoadingModalContent loading={!!loading} text={loading} />);
+      return;
+    }
+    closeModal();
+  }, [loading]);
 
   const onBackPress = useCallback(() => {
     if (index == 0) {
@@ -50,7 +60,6 @@ const ImportWallet = () => {
 
   return (
     <Container useSafeArea>
-      <Loading loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Import wallet'} pressBack={onBackPress} />
       <AnimatedStep style={styles.animatedStep} step={index} />
 

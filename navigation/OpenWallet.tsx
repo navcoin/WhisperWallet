@@ -7,13 +7,14 @@ import Text from '../components/Text';
 import Container from '../components/Container';
 import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
-import Loading from '../components/Loading';
+import LoadingModalContent from '../components/LoadingModalContent';
 import useNjs from '../hooks/useNjs';
 import OptionCard from '../components/OptionCard';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useKeychain from '../utils/Keychain';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
+import {useModal} from '../hooks/useModal';
 
 const OpenWallet = () => {
   const {navigate} = useNavigation();
@@ -24,10 +25,25 @@ const OpenWallet = () => {
   const {njs} = useNjs();
   const {read} = useKeychain();
 
+  const [walletList, setWalletList] = useState<any>([]);
+  const {openModal, closeModal} = useModal();
+
+  useEffect(() => {
+    njs.wallet.WalletFile.ListWallets().then(list => {
+      setWalletList(list);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (loading) {
+      openModal(<LoadingModalContent loading={!!loading} text={loading} />);
+      return;
+    }
+    closeModal();
+  }, [loading]);
   return (
     <Container useSafeArea>
-      <Loading loading={!!loading} text={loading} />
-      <TopNavigationComponent title={'Open wallet'} />
+      <TopNavigationComponent title={'Open Wallet'} />
       <View style={styles.container}>
         <KeyboardAwareScrollView
           style={styles.content}

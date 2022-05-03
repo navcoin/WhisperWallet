@@ -2,10 +2,10 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import createStackNavigator from './createStackNavigator';
 import {RootStackParamList} from './type';
-import {AppState} from 'react-native';
+import {AppState, View} from 'react-native';
 import Intro from './Intro';
 import CreateNewWallet from './CreateNewWallet';
-import Loading from '../components/Loading';
+import LoadingModalContent from '../components/LoadingModalContent';
 import OnBoarding from '../screens/OnBoarding';
 import Wallet from '../screens/Wallet';
 import OpenWallet from './OpenWallet';
@@ -16,11 +16,13 @@ import useWallet from '../hooks/useWallet';
 import {useEffect, useRef, useState} from 'react';
 import LocalAuth from '../utils/LocalAuth';
 import {BlurView} from 'expo';
+import {useModal} from '../hooks/useModal';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const AppContainer = (props: any) => {
   const {lockedScreen, setLockedScreen} = useLockedScreen();
+  const {openModal, closeModal} = useModal();
   const [lockAfterBackground, setLockAfterBackground] = useAsyncStorage(
     'lockAfterBackground',
     'false',
@@ -63,14 +65,14 @@ const AppContainer = (props: any) => {
     };
   }, [refreshWallet, lockAfterBackground, setLockedScreen]);
 
-  return props.loaded ? (
+  return props.loaded && props.shownWelcome !== null ? (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
         }}
         initialRouteName={
-          props.shownWelcome === 'true' ? 'Intro' : 'OnBoarding'
+          props.shownWelcome == 'true' ? 'Intro' : 'OnBoarding'
         }>
         <Stack.Screen name="Intro" component={Intro} />
         <Stack.Screen name="OnBoarding" component={OnBoarding} />
@@ -85,7 +87,7 @@ const AppContainer = (props: any) => {
       </Stack.Navigator>
     </NavigationContainer>
   ) : (
-    <Loading />
+    <View />
   );
 };
 export default AppContainer;

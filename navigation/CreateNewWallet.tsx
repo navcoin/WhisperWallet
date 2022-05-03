@@ -7,7 +7,7 @@ import Container from '../components/Container';
 import AnimatedStep from '../components/AnimatedStep';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useWallet from '../hooks/useWallet';
-import Loading from '../components/Loading';
+import LoadingModalContent from '../components/LoadingModalContent';
 import useNjs from '../hooks/useNjs';
 import {NetworkTypes} from '../constants/Type';
 import OptionCard from '../components/OptionCard';
@@ -16,6 +16,7 @@ import Mnemonic from '../components/Mnemonic';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
+import {useModal} from '../hooks/useModal';
 
 function useArrayRef() {
   const refs = [];
@@ -33,7 +34,7 @@ const CreateNewWallet = () => {
   const {njs} = useNjs();
   const {read} = useKeychain();
   const [elements, ref] = useArrayRef();
-
+  const {openModal, closeModal} = useModal();
   const [words, setWords] = useState<string[]>(new Array(12));
 
   const onBackPress = useCallback(() => {
@@ -53,6 +54,13 @@ const CreateNewWallet = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (loading) {
+      openModal(<LoadingModalContent loading={!!loading} text={loading} />);
+      return;
+    }
+    closeModal();
+  }, [loading]);
   return (
     <Container useSafeArea>
       <TopNavigationComponent title={'New wallet'} pressBack={onBackPress} />
@@ -61,7 +69,6 @@ const CreateNewWallet = () => {
         enableOnAndroid
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}>
-        <Loading loading={!!loading} text={loading} />
         <AnimatedStep style={styles.animatedStep} step={index} steps={5} />
 
         {index == 0 ? (

@@ -14,9 +14,9 @@ export enum Balance_Types_Enum {
 }
 
 export enum Destination_Types_Enum {
-  PublicWallet = 'My public wallet',
-  PrivateWallet = 'My private wallet',
-  StakingWallet = 'My staking wallet',
+  PublicWallet = 'My public account',
+  PrivateWallet = 'My private account',
+  StakingWallet = 'My staking account',
   Address = 'Navcoin address',
 }
 

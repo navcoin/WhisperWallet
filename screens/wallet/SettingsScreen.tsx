@@ -1,5 +1,5 @@
 import useWallet from '../../hooks/useWallet';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Alert, ScrollView} from 'react-native';
 import Container from '../../components/Container';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
@@ -9,11 +9,12 @@ import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import useNjs from '../../hooks/useNjs';
 import useKeychain from '../../utils/Keychain';
-import Loading from '../../components/Loading';
+import LoadingModalContent from '../../components/LoadingModalContent';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {screenHeight} from '../../utils/layout';
 import {scale, verticalScale} from 'react-native-size-matters';
+import {useModal} from '../../hooks/useModal';
 
 interface SettingsItem {
   title: string;
@@ -36,6 +37,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     'lockAfterBackground',
     'false',
   );
+  const {openModal, closeModal} = useModal();
 
   const biometricsAlert = () => {
     let title = 'Your wallet is NOT locked when WhisperWallet goes background.';
@@ -168,11 +170,27 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       show: true,
       onPress: () => leaveWallet(),
     },
+    {
+      title: 'Error Logs',
+      icon: 'search',
+      show: true,
+      onPress: () => {
+        navigate('Wallet', {
+          screen: 'ErrorLogsScreen',
+        });
+      },
+    },
   ];
 
+  useEffect(() => {
+    if (loading) {
+      openModal(<LoadingModalContent loading={!!loading} text={loading} />);
+      return;
+    }
+    closeModal();
+  }, [loading]);
   return (
     <Container useSafeArea>
-      <Loading loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Settings'} />
       <ScrollView style={styles.contentWrapper}>
         {items.map((item, index) => {
