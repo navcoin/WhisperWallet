@@ -32,7 +32,6 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const [loading, setLoading] = useState<string | undefined>(undefined);
   const {walletName, wallet, createWallet} = useWallet();
   const {njs} = useNjs();
-  const toast = useToast();
   const bottomSheet = useBottomSheet();
   const {changeMode, supportedType, currentAuthenticationType} = useSecurity();
   const [authTypes, setAuthTypes] = useState<any>([]);
@@ -157,21 +156,16 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       icon: 'padLock',
       show: true,
       onPress: () => {
-        readPassword()
-          .then(async (password: string) => {
-            const updatedMnemonic: string = await wallet.db.GetMasterKey(
-              'mnemonic',
-              password,
-            );
-            navigate('Wallet', {
-              screen: 'MnemonicScreen',
-              params: {mnemonic: updatedMnemonic},
-            });
-          })
-          .catch(e => {
-            toast.hideAll();
-            toast.show(e.toString());
+        readPassword().then(async (password: string) => {
+          const updatedMnemonic: string = await wallet.db.GetMasterKey(
+            'mnemonic',
+            password,
+          );
+          navigate('Wallet', {
+            screen: 'MnemonicScreen',
+            params: {mnemonic: updatedMnemonic},
           });
+        });
       },
     },
     {

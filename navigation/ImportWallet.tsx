@@ -17,6 +17,8 @@ import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useSecurity from '../hooks/useSecurity';
 import {useModal} from '../hooks/useModal';
+import {errorTextParser, promptErrorToaster} from '../utils/errors';
+import ErrorModalContent from '../components/ErrorModalContent';
 
 const ImportWallet = () => {
   const {navigate, goBack} = useNavigation();
@@ -216,8 +218,13 @@ const ImportWallet = () => {
                       );
                     })
                     .catch((e: any) => {
-                      toast.hideAll();
-                      toast.show(e.toString());
+                      promptErrorToaster(e.toString(), false, false, () => {
+                        const errorMsg = errorTextParser(e.toString(), false);
+                        openModal(
+                          <ErrorModalContent
+                            errorText={errorMsg}></ErrorModalContent>,
+                        );
+                      });
                       setLoading(undefined);
                     });
                 }

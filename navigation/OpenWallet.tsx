@@ -13,24 +13,17 @@ import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import useSecurity from '../hooks/useSecurity';
 import {useModal} from '../hooks/useModal';
+import {errorTextParser, promptErrorToaster} from '../utils/errors';
+import ErrorModalContent from '../components/ErrorModalContent';
 
 const OpenWallet = () => {
   const {navigate} = useNavigation();
   const {createWallet, walletsList} = useWallet();
   const [loading, setLoading] = useState<string | undefined>(undefined);
-  const [error, setError] = useState('');
   const {njs} = useNjs();
   const {readPassword} = useSecurity();
-  const toast = useToast();
 
-  const [walletList, setWalletList] = useState<any>([]);
   const {openModal, closeModal} = useModal();
-
-  useEffect(() => {
-    njs.wallet.WalletFile.ListWallets().then(list => {
-      setWalletList(list);
-    });
-  }, []);
 
   useEffect(() => {
     if (loading) {
@@ -77,9 +70,14 @@ const OpenWallet = () => {
                         );
                       })
                       .catch((e: any) => {
-                        toast.hideAll();
-                        toast.show(e.toString());
                         setLoading(undefined);
+                        promptErrorToaster(e.toString(), false, false, () => {
+                          const errorMsg = errorTextParser(e.toString(), false);
+                          openModal(
+                            <ErrorModalContent
+                              errorText={errorMsg}></ErrorModalContent>,
+                          );
+                        });
                       });
                   }}
                 />

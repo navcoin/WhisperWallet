@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {BackHandler, StyleSheet, View} from 'react-native';
 import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
@@ -17,6 +17,8 @@ import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useSecurity from '../hooks/useSecurity';
 import {useModal} from '../hooks/useModal';
+import {errorTextParser, promptErrorToaster} from '../utils/errors';
+import ErrorModalContent from '../components/ErrorModalContent';
 
 function useArrayRef() {
   const refs = [];
@@ -24,7 +26,7 @@ function useArrayRef() {
 }
 
 const CreateNewWallet = () => {
-  const {navigate} = useNavigation();
+  const {navigate, goBack} = useNavigation();
   const [index, setIndex] = useState(0);
   const [walletName, setWalletName] = useState('');
   const {mnemonic, createWallet} = useWallet();
@@ -33,8 +35,6 @@ const CreateNewWallet = () => {
   const [network, setNetwork] = useState('mainnet');
   const {njs} = useNjs();
   const {readPassword} = useSecurity();
-  const toast = useToast();
-  const {read} = useKeychain();
   const [elements, ref] = useArrayRef();
   const {openModal, closeModal} = useModal();
   const [words, setWords] = useState<string[]>(new Array(12));
@@ -164,10 +164,14 @@ const CreateNewWallet = () => {
                       );
                     })
                     .catch((e: any) => {
-                      console.log(e);
+                      promptErrorToaster(e.toString(), false, false, () => {
+                        const errorMsg = errorTextParser(e.toString(), false);
+                        openModal(
+                          <ErrorModalContent
+                            errorText={errorMsg}></ErrorModalContent>,
+                        );
+                      });
                       setLoading(undefined);
-                      toast.hideAll();
-                      toast.show(e.toString());
                     });
                 }}
               />
