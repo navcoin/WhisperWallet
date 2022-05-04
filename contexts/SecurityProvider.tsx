@@ -15,38 +15,50 @@ import {Text} from '@tsejerome/ui-kitten-components';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Container from '../components/Container';
 import {scale} from 'react-native-size-matters';
-import useLockedScreen from '../hooks/useLockedScreen';
 import useAsyncStorage from '../hooks/useAsyncStorage';
 import useWallet from '../hooks/useWallet';
-import {AppState, Platform} from 'react-native';
+import {AppState, Platform, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
+import { BlurView } from '@react-native-community/blur';
+import { Connection_Stats_Enum } from '../constants/Type';
+import {Button} from '@tsejerome/ui-kitten-components';
 
 export const SecurityProvider = (props: any) => {
-  const {lockedScreen, setLockedScreen} = useLockedScreen();
+  const [lockedScreen, setLockedScreen] = useState(false);
   const [lockAfterBackground, setLockAfterBackground] = useAsyncStorage(
     'lockAfterBackground',
     'false',
   );
   const {navigate} = useNavigation();
 
-  const {refreshWallet} = useWallet();
+  const {refreshWallet, connected} = useWallet();
 
   const appState = useRef(AppState.currentState);
 
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
+  const AskForUnlock = () => {
+    readPassword().then(() => {
+      setLockedScreen(false);
+    }).catch((e) => {
+      AskForUnlock();
+    })
+  }
+
   useEffect(() => {
     if (appStateVisible == 'active' && lockedScreen) {
-      LocalAuth((error: any) => {
-        if (!error) {
-          setLockedScreen(false);
-        } else {
-          setLockedScreen(true);
-        }
+      AsyncStorage.getItem(
+          'AuthenticationType',
+      ).then(async(val) => {
+        if (!(await AsyncStorage.getItem('walletKey')))
+          return;
+        if (!!val)
+          await UpdateFeatures();
+        AskForUnlock();
       });
     }
-  }, [appStateVisible]);
+  }, [appStateVisible, lockedScreen]);
 
   /*
    * isPinOrFingerprintSet will be true if the device's screen is locked
@@ -54,25 +66,20 @@ export const SecurityProvider = (props: any) => {
    * supportedBiometry will refer to the biometry supported by the device.
    */
   const UpdateFeatures = async () => {
-    if (Platform.OS == 'ios') {
-      await new Promise((res, rej) => {
-        AsyncStorage.getItem('RequestedFaceId')
-          .then(async val => {
-            if (!val) {
-              const faceIdPermission = await check(PERMISSIONS.IOS.FACE_ID);
-              if (faceIdPermission !== RESULTS.GRANTED) {
-                await request(PERMISSIONS.IOS.FACE_ID);
-                await AsyncStorage.setItem('RequestedFaceId', 'true');
-              }
-            }
-            res(true);
-          })
-          .catch(rej);
-      });
+    if (Platform.OS == 'ios' && currentAuthenticationType != -1) {
+      const faceIdPermission = await check(PERMISSIONS.IOS.FACE_ID);
+      if (faceIdPermission == RESULTS.DENIED) {
+        await request(PERMISSIONS.IOS.FACE_ID);
+        await AsyncStorage.setItem('RequestedFaceId', 'true');
+      }
     }
 
-    DeviceInfo.isPinOrFingerprintSet().then(setIsPinOrFingerprintSet);
-    Keychain.getSupportedBiometryType({}).then(setSupportedBiometry);
+    setIsPinOrFingerprintSet(await DeviceInfo.isPinOrFingerprintSet());
+    setSupportedBiometry(await Keychain.getSupportedBiometryType({}));
+
+    while (currentAuthenticationType == -1) {
+      await new Promise((res, _) => { setInterval(res, 100)});
+    }
   };
 
   useEffect(() => {
@@ -82,9 +89,8 @@ export const SecurityProvider = (props: any) => {
      * settings have changed.
      */
     const subscription = AppState.addEventListener('change', nextAppState => {
-      UpdateFeatures();
-      if (appState.current.match(/background/) && nextAppState === 'active') {
-        if (refreshWallet) {
+      if (nextAppState === 'background' || nextAppState === 'active') {
+        if (refreshWallet && !(connected == Connection_Stats_Enum.Bootstrapping || connected == Connection_Stats_Enum.Connecting || connected == Connection_Stats_Enum.Syncing)) {
           refreshWallet();
         }
         if (lockAfterBackground === 'true') {
@@ -114,18 +120,10 @@ export const SecurityProvider = (props: any) => {
     Keychain.BIOMETRY_TYPE | null | number
   >(0);
 
-  useEffect((): void => {
-    /*
-     * We need to update the set of avialable features when the component
-     * is mounted for an initial state.
-     */
-    UpdateFeatures();
-  }, []);
-
   const [supportedType, setSupportedType] =
     useState<SecurityAuthenticationTypes>(SecurityAuthenticationTypes.NONE);
   const [currentAuthenticationType, setCurrentAuthenticationType] =
-    useState<SecurityAuthenticationTypes>(SecurityAuthenticationTypes.NONE);
+    useState<SecurityAuthenticationTypes | number>(-1);
 
   const [error, setError] = useState<string | undefined>(undefined);
 
@@ -142,7 +140,10 @@ export const SecurityProvider = (props: any) => {
    */
 
   useEffect((): void => {
-    if (supportedBiometry === 0) return;
+    if (supportedBiometry === 0 || isPinOrFingerprintSet == undefined) {
+      UpdateFeatures();
+      return;
+    }
     AsyncStorage.getItem('AuthenticationType').then(async val => {
       if (!val) {
         if (supportedBiometry !== null) {
@@ -153,7 +154,7 @@ export const SecurityProvider = (props: any) => {
           setCurrentAuthenticationType(SecurityAuthenticationTypes.KEYCHAIN);
           setSupportedType(SecurityAuthenticationTypes.KEYCHAIN);
           setError(undefined);
-        } else if (isPinOrFingerprintSet === true) {
+        } else if (isPinOrFingerprintSet === true && Platform.OS != 'ios') {
           AsyncStorage.setItem(
             'AuthenticationType',
             SecurityAuthenticationTypes.LOCALAUTH,
@@ -234,7 +235,7 @@ export const SecurityProvider = (props: any) => {
    * Generates a random key and stores it in the encrypted storage.
    */
 
-  const writeEncrypedStorage = useCallback(async (suffix: string): void => {
+  const writeEncrypedStorage = useCallback(async (suffix: string) => {
     try {
       await EncryptedStorage.setItem(
         suffix,
@@ -287,11 +288,24 @@ export const SecurityProvider = (props: any) => {
 
   const readPin = useCallback(
     async (authType_?: SecurityAuthenticationTypes): Promise<string> => {
+      await UpdateFeatures();
       let authType = authType_
         ? authType_
         : ((await AsyncStorage.getItem(
             'AuthenticationType',
           )) as unknown as SecurityAuthenticationTypes);
+
+      while (!authType) {
+        authType = authType_
+            ? authType_
+            : ((await AsyncStorage.getItem(
+                'AuthenticationType',
+            )) as unknown as SecurityAuthenticationTypes);
+        await new Promise((res, _) => {
+            setInterval(res, 100)
+        });
+      }
+
       if (authType == SecurityAuthenticationTypes.KEYCHAIN) {
         return await read('whisperMasterKey');
       } else if (authType == SecurityAuthenticationTypes.LOCALAUTH) {
@@ -304,7 +318,7 @@ export const SecurityProvider = (props: any) => {
           return await new Promise(res => {
             navigate('AskPinScreen', {
               pinLength: authType == SecurityAuthenticationTypes.MANUAL ? 6 : 4,
-              setManualPin: pin => {
+              setManualPin: (pin: string) => {
                 res(pin);
               },
             });
@@ -313,20 +327,17 @@ export const SecurityProvider = (props: any) => {
           return await new Promise(res => {
             navigate('AskPinScreen', {
               pinLength: authType == SecurityAuthenticationTypes.MANUAL ? 6 : 4,
-              askManualPin: pin => {
+              askManualPin: (pin: string) => {
                 res(pin);
               },
             });
           });
         }
       } else {
-        /*
-         * Empty key if no authentication is used
-         */
-        return '';
+        return Buffer.alloc(64).toString('hex');
       }
     },
-    [supportedType],
+    [supportedType, currentAuthenticationType],
   );
 
   /*
@@ -346,10 +357,14 @@ export const SecurityProvider = (props: any) => {
             AsyncStorage.setItem('walletKey', encryptedKey);
             res(newKey);
           } else {
-            res(Decrypt(val, await readPin()));
+            let ret = Decrypt(val, await readPin());
+            res(ret);
           }
         })
-        .catch(rej);
+        .catch((e) => {
+          console.log(e);
+          rej(e);
+        });
     });
   }, [supportedType]);
 
@@ -406,8 +421,17 @@ export const SecurityProvider = (props: any) => {
       readPassword,
       changeMode,
       currentAuthenticationType,
+      lockedScreen,
+      setLockedScreen
     }),
-    [readPassword, supportedType, changeMode, currentAuthenticationType],
+    [
+        readPassword,
+        supportedType,
+        changeMode,
+        currentAuthenticationType,
+        lockedScreen,
+        setLockedScreen
+    ],
   );
 
   return (

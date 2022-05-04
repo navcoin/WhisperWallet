@@ -13,7 +13,7 @@ const AskPinScreen: React.FC<ScreenProps<'AskPinScreen'>> = (props: any) => {
   const {goBack} = useNavigation();
   const [showInstructions, setShowInstructions] = useState(true);
   return (
-    <Container>
+    <Container doNotLock={true}>
       {setManualPin ? (
         showInstructions ? (
           <Container

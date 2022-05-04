@@ -9,10 +9,12 @@ export enum SecurityAuthenticationTypes {
 }
 
 export interface SecurityContextValue {
-  supportedType: SecurityAuthenticationTypes;
+  supportedType: SecurityAuthenticationTypes | number;
   readPassword(): Promise<string>;
   changeMode(newMode: SecurityAuthenticationTypes): Promise<boolean>;
-  currentAuthenticationType: SecurityAuthenticationTypes;
+  currentAuthenticationType: SecurityAuthenticationTypes | number;
+  lockedScreen: boolean;
+  setLockedScreen(locked: boolean): any;
 }
 
 export const SecurityContext = createContext<SecurityContextValue | undefined>(
