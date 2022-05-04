@@ -16,7 +16,7 @@ const Modal = (props: any) => {
         style={styles.absolute}
         blurType="dark"
         blurAmount={10}
-        reducedTransparencyFallbackColor="#1f2933">
+        reducedTransparencyFallbackColor="#1F2933">
         <Toast config={toastConfig} />
         <View style={styles.contentContainer}>
           {!!children ? children : <></>}

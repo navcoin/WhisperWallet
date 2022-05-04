@@ -10,10 +10,10 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "dev-ios": "npx react-native run-ios --simulator=\"iPhone 13 Pro\"",
     "generate-splash": "npx react-native generate-bootsplash 'assets/logos/splash/default.png' --background-color '#1F2933' --assets-path 'assets/logos/splash' --logo-width=200 ",
-    "postinstall": "patch-package;rm -rf ./node_modules/@aguycalled/bitcore-lib/node_modules/react-native-mcl"
+    "postinstall": "patch-package;rm -rf ./node_modules/@aguycalled/bitcore-lib/node_modules/react-native-mcl;rm -rf ./node_modules/@aguycalled/react-native-bitcore-mnemonic/node_modules/@aguycalled/bitcore-lib"
   },
   "dependencies": {
-    "@aguycalled/bitcore-mnemonic": "^1.5.1",
+    "@aguycalled/bitcore-mnemonic": "^1.5.4",
     "@aguycalled/bitcore-p2p": "^5.0.11",
     "@arelstone/react-native-swipe-button": "^0.1.0",
     "@eva-design/eva": "^2.1.1",
@@ -57,6 +57,7 @@
     "react-native-dialog-input": "^1.0.8",
     "react-native-encrypted-storage": "^4.0.2",
     "react-native-exception-handler": "^2.10.10",
+    "react-native-fast-crypto": "^2.2.0",
     "react-native-gesture-handler": "^2.1.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-keychain": "^8.0.0",
