@@ -123,7 +123,7 @@ const deleteWallet = () => {
         {
           text: 'Delete',
           onPress: () => {
-            read(walletName).then((password: string) => {
+            readPassword().then((password: string) => {
               disconnectWallet(true);
             });
           },
