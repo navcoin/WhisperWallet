@@ -78,7 +78,7 @@ const OnBoardingPage = memo(() => {
               if (supportedType != SecurityAuthenticationTypes.MANUAL) {
                 Alert.alert(
                   'Security',
-                  'Do you want to lock automatically the wallet when it goes to background?',
+                  'Do you want to automatically lock the wallet when it goes to background?',
                   [
                     {
                       text: 'Yes',
