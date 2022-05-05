@@ -79,7 +79,6 @@ const StakingNodeScreen = () => {
               });
             }}
             icon={'add'}
-            color={'white'}
             cardType={'outline'}
           />
         ) : null}
@@ -101,7 +100,6 @@ const StakingNodeScreen = () => {
                   setEditingNode(eachNode.address || '');
                   showEditDialog(true);
                 }}
-                color={'white'}
               />
             );
           })}

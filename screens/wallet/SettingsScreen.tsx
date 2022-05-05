@@ -24,7 +24,7 @@ interface SettingsItem {
   title: string;
   onPress: () => void;
   icon?: string;
-  color?: string;
+  colorType?: string;
   show?: boolean;
 }
 
@@ -36,6 +36,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const bottomSheet = useBottomSheet();
   const {changeMode, supportedType, currentAuthenticationType} = useSecurity();
   const [authTypes, setAuthTypes] = useState<any>([]);
+  const theme = useTheme();
 
   useEffect(() => {
     let deviceAuth = [];
@@ -114,13 +115,15 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     navigate('Intro');
   };
 
-const deleteWallet = () => {
+  const deleteWallet = () => {
     Alert.alert(
-      'Delete Wallet',
-      'The coins stored on the wallet "' +
-        walletName +
-        '" will be lost and only accessible again using a valid backup.\n\nPlease be sure your seed words are correctly backed up.\n\nAre you sure you want to delete this wallet?',
+      `Do you want to delete the wallet "${walletName}"?`,
+      `The coins stored on the wallet "${walletName}" will be lost and you cannot do undo this action. The wallet will only be accessible again using a valid backup.\n\nPlease be sure your seed words are correctly backed up.\n\nAre you sure you want to delete this wallet?`,
       [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+        },
         {
           text: 'Delete',
           onPress: () => {
@@ -128,10 +131,6 @@ const deleteWallet = () => {
               disconnectWallet(true);
             });
           },
-        },
-        {
-          text: 'Cancel',
-          onPress: () => {},
         },
       ],
     );
@@ -236,6 +235,7 @@ const deleteWallet = () => {
       title: 'Delete wallet',
       icon: 'cancel',
       show: true,
+      colorType: theme['color-radical-700'],
       onPress: () => deleteWallet(),
     },
     {
@@ -281,7 +281,7 @@ const deleteWallet = () => {
               onPress={item.onPress}
               animationType={Animation_Types_Enum.SlideInLeft}
               icon={item.icon || 'download'}
-              color={item.color || 'white'}
+              color={item.colorType || 'white'}
             />
           );
         })}
