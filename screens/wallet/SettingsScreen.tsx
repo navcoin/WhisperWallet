@@ -19,6 +19,7 @@ import {useBottomSheet} from '../../hooks/useBottomSheet';
 import BottomSheetOptions from '../../components/BottomSheetOptions';
 import {useModal} from '../../hooks/useModal';
 import {useTheme} from '@tsejerome/ui-kitten-components';
+import DeleteWalletModalContent from '../../components/Modals/DeleteWalletModalContent';
 
 interface SettingsItem {
   title: string;
@@ -116,23 +117,15 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   };
 
   const deleteWallet = () => {
-    Alert.alert(
-      `Do you want to delete the wallet "${walletName}"?`,
-      `The coins stored on the wallet "${walletName}" will be lost and you cannot do undo this action. The wallet will only be accessible again using a valid backup.\n\nPlease be sure your seed words are correctly backed up.\n\nAre you sure you want to delete this wallet?`,
-      [
-        {
-          text: 'Cancel',
-          onPress: () => {},
-        },
-        {
-          text: 'Delete',
-          onPress: () => {
-            readPassword().then((password: string) => {
-              disconnectWallet(true);
-            });
-          },
-        },
-      ],
+    openModal(
+      <DeleteWalletModalContent
+        walletName={walletName}
+        deleteWallet={() => {
+          readPassword().then((password: string) => {
+            disconnectWallet(true);
+          });
+        }}
+      />,
     );
   };
 
