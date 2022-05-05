@@ -228,7 +228,6 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       title: 'Delete wallet',
       icon: 'cancel',
       show: true,
-      colorType: theme['color-radical-700'],
       onPress: () => deleteWallet(),
     },
     {

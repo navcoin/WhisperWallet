@@ -27,7 +27,7 @@ const DeleteWalletModalContent = (props: {
   const buttonOptions = [
     {
       text: 'Cancel',
-      colorStyle: ButtonColorStyle.default,
+      colorStyle: ButtonColorStyle.white,
       onPress: async () => {
         closeModal();
       },
@@ -43,17 +43,9 @@ const DeleteWalletModalContent = (props: {
   ];
   return (
     <>
-      <ScrollView
-        contentContainerStyle={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          flex: 1,
-        }}>
-        <Text category="title3" style={styles.item}>
-          {`Do you want to delete the wallet "${walletName}"?`}
-        </Text>
+      <View>
         <Text category="body" style={styles.item}>
-          {`The coins stored on the wallet "${walletName}" will be lost and you cannot do undo this action. \n\n Please be sure your seed words are correctly backed up, as the wallet will only be accessible again using a valid backup.\n\nAre you sure you want to delete this wallet?`}
+          {`The coins stored on the wallet "${walletName}" will be lost and you cannot do undo this action. \n\nPlease be sure your seed words are correctly backed up, as the wallet will only be accessible again using a valid backup.\n\nAre you sure you want to delete "${walletName}"?`}
         </Text>
         <View style={[styles.buttonGroup]}>
           {buttonOptions.map((option, index) => (
@@ -67,24 +59,25 @@ const DeleteWalletModalContent = (props: {
             />
           ))}
         </View>
-      </ScrollView>
+      </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
   item: {
-    paddingHorizontal: scale(16),
     marginBottom: scale(16),
   },
   buttonGroup: {
     marginTop: scale(20),
-    width: '100%',
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   button: {
     marginBottom: scale(20),
-    width: scale(300),
+    flex: 1,
+    maxWidth: '45%',
   },
 });
 

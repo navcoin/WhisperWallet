@@ -31,6 +31,7 @@ const ButtonStyleOptionsWithNumbers = [
 
 export enum ButtonColorStyle {
   default = 'default',
+  white = 'white',
   radical = 'radical',
 }
 
@@ -58,22 +59,29 @@ export default memo(
     ) => {
       if (cStyle === ButtonColorStyle.radical)
         return {
-          backgroundColor: theme['color-radical-100'],
+          buttonStyle: {backgroundColor: theme['color-radical-100']},
+          textStyle: {},
         };
-      return {};
+      if (cStyle === ButtonColorStyle.white)
+        return {
+          buttonStyle: {backgroundColor: 'white'},
+          textStyle: {color: theme['color-basic-800']},
+        };
+      return {buttonStyle: {}, textStyle: {}};
     };
-    let [finalizedStyle, setFinalizedStyle] = useState<StyleProp<TextStyle>>(
-      {},
-    );
+    let [finalizedButtonStyle, setFinalizedStyle] = useState<
+      StyleProp<TextStyle>
+    >({});
+    let [finalizedTextStyle, setFinalizedTextStyle] = useState<
+      StyleProp<TextStyle>
+    >({});
     useEffect(() => {
-      let defaultStyles: StyleProp<TextStyle> = defaultColorStyle(colorStyle);
-      console.log(JSON.stringify(defaultStyles), ' defaultStyles');
-      console.log('wtf');
-      defaultStyles = {
-        ...defaultStyles,
+      let defaultStyles = defaultColorStyle(colorStyle);
+      let defaultButtonStyles: StyleProp<TextStyle> = defaultStyles.buttonStyle;
+      defaultButtonStyles = {
+        ...defaultButtonStyles,
         ...parseUiKittenStyle(size as sizeOptions),
       };
-      console.log(JSON.stringify(defaultStyles), ' defaultStyles');
       let injectedStyles: StyleProp<TextStyle> = {};
       if (Array.isArray(style)) {
         for (const e of style) {
@@ -82,12 +90,17 @@ export default memo(
       } else {
         injectedStyles = style;
       }
-      setFinalizedStyle([defaultStyles, injectedStyles]);
+      setFinalizedStyle([defaultButtonStyles, injectedStyles]);
+      console.log('defaultStyles');
+      console.log(defaultStyles);
+      setFinalizedTextStyle(defaultStyles.textStyle);
     }, [size, style]);
     return (
-      <Button style={finalizedStyle} {...rest}>
+      <Button style={finalizedButtonStyle} {...rest}>
         {evaProps => (
-          <Text style={{fontWeight: '700'}} category={'call-out'}>
+          <Text
+            style={[{fontWeight: '700'}, finalizedTextStyle]}
+            category={'call-out'}>
             {children}
           </Text>
         )}
