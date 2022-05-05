@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
   buttonGroup: {
     marginTop: scale(20),
     width: '100%',
+    alignItems: 'center',
   },
   button: {
     marginBottom: scale(20),

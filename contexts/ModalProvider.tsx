@@ -13,7 +13,6 @@ export const ModalProvider = (props: any) => {
   const [visible, setVisibility] = useState(false);
   const [children, setChildren] = useState<Element>();
 
-  const styles = useStyleSheet(themedStyles);
   const {initChildren} = props;
 
   const modalContext: ModalContextValue = useMemo(
@@ -41,20 +40,3 @@ export const ModalProvider = (props: any) => {
 };
 
 export default ModalProvider;
-
-const themedStyles = StyleService.create({
-  contentContainer: {
-    backgroundColor: 'red',
-    flex: 1,
-    paddingTop: 8,
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  absolute: {
-    flex: 1,
-    backgroundColor: 'green',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

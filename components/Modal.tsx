@@ -10,18 +10,15 @@ const Modal = (props: any) => {
     <RawModal
       transparent={true}
       statusBarTranslucent={true}
-      animationType={'none'}
+      animationType={'fade'}
       visible={visible}>
       <BlurView
         style={styles.absolute}
         blurType="dark"
         blurAmount={10}
-        reducedTransparencyFallbackColor="#1F2933">
-        <Toast config={toastConfig} />
-        <View style={styles.contentContainer}>
-          {!!children ? children : <></>}
-        </View>
-      </BlurView>
+        reducedTransparencyFallbackColor="#1F2933"></BlurView>
+      <Toast config={toastConfig} />
+      <View style={styles.contentContainer}>{children || <></>}</View>
     </RawModal>
   );
 };
@@ -30,15 +27,21 @@ const styles = StyleSheet.create({
   contentContainer: {
     backgroundColor: 'transparent',
     flex: 1,
-    paddingTop: 8,
     padding: 20,
+    paddingTop: 8,
     alignItems: 'center',
     justifyContent: 'center',
+    textAlign: 'center',
   },
   absolute: {
     flex: 1,
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'absolute',
   },
 });
 
