@@ -44,8 +44,11 @@ const DeleteWalletModalContent = (props: {
   return (
     <>
       <View>
+        <Text category="title3" style={styles.item}>
+          {`Do you want to delete the wallet "${walletName}"?`}
+        </Text>
         <Text category="body" style={styles.item}>
-          {`The coins stored on the wallet "${walletName}" will be lost and you cannot do undo this action. \n\nPlease be sure your seed words are correctly backed up, as the wallet will only be accessible again using a valid backup.\n\nAre you sure you want to delete "${walletName}"?`}
+          {`The coins stored on the wallet "${walletName}" will be lost and you cannot do undo this action. \n\nPlease be sure your seed words are correctly backed up, as the wallet will only be accessible again using a valid backup.?`}
         </Text>
         <View style={[styles.buttonGroup]}>
           {buttonOptions.map((option, index) => (
@@ -66,10 +69,10 @@ const DeleteWalletModalContent = (props: {
 
 const styles = StyleSheet.create({
   item: {
-    marginBottom: scale(16),
+    marginBottom: scale(40),
   },
   buttonGroup: {
-    marginTop: scale(20),
+    marginTop: scale(10),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

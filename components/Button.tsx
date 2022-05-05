@@ -91,8 +91,6 @@ export default memo(
         injectedStyles = style;
       }
       setFinalizedStyle([defaultButtonStyles, injectedStyles]);
-      console.log('defaultStyles');
-      console.log(defaultStyles);
       setFinalizedTextStyle(defaultStyles.textStyle);
     }, [size, style]);
     return (
