@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {BackHandler, StyleSheet, View} from 'react-native';
+import {BackHandler, StyleSheet, View, Platform} from 'react-native';
 import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 
@@ -106,10 +106,14 @@ const ImportWallet = () => {
                 styles.layout,
               ]}>
               <Input
+                autoCapitalize={'none'}
                 multiline={true}
+                keyboardType={
+                  Platform.OS === 'ios' ? 'default' : 'visible-password'
+                }
                 numberOfLines={3}
                 autoFocus={true}
-                style={styles.flex1}
+                style={[styles.flex1, {height: scale(100)}]}
                 value={mnemonic}
                 onChangeText={(m: string) => {
                   setMnemonic(m.toLowerCase());
