@@ -8,7 +8,7 @@ import OptionCard from '../../components/OptionCard';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import useNjs from '../../hooks/useNjs';
-import LoadingModalContent from '../../components/LoadingModalContent';
+import LoadingModalContent from '../../components/Modals/LoadingModalContent';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {screenHeight} from '../../utils/layout';
@@ -18,6 +18,7 @@ import {SecurityAuthenticationTypes} from '../../contexts/SecurityContext';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
 import BottomSheetOptions from '../../components/BottomSheetOptions';
 import {useModal} from '../../hooks/useModal';
+import {useTheme} from '@tsejerome/ui-kitten-components';
 
 interface SettingsItem {
   title: string;

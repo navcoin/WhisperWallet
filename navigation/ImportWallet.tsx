@@ -8,7 +8,7 @@ import Container from '../components/Container';
 import AnimatedStep from '../components/AnimatedStep';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useWallet from '../hooks/useWallet';
-import LoadingModalContent from '../components/LoadingModalContent';
+import LoadingModalContent from '../components/Modals/LoadingModalContent';
 import {IsValidMnemonic} from '../utils/Mnemonic';
 import OptionCard from '../components/OptionCard';
 import {NetworkTypes, WalletTypes} from '../constants/Type';
@@ -18,7 +18,7 @@ import {scale, verticalScale} from 'react-native-size-matters';
 import useSecurity from '../hooks/useSecurity';
 import {useModal} from '../hooks/useModal';
 import {errorTextParser, promptErrorToaster} from '../utils/errors';
-import ErrorModalContent from '../components/ErrorModalContent';
+import ErrorModalContent from '../components/Modals/ErrorModalContent';
 
 const ImportWallet = () => {
   const {navigate, goBack} = useNavigation();

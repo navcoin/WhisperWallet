@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {ModalContextValue, ModalContext} from './ModalContext';
-import Modal from '../components/Modal';
+import Modal from '../components/Modals/BaseModal';
 
 interface ModalProviderProp {
   initChildren: Element | string;

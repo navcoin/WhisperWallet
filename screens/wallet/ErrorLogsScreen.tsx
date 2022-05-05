@@ -6,11 +6,9 @@ import OptionCard from '../../components/OptionCard';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
-import {
-  AsyncStoredItems,
-} from '../../utils/asyncStorageManager';
+import {AsyncStoredItems} from '../../utils/asyncStorageManager';
 import {useModal} from '../../hooks/useModal';
-import ErrorModalContent from '../../components/ErrorModalContent';
+import ErrorModalContent from '../../components/Modals/ErrorModalContent';
 import {scale} from 'react-native-size-matters';
 
 const ErrorLogsScreen = (props: any) => {

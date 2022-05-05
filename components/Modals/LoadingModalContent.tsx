@@ -1,7 +1,7 @@
 import React from 'react';
 import {ActivityIndicator, StyleSheet} from 'react-native';
-import Modal from './Modal';
-import Text from './Text';
+import Modal from './BaseModal';
+import Text from '../Text';
 
 const LoadingModalContent = (props: any) => {
   const {loading, text} = props;

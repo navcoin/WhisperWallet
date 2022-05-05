@@ -45,7 +45,7 @@ import {
 } from './utils/errors';
 import ModalProvider from './contexts/ModalProvider';
 import {useModal} from './hooks/useModal';
-import ErrorModalContent from './components/ErrorModalContent';
+import ErrorModalContent from './components/Modals/ErrorModalContent';
 import {AsyncStoredItems} from './utils/asyncStorageManager';
 const win = {};
 
