@@ -8,7 +8,7 @@ import OptionCard from '../../components/OptionCard';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import useNjs from '../../hooks/useNjs';
-import LoadingModalContent from '../../components/LoadingModalContent';
+import LoadingModalContent from '../../components/Modals/LoadingModalContent';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {screenHeight} from '../../utils/layout';
@@ -18,12 +18,14 @@ import {SecurityAuthenticationTypes} from '../../contexts/SecurityContext';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
 import BottomSheetOptions from '../../components/BottomSheetOptions';
 import {useModal} from '../../hooks/useModal';
+import {useTheme} from '@tsejerome/ui-kitten-components';
+import DeleteWalletModalContent from '../../components/Modals/DeleteWalletModalContent';
 
 interface SettingsItem {
   title: string;
   onPress: () => void;
   icon?: string;
-  color?: string;
+  colorType?: string;
   show?: boolean;
 }
 
@@ -35,6 +37,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const bottomSheet = useBottomSheet();
   const {changeMode, supportedType, currentAuthenticationType} = useSecurity();
   const [authTypes, setAuthTypes] = useState<any>([]);
+  const theme = useTheme();
 
   useEffect(() => {
     let deviceAuth = [];
@@ -42,20 +45,23 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       supportedType == SecurityAuthenticationTypes.KEYCHAIN ||
       supportedType == SecurityAuthenticationTypes.LOCALAUTH
     ) {
-      deviceAuth = [{text: supportedType, icon: 'biometrics'}];
+      deviceAuth = [{text: 'Face ID or Touch ID', mode: supportedType, icon: 'biometrics'}];
     }
 
     deviceAuth.push(
       {
-        text: SecurityAuthenticationTypes.MANUAL_4,
+        text: '4-digit PIN code',
+        mode: SecurityAuthenticationTypes.MANUAL_4,
         icon: 'pincode',
       },
       {
-        text: SecurityAuthenticationTypes.MANUAL,
+        text: '6-digit PIN code',
+        mode: SecurityAuthenticationTypes.MANUAL,
         icon: 'pincode',
       },
       {
-        text: SecurityAuthenticationTypes.NONE,
+        text: 'None'
+,       mode: SecurityAuthenticationTypes.NONE,
         icon: 'unsecure',
       },
     );
@@ -113,26 +119,16 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     navigate('Intro');
   };
 
-const deleteWallet = () => {
-    Alert.alert(
-      'Delete Wallet',
-      'The coins stored on the wallet "' +
-        walletName +
-        '" will be lost and only accessible again using a valid backup.\n\nPlease be sure your seed words are correctly backed up.\n\nAre you sure you want to delete this wallet?',
-      [
-        {
-          text: 'Delete',
-          onPress: () => {
-            readPassword().then((password: string) => {
-              disconnectWallet(true);
-            });
-          },
-        },
-        {
-          text: 'Cancel',
-          onPress: () => {},
-        },
-      ],
+  const deleteWallet = () => {
+    openModal(
+      <DeleteWalletModalContent
+        walletName={walletName}
+        deleteWallet={() => {
+          readPassword().then((password: string) => {
+            disconnectWallet(true);
+          });
+        }}
+      />,
     );
   };
 
@@ -199,7 +195,7 @@ const deleteWallet = () => {
             options={authTypes}
             bottomSheetRef={bottomSheet.getRef}
             onSelect={(el: any) => {
-              changeMode(el.text);
+              changeMode(el.mode);
             }}
           />,
         );
@@ -280,7 +276,7 @@ const deleteWallet = () => {
               onPress={item.onPress}
               animationType={Animation_Types_Enum.SlideInLeft}
               icon={item.icon || 'download'}
-              color={item.color || 'white'}
+              color={item.colorType || 'white'}
             />
           );
         })}
