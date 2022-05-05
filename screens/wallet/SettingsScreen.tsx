@@ -1,6 +1,6 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Alert, ScrollView} from 'react-native';
+import {StyleSheet, View, Alert, ScrollView, Switch} from 'react-native';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Animation_Types_Enum} from '../../constants/Type';
@@ -18,6 +18,7 @@ import {SecurityAuthenticationTypes} from '../../contexts/SecurityContext';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
 import BottomSheetOptions from '../../components/BottomSheetOptions';
 import {useModal} from '../../hooks/useModal';
+import { useTheme } from '@tsejerome/ui-kitten-components';
 
 interface SettingsItem {
   title: string;
@@ -25,6 +26,7 @@ interface SettingsItem {
   icon?: string;
   color?: string;
   show?: boolean;
+  rightElement?: any;
 }
 
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
@@ -35,6 +37,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const bottomSheet = useBottomSheet();
   const {changeMode, supportedType, currentAuthenticationType} = useSecurity();
   const [authTypes, setAuthTypes] = useState<any>([]);
+  const theme = useTheme();
 
   useEffect(() => {
     let deviceAuth = [];
@@ -183,10 +186,21 @@ const deleteWallet = () => {
       },
     },
     {
-      title: 'Biometrics configuration',
+      title: 'Auto-lock',
       icon: 'eye',
       show: supportedType != SecurityAuthenticationTypes.MANUAL,
-      onPress: () => biometricsAlert(),
+      rightElement: (
+          <Switch
+          trackColor={{ false: '#fff', true: theme['color-staking'] }}
+          onValueChange={(val) => {
+            setLockAfterBackground(lockAfterBackground !== 'true' ? 'true' : 'false')
+          }}
+          value={lockAfterBackground === 'true'}
+          style={{ marginRight: scale(12) }}
+      />),
+      onPress: () => {
+        ;;
+      },
     },
     {
       title: 'Security: ' + currentAuthenticationType,
@@ -281,6 +295,7 @@ const deleteWallet = () => {
               animationType={Animation_Types_Enum.SlideInLeft}
               icon={item.icon || 'download'}
               color={item.color || 'white'}
+              rightElement={item.rightElement}
             />
           );
         })}

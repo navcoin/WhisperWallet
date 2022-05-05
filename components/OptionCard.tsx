@@ -32,6 +32,7 @@ interface OptionProps {
   animationType?: Animation_Types_Enum;
   cardType?: 'outline' | 'fill';
   leftElement?: any;
+  rightElement?: any;
 }
 
 const OptionCard = ({
@@ -47,6 +48,7 @@ const OptionCard = ({
   animationType = Animation_Types_Enum.SlideInRight,
   cardType = 'fill',
   leftElement,
+  rightElement
 }: OptionProps) => {
   const theme = useTheme();
 
@@ -99,7 +101,7 @@ const OptionCard = ({
             category="headline">
             {text ? text : ''}
           </Text>
-          {iconRight ? (
+          {rightElement ? rightElement : iconRight ? (
             <View style={[styles.iconWrapper, styles.rightIconWrapper]}>
               <TouchableOpacity
                 style={[styles.rightIconTouchables]}
