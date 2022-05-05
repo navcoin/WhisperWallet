@@ -49,11 +49,11 @@ const DeleteWalletModalContent = (props: {
           justifyContent: 'center',
           flex: 1,
         }}>
-        <Text category="title3" center style={styles.item}>
+        <Text category="title3" style={styles.item}>
           {`Do you want to delete the wallet "${walletName}"?`}
         </Text>
-        <Text category="body" center style={styles.item}>
-          {`The coins stored on the wallet "${walletName}" will be lost and you cannot do undo this action. \n\n Please be sure your seed words are correctly backed up., as the wallet will only be accessible again using a valid backup.\n\nAre you sure you want to delete this wallet?`}
+        <Text category="body" style={styles.item}>
+          {`The coins stored on the wallet "${walletName}" will be lost and you cannot do undo this action. \n\n Please be sure your seed words are correctly backed up, as the wallet will only be accessible again using a valid backup.\n\nAre you sure you want to delete this wallet?`}
         </Text>
         <View style={[styles.buttonGroup]}>
           {buttonOptions.map((option, index) => (
