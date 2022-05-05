@@ -9,15 +9,16 @@ import AnimatedStep from '../components/AnimatedStep';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useWallet from '../hooks/useWallet';
 import LoadingModalContent from '../components/LoadingModalContent';
-import useNjs from '../hooks/useNjs';
 import {IsValidMnemonic} from '../utils/Mnemonic';
 import OptionCard from '../components/OptionCard';
 import {NetworkTypes, WalletTypes} from '../constants/Type';
-import useKeychain from '../utils/Keychain';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
+import useSecurity from '../hooks/useSecurity';
 import {useModal} from '../hooks/useModal';
+import {errorTextParser, promptErrorToaster} from '../utils/errors';
+import ErrorModalContent from '../components/ErrorModalContent';
 
 const ImportWallet = () => {
   const {navigate, goBack} = useNavigation();
@@ -29,8 +30,8 @@ const ImportWallet = () => {
   const {createWallet} = useWallet();
   const [loading, setLoading] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
-  const {njs} = useNjs();
-  const {read} = useKeychain();
+  const {walletsList} = useWallet();
+  const {readPassword} = useSecurity();
   const {openModal, closeModal} = useModal();
 
   useEffect(() => {
@@ -195,11 +196,10 @@ const ImportWallet = () => {
               status={'primary-whisper'}
               style={styles.button}
               onPressOut={async () => {
-                const walletList = await njs.wallet.WalletFile.ListWallets();
-                if (walletList.indexOf(walletName) > -1) {
+                if (walletsList.indexOf(walletName) > -1) {
                   setError('There is already a wallet with that name.');
                 } else if (walletName) {
-                  read(walletName)
+                  readPassword()
                     .then((password: string) => {
                       setLoading('Creating wallet keys...');
                       createWallet(
@@ -219,6 +219,13 @@ const ImportWallet = () => {
                     })
                     .catch((e: any) => {
                       setLoading(undefined);
+                      promptErrorToaster(e.toString(), false, false, () => {
+                        const errorMsg = errorTextParser(e.toString(), false);
+                        openModal(
+                          <ErrorModalContent
+                            errorText={errorMsg}></ErrorModalContent>,
+                        );
+                      });
                     });
                 }
               }}

@@ -1,6 +1,5 @@
 import {View} from 'react-native';
 import React, {memo, useEffect, useState} from 'react';
-import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
 import {Connection_Stats_Enum} from '../constants/Type';
 import CurrencyText from './CurrencyText';

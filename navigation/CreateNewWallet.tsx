@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {BackHandler, StyleSheet, View} from 'react-native';
 import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
@@ -11,12 +11,14 @@ import LoadingModalContent from '../components/LoadingModalContent';
 import useNjs from '../hooks/useNjs';
 import {NetworkTypes} from '../constants/Type';
 import OptionCard from '../components/OptionCard';
-import useKeychain from '../utils/Keychain';
 import Mnemonic from '../components/Mnemonic';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
+import useSecurity from '../hooks/useSecurity';
 import {useModal} from '../hooks/useModal';
+import {errorTextParser, promptErrorToaster} from '../utils/errors';
+import ErrorModalContent from '../components/ErrorModalContent';
 
 function useArrayRef() {
   const refs = [];
@@ -24,7 +26,7 @@ function useArrayRef() {
 }
 
 const CreateNewWallet = () => {
-  const {goBack, navigate} = useNavigation();
+  const {navigate, goBack} = useNavigation();
   const [index, setIndex] = useState(0);
   const [walletName, setWalletName] = useState('');
   const {mnemonic, createWallet} = useWallet();
@@ -32,7 +34,7 @@ const CreateNewWallet = () => {
   const [error, setError] = useState('');
   const [network, setNetwork] = useState('mainnet');
   const {njs} = useNjs();
-  const {read} = useKeychain();
+  const {readPassword} = useSecurity();
   const [elements, ref] = useArrayRef();
   const {openModal, closeModal} = useModal();
   const [words, setWords] = useState<string[]>(new Array(12));
@@ -143,9 +145,9 @@ const CreateNewWallet = () => {
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={() => {
-                  setLoading('Creating wallet keys...');
-                  read(walletName)
+                  readPassword()
                     .then((password: string) => {
+                      setLoading('Creating wallet keys...');
                       createWallet(
                         walletName,
                         '',
@@ -162,8 +164,14 @@ const CreateNewWallet = () => {
                       );
                     })
                     .catch((e: any) => {
-                      console.log(e);
                       setLoading(undefined);
+                      promptErrorToaster(e.toString(), false, false, () => {
+                        const errorMsg = errorTextParser(e.toString(), false);
+                        openModal(
+                          <ErrorModalContent
+                            errorText={errorMsg}></ErrorModalContent>,
+                        );
+                      });
                     });
                 }}
               />

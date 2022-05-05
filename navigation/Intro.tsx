@@ -10,9 +10,6 @@ import Container from '../components/Container';
 import {Button} from '@tsejerome/ui-kitten-components';
 import {Images} from '../assets/images';
 import {RootStackParamList} from './type';
-import useNjs from '../hooks/useNjs';
-import {useModal} from '../hooks/useModal';
-import useKeychain from '../utils/Keychain';
 import useWallet from '../hooks/useWallet';
 
 const Intro = memo(props => {

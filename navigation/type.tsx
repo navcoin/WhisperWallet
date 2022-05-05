@@ -25,10 +25,11 @@ export type RootStackParamList = {
   OnBoarding: undefined;
   OpenWallet: undefined;
   ImportWallet: undefined;
+  AskPinScreen: undefined;
   Wallet: NavigatorScreenParams<WalletParamList>;
 };
 
-export type MnemonicScreenProps = undefined;
+export type MnemonicScreenProps = {mnemonic: string};
 export type AddressScreenProps = {
   from: string;
 };

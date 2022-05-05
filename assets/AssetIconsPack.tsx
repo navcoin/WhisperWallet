@@ -121,6 +121,9 @@ const AssetIconsPack: IconPack<ImageProps | SvgProps> = {
     qr: createIcon(Icons.qr),
     nav: createIcon(Icons.nav),
     xnav: createIcon(Icons.xnav),
+    biometrics: createIcon(Icons.biometrics),
+    pincode: createIcon(Icons.pincode),
+    unsecure: createIcon(Icons.unsecure),
   },
 };
 export default AssetIconsPack;

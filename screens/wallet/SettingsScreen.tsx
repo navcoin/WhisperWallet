@@ -2,18 +2,21 @@ import useWallet from '../../hooks/useWallet';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Alert, ScrollView} from 'react-native';
 import Container from '../../components/Container';
-import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Animation_Types_Enum} from '../../constants/Type';
 import OptionCard from '../../components/OptionCard';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import useNjs from '../../hooks/useNjs';
-import useKeychain from '../../utils/Keychain';
 import LoadingModalContent from '../../components/LoadingModalContent';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {screenHeight} from '../../utils/layout';
 import {scale, verticalScale} from 'react-native-size-matters';
+import useSecurity from '../../hooks/useSecurity';
+import {SecurityAuthenticationTypes} from '../../contexts/SecurityContext';
+import {useBottomSheet} from '../../hooks/useBottomSheet';
+import BottomSheetOptions from '../../components/BottomSheetOptions';
 import {useModal} from '../../hooks/useModal';
 
 interface SettingsItem {
@@ -25,10 +28,42 @@ interface SettingsItem {
 }
 
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
+  const {readPassword} = useSecurity();
   const [loading, setLoading] = useState<string | undefined>(undefined);
-  const {read} = useKeychain();
   const {walletName, wallet, createWallet} = useWallet();
   const {njs} = useNjs();
+  const bottomSheet = useBottomSheet();
+  const {changeMode, supportedType, currentAuthenticationType} = useSecurity();
+  const [authTypes, setAuthTypes] = useState<any>([]);
+
+  useEffect(() => {
+    let deviceAuth = [];
+    if (
+      supportedType == SecurityAuthenticationTypes.KEYCHAIN ||
+      supportedType == SecurityAuthenticationTypes.LOCALAUTH
+    ) {
+      deviceAuth = [{text: supportedType, icon: 'biometrics'}];
+    }
+
+    deviceAuth.push(
+      {
+        text: SecurityAuthenticationTypes.MANUAL_4,
+        icon: 'pincode',
+      },
+      {
+        text: SecurityAuthenticationTypes.MANUAL,
+        icon: 'pincode',
+      },
+      {
+        text: SecurityAuthenticationTypes.NONE,
+        icon: 'unsecure',
+      },
+    );
+
+    deviceAuth = deviceAuth.filter(el => el.text != currentAuthenticationType);
+
+    setAuthTypes(deviceAuth);
+  }, [supportedType, currentAuthenticationType]);
 
   const {navigate, goBack} =
     useNavigation<NavigationProp<RootStackParamList>>();
@@ -47,7 +82,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     }
     Alert.alert(
       title,
-      'Do you want to lock automatically the wallet when it goes to background?',
+      'Do you want to automatically lock the wallet when it goes to background?',
       [
         {
           text: 'Yes',
@@ -88,7 +123,7 @@ const deleteWallet = () => {
         {
           text: 'Delete',
           onPress: () => {
-            read(walletName).then((password: string) => {
+            readPassword().then((password: string) => {
               disconnectWallet(true);
             });
           },
@@ -107,7 +142,7 @@ const deleteWallet = () => {
       wallet.CloseDb();
     } catch (e) {}
 
-    read(walletName).then((password: string) => {
+    readPassword().then((password: string) => {
       setLoading('Restarting...');
 
       createWallet(
@@ -135,16 +170,40 @@ const deleteWallet = () => {
       icon: 'padLock',
       show: true,
       onPress: () => {
-        navigate('Wallet', {
-          screen: 'MnemonicScreen',
+        readPassword().then(async (password: string) => {
+          const updatedMnemonic: string = await wallet.db.GetMasterKey(
+            'mnemonic',
+            password,
+          );
+          navigate('Wallet', {
+            screen: 'MnemonicScreen',
+            params: {mnemonic: updatedMnemonic},
+          });
         });
       },
     },
     {
       title: 'Biometrics configuration',
       icon: 'eye',
-      show: true,
+      show: supportedType != SecurityAuthenticationTypes.MANUAL,
       onPress: () => biometricsAlert(),
+    },
+    {
+      title: 'Security: ' + currentAuthenticationType,
+      icon: 'pincode',
+      show: true,
+      onPress: () => {
+        bottomSheet.expand(
+          <BottomSheetOptions
+            title={'Select a new authentication mode'}
+            options={authTypes}
+            bottomSheetRef={bottomSheet.getRef}
+            onSelect={(el: any) => {
+              changeMode(el.text);
+            }}
+          />,
+        );
+      },
     },
     {
       title: 'Staking nodes',

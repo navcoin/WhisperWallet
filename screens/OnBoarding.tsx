@@ -22,12 +22,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import useAsyncStorage from '../hooks/useAsyncStorage';
 import {maxComponentWidth, screenWidth} from '../utils/layout';
 import {scale} from 'react-native-size-matters';
+import useSecurity from '../hooks/useSecurity';
+import {SecurityAuthenticationTypes} from '../contexts/SecurityContext';
 
 const OnBoardingPage = memo(() => {
   const {navigate} = useNavigation();
   const {height, width} = useWindowDimensions();
-  const {top, bottom} = useSafeAreaInsets();
-  const theme = useTheme();
+  const {supportedType} = useSecurity();
   const styles = useStyleSheet(themedStyles);
   const [lockAfterBackground, setLockAfterBackground] = useAsyncStorage(
     'lockAfterBackground',
@@ -74,27 +75,33 @@ const OnBoardingPage = memo(() => {
           style={{flex: 1}}
           onPress={() => {
             AsyncStorage.setItem('shownWelcome', 'true').then(() => {
-              Alert.alert(
-                'Security',
-                'Do you want to lock automatically the wallet when it goes to background?',
-                [
-                  {
-                    text: 'Yes',
-                    onPress: () => {
-                      setLockAfterBackground('true');
-                      navigate('Intro');
-                    },
-                  },
-                  {
-                    text: 'No',
-                    onPress: () => {
-                      AsyncStorage.setItem('shownWelcome', 'true').then(() => {
+              if (supportedType != SecurityAuthenticationTypes.MANUAL) {
+                Alert.alert(
+                  'Security',
+                  'Do you want to automatically lock the wallet when it goes to background?',
+                  [
+                    {
+                      text: 'Yes',
+                      onPress: () => {
+                        setLockAfterBackground('true');
                         navigate('Intro');
-                      });
+                      },
                     },
-                  },
-                ],
-              );
+                    {
+                      text: 'No',
+                      onPress: () => {
+                        AsyncStorage.setItem('shownWelcome', 'true').then(
+                          () => {
+                            navigate('Intro');
+                          },
+                        );
+                      },
+                    },
+                  ],
+                );
+              } else {
+                navigate('Intro');
+              }
             });
           }}
           status="primary-whisper"
