@@ -89,7 +89,8 @@ export const SecurityProvider = (props: any) => {
      * settings have changed.
      */
     const subscription = AppState.addEventListener('change', nextAppState => {
-      if (nextAppState === 'background' || nextAppState === 'active') {
+      if (nextAppState === 'background' &&
+          appState.current === 'inactive') {
         if (refreshWallet && !(connected == Connection_Stats_Enum.Bootstrapping || connected == Connection_Stats_Enum.Connecting || connected == Connection_Stats_Enum.Syncing)) {
           refreshWallet();
         }
