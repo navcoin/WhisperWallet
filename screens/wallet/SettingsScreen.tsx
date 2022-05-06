@@ -252,17 +252,16 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     },
     {
       title: 'Close wallet',
-      icon: 'undo',
+      icon: 'cancel',
       show: true,
       onPress: () => leaveWallet(),
     },
     {
       title: 'Delete wallet',
-      icon: 'cancel',
+      icon: 'bin',
       show: true,
       onPress: () => deleteWallet(),
     },
-
   ];
 
   useEffect(() => {
