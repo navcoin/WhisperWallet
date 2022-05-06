@@ -479,6 +479,16 @@ export const WalletProvider = (props: any) => {
     }
   }, [wallet]);
 
+  const removeWallet = useCallback(
+    async (name: string) => {
+      if (njs) {
+        await njs.wallet.WalletFile.RemoveWallet(name);
+        njs.wallet.WalletFile.ListWallets().then(setWalletsList);
+      }
+    },
+    [njs],
+  );
+
   const walletContext: WalletContextValue = useMemo(
     () => ({
       bitcore: njs?.wallet.bitcore,
@@ -506,6 +516,7 @@ export const WalletProvider = (props: any) => {
       nfts,
       updateAccounts,
       bootstrapProgress,
+      removeWallet,
     }),
     [
       win,
@@ -527,6 +538,7 @@ export const WalletProvider = (props: any) => {
       nfts,
       updateAccounts,
       bootstrapProgress,
+      removeWallet,
     ],
   );
 

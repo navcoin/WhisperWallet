@@ -32,7 +32,7 @@ interface SettingsItem {
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const {readPassword} = useSecurity();
   const [loading, setLoading] = useState<string | undefined>(undefined);
-  const {walletName, wallet, createWallet} = useWallet();
+  const {walletName, wallet, createWallet, removeWallet} = useWallet();
   const {njs} = useNjs();
   const bottomSheet = useBottomSheet();
   const {changeMode, supportedType, currentAuthenticationType} = useSecurity();
@@ -45,7 +45,9 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       supportedType == SecurityAuthenticationTypes.KEYCHAIN ||
       supportedType == SecurityAuthenticationTypes.LOCALAUTH
     ) {
-      deviceAuth = [{text: 'Face ID or Touch ID', mode: supportedType, icon: 'biometrics'}];
+      deviceAuth = [
+        {text: 'Face ID or Touch ID', mode: supportedType, icon: 'biometrics'},
+      ];
     }
 
     deviceAuth.push(
@@ -60,8 +62,8 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
         icon: 'pincode',
       },
       {
-        text: 'None'
-,       mode: SecurityAuthenticationTypes.NONE,
+        text: 'None',
+        mode: SecurityAuthenticationTypes.NONE,
         icon: 'unsecure',
       },
     );
@@ -114,22 +116,11 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     wallet.Disconnect();
     wallet.CloseDb();
     if (deleteWallet) {
-      await njs.wallet.WalletFile.RemoveWallet(walletName);
+      await removeWallet(walletName);
     }
-    navigate('Intro');
-  };
+    setLoading(undefined);
 
-  const deleteWallet = () => {
-    openModal(
-      <DeleteWalletModalContent
-        walletName={walletName}
-        deleteWallet={() => {
-          readPassword().then((password: string) => {
-            disconnectWallet(true);
-          });
-        }}
-      />,
-    );
+    navigate('Intro');
   };
 
   const resyncWallet = () => {
@@ -185,6 +176,12 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       onPress: () => biometricsAlert(),
     },
     {
+      title: 'Biometrics check',
+      icon: 'eye',
+      show: true,
+      onPress: () => console.log(lockAfterBackground),
+    },
+    {
       title: 'Security: ' + currentAuthenticationType,
       icon: 'pincode',
       show: true,
@@ -231,7 +228,15 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       title: 'Delete wallet',
       icon: 'cancel',
       show: true,
-      onPress: () => deleteWallet(),
+      onPress: async () => {
+        setLoading('Deleting...');
+        try {
+          await readPassword();
+          await disconnectWallet(true);
+        } catch (e) {
+          setLoading(undefined);
+        }
+      },
     },
     {
       title: 'Close wallet',
