@@ -8,18 +8,17 @@ import OptionCard from '../../components/OptionCard';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import useNjs from '../../hooks/useNjs';
-import LoadingModalContent from '../../components/Modals/LoadingModalContent';
+import LoadingModalContent from '../../components/LoadingModalContent';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {screenHeight} from '../../utils/layout';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useSecurity from '../../hooks/useSecurity';
-import {SecurityAuthenticationTypes} from '../../contexts/SecurityContext';
+import {GetAuthenticationName, SecurityAuthenticationTypes} from '../../contexts/SecurityContext';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
 import BottomSheetOptions from '../../components/BottomSheetOptions';
 import {useModal} from '../../hooks/useModal';
 import {useTheme} from '@tsejerome/ui-kitten-components';
-import DeleteWalletModalContent from '../../components/Modals/DeleteWalletModalContent';
 
 interface SettingsItem {
   title: string;
@@ -45,23 +44,25 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       supportedType == SecurityAuthenticationTypes.KEYCHAIN ||
       supportedType == SecurityAuthenticationTypes.LOCALAUTH
     ) {
-      deviceAuth = [{text: 'Face ID or Touch ID', mode: supportedType, icon: 'biometrics'}];
+      deviceAuth = [
+        {text: GetAuthenticationName(supportedType), mode: supportedType, icon: 'biometrics'},
+      ];
     }
 
     deviceAuth.push(
       {
-        text: '4-digit PIN code',
+        text: GetAuthenticationName(SecurityAuthenticationTypes.MANUAL_4),
         mode: SecurityAuthenticationTypes.MANUAL_4,
         icon: 'pincode',
       },
       {
-        text: '6-digit PIN code',
+        text: GetAuthenticationName(SecurityAuthenticationTypes.MANUAL),
         mode: SecurityAuthenticationTypes.MANUAL,
         icon: 'pincode',
       },
       {
-        text: 'None'
-,       mode: SecurityAuthenticationTypes.NONE,
+        text: GetAuthenticationName(SecurityAuthenticationTypes.NONE),
+        mode: SecurityAuthenticationTypes.NONE,
         icon: 'unsecure',
       },
     );
@@ -185,7 +186,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       onPress: () => biometricsAlert(),
     },
     {
-      title: 'Security: ' + currentAuthenticationType,
+      title: 'Security: ' + GetAuthenticationName(currentAuthenticationType),
       icon: 'pincode',
       show: true,
       onPress: () => {
