@@ -109,11 +109,12 @@ const ImportWallet = () => {
                 autoCapitalize={'none'}
                 multiline={true}
                 keyboardType={
-                  Platform.OS === 'ios' ? 'default' : 'visible-password'
+                  // Platform.OS === 'ios' ? 'default' : 'visible-password'
+                  Platform.OS === 'ios' ? 'default' : 'email-address'
                 }
                 numberOfLines={3}
                 autoFocus={true}
-                style={[styles.flex1, {height: scale(100)}]}
+                style={[styles.flex1, {height: scale(100), color: 'black'}]}
                 value={mnemonic}
                 onChangeText={(m: string) => {
                   setMnemonic(m.toLowerCase());
