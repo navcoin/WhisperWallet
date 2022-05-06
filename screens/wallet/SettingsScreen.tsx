@@ -45,20 +45,23 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       supportedType == SecurityAuthenticationTypes.KEYCHAIN ||
       supportedType == SecurityAuthenticationTypes.LOCALAUTH
     ) {
-      deviceAuth = [{text: supportedType, icon: 'biometrics'}];
+      deviceAuth = [{text: 'Face ID or Touch ID', mode: supportedType, icon: 'biometrics'}];
     }
 
     deviceAuth.push(
       {
-        text: SecurityAuthenticationTypes.MANUAL_4,
+        text: '4-digit PIN code',
+        mode: SecurityAuthenticationTypes.MANUAL_4,
         icon: 'pincode',
       },
       {
-        text: SecurityAuthenticationTypes.MANUAL,
+        text: '6-digit PIN code',
+        mode: SecurityAuthenticationTypes.MANUAL,
         icon: 'pincode',
       },
       {
-        text: SecurityAuthenticationTypes.NONE,
+        text: 'None'
+,       mode: SecurityAuthenticationTypes.NONE,
         icon: 'unsecure',
       },
     );
@@ -192,7 +195,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
             options={authTypes}
             bottomSheetRef={bottomSheet.getRef}
             onSelect={(el: any) => {
-              changeMode(el.text);
+              changeMode(el.mode);
             }}
           />,
         );

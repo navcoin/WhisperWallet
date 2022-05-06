@@ -5,6 +5,7 @@ import useSecurity from '../hooks/useSecurity';
 import { SecurityAuthenticationTypes } from '../contexts/SecurityContext';
 import { BlurView } from '@react-native-community/blur';
 import { StyleSheet, View } from 'react-native';
+import { scale } from 'react-native-size-matters';
 
 interface ContainerProps extends LayoutProps {
   useSafeArea?: boolean;
@@ -41,6 +42,7 @@ const Container: React.FC<ContainerProps> = ({
                             currentAuthenticationType == SecurityAuthenticationTypes.MANUAL)
                             &&
                             <Button
+                            style={{paddingHorizontal: scale(20)}}
                             children={"Tap to unlock"}
                             status="primary-whisper" onPress={() => {
                             readPassword().then(() => {
