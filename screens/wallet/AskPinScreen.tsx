@@ -39,9 +39,9 @@ const AskPinScreen: React.FC<ScreenProps<'AskPinScreen'>> = (props: any) => {
                 textAlign: 'center',
                 paddingHorizontal: scale(32),
               }}>
-              In the next screen you are going to be asked to introduce a new{' '}
+              In the next screen you are going to be asked to introduce a{' '}
               {pinLength}-digit PIN code. {'\n\n'}This code will be asked
-              anytime: {'\n\n'}- A wallet is opened, deleted or resynced{' '}
+              when: {'\n\n'}- A wallet is opened, deleted or resynced{' '}
               {'\n\n'}- Access to the private keys is required {'\n\n'}
             </Text>
             <Button

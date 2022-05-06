@@ -1,6 +1,6 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Alert, ScrollView} from 'react-native';
+import {StyleSheet, View, Alert, ScrollView, Switch} from 'react-native';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Animation_Types_Enum} from '../../constants/Type';
@@ -18,7 +18,7 @@ import {GetAuthenticationName, SecurityAuthenticationTypes} from '../../contexts
 import {useBottomSheet} from '../../hooks/useBottomSheet';
 import BottomSheetOptions from '../../components/BottomSheetOptions';
 import {useModal} from '../../hooks/useModal';
-import {useTheme} from '@tsejerome/ui-kitten-components';
+import { useTheme } from '@tsejerome/ui-kitten-components';
 
 interface SettingsItem {
   title: string;
@@ -26,6 +26,7 @@ interface SettingsItem {
   icon?: string;
   colorType?: string;
   show?: boolean;
+  rightElement?: any;
 }
 
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
@@ -163,46 +164,6 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
 
   const items: SettingsItem[] = [
     {
-      title: 'Show mnemonic',
-      icon: 'padLock',
-      show: true,
-      onPress: () => {
-        readPassword().then(async (password: string) => {
-          const updatedMnemonic: string = await wallet.db.GetMasterKey(
-            'mnemonic',
-            password,
-          );
-          navigate('Wallet', {
-            screen: 'MnemonicScreen',
-            params: {mnemonic: updatedMnemonic},
-          });
-        });
-      },
-    },
-    {
-      title: 'Biometrics configuration',
-      icon: 'eye',
-      show: supportedType != SecurityAuthenticationTypes.MANUAL,
-      onPress: () => biometricsAlert(),
-    },
-    {
-      title: 'Security: ' + GetAuthenticationName(currentAuthenticationType),
-      icon: 'pincode',
-      show: true,
-      onPress: () => {
-        bottomSheet.expand(
-          <BottomSheetOptions
-            title={'Select a new authentication mode'}
-            options={authTypes}
-            bottomSheetRef={bottomSheet.getRef}
-            onSelect={(el: any) => {
-              changeMode(el.mode);
-            }}
-          />,
-        );
-      },
-    },
-    {
       title: 'Staking nodes',
       icon: 'factory',
       show: true,
@@ -223,22 +184,61 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       },
     },
     {
+      title: 'Security: ' + GetAuthenticationName(currentAuthenticationType),
+      icon: 'pincode',
+      show: true,
+      onPress: () => {
+        bottomSheet.expand(
+          <BottomSheetOptions
+            title={'Select a new authentication mode'}
+            options={authTypes}
+            bottomSheetRef={bottomSheet.getRef}
+            onSelect={(el: any) => {
+              changeMode(el.mode);
+            }}
+          />,
+        );
+      },
+    },
+    {
+      title: 'Auto-lock',
+      icon: 'eye',
+      show: currentAuthenticationType != SecurityAuthenticationTypes.NONE,
+      rightElement: (
+          <Switch
+          trackColor={{ false: '#fff', true: theme['color-staking'] }}
+          onValueChange={(val) => {
+            setLockAfterBackground(lockAfterBackground !== 'true' ? 'true' : 'false')
+          }}
+          value={lockAfterBackground === 'true'}
+          style={{ marginRight: scale(12) }}
+      />),
+      onPress: () => {
+        setLockAfterBackground(lockAfterBackground !== 'true' ? 'true' : 'false')
+      },
+    },
+    {
+      title: 'Show mnemonic',
+      icon: 'padLock',
+      show: true,
+      onPress: () => {
+        readPassword().then(async (password: string) => {
+          const updatedMnemonic: string = await wallet.db.GetMasterKey(
+            'mnemonic',
+            password,
+          );
+          navigate('Wallet', {
+            screen: 'MnemonicScreen',
+            params: {mnemonic: updatedMnemonic},
+          });
+        });
+      },
+    },
+    {
       title: 'Clear history and resync',
       icon: 'refresh',
       show: true,
       onPress: () => resyncWallet(),
-    },
-    {
-      title: 'Delete wallet',
-      icon: 'cancel',
-      show: true,
-      onPress: () => deleteWallet(),
-    },
-    {
-      title: 'Close wallet',
-      icon: 'undo',
-      show: true,
-      onPress: () => leaveWallet(),
     },
     {
       title: 'Error Logs',
@@ -250,6 +250,19 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
         });
       },
     },
+    {
+      title: 'Close wallet',
+      icon: 'undo',
+      show: true,
+      onPress: () => leaveWallet(),
+    },
+    {
+      title: 'Delete wallet',
+      icon: 'cancel',
+      show: true,
+      onPress: () => deleteWallet(),
+    },
+
   ];
 
   useEffect(() => {
@@ -277,6 +290,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
               onPress={item.onPress}
               animationType={Animation_Types_Enum.SlideInLeft}
               icon={item.icon || 'download'}
+              rightElement={item.rightElement}
               color={item.colorType || 'white'}
             />
           );
