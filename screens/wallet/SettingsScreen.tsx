@@ -189,23 +189,6 @@ const deleteWallet = () => {
       },
     },
     {
-      title: 'Auto-lock',
-      icon: 'eye',
-      show: supportedType != SecurityAuthenticationTypes.MANUAL,
-      rightElement: (
-          <Switch
-          trackColor={{ false: '#fff', true: theme['color-staking'] }}
-          onValueChange={(val) => {
-            setLockAfterBackground(lockAfterBackground !== 'true' ? 'true' : 'false')
-          }}
-          value={lockAfterBackground === 'true'}
-          style={{ marginRight: scale(12) }}
-      />),
-      onPress: () => {
-        setLockAfterBackground(lockAfterBackground !== 'true' ? 'true' : 'false')
-      },
-    },
-    {
       title: 'Security: ' + currentAuthenticationType,
       icon: 'pincode',
       show: true,
@@ -220,6 +203,23 @@ const deleteWallet = () => {
             }}
           />,
         );
+      },
+    },
+    {
+      title: 'Auto-lock',
+      icon: 'eye',
+      show: currentAuthenticationType != SecurityAuthenticationTypes.NONE,
+      rightElement: (
+          <Switch
+          trackColor={{ false: '#fff', true: theme['color-staking'] }}
+          onValueChange={(val) => {
+            setLockAfterBackground(lockAfterBackground !== 'true' ? 'true' : 'false')
+          }}
+          value={lockAfterBackground === 'true'}
+          style={{ marginRight: scale(12) }}
+      />),
+      onPress: () => {
+        setLockAfterBackground(lockAfterBackground !== 'true' ? 'true' : 'false')
       },
     },
     {
