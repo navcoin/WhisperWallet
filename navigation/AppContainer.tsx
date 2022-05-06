@@ -12,6 +12,7 @@ import OpenWallet from './OpenWallet';
 import ImportWallet from './ImportWallet';
 import AskPinScreen from '../screens/wallet/AskPinScreen';
 import SecurityProvider from '../contexts/SecurityProvider';
+import Toast from 'react-native-toast-message';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -19,7 +20,9 @@ const AppContainer = (props: any) => {
   const theme = useTheme();
   return props.loaded && props.shownWelcome !== null ? (
     <View style={{flex: 1, backgroundColor: theme['color-basic-700']}}>
-      <NavigationContainer>
+      <NavigationContainer onStateChange={() => {
+        Toast.hide();
+      }}>
         <SecurityProvider>
           <Stack.Navigator
             screenOptions={{

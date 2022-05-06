@@ -139,7 +139,6 @@ const styles = StyleSheet.create({
     width: 120,
   },
   animatedStep: {
-    marginTop: 28,
   },
   layout: {
     flexDirection: 'row',

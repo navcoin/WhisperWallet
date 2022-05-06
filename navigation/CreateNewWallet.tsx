@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {BackHandler, StyleSheet, View} from 'react-native';
+import {Alert, BackHandler, StyleSheet, View} from 'react-native';
 import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 import Text from '../components/Text';
@@ -19,6 +19,7 @@ import useSecurity from '../hooks/useSecurity';
 import {useModal} from '../hooks/useModal';
 import {errorTextParser, promptErrorToaster} from '../utils/errors';
 import ErrorModalContent from '../components/Modals/ErrorModalContent';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function useArrayRef() {
   const refs = [];
@@ -58,20 +59,20 @@ const CreateNewWallet = () => {
 
   useEffect(() => {
     if (loading) {
-      openModal(<LoadingModalContent loading={!!loading} text={loading} />);
+      openModal(<LoadingModalContent loading={!!loading} text={loading}/>);
       return;
     }
     closeModal();
   }, [loading]);
   return (
     <Container useSafeArea>
-      <TopNavigationComponent title={'New wallet'} pressBack={onBackPress} />
+      <TopNavigationComponent title={'New wallet'} pressBack={onBackPress}/>
       <KeyboardAwareScrollView
         contentContainerStyle={{flexGrow: 1}}
         enableOnAndroid
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}>
-        <AnimatedStep style={styles.animatedStep} step={index} steps={5} />
+        <AnimatedStep style={styles.animatedStep} step={index} steps={5}/>
 
         {index == 0 ? (
           <View style={[styles.container, styles.horizontalPadding24]}>
@@ -180,7 +181,7 @@ const CreateNewWallet = () => {
         ) : index == 2 ? (
           <View style={styles.container}>
             <View style={{marginBottom: scale(90)}}>
-              <Mnemonic mnemonic={mnemonic} />
+              <Mnemonic mnemonic={mnemonic}/>
             </View>
             <View
               style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
@@ -291,8 +292,32 @@ const CreateNewWallet = () => {
                 children="Continue"
                 status={'primary-whisper'}
                 style={styles.button}
-                onPressOut={() => {
-                  navigate('Wallet');
+                onPressOut={async () => {
+                  const lockSetting = await AsyncStorage.getItem('lockAfterBackground');
+                  if (!(lockSetting == 'true' || lockSetting == 'false')) {
+                    Alert.alert(
+                      'Security',
+                      'Do you want to lock the wallet when it goes to background?',
+                      [
+                        {
+                          text: 'Yes',
+                          onPress: async () => {
+                            await AsyncStorage.setItem('lockAfterBackground', 'true');
+                            navigate('Wallet');
+                          },
+                        },
+                        {
+                          text: 'No',
+                          onPress: async () => {
+                            await AsyncStorage.setItem('lockAfterBackground', 'false');
+                            navigate('Wallet');
+                          },
+                        },
+                      ],
+                    );
+                  } else {
+                    navigate('Wallet');
+                  }
                 }}
               />
             </View>
@@ -358,7 +383,6 @@ const styles = StyleSheet.create({
     width: scale(120),
   },
   animatedStep: {
-    marginTop: verticalScale(28),
   },
   layout: {
     marginBottom: verticalScale(24),
