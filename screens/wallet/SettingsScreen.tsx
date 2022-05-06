@@ -229,9 +229,9 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       icon: 'cancel',
       show: true,
       onPress: async () => {
-        setLoading('Deleting...');
         try {
           await readPassword();
+          setLoading('Deleting...');
           await disconnectWallet(true);
         } catch (e) {
           setLoading(undefined);
