@@ -169,57 +169,6 @@ const deleteWallet = () => {
 
   const items: SettingsItem[] = [
     {
-      title: 'Show mnemonic',
-      icon: 'padLock',
-      show: true,
-      onPress: () => {
-        readPassword().then(async (password: string) => {
-          const updatedMnemonic: string = await wallet.db.GetMasterKey(
-            'mnemonic',
-            password,
-          );
-          navigate('Wallet', {
-            screen: 'MnemonicScreen',
-            params: {mnemonic: updatedMnemonic},
-          });
-        });
-      },
-    },
-    {
-      title: 'Auto-lock',
-      icon: 'eye',
-      show: supportedType != SecurityAuthenticationTypes.MANUAL,
-      rightElement: (
-          <Switch
-          trackColor={{ false: '#fff', true: theme['color-staking'] }}
-          onValueChange={(val) => {
-            setLockAfterBackground(lockAfterBackground !== 'true' ? 'true' : 'false')
-          }}
-          value={lockAfterBackground === 'true'}
-          style={{ marginRight: scale(12) }}
-      />),
-      onPress: () => {
-        ;;
-      },
-    },
-    {
-      title: 'Security: ' + currentAuthenticationType,
-      icon: 'pincode',
-      show: true,
-      onPress: () => {
-        bottomSheet.expand(
-          <BottomSheetOptions
-            title={'Select a new authentication mode'}
-            options={authTypes}
-            bottomSheetRef={bottomSheet.getRef}
-            onSelect={(el: any) => {
-              changeMode(el.text);
-            }}
-          />,
-        );
-      },
-    },
-    {
       title: 'Staking nodes',
       icon: 'factory',
       show: true,
@@ -240,22 +189,61 @@ const deleteWallet = () => {
       },
     },
     {
+      title: 'Auto-lock',
+      icon: 'eye',
+      show: supportedType != SecurityAuthenticationTypes.MANUAL,
+      rightElement: (
+          <Switch
+          trackColor={{ false: '#fff', true: theme['color-staking'] }}
+          onValueChange={(val) => {
+            setLockAfterBackground(lockAfterBackground !== 'true' ? 'true' : 'false')
+          }}
+          value={lockAfterBackground === 'true'}
+          style={{ marginRight: scale(12) }}
+      />),
+      onPress: () => {
+        setLockAfterBackground(lockAfterBackground !== 'true' ? 'true' : 'false')
+      },
+    },
+    {
+      title: 'Security: ' + currentAuthenticationType,
+      icon: 'pincode',
+      show: true,
+      onPress: () => {
+        bottomSheet.expand(
+          <BottomSheetOptions
+            title={'Select a new authentication mode'}
+            options={authTypes}
+            bottomSheetRef={bottomSheet.getRef}
+            onSelect={(el: any) => {
+              changeMode(el.text);
+            }}
+          />,
+        );
+      },
+    },
+    {
+      title: 'Show mnemonic',
+      icon: 'padLock',
+      show: true,
+      onPress: () => {
+        readPassword().then(async (password: string) => {
+          const updatedMnemonic: string = await wallet.db.GetMasterKey(
+            'mnemonic',
+            password,
+          );
+          navigate('Wallet', {
+            screen: 'MnemonicScreen',
+            params: {mnemonic: updatedMnemonic},
+          });
+        });
+      },
+    },
+    {
       title: 'Clear history and resync',
       icon: 'refresh',
       show: true,
       onPress: () => resyncWallet(),
-    },
-    {
-      title: 'Delete wallet',
-      icon: 'cancel',
-      show: true,
-      onPress: () => deleteWallet(),
-    },
-    {
-      title: 'Close wallet',
-      icon: 'undo',
-      show: true,
-      onPress: () => leaveWallet(),
     },
     {
       title: 'Error Logs',
@@ -267,6 +255,19 @@ const deleteWallet = () => {
         });
       },
     },
+    {
+      title: 'Close wallet',
+      icon: 'undo',
+      show: true,
+      onPress: () => leaveWallet(),
+    },
+    {
+      title: 'Delete wallet',
+      icon: 'cancel',
+      show: true,
+      onPress: () => deleteWallet(),
+    },
+
   ];
 
   useEffect(() => {
