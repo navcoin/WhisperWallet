@@ -383,7 +383,6 @@ const styles = StyleSheet.create({
     width: scale(120),
   },
   animatedStep: {
-    marginTop: verticalScale(28),
   },
   layout: {
     marginBottom: verticalScale(24),

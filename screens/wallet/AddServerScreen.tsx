@@ -65,9 +65,6 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
     setNewServer(temp);
   };
   const addServer = () => {
-    console.log('newserver');
-    console.log(newServer);
-    console.log('newserver');
     if (
       !newServer?.host ||
       !newServer?.port ||
@@ -105,6 +102,7 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
             <Input
               autoFocus={true}
               style={[styles.inputField]}
+              value={newServer['host']}
               onChangeText={value => {
                 setNewServerProperty('host', value);
               }}
@@ -116,6 +114,7 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
             </Text>
             <Input
               style={[styles.inputField]}
+              value={newServer['port']}
               onChangeText={value => {
                 setNewServerProperty('port', Number.parseInt(value));
               }}

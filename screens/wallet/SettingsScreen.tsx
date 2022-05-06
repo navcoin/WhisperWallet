@@ -14,7 +14,7 @@ import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {screenHeight} from '../../utils/layout';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useSecurity from '../../hooks/useSecurity';
-import {SecurityAuthenticationTypes} from '../../contexts/SecurityContext';
+import {GetAuthenticationName, SecurityAuthenticationTypes} from '../../contexts/SecurityContext';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
 import BottomSheetOptions from '../../components/BottomSheetOptions';
 import {useModal} from '../../hooks/useModal';
@@ -24,7 +24,7 @@ interface SettingsItem {
   title: string;
   onPress: () => void;
   icon?: string;
-  color?: string;
+  colorType?: string;
   show?: boolean;
   rightElement?: any;
 }
@@ -45,20 +45,25 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       supportedType == SecurityAuthenticationTypes.KEYCHAIN ||
       supportedType == SecurityAuthenticationTypes.LOCALAUTH
     ) {
-      deviceAuth = [{text: supportedType, icon: 'biometrics'}];
+      deviceAuth = [
+        {text: GetAuthenticationName(supportedType), mode: supportedType, icon: 'biometrics'},
+      ];
     }
 
     deviceAuth.push(
       {
-        text: SecurityAuthenticationTypes.MANUAL_4,
+        text: GetAuthenticationName(SecurityAuthenticationTypes.MANUAL_4),
+        mode: SecurityAuthenticationTypes.MANUAL_4,
         icon: 'pincode',
       },
       {
-        text: SecurityAuthenticationTypes.MANUAL,
+        text: GetAuthenticationName(SecurityAuthenticationTypes.MANUAL),
+        mode: SecurityAuthenticationTypes.MANUAL,
         icon: 'pincode',
       },
       {
-        text: SecurityAuthenticationTypes.NONE,
+        text: GetAuthenticationName(SecurityAuthenticationTypes.NONE),
+        mode: SecurityAuthenticationTypes.NONE,
         icon: 'unsecure',
       },
     );
@@ -116,26 +121,16 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     navigate('Intro');
   };
 
-const deleteWallet = () => {
-    Alert.alert(
-      'Delete Wallet',
-      'The coins stored on the wallet "' +
-        walletName +
-        '" will be lost and only accessible again using a valid backup.\n\nPlease be sure your seed words are correctly backed up.\n\nAre you sure you want to delete this wallet?',
-      [
-        {
-          text: 'Delete',
-          onPress: () => {
-            readPassword().then((password: string) => {
-              disconnectWallet(true);
-            });
-          },
-        },
-        {
-          text: 'Cancel',
-          onPress: () => {},
-        },
-      ],
+  const deleteWallet = () => {
+    openModal(
+      <DeleteWalletModalContent
+        walletName={walletName}
+        deleteWallet={() => {
+          readPassword().then((password: string) => {
+            disconnectWallet(true);
+          });
+        }}
+      />,
     );
   };
 
@@ -189,7 +184,7 @@ const deleteWallet = () => {
       },
     },
     {
-      title: 'Security: ' + currentAuthenticationType,
+      title: 'Security: ' + GetAuthenticationName(currentAuthenticationType),
       icon: 'pincode',
       show: true,
       onPress: () => {
@@ -199,7 +194,7 @@ const deleteWallet = () => {
             options={authTypes}
             bottomSheetRef={bottomSheet.getRef}
             onSelect={(el: any) => {
-              changeMode(el.text);
+              changeMode(el.mode);
             }}
           />,
         );
@@ -295,8 +290,8 @@ const deleteWallet = () => {
               onPress={item.onPress}
               animationType={Animation_Types_Enum.SlideInLeft}
               icon={item.icon || 'download'}
-              color={item.color || 'white'}
               rightElement={item.rightElement}
+              color={item.colorType || 'white'}
             />
           );
         })}
