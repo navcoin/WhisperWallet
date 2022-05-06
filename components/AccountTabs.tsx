@@ -4,24 +4,29 @@ import {RefreshControl, ScrollView, View} from 'react-native';
 import BalanceCard from './BalanceCard';
 import Text from './Text';
 import React, {useCallback, useState} from 'react';
-import {BalanceFragment} from '../constants/Type';
+import {BalanceFragment, Connection_Stats_Enum} from '../constants/Type';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import BottomSheetMenu from './BottomSheetMenu';
 import useWallet from '../hooks/useWallet';
 import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import BottomSheetOptions from './BottomSheetOptions';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {scale, verticalScale} from 'react-native-size-matters';
+import {RootStackParamList} from '../navigation/type';
 
-const AccountsTab = () => {
+const AccountsTab = (props: {
+  onRefresh: () => Promise<void>;
+  refreshing: boolean;
+}) => {
+  const {onRefresh, refreshing} = props;
   const [selectedTab, setSelectedTab] = useState(0);
   const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
   );
-  const {accounts, tokens, nfts, refreshWallet, connected} = useWallet();
+  const {accounts, tokens, nfts} = useWallet();
   const bottomSheet = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
-  const {navigate} = useNavigation();
+  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
 
   const pickDestination = useCallback(
     account_ => {
@@ -144,22 +149,6 @@ const AccountsTab = () => {
     },
     [bottomSheet, pickDestination],
   );
-
-  const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = useCallback(async () => {
-    if (
-      !(
-        connected == Connection_Stats_Enum.Connecting ||
-        connected == Connection_Stats_Enum.Bootstrapping ||
-        connected == Connection_Stats_Enum.Syncing
-      )
-    ) {
-      setRefreshing(true);
-      await refreshWallet();
-      setRefreshing(false);
-    }
-  }, []);
 
   return (
     <>
