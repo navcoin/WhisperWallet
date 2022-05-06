@@ -63,8 +63,8 @@ const OpenWallet = () => {
                           true,
                           'mainnet',
                           () => {
-                            setLoading(undefined);
                             navigate('Wallet');
+                            setLoading(undefined);
                           },
                         );
                       })
