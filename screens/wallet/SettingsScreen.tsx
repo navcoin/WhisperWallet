@@ -155,12 +155,6 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       },
     },
     {
-      title: 'Biometrics check',
-      icon: 'eye',
-      show: true,
-      onPress: () => console.log(lockAfterBackground),
-    },
-    {
       title: 'Security: ' + GetAuthenticationName(currentAuthenticationType),
       icon: 'pincode',
       show: true,
