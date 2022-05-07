@@ -7,7 +7,7 @@ import {Animation_Types_Enum} from '../../constants/Type';
 import OptionCard from '../../components/OptionCard';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
-import LoadingModalContent from '../../components/LoadingModalContent';
+import LoadingModalContent from '../../components/Modals/LoadingModalContent';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {screenHeight} from '../../utils/layout';
