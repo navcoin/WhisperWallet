@@ -61,8 +61,8 @@ const OnBoardingPage = memo(() => {
       <View style={styles.bottomView}>
         <Button
           size={'large'}
-          children="Start using Whisper Wallet"
-          style={{flex: 1}}
+          children="Start using Whisper"
+          style={{flex: 1, marginBottom: scale(16)}}
           onPress={() => {
             AsyncStorage.setItem('shownWelcome', 'true').then(() => {
               navigate('Intro');
