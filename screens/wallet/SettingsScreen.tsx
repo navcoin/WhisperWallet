@@ -260,7 +260,6 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       show: true,
       onPress: () => deleteWallet(),
     },
-
   ];
 
   useEffect(() => {
