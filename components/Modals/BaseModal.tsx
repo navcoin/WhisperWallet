@@ -3,23 +3,25 @@ import {StyleSheet, View, Modal as RawModal} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
 import Toast from 'react-native-toast-message';
 import toastConfig from '../Toast';
+import {useModal} from '../../hooks/useModal';
 
 const Modal = (props: any) => {
   const {children, visible} = props;
-  return (
-    <RawModal
-      transparent={true}
-      statusBarTranslucent={true}
-      animationType={'fade'}
-      visible={visible}>
-      <BlurView
-        style={styles.absolute}
-        blurType="dark"
-        blurAmount={50}
-        reducedTransparencyFallbackColor="#1F2933"></BlurView>
-      <Toast config={toastConfig} />
-      <View style={styles.contentContainer}>{children || <></>}</View>
-    </RawModal>
+  const {isVisible} = useModal();
+  return (isVisible ?
+      <RawModal
+        transparent={true}
+        statusBarTranslucent={true}
+        animationType={'fade'}
+        visible={visible}>
+        <BlurView
+          style={styles.absolute}
+          blurType="dark"
+          blurAmount={50}
+          reducedTransparencyFallbackColor="#1F2933"></BlurView>
+        <Toast config={toastConfig}/>
+        <View style={styles.contentContainer}>{children || <></>}</View>
+      </RawModal> : <></>
   );
 };
 
