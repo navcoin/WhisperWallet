@@ -52,20 +52,6 @@ const MainWalletScreen = () => {
     }
   }, [connected]);
 
-  const onRefresh = useCallback(async () => {
-    if (
-      !(
-        connected == Connection_Stats_Enum.Connecting ||
-        connected == Connection_Stats_Enum.Bootstrapping ||
-        connected == Connection_Stats_Enum.Syncing
-      )
-    ) {
-      setRefreshing(true);
-      await refreshWallet();
-      setRefreshing(false);
-    }
-  }, []);
-
   return (
     <BottomSheetProvider>
       <Container style={styles.container}>
@@ -102,7 +88,7 @@ const MainWalletScreen = () => {
             <TouchableWithoutFeedback
               style={{padding: scale(12)}}
               onPress={() => {
-                onRefresh();
+                refreshWallet();
               }}>
               <Icon pack="assets" name={'refresh'} style={[styles.icon]} />
             </TouchableWithoutFeedback>
@@ -118,7 +104,7 @@ const MainWalletScreen = () => {
           </View>
         </Layout>
         <BalanceCircle />
-        <AccountsTab refreshing={refreshing} onRefresh={onRefresh} />
+        <AccountsTab refreshing={refreshing} onRefresh={refreshWallet} />
       </Container>
     </BottomSheetProvider>
   );

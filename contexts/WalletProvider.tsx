@@ -12,6 +12,7 @@ import RNBootSplash from 'react-native-bootsplash';
 import SQLite from 'react-native-sqlite-2';
 
 import setGlobalVars from 'indexeddbshim/dist/indexeddbshim-noninvasive';
+
 const win = {};
 
 setGlobalVars(win, {win: SQLite});
@@ -422,31 +423,31 @@ export const WalletProvider = (props: any) => {
           let obj =
             from == 'token' || from == 'nft'
               ? await wallet.tokenCreateTransaction(
-                  to,
-                  Math.floor(amount * 1e8),
-                  memo,
-                  password,
-                  tokenId,
-                  tokenNftId,
-                  new Buffer([]),
-                  undefined,
-                  false,
-                  false,
-                  fee,
-                )
+                to,
+                Math.floor(amount * 1e8),
+                memo,
+                password,
+                tokenId,
+                tokenNftId,
+                new Buffer([]),
+                undefined,
+                false,
+                false,
+                fee,
+              )
               : await wallet.xNavCreateTransaction(
-                  to,
-                  Math.floor(amount * 1e8),
-                  memo,
-                  password,
-                  subtractFee,
-                  new Buffer(new Uint8Array(32)),
-                  -1,
-                  new Buffer([]),
-                  undefined,
-                  0,
-                  fee,
-                );
+                to,
+                Math.floor(amount * 1e8),
+                memo,
+                password,
+                subtractFee,
+                new Buffer(new Uint8Array(32)),
+                -1,
+                new Buffer([]),
+                undefined,
+                0,
+                fee,
+              );
           if (!obj) {
             rej("Can't access you wallet keys");
           } else {
@@ -516,14 +517,16 @@ export const WalletProvider = (props: any) => {
   };
 
   const refreshWallet = useCallback(async () => {
-    if (wallet) {
-      try {
-        await wallet.Sync();
-      } catch (e) {
-        console.log(e);
-      }
+    if (wallet &&
+      !(
+        connected == Connection_Stats_Enum.Connecting ||
+        connected == Connection_Stats_Enum.Bootstrapping ||
+        connected == Connection_Stats_Enum.Syncing
+      )
+    ) {
+      await wallet.Sync();
     }
-  }, [wallet]);
+  }, [wallet, connected]);
 
   const removeWallet = useCallback(
     async (name: string) => {
@@ -564,7 +567,7 @@ export const WalletProvider = (props: any) => {
       bootstrapProgress,
       removeWallet,
       njs,
-      walletLibLoaded
+      walletLibLoaded,
     }),
     [
       win,
@@ -588,7 +591,8 @@ export const WalletProvider = (props: any) => {
       bootstrapProgress,
       removeWallet,
       njs,
-      walletLibLoaded
+      walletLibLoaded,
+      refreshWallet
     ],
   );
 
