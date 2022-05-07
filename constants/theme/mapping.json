@@ -405,6 +405,12 @@
             "primary-whisper": {
               "default": true
             },
+            "radical-whisper": {
+              "default": false
+            },
+            "white-whisper": {
+              "default": false
+            },
             "transparent": {
               "default": false
             }
@@ -508,6 +514,58 @@
                   "active": {
                     "borderColor": "transparent",
                     "backgroundColor": "color-staking",
+                    "textColor": "text-white-color",
+                    "iconTintColor": "text-white-color"
+                  },
+                  "disabled": {
+                    "borderColor": "color-info-disabled-border",
+                    "backgroundColor": "color-info-disabled",
+                    "textColor": "text-disabled-color",
+                    "iconTintColor": "text-disabled-color"
+                  }
+                }
+              },
+              "white-whisper": {
+                "backgroundColor": "white",
+                "textColor": "color-basic-700",
+                "iconTintColor": "text-blue-color",
+                "borderColor": "transparent",
+                "state": {
+                  "focused": {
+                    "borderColor": "transparent",
+                    "backgroundColor": "color-basic-1000",
+                    "textColor": "text-white-color",
+                    "iconTintColor": "text-white-color"
+                  },
+                  "active": {
+                    "borderColor": "transparent",
+                    "backgroundColor": "color-xnav",
+                    "textColor": "text-white-color",
+                    "iconTintColor": "text-white-color"
+                  },
+                  "disabled": {
+                    "borderColor": "color-info-disabled-border",
+                    "backgroundColor": "color-info-disabled",
+                    "textColor": "text-disabled-color",
+                    "iconTintColor": "text-disabled-color"
+                  }
+                }
+              },
+              "radical-whisper": {
+                "backgroundColor": "color-radical-100",
+                "textColor": "color-basic-700",
+                "iconTintColor": "text-blue-color",
+                "borderColor": "transparent",
+                "state": {
+                  "focused": {
+                    "borderColor": "transparent",
+                    "backgroundColor": "color-basic-1000",
+                    "textColor": "text-white-color",
+                    "iconTintColor": "text-white-color"
+                  },
+                  "active": {
+                    "borderColor": "transparent",
+                    "backgroundColor": "color-radical-100",
                     "textColor": "text-white-color",
                     "iconTintColor": "text-white-color"
                   },

@@ -6,7 +6,7 @@ import Toast from 'react-native-toast-message';
 import {useModal} from '../../hooks/useModal';
 import {cleanTemporaryErrorRecord, errorGroupParser} from '../../utils/errors';
 import {sendErrorCrashEmail} from '../../utils/sendMail';
-import Button from '../Button';
+import {Button} from '@tsejerome/ui-kitten-components';
 import Text from '../Text';
 import {screenHeight} from '../../utils/layout';
 import {AsyncStoredItems} from '../../utils/asyncStorageManager';

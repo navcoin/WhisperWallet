@@ -18,6 +18,7 @@ import {useBottomSheet} from '../../hooks/useBottomSheet';
 import BottomSheetOptions from '../../components/BottomSheetOptions';
 import {useModal} from '../../hooks/useModal';
 import { useTheme } from '@tsejerome/ui-kitten-components';
+import DeleteWalletModalContent from '../../components/Modals/DeleteWalletModalContent';
 
 interface SettingsItem {
   title: string;
@@ -86,9 +87,8 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     if (deleteWallet) {
       await removeWallet(walletName);
     }
-    setLoading(undefined);
-
     navigate('Intro');
+    setLoading(undefined);
   };
 
   const resyncWallet = () => {
@@ -118,6 +118,20 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   };
 
   const leaveWallet = () => disconnectWallet();
+
+  const deleteWallet = () => {
+    openModal(
+      <DeleteWalletModalContent
+        walletName={walletName}
+        deleteWallet={() => {
+          readPassword().then((password: string) => {
+            setLoading('Deleting...');
+            disconnectWallet(true);
+          });
+        }}
+      />,
+    );
+  };
 
   const items: SettingsItem[] = [
     {

@@ -6,7 +6,7 @@ import Toast from 'react-native-toast-message';
 import {useModal} from '../../hooks/useModal';
 import {cleanTemporaryErrorRecord, errorGroupParser} from '../../utils/errors';
 import {sendErrorCrashEmail} from '../../utils/sendMail';
-import Button, {ButtonColorStyle} from '../Button';
+import {Button} from '@tsejerome/ui-kitten-components';
 import Text from '../Text';
 import {screenHeight} from '../../utils/layout';
 import {AsyncStoredItems} from '../../utils/asyncStorageManager';
@@ -27,14 +27,14 @@ const DeleteWalletModalContent = (props: {
   const buttonOptions = [
     {
       text: 'Cancel',
-      colorStyle: ButtonColorStyle.white,
+      status: 'white-whisper',
       onPress: async () => {
         closeModal();
       },
     },
     {
       text: 'Delete',
-      colorStyle: ButtonColorStyle.radical,
+      status: 'radical-whisper',
       onPress: async () => {
         deleteWallet();
         closeModal();
@@ -43,7 +43,7 @@ const DeleteWalletModalContent = (props: {
   ];
   return (
     <>
-      <View>
+      <View style={{paddingHorizontal: scale(30)}}>
         <Text category="title3" style={styles.item}>
           {`Do you want to delete the wallet "${walletName}"?`}
         </Text>
@@ -54,10 +54,9 @@ const DeleteWalletModalContent = (props: {
           {buttonOptions.map((option, index) => (
             <Button
               key={index}
-              status={'primary-whisper'}
+              status={option.status}
               style={[styles.button]}
               children={option.text}
-              colorStyle={option.colorStyle}
               onPress={() => option.onPress()}
             />
           ))}
