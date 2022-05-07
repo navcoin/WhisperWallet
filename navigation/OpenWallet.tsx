@@ -5,7 +5,6 @@ import {useNavigation} from '@react-navigation/native';
 import Container from '../components/Container';
 import useWallet from '../hooks/useWallet';
 import LoadingModalContent from '../components/LoadingModalContent';
-import useNjs from '../hooks/useNjs';
 import OptionCard from '../components/OptionCard';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {layoutStyles} from '../utils/layout';
@@ -17,9 +16,8 @@ import ErrorModalContent from '../components/ErrorModalContent';
 
 const OpenWallet = () => {
   const {navigate} = useNavigation();
-  const {createWallet, walletsList} = useWallet();
+  const {njs, createWallet, walletsList} = useWallet();
   const [loading, setLoading] = useState<string | undefined>(undefined);
-  const {njs} = useNjs();
   const {readPassword} = useSecurity();
 
   const {openModal, closeModal} = useModal();
@@ -63,8 +61,8 @@ const OpenWallet = () => {
                           true,
                           'mainnet',
                           () => {
-                            setLoading(undefined);
                             navigate('Wallet');
+                            setLoading(undefined);
                           },
                         );
                       })

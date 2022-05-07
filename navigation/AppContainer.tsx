@@ -12,11 +12,14 @@ import ImportWallet from './ImportWallet';
 import AskPinScreen from '../screens/wallet/AskPinScreen';
 import SecurityProvider from '../contexts/SecurityProvider';
 import Toast from 'react-native-toast-message';
+import useWallet from '../hooks/useWallet';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const AppContainer = (props: any) => {
-  return props.loaded && props.shownWelcome !== null ? (
+  const {walletLibLoaded} = useWallet();
+  
+  return walletLibLoaded && props.shownWelcome !== null ? (
     <NavigationContainer onStateChange={() => {
         Toast.hide();
       }}>

@@ -28,6 +28,8 @@ export interface WalletContextValue {
   updateAccounts: () => void;
   bootstrapProgress: number;
   firstSyncCompleted: boolean;
+  njs: any;
+  walletLibLoaded: boolean;
 }
 
 export const WalletContext = createContext<WalletContextValue | undefined>(
