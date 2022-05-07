@@ -7,7 +7,6 @@ import {Animation_Types_Enum} from '../../constants/Type';
 import OptionCard from '../../components/OptionCard';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
-import useNjs from '../../hooks/useNjs';
 import LoadingModalContent from '../../components/LoadingModalContent';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
@@ -32,8 +31,7 @@ interface SettingsItem {
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const {readPassword} = useSecurity();
   const [loading, setLoading] = useState<string | undefined>(undefined);
-  const {walletName, wallet, createWallet, removeWallet} = useWallet();
-  const {njs} = useNjs();
+  const {walletName, wallet, createWallet, njs, removeWallet} = useWallet();
   const bottomSheet = useBottomSheet();
   const {changeMode, supportedType, currentAuthenticationType} = useSecurity();
   const [authTypes, setAuthTypes] = useState<any>([]);
@@ -217,17 +215,16 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     },
     {
       title: 'Close wallet',
-      icon: 'undo',
+      icon: 'cancel',
       show: true,
       onPress: () => leaveWallet(),
     },
     {
       title: 'Delete wallet',
-      icon: 'cancel',
+      icon: 'bin',
       show: true,
       onPress: () => deleteWallet(),
     },
-
   ];
 
   useEffect(() => {

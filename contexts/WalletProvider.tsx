@@ -1,6 +1,4 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import useNjs from '../hooks/useNjs';
-import useWin from '../hooks/useWin';
 import {WalletContext, WalletContextValue} from './WalletContext';
 import {
   AddressFragment,
@@ -9,15 +7,24 @@ import {
   Connection_Stats_Enum,
   Destination_Types_Enum,
 } from '../constants/Type';
-import useTraceUpdate from '../hooks/useTraceUpdates';
 import Identicon from '../components/Identicon';
+import RNBootSplash from 'react-native-bootsplash';
+import SQLite from 'react-native-sqlite-2';
+
+import setGlobalVars from 'indexeddbshim/dist/indexeddbshim-noninvasive';
+const win = {};
+
+setGlobalVars(win, {win: SQLite});
+win.indexedDB.__useShim();
+const njs = require('navcoin-js');
+const P2pPool = require('@aguycalled/bitcore-p2p').Pool;
 
 export const WalletProvider = (props: any) => {
-  const {njs, p2pPool} = useNjs();
-  const {win} = useWin();
+  const [p2pPool, setP2pPool] = useState<any>(undefined);
   const [wallet, setWallet] = useState<any>(undefined);
   const [walletName, setWalletName] = useState('');
   const [walletsList, setWalletsList] = useState([]);
+  const [walletLibLoaded, setWalletLibLoaded] = useState(false);
   const [network, setNetwork] = useState('livenet');
   const [mnemonic, setMnemonic] = useState('');
   const [syncProgress, setSyncProgress] = useState(0);
@@ -70,6 +77,51 @@ export const WalletProvider = (props: any) => {
   ]);
 
   useEffect(() => {
+    if (walletLibLoaded) {
+      RNBootSplash.hide({fade: true});
+      njs.wallet.WalletFile.ListWallets().then(setWalletsList);
+    }
+  }, [walletLibLoaded]);
+
+  useEffect(() => {
+    njs.wallet.Init().then(async () => {
+      njs.wallet.WalletFile.SetBackend(win.indexedDB, win.IDBKeyRange);
+
+      setP2pPool(
+        new P2pPool({
+          dnsSeed: false, // prevent seeding with DNS discovered known peers upon connecting
+          listenAddr: true, // prevent new peers being added from addr messages
+          addrs: [
+            // initial peers to connect to
+            {
+              ip: {
+                v4: 'electrum.nav.community',
+              },
+            },
+            {
+              ip: {
+                v4: 'electrum2.nav.community',
+              },
+            },
+            {
+              ip: {
+                v4: 'electrum3.nav.community',
+              },
+            },
+            {
+              ip: {
+                v4: 'electrum4.nav.community',
+              },
+            },
+          ],
+        }),
+      );
+
+      setWalletLibLoaded(true);
+    });
+  }, []);
+
+  useEffect(() => {
     let parsed: AddressFragment[] = [];
     for (let type in addresses.spending) {
       for (let address in addresses.spending[type]) {
@@ -109,12 +161,6 @@ export const WalletProvider = (props: any) => {
     }
     setParsedAddresses(parsed);
   }, [njs, network, addresses]);
-
-  useEffect(() => {
-    if (njs && win) {
-      njs.wallet.WalletFile.ListWallets().then(setWalletsList);
-    }
-  }, [njs, win]);
 
   const newCandidate = useCallback(
     function (session: string, candidate: any) {
@@ -517,6 +563,8 @@ export const WalletProvider = (props: any) => {
       updateAccounts,
       bootstrapProgress,
       removeWallet,
+      njs,
+      walletLibLoaded
     }),
     [
       win,
@@ -539,6 +587,8 @@ export const WalletProvider = (props: any) => {
       updateAccounts,
       bootstrapProgress,
       removeWallet,
+      njs,
+      walletLibLoaded
     ],
   );
 

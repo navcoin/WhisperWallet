@@ -13,12 +13,14 @@ import ImportWallet from './ImportWallet';
 import AskPinScreen from '../screens/wallet/AskPinScreen';
 import SecurityProvider from '../contexts/SecurityProvider';
 import Toast from 'react-native-toast-message';
+import useWallet from '../hooks/useWallet';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const AppContainer = (props: any) => {
   const theme = useTheme();
-  return props.loaded && props.shownWelcome !== null ? (
+  const {walletLibLoaded} = useWallet();
+  return walletLibLoaded && props.shownWelcome !== null ? (
     <View style={{flex: 1, backgroundColor: theme['color-basic-700']}}>
       <NavigationContainer onStateChange={() => {
         Toast.hide();
