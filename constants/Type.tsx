@@ -36,6 +36,7 @@ export interface BalanceFragment {
   destination_id: Destination_Types_Enum;
   currency: string;
   address?: string;
+  items?: any;
   tokenId?: string;
   nftId?: number;
 }
