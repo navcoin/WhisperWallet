@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@aguycalled/bitcore-mnemonic": "^1.5.4",
-    "@aguycalled/bitcore-p2p": "^5.0.12",
+    "@aguycalled/bitcore-p2p": "^5.0.13",
     "@arelstone/react-native-swipe-button": "^0.1.0",
     "@eva-design/eva": "^2.1.1",
     "@gorhom/bottom-sheet": "^4.1.5",
