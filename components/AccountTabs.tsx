@@ -1,27 +1,36 @@
 import Tab from './Tab';
 import Content from './Content';
 import {RefreshControl, ScrollView, View} from 'react-native';
+import {useEffect} from 'react';
 import BalanceCard from './BalanceCard';
 import Text from './Text';
 import React, {useCallback, useState} from 'react';
-import {BalanceFragment} from '../constants/Type';
+import {BalanceFragment, Connection_Stats_Enum} from '../constants/Type';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import BottomSheetMenu from './BottomSheetMenu';
 import useWallet from '../hooks/useWallet';
-import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
+import {StyleService, useStyleSheet, useTheme} from '@tsejerome/ui-kitten-components';
 import BottomSheetOptions from './BottomSheetOptions';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {scale, verticalScale} from 'react-native-size-matters';
+import {RootStackParamList} from '../navigation/type';
+import OptionCard from './OptionCard';
+import useTraceUpdate from '../hooks/useTraceUpdates';
 
-const AccountsTab = () => {
+const AccountsTab = (props: {
+  onRefresh: () => Promise<void>;
+  refreshing: boolean;
+}) => {
+  const {onRefresh, refreshing} = props;
   const [selectedTab, setSelectedTab] = useState(0);
   const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
   );
-  const {accounts, tokens, nfts, refreshWallet, connected} = useWallet();
+  const {accounts, tokens, nfts} = useWallet();
   const bottomSheet = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
-  const {navigate} = useNavigation();
+  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+  const theme = useTheme();
 
   const pickDestination = useCallback(
     account_ => {
@@ -145,21 +154,85 @@ const AccountsTab = () => {
     [bottomSheet, pickDestination],
   );
 
-  const [refreshing, setRefreshing] = useState(false);
+  const [accountsContent, setAccountContent] = useState(<></>);
+  const [tokensContent, setTokensContent] = useState(<></>);
+  const [nftsContent, setNftsContent] = useState(<></>);
 
-  const onRefresh = useCallback(async () => {
-    if (
-      !(
-        connected == Connection_Stats_Enum.Connecting ||
-        connected == Connection_Stats_Enum.Bootstrapping ||
-        connected == Connection_Stats_Enum.Syncing
-      )
-    ) {
-      setRefreshing(true);
-      await refreshWallet();
-      setRefreshing(false);
-    }
-  }, []);
+  useEffect(() => {
+    setAccountContent(<>
+      {accounts.map((el, i) => {
+        return (
+          <View style={styles.item} key={i}>
+            <BalanceCard
+              item={{...el, name: el.name + ' account'}}
+              index={i}
+              onPress={() => {
+                setAccount(el);
+                expandMenu(el);
+              }}
+            />
+          </View>
+        );
+      })}
+    </>);
+  }, [accounts])
+
+  useEffect(() => {
+    setTokensContent(<>
+      {tokens.length == 0
+        ? <Text marginBottom={scale(24)} center>No private tokens found</Text>
+        : tokens.map((el, i) => {
+          return (
+            <View style={styles.item} key={i}>
+              <BalanceCard
+                item={{...el, name: el.name}}
+                index={i}
+                onPress={() => {
+                  setAccount(el);
+                  expandMenuToken(el);
+                }}
+              />
+            </View>
+          );
+        })}
+    </>)
+  }, [tokens])
+
+  useEffect(() => {
+    setNftsContent(<>
+      {nfts.length == 0
+        ? <Text center marginBottom={scale(24)}>No private NFTs found</Text>
+        : nfts.map((el, i) => {
+          return (
+            <View style={styles.item} key={i}>
+              <BalanceCard
+                item={{...el, name: el.name}}
+                key={i}
+                index={i}
+                onPress={() => {
+                  setAccount(el);
+                  expandMenuToken(el);
+                }}
+              />
+            </View>
+          );
+        })}
+      <View style={styles.item}>
+        <OptionCard
+          color={theme['color-basic-1200']}
+          key={'add'}
+          index={nfts.length+1}
+          item={{text: 'Create collection'}}
+          selected={''}
+          onPress={() => {
+            
+          }}
+          icon={'add'}
+          cardType={'outline'}
+        />
+      </View>
+    </>)
+  }, [nfts])
 
   return (
     <>
@@ -179,62 +252,15 @@ const AccountsTab = () => {
           />
         }>
         <Content style={{paddingTop: verticalScale(24)}}>
-          {selectedTab == 0 ? (
-            accounts.map((el, i) => {
-              return (
-                <View style={styles.item} key={i}>
-                  <BalanceCard
-                    item={{...el, name: el.name + ' account'}}
-                    index={i}
-                    onPress={() => {
-                      setAccount(el);
-                      expandMenu(el);
-                    }}
-                  />
-                </View>
-              );
-            })
-          ) : selectedTab == 1 ? (
-            <Text marginBottom={16} center>
-              {tokens.length == 0
-                ? 'No private tokens found'
-                : tokens.map((el, i) => {
-                    return (
-                      <View style={styles.item} key={i}>
-                        <BalanceCard
-                          item={{...el, name: el.name}}
-                          index={i}
-                          onPress={() => {
-                            setAccount(el);
-                            expandMenuToken(el);
-                          }}
-                        />
-                      </View>
-                    );
-                  })}
-            </Text>
-          ) : selectedTab == 2 ? (
-            <Text center marginBottom={16}>
-              {nfts.length == 0
-                ? 'No private NFTs found'
-                : nfts.map((el, i) => {
-                    return (
-                      <View style={styles.item} key={i}>
-                        <BalanceCard
-                          item={{...el, name: el.name}}
-                          index={i}
-                          onPress={() => {
-                            setAccount(el);
-                            expandMenuToken(el);
-                          }}
-                        />
-                      </View>
-                    );
-                  })}{' '}
-            </Text>
-          ) : (
-            <></>
-          )}
+          {selectedTab == 0 ?
+            accountsContent
+            : selectedTab == 1 ? (
+              tokensContent
+            ) : selectedTab == 2 ? (
+              nftsContent
+            ) : (
+              <></>
+            )}
         </Content>
       </ScrollView>
     </>
