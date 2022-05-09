@@ -68,7 +68,7 @@ const OptionCard = ({
     if (type === 'outline') {
       Object.assign(styleResult, {
         borderStyle: 'dashed',
-        borderColor: '#FFFFFF99',
+        borderColor: color || '#FFFFFF99',
       });
     }
     return styleResult;

@@ -2,6 +2,7 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {ModalContextValue, ModalContext} from './ModalContext';
 import Modal from '../components/Modals/BaseModal';
+import Toast from 'react-native-toast-message';
 
 export const ModalProvider = (props: any) => {
   const ModalRef = useRef<typeof Modal>(null);
@@ -16,6 +17,7 @@ export const ModalProvider = (props: any) => {
         setChildren(newChildren);
       },
       closeModal: () => {
+        Toast.hide();
         setVisibility(false);
         setChildren(undefined);
       },
