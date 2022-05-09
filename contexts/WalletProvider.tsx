@@ -12,6 +12,7 @@ import RNBootSplash from 'react-native-bootsplash';
 import SQLite from 'react-native-sqlite-2';
 
 import setGlobalVars from 'indexeddbshim/dist/indexeddbshim-noninvasive';
+
 const win = {};
 
 setGlobalVars(win, {win: SQLite});
@@ -22,8 +23,10 @@ const P2pPool = require('@aguycalled/bitcore-p2p').Pool;
 export const WalletProvider = (props: any) => {
   const [p2pPool, setP2pPool] = useState<any>(undefined);
   const [wallet, setWallet] = useState<any>(undefined);
+  const [server, setServer] = useState('');
   const [walletName, setWalletName] = useState('');
   const [walletsList, setWalletsList] = useState([]);
+  const [myTokens, setMyTokens] = useState([]);
   const [walletLibLoaded, setWalletLibLoaded] = useState(false);
   const [network, setNetwork] = useState('livenet');
   const [mnemonic, setMnemonic] = useState('');
@@ -86,37 +89,6 @@ export const WalletProvider = (props: any) => {
   useEffect(() => {
     njs.wallet.Init().then(async () => {
       njs.wallet.WalletFile.SetBackend(win.indexedDB, win.IDBKeyRange);
-
-      setP2pPool(
-        new P2pPool({
-          dnsSeed: false, // prevent seeding with DNS discovered known peers upon connecting
-          listenAddr: true, // prevent new peers being added from addr messages
-          addrs: [
-            // initial peers to connect to
-            {
-              ip: {
-                v4: 'electrum.nav.community',
-              },
-            },
-            {
-              ip: {
-                v4: 'electrum2.nav.community',
-              },
-            },
-            {
-              ip: {
-                v4: 'electrum3.nav.community',
-              },
-            },
-            {
-              ip: {
-                v4: 'electrum4.nav.community',
-              },
-            },
-          ],
-        }),
-      );
-
       setWalletLibLoaded(true);
     });
   }, []);
@@ -163,28 +135,28 @@ export const WalletProvider = (props: any) => {
   }, [njs, network, addresses]);
 
   const newCandidate = useCallback(
-    function (session: string, candidate: any) {
+    async function (session: string, candidate: any) {
       if (wallet && p2pPool) {
-        wallet.AddCandidate(
+        await wallet.AddCandidate(
           candidate,
           p2pPool.network.name == 'livenet' ? 'mainnet' : 'testnet',
         );
-        //wallet.GetCandidates().then((l: any) => console.log(l.length));
       }
     },
     [wallet, p2pPool],
   );
 
   useEffect(() => {
-    if (p2pPool && wallet) {
+    if (p2pPool) {
+      console.log('connecting to p2p');
       p2pPool.on('candidate', newCandidate);
-
-      p2pPool.connect().then(() => {
+      p2pPool.on('peerready', (_: string, server: number) => {
         let sessionId = p2pPool.startSession();
         console.log('started session', sessionId);
-      });
+      })
+      p2pPool.connect();
     }
-  }, [p2pPool, wallet]);
+  }, [p2pPool]);
 
   const parseAccounts = useCallback(() => {
     if (balances?.nav) {
@@ -261,6 +233,8 @@ export const WalletProvider = (props: any) => {
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
           leftElement: <Identicon value={tokenId}></Identicon>,
+          items: {confirmed: balances.nfts[tokenId].confirmed, pending: balances.nfts[tokenId].pending},
+          mine: myTokens.filter(el => el.id == tokenId).length != 0,
           currency: 'NFT',
         });
       }
@@ -284,6 +258,25 @@ export const WalletProvider = (props: any) => {
     parseAccounts();
   }, [balances, addresses]);
 
+  const connectP2P = useCallback(() => {
+    setP2pPool(
+      new P2pPool({
+        dnsSeed: false, // prevent seeding with DNS discovered known peers upon connecting
+        listenAddr: false, // prevent new peers being added from addr messages
+        network: network,
+        maxSize: 1,
+        addrs: [
+          // initial peers to connect to
+          {
+            ip: {
+              v4: server.split(':')[0],
+            },
+          },
+        ],
+      }),
+    );
+  }, [server, network]);
+
   const createWallet = useCallback(
     async (
       name: string,
@@ -298,6 +291,11 @@ export const WalletProvider = (props: any) => {
     ) => {
       if (wallet) {
         wallet.Disconnect();
+      }
+
+      if (p2pPool) {
+        p2pPool.disconnect();
+        setP2pPool(undefined);
       }
 
       const walletFile = new njs.wallet.WalletFile({
@@ -328,12 +326,17 @@ export const WalletProvider = (props: any) => {
         console.log('loaded');
         walletFile.GetBalance().then(setBalances);
         walletFile.GetHistory().then(setHistory);
+        walletFile.GetMyTokens(spendingPassword).then(setMyTokens);
         njs.wallet.WalletFile.ListWallets().then(setWalletsList);
         walletFile.Connect();
         onLoaded();
         setNetwork(walletFile.network);
         setAddresses(await walletFile.GetAllAddresses());
       });
+
+      walletFile.on('new_token', async () => {
+        walletFile.GetMyTokens(spendingPassword).then(setMyTokens);
+      })
 
       walletFile.on('sync_status', (progress: number) => {
         setSyncProgress(progress);
@@ -347,12 +350,20 @@ export const WalletProvider = (props: any) => {
         setConnected(Connection_Stats_Enum.Disconnected);
       });
 
-      walletFile.on('connected', () => {
+      walletFile.on('connected', async (serverName: string) => {
+        setServer(serverName);
+        if ((await walletFile.GetCandidates()).length < 100) {
+          connectP2P();
+        } else {
+          setP2pPool(undefined);
+        }
         setConnected(Connection_Stats_Enum.Connected);
       });
 
       walletFile.on('new_tx', async () => {
-        console.log('new_tx');
+        if (!p2pPool && (await walletFile.GetCandidates()).length < 100) {
+          connectP2P();
+        }
         setBalances(await walletFile.GetBalance());
         setHistory(await walletFile.GetHistory());
         setAddresses(await walletFile.GetAllAddresses());
@@ -422,31 +433,31 @@ export const WalletProvider = (props: any) => {
           let obj =
             from == 'token' || from == 'nft'
               ? await wallet.tokenCreateTransaction(
-                  to,
-                  Math.floor(amount * 1e8),
-                  memo,
-                  password,
-                  tokenId,
-                  tokenNftId,
-                  new Buffer([]),
-                  undefined,
-                  false,
-                  false,
-                  fee,
-                )
+                to,
+                Math.floor(amount * 1e8),
+                memo,
+                password,
+                tokenId,
+                tokenNftId,
+                new Buffer([]),
+                undefined,
+                false,
+                false,
+                fee,
+              )
               : await wallet.xNavCreateTransaction(
-                  to,
-                  Math.floor(amount * 1e8),
-                  memo,
-                  password,
-                  subtractFee,
-                  new Buffer(new Uint8Array(32)),
-                  -1,
-                  new Buffer([]),
-                  undefined,
-                  0,
-                  fee,
-                );
+                to,
+                Math.floor(amount * 1e8),
+                memo,
+                password,
+                subtractFee,
+                new Buffer(new Uint8Array(32)),
+                -1,
+                new Buffer([]),
+                undefined,
+                0,
+                fee,
+              );
           if (!obj) {
             rej("Can't access you wallet keys");
           } else {
@@ -516,14 +527,29 @@ export const WalletProvider = (props: any) => {
   };
 
   const refreshWallet = useCallback(async () => {
-    if (wallet) {
-      try {
-        await wallet.Sync();
-      } catch (e) {
-        console.log(e);
-      }
+    if (wallet &&
+      !(
+        connected == Connection_Stats_Enum.Connecting ||
+        connected == Connection_Stats_Enum.Bootstrapping ||
+        connected == Connection_Stats_Enum.Syncing
+      )
+    ) {
+      await wallet.Sync();
+      setBalances(await wallet.GetBalance());
+      setHistory(await wallet.GetHistory());
+      setAddresses(await wallet.GetAllAddresses());
     }
-  }, [wallet]);
+  }, [wallet, connected]);
+
+  const removeWallet = useCallback(
+    async (name: string) => {
+      if (njs) {
+        await njs.wallet.WalletFile.RemoveWallet(name);
+        njs.wallet.WalletFile.ListWallets().then(setWalletsList);
+      }
+    },
+    [njs],
+  );
 
   const walletContext: WalletContextValue = useMemo(
     () => ({
@@ -552,8 +578,9 @@ export const WalletProvider = (props: any) => {
       nfts,
       updateAccounts,
       bootstrapProgress,
+      removeWallet,
       njs,
-      walletLibLoaded
+      walletLibLoaded,
     }),
     [
       win,
@@ -575,8 +602,10 @@ export const WalletProvider = (props: any) => {
       nfts,
       updateAccounts,
       bootstrapProgress,
+      removeWallet,
       njs,
-      walletLibLoaded
+      walletLibLoaded,
+      refreshWallet
     ],
   );
 
