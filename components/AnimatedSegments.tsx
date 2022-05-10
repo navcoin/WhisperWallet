@@ -204,7 +204,9 @@ export const AnimatedSegments: FC<CircularProgressProps> = ({
       : 360;
 
     let endAngle = endA > 360 ? endA % 360 : endA;
-    if (startAng == endAngle) return '';
+    if (startAng == endAngle) {
+      return '';
+    }
     var start = {
       x: cx - r * Math.cos(startAng * (Math.PI / 180)),
       y: -r * Math.sin(startAng * (Math.PI / 180)) + cy,
@@ -293,31 +295,36 @@ export const AnimatedSegments: FC<CircularProgressProps> = ({
               r * 2
             } 0 a ${r} ${r} 0 1 0 ${-r * 2} 0`}
             stroke={theme['color-patrick-blue-400']}
-            strokeWidth={strokeWidth}></AnimatedPath>
+            strokeWidth={strokeWidth}
+          />
           <AnimatedPath
             style={progressAnimatedStyle}
             animatedProps={progressAnimatedProps}
             stroke={theme['color-nav-pink']}
             strokeWidth={strokeWidth}
-            strokeLinecap={'round'}></AnimatedPath>
+            strokeLinecap={'round'}
+          />
           <AnimatedPath
             style={balanceNavAnimatedStyle}
             animatedProps={balanceNavAnimatedProps}
             stroke={theme['color-nav-pink']}
             strokeWidth={strokeWidth}
-            strokeLinecap={'round'}></AnimatedPath>
+            strokeLinecap={'round'}
+          />
           <AnimatedPath
             style={balanceXnavAnimatedStyle}
             animatedProps={balanceXnavAnimatedProps}
             stroke={theme['color-xnav']}
             strokeWidth={strokeWidth}
-            strokeLinecap={'round'}></AnimatedPath>
+            strokeLinecap={'round'}
+          />
           <AnimatedPath
             style={balanceStakingAnimatedStyle}
             animatedProps={balanceStakingAnimatedProps}
             stroke={theme['color-staking']}
             strokeWidth={strokeWidth}
-            strokeLinecap={'round'}></AnimatedPath>
+            strokeLinecap={'round'}
+          />
         </G>
       </Svg>
     </View>

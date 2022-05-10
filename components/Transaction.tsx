@@ -43,7 +43,7 @@ const Transaction = ({item, index, onPress}: TransactionProps) => {
             styles.iconView,
             {backgroundColor: theme['color-basic-1300']},
           ]}>
-          {!!category?.icon?.path ? (
+          {category?.icon?.path ? (
             <Image source={category?.icon?.path} style={[styles.icon]} />
           ) : (
             <Icon

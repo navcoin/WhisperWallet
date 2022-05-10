@@ -71,7 +71,7 @@ const AddStakingNodeScreen = () => {
             <Input
               autoFocus={true}
               style={[styles.inputField]}
-              value={newNode['name']}
+              value={newNode.name}
               onChangeText={value => {
                 setNewNodeProperty('name', value);
               }}
@@ -83,7 +83,7 @@ const AddStakingNodeScreen = () => {
             </Text>
             <Input
               style={[styles.inputField]}
-              value={newNode['address']}
+              value={newNode.address}
               onChangeText={value => {
                 setNewNodeProperty('address', value);
               }}

@@ -57,16 +57,18 @@ export default memo(
     const defaultColorStyle = (
       cStyle: ButtonColorStyle = ButtonColorStyle.default,
     ) => {
-      if (cStyle === ButtonColorStyle.radical)
+      if (cStyle === ButtonColorStyle.radical) {
         return {
           buttonStyle: {backgroundColor: theme['color-radical-100']},
           textStyle: {},
         };
-      if (cStyle === ButtonColorStyle.white)
+      }
+      if (cStyle === ButtonColorStyle.white) {
         return {
           buttonStyle: {backgroundColor: 'white'},
           textStyle: {color: theme['color-basic-800']},
         };
+      }
       return {buttonStyle: {}, textStyle: {}};
     };
     let [finalizedButtonStyle, setFinalizedStyle] = useState<

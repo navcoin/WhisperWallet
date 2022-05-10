@@ -36,9 +36,7 @@ const ErrorLogsScreen = (props: any) => {
                 selected={''}
                 onPress={() => {
                   openModal(
-                    <ErrorModalContent
-                      focusOneError
-                      errorText={eachError}></ErrorModalContent>,
+                    <ErrorModalContent focusOneError errorText={eachError} />,
                   );
                 }}
                 color={'white'}

@@ -10,7 +10,9 @@ const saveGlobalErrorRecord = async (newError: string) => {
   let globalRecords = await getAsyncStorage(
     AsyncStoredItems.GLOBAL_ERROR_RECORDS,
   );
-  if (!globalRecords) globalRecords = [];
+  if (!globalRecords) {
+    globalRecords = [];
+  }
   const temp = `${new Date().toISOString()} 
   ${newError}`;
   await setAsyncStorage(AsyncStoredItems.GLOBAL_ERROR_RECORDS, [
@@ -21,7 +23,9 @@ const saveGlobalErrorRecord = async (newError: string) => {
 
 const saveTemporaryErrorRecord = async (newError: string) => {
   let tempRecords = await getAsyncStorage(AsyncStoredItems.TEMP_ERROR_RECORDS);
-  if (!tempRecords) tempRecords = [];
+  if (!tempRecords) {
+    tempRecords = [];
+  }
   const temp = `${new Date().toISOString()} 
   ${newError}`;
   await setAsyncStorage(AsyncStoredItems.TEMP_ERROR_RECORDS, [
@@ -47,7 +51,7 @@ const promptErrorToaster = (
         'Something went wrong in the previous session. Tap for more details.',
       autoHide: false,
       onPress: () => {
-        if (!!cb) {
+        if (cb) {
           cb();
         }
       },
@@ -59,7 +63,7 @@ const promptErrorToaster = (
     text1: 'Something went wrong. Tap for more details.',
     autoHide: false,
     onPress: () => {
-      if (!!cb) {
+      if (cb) {
         cb();
       }
     },
@@ -70,7 +74,7 @@ const promptErrorToaster = (
  * Change an Error object to a single string
  */
 const errorTextParser = (e: Error | string, isFatal: boolean) => {
-  let errorMsg: string = ``;
+  let errorMsg: string = '';
   if (typeof e === 'string') {
     errorMsg += `${isFatal ? 'Fatal:' : ''} ${e}`;
   }
@@ -84,11 +88,11 @@ const errorTextParser = (e: Error | string, isFatal: boolean) => {
  * Parsing an array of error string into one single string
  */
 const errorGroupParser = (errors: string[]) => {
-  let result = ``;
+  let result = '';
   errors.map((err, index) => {
     result += `${err}`;
     if (index < errors.length - 1) {
-      result += `\n\n\n`;
+      result += '\n\n\n';
     }
   });
   return result;

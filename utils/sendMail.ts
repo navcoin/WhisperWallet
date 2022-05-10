@@ -1,8 +1,8 @@
 import qs from 'qs';
-import { Linking } from 'react-native';
+import {Linking} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { getAsyncStorage, AsyncStoredItems } from './asyncStorageManager';
-import { errorGroupParser } from './errors';
+import {getAsyncStorage, AsyncStoredItems} from './asyncStorageManager';
+import {errorGroupParser} from './errors';
 
 type Email = string | string[];
 
@@ -16,13 +16,14 @@ const getDeviceInfo = async () => {
   let brand = DeviceInfo.getBrand();
   let systemVersion = DeviceInfo.getSystemVersion();
   let model = DeviceInfo.getModel();
-  return { model, os, brand, systemVersion }
-}
+  return {model, os, brand, systemVersion};
+};
 
 export async function sendErrorCrashEmail(particularError?: string) {
   let deviceInfo = await getDeviceInfo();
-  const tempRecords: string[] = await getAsyncStorage(AsyncStoredItems.TEMP_ERROR_RECORDS)
-
+  const tempRecords: string[] = await getAsyncStorage(
+    AsyncStoredItems.TEMP_ERROR_RECORDS,
+  );
 
   await sendEmail(
     'dev@whisperwallet.net',
@@ -51,7 +52,7 @@ export async function sendEmail(
   body: string,
   options: EmailOptions = {},
 ) {
-  const { cc, bcc } = options;
+  const {cc, bcc} = options;
 
   let url = `mailto:${to}`;
 

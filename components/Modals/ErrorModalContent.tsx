@@ -27,7 +27,9 @@ const ErrorModalContent = (props: {
       text: 'Send report via email',
       onPress: async () => {
         await sendErrorCrashEmail(focusOneError ? errorText : undefined);
-        if (!focusOneError) await cleanTemporaryErrorRecord();
+        if (!focusOneError) {
+          await cleanTemporaryErrorRecord();
+        }
         closeModal();
       },
     },
@@ -41,14 +43,18 @@ const ErrorModalContent = (props: {
           type: 'success',
           text1: 'Error Copied!',
         });
-        if (!focusOneError) await cleanTemporaryErrorRecord();
+        if (!focusOneError) {
+          await cleanTemporaryErrorRecord();
+        }
         closeModal();
       },
     },
     {
       text: 'Close',
       onPress: async () => {
-        if (!focusOneError) await cleanTemporaryErrorRecord();
+        if (!focusOneError) {
+          await cleanTemporaryErrorRecord();
+        }
         closeModal();
       },
     },

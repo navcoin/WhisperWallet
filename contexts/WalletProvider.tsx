@@ -186,7 +186,9 @@ export const WalletProvider = (props: any) => {
 
       for (let address in addresses.staking) {
         let label = addresses.staking[address].label?.name;
-        if (!label) label = address;
+        if (!label) {
+          label = address;
+        }
         // if (!label) label = address.substring(0, 8) + '...';
         accs.push({
           name: label + ' staking',
@@ -216,7 +218,7 @@ export const WalletProvider = (props: any) => {
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
           currency: balances.tokens[tokenId].code,
-          leftElement: <Identicon value={tokenId}></Identicon>,
+          leftElement: <Identicon value={tokenId} />,
         });
       }
 
@@ -233,7 +235,7 @@ export const WalletProvider = (props: any) => {
           type_id: Balance_Types_Enum.Nft,
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
-          leftElement: <Identicon value={tokenId}></Identicon>,
+          leftElement: <Identicon value={tokenId} />,
           items: {
             confirmed: balances.nfts[tokenId].confirmed,
             pending: balances.nfts[tokenId].pending,
