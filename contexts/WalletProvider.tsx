@@ -153,7 +153,7 @@ export const WalletProvider = (props: any) => {
       p2pPool.on('peerready', (_: string, server: number) => {
         let sessionId = p2pPool.startSession();
         console.log('started session', sessionId);
-      })
+      });
       p2pPool.connect();
     }
   }, [p2pPool]);
@@ -234,7 +234,10 @@ export const WalletProvider = (props: any) => {
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
           leftElement: <Identicon value={tokenId}></Identicon>,
-          items: {confirmed: balances.nfts[tokenId].confirmed, pending: balances.nfts[tokenId].pending},
+          items: {
+            confirmed: balances.nfts[tokenId].confirmed,
+            pending: balances.nfts[tokenId].pending,
+          },
           mine: myTokens.filter(el => el.id == tokenId).length != 0,
           currency: 'NFT',
         });
@@ -337,7 +340,7 @@ export const WalletProvider = (props: any) => {
 
       walletFile.on('new_token', async () => {
         walletFile.GetMyTokens(spendingPassword).then(setMyTokens);
-      })
+      });
 
       walletFile.on('sync_status', (progress: number) => {
         setSyncProgress(progress);
@@ -434,31 +437,31 @@ export const WalletProvider = (props: any) => {
           let obj =
             from == 'token' || from == 'nft'
               ? await wallet.tokenCreateTransaction(
-                to,
-                Math.floor(amount * 1e8),
-                memo,
-                password,
-                tokenId,
-                tokenNftId,
-                new Buffer([]),
-                undefined,
-                false,
-                false,
-                fee,
-              )
+                  to,
+                  Math.floor(amount * 1e8),
+                  memo,
+                  password,
+                  tokenId,
+                  tokenNftId,
+                  new Buffer([]),
+                  undefined,
+                  false,
+                  false,
+                  fee,
+                )
               : await wallet.xNavCreateTransaction(
-                to,
-                Math.floor(amount * 1e8),
-                memo,
-                password,
-                subtractFee,
-                new Buffer(new Uint8Array(32)),
-                -1,
-                new Buffer([]),
-                undefined,
-                0,
-                fee,
-              );
+                  to,
+                  Math.floor(amount * 1e8),
+                  memo,
+                  password,
+                  subtractFee,
+                  new Buffer(new Uint8Array(32)),
+                  -1,
+                  new Buffer([]),
+                  undefined,
+                  0,
+                  fee,
+                );
           if (!obj) {
             rej("Can't access you wallet keys");
           } else {
@@ -528,7 +531,8 @@ export const WalletProvider = (props: any) => {
   };
 
   const refreshWallet = useCallback(async () => {
-    if (wallet &&
+    if (
+      wallet &&
       !(
         connected == Connection_Stats_Enum.Connecting ||
         connected == Connection_Stats_Enum.Bootstrapping ||
@@ -606,7 +610,7 @@ export const WalletProvider = (props: any) => {
       removeWallet,
       njs,
       walletLibLoaded,
-      refreshWallet
+      refreshWallet,
     ],
   );
 

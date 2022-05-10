@@ -29,9 +29,9 @@ const CardSelect = ({
   const [selectedOption, setSelectedOption] = useState(defaultOption);
   const styles = useStyleSheet(themedStyles);
   const bottomSheet = useBottomSheet();
-  
+
   useEffect(() => {
-    setSelectedOption(defaultOption)
+    setSelectedOption(defaultOption);
   }, [defaultOption]);
 
   const showOptions = () =>
