@@ -24,7 +24,7 @@ const ErrorModalContent = (props: {
   );
   const buttonOptions = [
     {
-      text: 'Send report via email',
+      text: 'Share report',
       onPress: async () => {
         await sendErrorCrashEmail(focusOneError ? errorText : undefined);
         if (!focusOneError) {

@@ -1,14 +1,9 @@
 import React from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
-import Clipboard from '@react-native-community/clipboard';
-import {scale, verticalScale} from 'react-native-size-matters';
-import Toast from 'react-native-toast-message';
+import {StyleSheet, View} from 'react-native';
+import {scale} from 'react-native-size-matters';
 import {useModal} from '../../hooks/useModal';
-import {cleanTemporaryErrorRecord, errorGroupParser} from '../../utils/errors';
-import {sendErrorCrashEmail} from '../../utils/sendMail';
 import {Button} from '@tsejerome/ui-kitten-components';
 import Text from '../Text';
-import {screenHeight} from '../../utils/layout';
 import {AsyncStoredItems} from '../../utils/asyncStorageManager';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
