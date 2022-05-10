@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {BackHandler, StyleSheet, View} from 'react-native';
+import {BackHandler, StyleSheet, View, Platform} from 'react-native';
 import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 
@@ -8,7 +8,7 @@ import Container from '../components/Container';
 import AnimatedStep from '../components/AnimatedStep';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useWallet from '../hooks/useWallet';
-import LoadingModalContent from '../components/LoadingModalContent';
+import LoadingModalContent from '../components/Modals/LoadingModalContent';
 import {IsValidMnemonic} from '../utils/Mnemonic';
 import OptionCard from '../components/OptionCard';
 import {NetworkTypes, WalletTypes} from '../constants/Type';
@@ -18,7 +18,7 @@ import {scale, verticalScale} from 'react-native-size-matters';
 import useSecurity from '../hooks/useSecurity';
 import {useModal} from '../hooks/useModal';
 import {errorTextParser, promptErrorToaster} from '../utils/errors';
-import ErrorModalContent from '../components/ErrorModalContent';
+import ErrorModalContent from '../components/Modals/ErrorModalContent';
 
 const ImportWallet = () => {
   const {navigate, goBack} = useNavigation();
@@ -106,10 +106,15 @@ const ImportWallet = () => {
                 styles.layout,
               ]}>
               <Input
+                autoCapitalize={'none'}
                 multiline={true}
+                keyboardType={
+                  // Platform.OS === 'ios' ? 'default' : 'visible-password'
+                  Platform.OS === 'ios' ? 'default' : 'email-address'
+                }
                 numberOfLines={3}
                 autoFocus={true}
-                style={styles.flex1}
+                style={[styles.flex1, {height: scale(100), color: 'black'}]}
                 value={mnemonic}
                 onChangeText={(m: string) => {
                   setMnemonic(m.toLowerCase());

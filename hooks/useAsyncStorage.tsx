@@ -18,7 +18,7 @@ function useAsyncStorageHook(key: string, initialValue: any) {
         return JSON.parse(value);
       })
       .then(setStoredValue);
-  }, [key, initialValue]);
+  }, [key, storedValue, initialValue]);
   const setValue = (value: any) => {
     const valueToStore = value instanceof Function ? value(storedValue) : value;
     setStoredValue(valueToStore);

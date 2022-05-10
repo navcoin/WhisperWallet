@@ -29,7 +29,6 @@ const BottomSheetMenu = (props: any) => {
             id={el.text}
             key={el.text}
             icon={el.icon}
-            color={'white'}
             onPress={() => {
               if (el.onPress) {
                 el.onPress();

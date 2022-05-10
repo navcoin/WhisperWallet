@@ -117,6 +117,7 @@ const DestinationComponent = (props: any) => {
           {toType?.destination_id == Destination_Types_Enum.Address ? (
             <View style={styles.cardNumber}>
               <Input
+                autoFocus
                 ref={destinationInputRef}
                 keyboardType={'ascii-capable'}
                 status={'transparent'}

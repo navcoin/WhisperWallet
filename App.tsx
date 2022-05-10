@@ -39,12 +39,11 @@ import {
 } from './utils/errors';
 import ModalProvider from './contexts/ModalProvider';
 import {useModal} from './hooks/useModal';
-import ErrorModalContent from './components/ErrorModalContent';
+import ErrorModalContent from './components/Modals/ErrorModalContent';
 import {AsyncStoredItems} from './utils/asyncStorageManager';
 
 const App = (props: { theme: string }) => {
   const {theme} = props;
-  const [loaded, setLoaded] = useState(false);
   const {openModal, closeModal} = useModal();
 
   const [promptPreviousError, setPromptPreviousError] = useAsyncStorage(
@@ -81,13 +80,6 @@ const App = (props: { theme: string }) => {
       openModal(<ErrorModalContent errorText={errorMsg}></ErrorModalContent>);
     });
   };
-  setJSExceptionHandler(JSLeveErrorPrompt, true);
-
-  setNativeExceptionHandler(async errorString => {
-    await saveGlobalErrorRecord(errorTextParser(errorString, true));
-    await saveTemporaryErrorRecord(errorTextParser(errorString, true));
-    await AsyncStorage.setItem('crashErrorRecords', errorString);
-  });
 
   useEffect(() => {
     AsyncStorage.getItem('shownWelcome').then(itemValue => {
@@ -100,6 +92,14 @@ const App = (props: { theme: string }) => {
   }, []);
 
   useEffect(() => {
+    setJSExceptionHandler(JSLeveErrorPrompt, true);
+
+    setNativeExceptionHandler(async errorString => {
+      await saveGlobalErrorRecord(errorTextParser(errorString, true));
+      await saveTemporaryErrorRecord(errorTextParser(errorString, true));
+      await AsyncStorage.setItem('crashErrorRecords', errorString);
+    });
+
     checkIfAppHadPreviousNativeErrorHandler();
   }, []);
 

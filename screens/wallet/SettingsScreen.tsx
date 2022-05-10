@@ -7,7 +7,7 @@ import {Animation_Types_Enum} from '../../constants/Type';
 import OptionCard from '../../components/OptionCard';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
-import LoadingModalContent from '../../components/LoadingModalContent';
+import LoadingModalContent from '../../components/Modals/LoadingModalContent';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {screenHeight} from '../../utils/layout';
@@ -18,6 +18,7 @@ import {useBottomSheet} from '../../hooks/useBottomSheet';
 import BottomSheetOptions from '../../components/BottomSheetOptions';
 import {useModal} from '../../hooks/useModal';
 import { useTheme } from '@tsejerome/ui-kitten-components';
+import DeleteWalletModalContent from '../../components/Modals/DeleteWalletModalContent';
 
 interface SettingsItem {
   title: string;
@@ -31,7 +32,7 @@ interface SettingsItem {
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const {readPassword} = useSecurity();
   const [loading, setLoading] = useState<string | undefined>(undefined);
-  const {walletName, wallet, createWallet, njs} = useWallet();
+  const {walletName, wallet, createWallet, njs, removeWallet} = useWallet();
   const bottomSheet = useBottomSheet();
   const {changeMode, supportedType, currentAuthenticationType} = useSecurity();
   const [authTypes, setAuthTypes] = useState<any>([]);
@@ -80,56 +81,14 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   );
   const {openModal, closeModal} = useModal();
 
-  const biometricsAlert = () => {
-    let title = 'Your wallet is NOT locked when WhisperWallet goes background.';
-    if (lockAfterBackground === 'true') {
-      title =
-        'Your wallet is currently locked when WhisperWallet goes background.';
-    }
-    Alert.alert(
-      title,
-      'Do you want to automatically lock the wallet when it goes to background?',
-      [
-        {
-          text: 'Yes',
-          onPress: () => {
-            setLockAfterBackground('true');
-          },
-        },
-        {
-          text: 'No',
-          onPress: () => {
-            setLockAfterBackground('false');
-          },
-        },
-        {
-          text: 'Cancel',
-          onPress: () => {},
-        },
-      ],
-    );
-  };
-
   const disconnectWallet = async (deleteWallet: boolean = false) => {
     wallet.Disconnect();
     wallet.CloseDb();
     if (deleteWallet) {
-      await njs.wallet.WalletFile.RemoveWallet(walletName);
+      await removeWallet(walletName);
     }
     navigate('Intro');
-  };
-
-  const deleteWallet = () => {
-    openModal(
-      <DeleteWalletModalContent
-        walletName={walletName}
-        deleteWallet={() => {
-          readPassword().then((password: string) => {
-            disconnectWallet(true);
-          });
-        }}
-      />,
-    );
+    setLoading(undefined);
   };
 
   const resyncWallet = () => {
@@ -159,6 +118,20 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   };
 
   const leaveWallet = () => disconnectWallet();
+
+  const deleteWallet = () => {
+    openModal(
+      <DeleteWalletModalContent
+        walletName={walletName}
+        deleteWallet={() => {
+          readPassword().then((password: string) => {
+            setLoading('Deleting...');
+            disconnectWallet(true);
+          });
+        }}
+      />,
+    );
+  };
 
   const items: SettingsItem[] = [
     {

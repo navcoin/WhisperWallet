@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import Container from '../components/Container';
 import useWallet from '../hooks/useWallet';
-import LoadingModalContent from '../components/LoadingModalContent';
+import LoadingModalContent from '../components/Modals/LoadingModalContent';
 import OptionCard from '../components/OptionCard';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {layoutStyles} from '../utils/layout';
@@ -12,7 +12,7 @@ import TopNavigationComponent from '../components/TopNavigation';
 import useSecurity from '../hooks/useSecurity';
 import {useModal} from '../hooks/useModal';
 import {errorTextParser, promptErrorToaster} from '../utils/errors';
-import ErrorModalContent from '../components/ErrorModalContent';
+import ErrorModalContent from '../components/Modals/ErrorModalContent';
 
 const OpenWallet = () => {
   const {navigate} = useNavigation();

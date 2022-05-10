@@ -15,7 +15,6 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {RootStackParamList} from '../navigation/type';
 import OptionCard from './OptionCard';
-import useTraceUpdate from '../hooks/useTraceUpdates';
 
 const AccountsTab = (props: {
   onRefresh: () => Promise<void>;

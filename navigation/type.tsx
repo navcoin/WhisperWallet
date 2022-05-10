@@ -19,13 +19,18 @@ export type ScreenProps<T extends keyof AllParamList> = {
   navigation: ScreenNavigationProp<T>;
 };
 
+export type AskPinScreenProps = {
+  setManualPin: any;
+  askManualPin: any;
+  pinLength: number;
+};
 export type RootStackParamList = {
   Intro: undefined;
   CreateNewWallet: undefined;
   OnBoarding: undefined;
   OpenWallet: undefined;
   ImportWallet: undefined;
-  AskPinScreen: undefined;
+  AskPinScreen: AskPinScreenProps;
   Wallet: NavigatorScreenParams<WalletParamList>;
 };
 

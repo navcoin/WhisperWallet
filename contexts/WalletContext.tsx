@@ -28,6 +28,7 @@ export interface WalletContextValue {
   updateAccounts: () => void;
   bootstrapProgress: number;
   firstSyncCompleted: boolean;
+  removeWallet: (name: string) => Promise<void>;
   njs: any;
   walletLibLoaded: boolean;
 }
