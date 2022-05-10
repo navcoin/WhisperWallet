@@ -60,7 +60,7 @@ const CardSelect = ({
             </Text>
             <Text
               adjustsFontSizeToFit
-              numberOfLines={3}
+              numberOfLines={1}
               style={{flex: 1}}
               category="headline">
               {selectedOption}

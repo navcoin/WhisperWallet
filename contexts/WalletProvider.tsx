@@ -187,9 +187,8 @@ export const WalletProvider = (props: any) => {
       for (let address in addresses.staking) {
         let label = addresses.staking[address].label?.name;
         if (!label) {
-          label = address;
+          label = address.substring(0, 8) + '...';
         }
-        // if (!label) label = address.substring(0, 8) + '...';
         accs.push({
           name: label + ' staking',
           amount: (addresses.staking[address].staking.confirmed || 0) / 1e8,
