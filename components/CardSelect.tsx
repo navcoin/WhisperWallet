@@ -55,8 +55,16 @@ const CardSelect = ({
         }}>
         <Layout level="2" style={styles.card}>
           <View style={styles.row}>
-            <Text category="headline">{text}</Text>
-            <Text category="headline">{selectedOption}</Text>
+            <Text style={{marginRight: scale(6)}} category="headline">
+              {text}
+            </Text>
+            <Text
+              adjustsFontSizeToFit
+              numberOfLines={3}
+              style={{flex: 1}}
+              category="headline">
+              {selectedOption}
+            </Text>
           </View>
         </Layout>
       </TouchableOpacity>
@@ -78,6 +86,7 @@ const themedStyles = StyleService.create({
     marginBottom: verticalScale(24),
   },
   row: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
