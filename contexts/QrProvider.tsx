@@ -30,15 +30,20 @@ export const QrProvider = (props: any) => {
   );
 
   const checkPermissions = () => {
-    request(Platform.OS === 'ios' ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.CAMERA).then((result) => {
+    request(
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.CAMERA
+        : PERMISSIONS.ANDROID.CAMERA,
+    ).then(result => {
       setCameraPermision(result == RESULTS.GRANTED);
     });
-  }
+  };
 
   useEffect(() => {
-    if (showQr)
+    if (showQr) {
       checkPermissions();
-  }, [showQr])
+    }
+  }, [showQr]);
 
   return (
     <QrContext.Provider value={qrContext}>
@@ -46,8 +51,9 @@ export const QrProvider = (props: any) => {
         <QRCodeScanner
           onRead={data => {
             let toParse = data.data;
-            if (data.data?.substring(0, 8) === 'navcoin:')
+            if (data.data?.substring(0, 8) === 'navcoin:') {
               toParse = data.data.split(':')[1];
+            }
             if (bitcore.Address.isValid(toParse)) {
               setTo(toParse);
               setShowQr(false);

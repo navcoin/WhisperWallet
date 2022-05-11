@@ -2,10 +2,10 @@ import React from 'react';
 import {Button, Layout, LayoutProps} from '@tsejerome/ui-kitten-components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useSecurity from '../hooks/useSecurity';
-import { SecurityAuthenticationTypes } from '../contexts/SecurityContext';
-import { BlurView } from '@react-native-community/blur';
-import { StyleSheet, View } from 'react-native';
-import { scale } from 'react-native-size-matters';
+import {SecurityAuthenticationTypes} from '../contexts/SecurityContext';
+import {BlurView} from '@react-native-community/blur';
+import {StyleSheet, View} from 'react-native';
+import {scale} from 'react-native-size-matters';
 
 interface ContainerProps extends LayoutProps {
   useSafeArea?: boolean;
@@ -19,7 +19,12 @@ const Container: React.FC<ContainerProps> = ({
   ...props
 }) => {
   const {top, bottom} = useSafeAreaInsets();
-  const {lockedScreen, setLockedScreen, currentAuthenticationType, readPassword} = useSecurity();
+  const {
+    lockedScreen,
+    setLockedScreen,
+    currentAuthenticationType,
+    readPassword,
+  } = useSecurity();
 
   return (
     <Layout
@@ -30,30 +35,36 @@ const Container: React.FC<ContainerProps> = ({
         style,
       ]}>
       {children}
-        {lockedScreen && !props.doNotLock
-            && (
-                <BlurView
-                    style={{...StyleSheet.absoluteFillObject}}
-                    blurType="dark"
-                    blurAmount={10}
-                    reducedTransparencyFallbackColor="#1f2933">
-                    <View style={styles.contentContainer}>
-                        {!(currentAuthenticationType == SecurityAuthenticationTypes.MANUAL_4 ||
-                            currentAuthenticationType == SecurityAuthenticationTypes.MANUAL)
-                            &&
-                            <Button
-                            style={{paddingHorizontal: scale(20)}}
-                            children={"Tap to unlock"}
-                            status="primary-whisper" onPress={() => {
-                            readPassword().then(() => {
-                                setLockedScreen(false);
-                            }).catch((e) => {
-                                setLockedScreen(true);
-                            })
-                        }}></Button>}
-                    </View>
-                </BlurView>
+      {lockedScreen && !props.doNotLock && (
+        <BlurView
+          style={{...StyleSheet.absoluteFillObject}}
+          blurType="dark"
+          blurAmount={10}
+          reducedTransparencyFallbackColor="#1f2933">
+          <View style={styles.contentContainer}>
+            {!(
+              currentAuthenticationType ==
+                SecurityAuthenticationTypes.MANUAL_4 ||
+              currentAuthenticationType == SecurityAuthenticationTypes.MANUAL
+            ) && (
+              <Button
+                style={{paddingHorizontal: scale(20)}}
+                children={'Tap to unlock'}
+                status="primary-whisper"
+                onPress={() => {
+                  readPassword()
+                    .then(() => {
+                      setLockedScreen(false);
+                    })
+                    .catch(e => {
+                      setLockedScreen(true);
+                    });
+                }}
+              />
             )}
+          </View>
+        </BlurView>
+      )}
     </Layout>
   );
 };
@@ -61,12 +72,12 @@ const Container: React.FC<ContainerProps> = ({
 export default Container;
 
 const styles = StyleSheet.create({
-    contentContainer: {
-        backgroundColor: 'transparent',
-        flex: 1,
-        paddingTop: 8,
-        padding: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+  contentContainer: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingTop: 8,
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

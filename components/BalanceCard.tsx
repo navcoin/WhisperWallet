@@ -63,9 +63,11 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
               />
             )}
           </View>
-          <View>
+          <View style={styles.textContent}>
             <View style={{flexDirection: 'row'}}>
-              <Text category="headline">{name + ' '}</Text>
+              <Text adjustsFontSizeToFit numberOfLines={2} category="headline">
+                {name + ' '}
+              </Text>
               {mine && <Text style={{color:theme['color-primary-100']}} category={"caption2"}>MINE</Text>}
             </View>
             {connected === Connection_Stats_Enum.Connecting &&
@@ -75,6 +77,7 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
               <Text style={{fontSize: scale(13)}}>Synchronizing...</Text>
             ) : (
               <CurrencyText
+                adjustsFontSizeToFit
                 category="footnote"
                 children={(amount + pending_amount).toFixed(8)}
                 marginTop={4}
@@ -107,6 +110,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  textContent: {
+    flex: 1,
+    paddingRight: scale(16),
+  },
+
   content: {
     flexDirection: 'row',
     alignItems: 'center',

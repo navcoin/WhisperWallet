@@ -8,20 +8,23 @@ import {useModal} from '../../hooks/useModal';
 const Modal = (props: any) => {
   const {children, visible} = props;
   const {isVisible} = useModal();
-  return (isVisible ?
-      <RawModal
-        transparent={true}
-        statusBarTranslucent={true}
-        animationType={'fade'}
-        visible={visible}>
-        <BlurView
-          style={styles.absolute}
-          blurType="dark"
-          blurAmount={50}
-          reducedTransparencyFallbackColor="#1F2933"></BlurView>
-        <Toast config={toastConfig}/>
-        <View style={styles.contentContainer}>{children || <></>}</View>
-      </RawModal> : <></>
+  return isVisible ? (
+    <RawModal
+      transparent={true}
+      statusBarTranslucent={true}
+      animationType={'fade'}
+      visible={visible}>
+      <BlurView
+        style={styles.absolute}
+        blurType="dark"
+        blurAmount={50}
+        reducedTransparencyFallbackColor="#1F2933"
+      />
+      <Toast config={toastConfig} />
+      <View style={styles.contentContainer}>{children || <></>}</View>
+    </RawModal>
+  ) : (
+    <></>
   );
 };
 

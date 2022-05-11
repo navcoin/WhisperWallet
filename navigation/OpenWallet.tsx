@@ -70,10 +70,7 @@ const OpenWallet = () => {
                         setLoading(undefined);
                         promptErrorToaster(e.toString(), false, false, () => {
                           const errorMsg = errorTextParser(e.toString(), false);
-                          openModal(
-                            <ErrorModalContent
-                              errorText={errorMsg}></ErrorModalContent>,
-                          );
+                          openModal(<ErrorModalContent errorText={errorMsg} />);
                         });
                       });
                   }}
@@ -136,8 +133,7 @@ const styles = StyleSheet.create({
     padding: 16,
     width: 120,
   },
-  animatedStep: {
-  },
+  animatedStep: {},
   layout: {
     flexDirection: 'row',
     marginBottom: 24,

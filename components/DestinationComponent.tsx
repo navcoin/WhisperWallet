@@ -47,9 +47,12 @@ const DestinationComponent = (props: any) => {
       );
       if (props.setTo) {
         props.setTo(
-          parsedAddresses.filter(el => el.type_id == toType?.destination_id &&
-            (!toType?.address || (toType?.address && el.stakingAddress == toType?.address)))[0]
-            ?.address,
+          parsedAddresses.filter(
+            el =>
+              el.type_id == toType?.destination_id &&
+              (!toType?.address ||
+                (toType?.address && el.stakingAddress == toType?.address)),
+          )[0]?.address,
         );
       }
     } else {

@@ -24,12 +24,17 @@ const AddressScreen = (props: any) => {
 
   useEffect(() => {
     setAddress(
-      parsedAddresses.sort((a,b) => {return a.used-b.used}).filter(
-        el =>
-          el.type_id == addressType.destination_id &&
-          (!addressType.address ||
-            (addressType.address && addressType.address == el.stakingAddress)),
-      )[0]?.address,
+      parsedAddresses
+        .sort((a, b) => {
+          return a.used - b.used;
+        })
+        .filter(
+          el =>
+            el.type_id == addressType.destination_id &&
+            (!addressType.address ||
+              (addressType.address &&
+                addressType.address == el.stakingAddress)),
+        )[0]?.address,
     );
   }, [addressType, parsedAddresses]);
 

@@ -48,7 +48,7 @@ const OptionCard = ({
   animationType = Animation_Types_Enum.SlideInRight,
   cardType = 'fill',
   leftElement,
-  rightElement
+  rightElement,
 }: OptionProps) => {
   const theme = useTheme();
 
@@ -96,12 +96,14 @@ const OptionCard = ({
             )}
           </View>
           <Text
-            numberOfLines={3}
+            adjustsFontSizeToFit
             style={[styles.content, {color: color || 'white'}]}
             category="headline">
             {text ? text : ''}
           </Text>
-          {rightElement ? rightElement : iconRight ? (
+          {rightElement ? (
+            rightElement
+          ) : iconRight ? (
             <View style={[styles.iconWrapper, styles.rightIconWrapper]}>
               <TouchableOpacity
                 style={[styles.rightIconTouchables]}
