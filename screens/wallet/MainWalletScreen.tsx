@@ -53,60 +53,58 @@ const MainWalletScreen = () => {
   }, [connected]);
 
   return (
-    <BottomSheetProvider>
-      <Container style={styles.container}>
-        <Layout style={styles.topTab}>
-          <View>
+    <Container style={styles.container}>
+      <Layout style={styles.topTab}>
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              left: 0,
+            }}>
             <View
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                left: 0,
-              }}>
-              <View
-                style={{
-                  width: scale(8),
-                  borderRadius: scale(4),
-                  marginLeft: scale(12),
-                  height: scale(8),
-                  backgroundColor: dotColor,
-                  alignSelf: 'center',
-                }}
-              />
-              <Text
-                style={{
-                  alignSelf: 'center',
-                  marginLeft: scale(12),
-                }}
-                category={'caption1'}>
-                {connected}
-              </Text>
-            </View>
+                width: scale(8),
+                borderRadius: scale(4),
+                marginLeft: scale(12),
+                height: scale(8),
+                backgroundColor: dotColor,
+                alignSelf: 'center',
+              }}
+            />
+            <Text
+              style={{
+                alignSelf: 'center',
+                marginLeft: scale(12),
+              }}
+              category={'caption1'}>
+              {connected}
+            </Text>
           </View>
-          <View style={[styles.iconGrp]}>
-            <TouchableWithoutFeedback
-              style={{padding: scale(12)}}
-              onPress={() => {
-                refreshWallet();
-              }}>
-              <Icon pack="assets" name={'refresh'} style={[styles.icon]} />
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback
-              style={{padding: scale(12)}}
-              onPress={() => {
-                navigate('Wallet', {
-                  screen: 'SettingsScreen',
-                });
-              }}>
-              <Icon pack="assets" name={'menuBtn'} style={[styles.icon]} />
-            </TouchableWithoutFeedback>
-          </View>
-        </Layout>
-        <BalanceCircle />
-        <AccountsTab refreshing={refreshing} onRefresh={refreshWallet} />
-      </Container>
-    </BottomSheetProvider>
+        </View>
+        <View style={[styles.iconGrp]}>
+          <TouchableWithoutFeedback
+            style={{padding: scale(12)}}
+            onPress={() => {
+              refreshWallet();
+            }}>
+            <Icon pack="assets" name={'refresh'} style={[styles.icon]}/>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            style={{padding: scale(12)}}
+            onPress={() => {
+              navigate('Wallet', {
+                screen: 'SettingsScreen',
+              });
+            }}>
+            <Icon pack="assets" name={'menuBtn'} style={[styles.icon]}/>
+          </TouchableWithoutFeedback>
+        </View>
+      </Layout>
+      <BalanceCircle/>
+      <AccountsTab refreshing={refreshing} onRefresh={refreshWallet}/>
+    </Container>
   );
 };
 

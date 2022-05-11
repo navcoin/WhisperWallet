@@ -9,7 +9,7 @@ import {BalanceFragment, Connection_Stats_Enum} from '../constants/Type';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import BottomSheetMenu from './BottomSheetMenu';
 import useWallet from '../hooks/useWallet';
-import {StyleService, useStyleSheet, useTheme} from '@tsejerome/ui-kitten-components';
+import {Button, StyleService, useStyleSheet, useTheme} from '@tsejerome/ui-kitten-components';
 import BottomSheetOptions from './BottomSheetOptions';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -150,7 +150,50 @@ const AccountsTab = (props: {
         />,
       );
     },
-    [bottomSheet, pickDestination],
+    [bottomSheet],
+  );
+
+  const expandMenuNft = useCallback(
+    account_ => {
+      bottomSheet.expand(
+        <BottomSheetMenu
+          title={account_.name}
+          options={[
+            {
+              text: 'Open collection',
+              icon: 'image',
+              navigate: {
+                screen: 'CollectionScreen',
+                params: {
+                  collection: account_,
+                },
+              },
+            },
+            {
+              text: 'View address to receive',
+              icon: 'download',
+              navigate: {
+                screen: 'AddressScreen',
+                params: {
+                  from: account_,
+                },
+              },
+            },
+            {
+              text: 'Transaction history',
+              icon: 'suitcase',
+              navigate: {
+                screen: 'HistoryScreen',
+                params: {
+                  filter: account_,
+                },
+              },
+            },
+          ]}
+        />,
+      );
+    },
+    [bottomSheet],
   );
 
   const [accountsContent, setAccountContent] = useState(<></>);
@@ -210,7 +253,7 @@ const AccountsTab = (props: {
                 index={i}
                 onPress={() => {
                   setAccount(el);
-                  expandMenuToken(el);
+                  expandMenuNft(el);
                 }}
               />
             </View>
@@ -224,7 +267,9 @@ const AccountsTab = (props: {
           item={{text: 'Create collection'}}
           selected={''}
           onPress={() => {
-            
+            navigate('Wallet', {
+              screen: 'CreateNftCollectionScreen'
+            });
           }}
           icon={'add'}
           cardType={'outline'}

@@ -17,6 +17,8 @@ import AddStakingNodeScreen from './wallet/AddStakingNodeScreen';
 import BottomSheetProvider from '../contexts/BottomSheetProvider';
 import ErrorLogsScreen from './wallet/ErrorLogsScreen';
 import {useTheme} from '@tsejerome/ui-kitten-components';
+import CreateNftCollectionScreen from './wallet/CreateNftCollectionScreen';
+import CollectionScreen from './wallet/CollectionScreen';
 
 const Stack = createStackNavigator<WalletParamList>();
 
@@ -42,6 +44,7 @@ const Wallet = ({navigation}) => {
             headerShown: false,
           }}
           initialRouteName={'MainWalletScreen'}>
+
           <Stack.Screen
             name={'MainWalletScreen'}
             component={MainWalletScreen}
@@ -50,23 +53,26 @@ const Wallet = ({navigation}) => {
               focus: _onFocus,
             }}
           />
-          <Stack.Screen name={'SendToScreen'} component={SendToScreen} />
-          <Stack.Screen name={'AddressScreen'} component={AddressScreen} />
-          <Stack.Screen name={'HistoryScreen'} component={HistoryScreen} />
-          <Stack.Screen name={'ViewTxScreen'} component={ViewTxScreen} />
-          <Stack.Screen name={'SettingsScreen'} component={SettingsScreen} />
-          <Stack.Screen name={'MnemonicScreen'} component={MnemonicScreen} />
+          <Stack.Screen name={'SendToScreen'} component={SendToScreen}/>
+          <Stack.Screen name={'AddressScreen'} component={AddressScreen}/>
+          <Stack.Screen name={'HistoryScreen'} component={HistoryScreen}/>
+          <Stack.Screen name={'ViewTxScreen'} component={ViewTxScreen}/>
+          <Stack.Screen name={'SettingsScreen'} component={SettingsScreen}/>
+          <Stack.Screen name={'MnemonicScreen'} component={MnemonicScreen}/>
           <Stack.Screen
             name={'StakingNodeScreen'}
             component={StakingNodeScreen}
           />
-          <Stack.Screen name={'ServersScreen'} component={ServersScreen} />
-          <Stack.Screen name={'AddServerScreen'} component={AddServerScreen} />
-          <Stack.Screen name={'ErrorLogsScreen'} component={ErrorLogsScreen} />
+          <Stack.Screen name={'ServersScreen'} component={ServersScreen}/>
+          <Stack.Screen name={'AddServerScreen'} component={AddServerScreen}/>
+          <Stack.Screen name={'ErrorLogsScreen'} component={ErrorLogsScreen}/>
+          <Stack.Screen name={'CreateNftCollectionScreen'} component={CreateNftCollectionScreen}/>
+          <Stack.Screen name={'CollectionScreen'} component={CollectionScreen}/>
           <Stack.Screen
             name={'AddStakingNodeScreen'}
             component={AddStakingNodeScreen}
           />
+
         </Stack.Navigator>
       </BottomSheetProvider>
     </View>

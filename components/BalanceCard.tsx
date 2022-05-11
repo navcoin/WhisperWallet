@@ -26,7 +26,7 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
   const theme = useTheme();
   const {connected, firstSyncCompleted} = useWallet();
 
-  const {name, amount, pending_amount, type_id, currency, tokenId} = item;
+  const {name, amount, pending_amount, type_id, currency, tokenId, mine} = item;
 
   return (
     <AnimatedAppearance type={Animation_Types_Enum.SlideInRight} index={index}>
@@ -64,7 +64,10 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
             )}
           </View>
           <View>
-            <Text category="headline">{name}</Text>
+            <View style={{flexDirection: 'row'}}>
+              <Text category="headline">{name + ' '}</Text>
+              {mine && <Text style={{color:theme['color-primary-100']}} category={"caption2"}>MINE</Text>}
+            </View>
             {connected === Connection_Stats_Enum.Connecting &&
             !firstSyncCompleted ? (
               <Text style={{fontSize: scale(13)}}>Connecting...</Text>

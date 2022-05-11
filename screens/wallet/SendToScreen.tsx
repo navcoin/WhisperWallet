@@ -104,184 +104,182 @@ const SendToScreen = (props: any) => {
   }, [amountInString, currentAmount]);
 
   return (
-    <BottomSheetProvider>
-      <Container useSafeArea>
-        <QrProvider>
-          <DialogInput
-            isDialogVisible={isMemoDialogVisible}
-            title={'Encrypted Memo'}
-            message={
-              'The following message will be encrypted and attached to the transaction. Only the receiver can see it.'
-            }
-            hintInput={'Message'}
-            submitInput={(inputText: string) => {
-              setMemo(inputText);
-              showMemoDialog(false);
-            }}
-            closeDialog={() => {
-              showMemoDialog(false);
-            }}
-          />
-          <TopNavigationComponent
-            title={
-              'Send ' +
-              (from?.type_id == Balance_Types_Enum.PrivateToken
-                ? 'tokens'
-                : from?.type_id == Balance_Types_Enum.Nft
+    <Container useSafeArea>
+      <QrProvider>
+        <DialogInput
+          isDialogVisible={isMemoDialogVisible}
+          title={'Encrypted Memo'}
+          message={
+            'The following message will be encrypted and attached to the transaction. Only the receiver can see it.'
+          }
+          hintInput={'Message'}
+          submitInput={(inputText: string) => {
+            setMemo(inputText);
+            showMemoDialog(false);
+          }}
+          closeDialog={() => {
+            showMemoDialog(false);
+          }}
+        />
+        <TopNavigationComponent
+          title={
+            'Send ' +
+            (from?.type_id == Balance_Types_Enum.PrivateToken
+              ? 'tokens'
+              : from?.type_id == Balance_Types_Enum.Nft
                 ? 'nfts'
                 : 'coins')
-            }
-          />
-          <Content contentContainerStyle={styles.contentContainerStyle}>
-            <CardSelect
-              options={sources.map(el => {
-                return {
-                  ...el,
-                  text:
-                    el.name +
-                    ' account (' +
-                    el.spendable_amount +
-                    ' ' +
-                    el.currency +
-                    ')',
-                };
-              })}
-              text={'From'}
-              defaultOption={(() => {
-                let el = sources?.filter(
-                  el =>
-                    el.type_id == from?.type_id &&
-                    (!from.address ||
-                      (from.address && el.address == from.address)),
-                )[0];
-                if (!el) {
-                  return '';
-                }
-                return (
+          }
+        />
+        <Content contentContainerStyle={styles.contentContainerStyle}>
+          <CardSelect
+            options={sources.map(el => {
+              return {
+                ...el,
+                text:
                   el.name +
                   ' account (' +
                   el.spendable_amount +
                   ' ' +
                   el.currency +
-                  ')'
-                );
-              })()}
-              onSelect={el => {
-                setFrom(el);
-              }}
-            />
+                  ')',
+              };
+            })}
+            text={'From'}
+            defaultOption={(() => {
+              let el = sources?.filter(
+                el =>
+                  el.type_id == from?.type_id &&
+                  (!from.address ||
+                    (from.address && el.address == from.address)),
+              )[0];
+              if (!el) {
+                return '';
+              }
+              return (
+                el.name +
+                ' account (' +
+                el.spendable_amount +
+                ' ' +
+                el.currency +
+                ')'
+              );
+            })()}
+            onSelect={el => {
+              setFrom(el);
+            }}
+          />
 
-            <DestinationComponent
-              setTo={setTo}
-              from={from}
-              toType={toType}
-              setToType={setToType}
-            />
+          <DestinationComponent
+            setTo={setTo}
+            from={from}
+            toType={toType}
+            setToType={setToType}
+          />
 
-            {showMemo && (
-              <View>
-                <TouchableOpacity
-                  onPress={() => {
-                    showMemoDialog(true);
-                  }}
-                  style={{marginHorizontal: scale(12), flexDirection: 'row'}}>
-                  {memo ? (
-                    <>
-                      <Text
-                        category={'headline'}
-                        style={{paddingRight: scale(12)}}>
-                        Encrypted memo:
-                      </Text>
-                      <Text
-                        category={'headline'}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                        style={{flex: 1}}>
-                        {memo}
-                      </Text>
-                    </>
-                  ) : (
-                    <>
-                      <Icon
-                        pack={'assets'}
-                        name={'add'}
-                        style={{
-                          tintColor: 'white',
-                          width: scale(24),
-                          height: scale(24),
-                          marginRight: scale(24),
-                        }}
-                      />
-                      <Text>Add an encrypted memo</Text>
-                    </>
-                  )}
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {from?.type_id == Balance_Types_Enum.Nft ? (
-              <></>
-            ) : (
+          {showMemo && (
+            <View>
               <TouchableOpacity
                 onPress={() => {
-                  amountInputRef.current?.focus();
-                }}>
-                <Layout level="2" style={styles.card}>
-                  <View style={styles.row}>
-                    <Text category="headline">Amount</Text>
-                    <Text category="headline" uppercase />
-                  </View>
-                  <View style={styles.cardNumber}>
-                    <Input
-                      ref={amountInputRef}
-                      keyboardType={'decimal-pad'}
-                      returnKeyType={'done'}
-                      status={'transparent'}
-                      style={styles.flex1}
-                      value={amountInString}
-                      placeholder={'0'}
-                      onChangeText={(text: string) => {
-                        let t = 0;
-                        let res = text.replace(/\./g, match =>
-                          ++t === 2 ? '' : match,
-                        );
-                        setAmount(res.trim().replace(',', '.'));
+                  showMemoDialog(true);
+                }}
+                style={{marginHorizontal: scale(12), flexDirection: 'row'}}>
+                {memo ? (
+                  <>
+                    <Text
+                      category={'headline'}
+                      style={{paddingRight: scale(12)}}>
+                      Encrypted memo:
+                    </Text>
+                    <Text
+                      category={'headline'}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                      style={{flex: 1}}>
+                      {memo}
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <Icon
+                      pack={'assets'}
+                      name={'add'}
+                      style={{
+                        tintColor: 'white',
+                        width: scale(24),
+                        height: scale(24),
+                        marginRight: scale(24),
                       }}
                     />
-                    <View
-                      style={{
-                        padding: 5,
-                      }}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setAmount(currentAmount.toString());
-                        }}>
-                        <Text category={'footnote'}>MAX</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </Layout>
+                    <Text>Add an encrypted memo</Text>
+                  </>
+                )}
               </TouchableOpacity>
-            )}
-          </Content>
-          <Layout
-            style={[
-              styles.bottom,
-              {paddingBottom: verticalScale(bottom + 16)},
-            ]}>
-            <SendTransactionButton
-              walletName={walletName}
-              from={from}
-              to={to}
-              amount={parseFloat(amountInString)}
-              memo={memo}
-              subtractFee={subtractFee}
-              nftId={nftId}
-            />
-          </Layout>
-        </QrProvider>
-      </Container>
-    </BottomSheetProvider>
+            </View>
+          )}
+
+          {from?.type_id == Balance_Types_Enum.Nft ? (
+            <></>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                amountInputRef.current?.focus();
+              }}>
+              <Layout level="2" style={styles.card}>
+                <View style={styles.row}>
+                  <Text category="headline">Amount</Text>
+                  <Text category="headline" uppercase/>
+                </View>
+                <View style={styles.cardNumber}>
+                  <Input
+                    ref={amountInputRef}
+                    keyboardType={'decimal-pad'}
+                    returnKeyType={'done'}
+                    status={'transparent'}
+                    style={styles.flex1}
+                    value={amountInString}
+                    placeholder={'0'}
+                    onChangeText={(text: string) => {
+                      let t = 0;
+                      let res = text.replace(/\./g, match =>
+                        ++t === 2 ? '' : match,
+                      );
+                      setAmount(res.trim().replace(',', '.'));
+                    }}
+                  />
+                  <View
+                    style={{
+                      padding: 5,
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setAmount(currentAmount.toString());
+                      }}>
+                      <Text category={'footnote'}>MAX</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Layout>
+            </TouchableOpacity>
+          )}
+        </Content>
+        <Layout
+          style={[
+            styles.bottom,
+            {paddingBottom: verticalScale(bottom + 16)},
+          ]}>
+          <SendTransactionButton
+            walletName={walletName}
+            from={from}
+            to={to}
+            amount={parseFloat(amountInString)}
+            memo={memo}
+            subtractFee={subtractFee}
+            nftId={nftId}
+          />
+        </Layout>
+      </QrProvider>
+    </Container>
   );
 };
 

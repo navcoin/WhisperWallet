@@ -220,8 +220,10 @@ export const WalletProvider = (props: any) => {
       }
 
       let nft = [];
+      let alreadyAdded = {};
 
       for (let tokenId in balances.nfts) {
+        alreadyAdded[tokenId] = true;
         nft.push({
           name: balances.nfts[tokenId].name,
           amount: Object.keys(balances.nfts[tokenId].confirmed).length || 0,
@@ -239,11 +241,29 @@ export const WalletProvider = (props: any) => {
         });
       }
 
+      for (let token of myTokens) {
+        if (token.version == 1 && !alreadyAdded[token.id]) {
+          nft.push({
+            name: token.name,
+            amount: 0,
+            pending_amount: 0,
+            spendable_amount: 0,
+            type_id: Balance_Types_Enum.Nft,
+            destination_id: Destination_Types_Enum.PrivateWallet,
+            tokenId: token.id,
+            leftElement: <Identicon value={token.id}></Identicon>,
+            items: {confirmed: [], pending: []},
+            mine: true,
+            currency: 'NFT',
+          });
+        }
+      }
+
       setAccounts(accs);
       setTokens(toks);
       setNfts(nft);
     }
-  }, [balances, addresses]);
+  }, [balances, addresses, myTokens]);
 
   const updateAccounts = async () => {
     if (wallet) {
@@ -327,6 +347,7 @@ export const WalletProvider = (props: any) => {
         walletFile.GetBalance().then(setBalances);
         walletFile.GetHistory().then(setHistory);
         walletFile.GetMyTokens(spendingPassword).then(setMyTokens);
+        walletFile.GetMyTokens(spendingPassword).then(console.log);
         njs.wallet.WalletFile.ListWallets().then(setWalletsList);
         walletFile.Connect();
         onLoaded();
@@ -351,6 +372,7 @@ export const WalletProvider = (props: any) => {
       });
 
       walletFile.on('connected', async (serverName: string) => {
+        console.log('connected to ',servername)
         setServer(serverName);
         if ((await walletFile.GetCandidates()).length < 100) {
           connectP2P();
@@ -361,9 +383,9 @@ export const WalletProvider = (props: any) => {
       });
 
       walletFile.on('new_tx', async () => {
-        if (!p2pPool && (await walletFile.GetCandidates()).length < 100) {
+        /*if (!p2pPool && (await walletFile.GetCandidates()).length < 100) {
           connectP2P();
-        }
+        }*/
         setBalances(await walletFile.GetBalance());
         setHistory(await walletFile.GetHistory());
         setAddresses(await walletFile.GetAllAddresses());
@@ -401,6 +423,50 @@ export const WalletProvider = (props: any) => {
     },
     [njs, wallet, win],
   );
+
+  const createNftCollection = async (name: string, scheme: string, amount: number, spendingPassword: string) => {
+    if (!wallet) {
+      throw new Error('Wallet not loaded');
+    }
+
+    let candidates = (await wallet.GetCandidates())
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 5);
+
+    let fee = 0;
+
+    for (let c of candidates) {
+      //fee += parseInt(BigInt(c.fee.words).toString());
+    }
+
+    let obj = await wallet.CreateNft(name, scheme, amount, spendingPassword);
+
+    if (!obj) {
+      throw new Error("Can't access you wallet keys");
+    }
+    let ret = {fee: obj.fee + fee, tx: undefined};
+    let toCombine = [obj.tx[0]];
+    for (let c of candidates) {
+      //toCombine.push(c.tx);
+    }
+    ret.tx = toCombine;
+
+    if (false && toCombine.length > 1) {
+      ret.tx = [
+        await njs.wallet.bitcore.Transaction.Blsct.CombineTransactions(
+          toCombine,
+        ),
+      ];
+      if (ret.tx.length == 1) {
+        ret.tx[0].version |= 0x10;
+        ret.tx[0] = ret.tx[0].toString();
+      } else {
+        throw new Error('Could not create transaction');
+      }
+    }
+
+    return ret;
+  }
 
   const createTransaction = async (
     from: string,
@@ -581,6 +647,7 @@ export const WalletProvider = (props: any) => {
       removeWallet,
       njs,
       walletLibLoaded,
+      createNftCollection,
     }),
     [
       win,
@@ -605,7 +672,8 @@ export const WalletProvider = (props: any) => {
       removeWallet,
       njs,
       walletLibLoaded,
-      refreshWallet
+      refreshWallet,
+      createNftCollection,
     ],
   );
 

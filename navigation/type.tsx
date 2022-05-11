@@ -45,6 +45,10 @@ export type AddServerScreenProps = {
   addServer: (newServer: ServerOption, cb: () => void) => void;
 };
 
+export type CollectionScreenProps = {
+  collection: any;
+};
+
 export type WalletParamList = {
   MainWalletScreen: undefined;
   SendToScreen: undefined;
@@ -58,4 +62,6 @@ export type WalletParamList = {
   AddServerScreen: AddServerScreenProps;
   AddStakingNodeScreen: undefined;
   ErrorLogsScreen: undefined;
+  CreateNftCollectionScreen: undefined;
+  CollectionScreen: CollectionScreenProps;
 };

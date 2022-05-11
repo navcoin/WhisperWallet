@@ -32,6 +32,7 @@ export default class Identicon extends React.Component {
           {colors.map((el, index) => {
             return (
               <Rect
+                key={index}
                 x={(index % 4) * 20}
                 y={Math.floor(index / 4) * 20}
                 width="20"

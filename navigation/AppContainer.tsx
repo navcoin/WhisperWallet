@@ -14,6 +14,7 @@ import AskPinScreen from '../screens/wallet/AskPinScreen';
 import SecurityProvider from '../contexts/SecurityProvider';
 import Toast from 'react-native-toast-message';
 import useWallet from '../hooks/useWallet';
+import {BottomSheetProvider} from '../contexts/BottomSheetProvider';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -33,12 +34,12 @@ const AppContainer = (props: any) => {
             initialRouteName={
               props.shownWelcome == 'true' ? 'Intro' : 'OnBoarding'
             }>
-            <Stack.Screen name="Intro" component={Intro} />
-            <Stack.Screen name="AskPinScreen" component={AskPinScreen} />
-            <Stack.Screen name="OnBoarding" component={OnBoarding} />
-            <Stack.Screen name="CreateNewWallet" component={CreateNewWallet} />
-            <Stack.Screen name="OpenWallet" component={OpenWallet} />
-            <Stack.Screen name="ImportWallet" component={ImportWallet} />
+            <Stack.Screen name="Intro" component={Intro}/>
+            <Stack.Screen name="AskPinScreen" component={AskPinScreen}/>
+            <Stack.Screen name="OnBoarding" component={OnBoarding}/>
+            <Stack.Screen name="CreateNewWallet" component={CreateNewWallet}/>
+            <Stack.Screen name="OpenWallet" component={OpenWallet}/>
+            <Stack.Screen name="ImportWallet" component={ImportWallet}/>
             <Stack.Screen
               name="Wallet"
               component={Wallet}
@@ -49,7 +50,7 @@ const AppContainer = (props: any) => {
       </NavigationContainer>
     </View>
   ) : (
-    <View />
+    <View/>
   );
 };
 export default AppContainer;

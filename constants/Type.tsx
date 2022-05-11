@@ -39,6 +39,7 @@ export interface BalanceFragment {
   items?: any;
   tokenId?: string;
   nftId?: number;
+  mine?: boolean;
 }
 
 export enum View_Types_Enum {
@@ -125,4 +126,10 @@ export interface ServerOption {
 export interface NodeOption {
   name?: string;
   address?: string;
+}
+
+export interface CollectionOption {
+  name?: string;
+  description?: string;
+  amount?: number;
 }
