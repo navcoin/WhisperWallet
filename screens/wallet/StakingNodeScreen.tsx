@@ -66,6 +66,7 @@ const StakingNodeScreen = () => {
         <Text style={[styles.summary]}>{summaryText}</Text>
       </View>
       <View style={[styles.serversWrapper]}>
+        {/* TODO: On clicking the card shd open the modal to show whole content */}
         {editMode ? (
           <OptionCard
             key={'1'}

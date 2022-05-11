@@ -9,7 +9,11 @@ import {BalanceFragment, Connection_Stats_Enum} from '../constants/Type';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import BottomSheetMenu from './BottomSheetMenu';
 import useWallet from '../hooks/useWallet';
-import {StyleService, useStyleSheet, useTheme} from '@tsejerome/ui-kitten-components';
+import {
+  StyleService,
+  useStyleSheet,
+  useTheme,
+} from '@tsejerome/ui-kitten-components';
 import BottomSheetOptions from './BottomSheetOptions';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -158,80 +162,92 @@ const AccountsTab = (props: {
   const [nftsContent, setNftsContent] = useState(<></>);
 
   useEffect(() => {
-    setAccountContent(<>
-      {accounts.map((el, i) => {
-        return (
-          <View style={styles.item} key={i}>
-            <BalanceCard
-              item={{...el, name: el.name + ' account'}}
-              index={i}
-              onPress={() => {
-                setAccount(el);
-                expandMenu(el);
-              }}
-            />
-          </View>
-        );
-      })}
-    </>);
-  }, [accounts])
-
-  useEffect(() => {
-    setTokensContent(<>
-      {tokens.length == 0
-        ? <Text marginBottom={scale(24)} center>No private tokens found</Text>
-        : tokens.map((el, i) => {
+    setAccountContent(
+      <>
+        {accounts.map((el, i) => {
           return (
             <View style={styles.item} key={i}>
               <BalanceCard
-                item={{...el, name: el.name}}
+                item={{...el, name: el.name + ' account'}}
                 index={i}
                 onPress={() => {
                   setAccount(el);
-                  expandMenuToken(el);
+                  expandMenu(el);
                 }}
               />
             </View>
           );
         })}
-    </>)
-  }, [tokens])
+      </>,
+    );
+  }, [accounts]);
 
   useEffect(() => {
-    setNftsContent(<>
-      {nfts.length == 0
-        ? <Text center marginBottom={scale(24)}>No private NFTs found</Text>
-        : nfts.map((el, i) => {
-          return (
-            <View style={styles.item} key={i}>
-              <BalanceCard
-                item={{...el, name: el.name}}
-                key={i}
-                index={i}
-                onPress={() => {
-                  setAccount(el);
-                  expandMenuToken(el);
-                }}
-              />
-            </View>
-          );
-        })}
-      <View style={styles.item}>
-        <OptionCard
-          color={theme['color-basic-1200']}
-          key={'add'}
-          index={nfts.length+1}
-          item={{text: 'Create collection'}}
-          selected={''}
-          onPress={() => {
-            
-          }}
-          icon={'add'}
-          cardType={'outline'}
-        />
-      </View>
-    </>)
-  }, [nfts])
+    setTokensContent(
+      <>
+        {tokens.length == 0 ? (
+          <Text marginBottom={scale(24)} center>
+            No private tokens found
+          </Text>
+        ) : (
+          tokens.map((el, i) => {
+            return (
+              <View style={styles.item} key={i}>
+                <BalanceCard
+                  item={{...el, name: el.name}}
+                  index={i}
+                  onPress={() => {
+                    setAccount(el);
+                    expandMenuToken(el);
+                  }}
+                />
+              </View>
+            );
+          })
+        )}
+      </>,
+    );
+  }, [tokens]);
+
+  useEffect(() => {
+    setNftsContent(
+      <>
+        {nfts.length == 0 ? (
+          <Text center marginBottom={scale(24)}>
+            No private NFTs found
+          </Text>
+        ) : (
+          nfts.map((el, i) => {
+            return (
+              <View style={styles.item} key={i}>
+                <BalanceCard
+                  item={{...el, name: el.name}}
+                  key={i}
+                  index={i}
+                  onPress={() => {
+                    setAccount(el);
+                    expandMenuToken(el);
+                  }}
+                />
+              </View>
+            );
+          })
+        )}
+        <View style={styles.item}>
+          <OptionCard
+            color={theme['color-basic-1200']}
+            key={'add'}
+            index={nfts.length + 1}
+            item={{text: 'Create collection'}}
+            selected={''}
+            onPress={() => {}}
+            icon={'add'}
+            cardType={'outline'}
+          />
+        </View>
+      </>,
+    );
+  }, [nfts]);
 
   return (
     <>
@@ -251,15 +267,15 @@ const AccountsTab = (props: {
           />
         }>
         <Content style={{paddingTop: verticalScale(24)}}>
-          {selectedTab == 0 ?
+          {selectedTab == 0 ? (
             accountsContent
-            : selectedTab == 1 ? (
-              tokensContent
-            ) : selectedTab == 2 ? (
-              nftsContent
-            ) : (
-              <></>
-            )}
+          ) : selectedTab == 1 ? (
+            tokensContent
+          ) : selectedTab == 2 ? (
+            nftsContent
+          ) : (
+            <></>
+          )}
         </Content>
       </ScrollView>
     </>

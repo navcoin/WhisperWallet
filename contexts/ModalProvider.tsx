@@ -21,7 +21,7 @@ export const ModalProvider = (props: any) => {
         setVisibility(false);
         setChildren(undefined);
       },
-      isVisible: visible
+      isVisible: visible,
     }),
     [ModalRef, visible],
   );
@@ -29,7 +29,7 @@ export const ModalProvider = (props: any) => {
   return (
     <ModalContext.Provider value={modalContext}>
       {props.children}
-       <Modal>{children}</Modal>
+      <Modal>{children}</Modal>
     </ModalContext.Provider>
   );
 };

@@ -29,7 +29,7 @@ export const OnBoarding = [
     title: 'Earn with cold staking',
     description:
       'Delegate your coins to a staking pool or your own Navcoin full node and earn up to 8% per year.',
-   },
+  },
 ];
 
 export const protosOptions = ['tcp', 'ssl', 'ws', 'wss'];

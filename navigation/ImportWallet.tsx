@@ -226,10 +226,7 @@ const ImportWallet = () => {
                       setLoading(undefined);
                       promptErrorToaster(e.toString(), false, false, () => {
                         const errorMsg = errorTextParser(e.toString(), false);
-                        openModal(
-                          <ErrorModalContent
-                            errorText={errorMsg}></ErrorModalContent>,
-                        );
+                        openModal(<ErrorModalContent errorText={errorMsg} />);
                       });
                     });
                 }
@@ -311,8 +308,7 @@ const styles = StyleSheet.create({
     padding: scale(16),
     width: scale(120),
   },
-  animatedStep: {
-  },
+  animatedStep: {},
   layout: {
     flexDirection: 'row',
     marginBottom: verticalScale(24),

@@ -8,7 +8,7 @@ export enum SecurityAuthenticationTypes {
   NONE = 'None',
 }
 export const GetAuthenticationName = (type: SecurityAuthenticationTypes) => {
-  switch(type) {
+  switch (type) {
     case SecurityAuthenticationTypes.KEYCHAIN:
       return 'Face ID or Touch ID';
       break;
@@ -24,7 +24,7 @@ export const GetAuthenticationName = (type: SecurityAuthenticationTypes) => {
     default:
       return 'None';
   }
-}
+};
 
 export interface SecurityContextValue {
   supportedType: SecurityAuthenticationTypes | number;

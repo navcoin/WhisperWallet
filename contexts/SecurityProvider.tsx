@@ -20,8 +20,8 @@ import useWallet from '../hooks/useWallet';
 import {AppState, Platform, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
-import { BlurView } from '@react-native-community/blur';
-import { Connection_Stats_Enum } from '../constants/Type';
+import {BlurView} from '@react-native-community/blur';
+import {Connection_Stats_Enum} from '../constants/Type';
 import {Button} from '@tsejerome/ui-kitten-components';
 
 export const SecurityProvider = (props: any) => {
@@ -39,22 +39,24 @@ export const SecurityProvider = (props: any) => {
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   const AskForUnlock = () => {
-    readPassword().then(() => {
-      setLockedScreen(false);
-    }).catch((e) => {
-      AskForUnlock();
-    })
-  }
+    readPassword()
+      .then(() => {
+        setLockedScreen(false);
+      })
+      .catch(e => {
+        AskForUnlock();
+      });
+  };
 
   useEffect(() => {
     if (appStateVisible == 'active' && lockedScreen) {
-      AsyncStorage.getItem(
-          'AuthenticationType',
-      ).then(async(val) => {
-        if (!(await AsyncStorage.getItem('walletKey')))
+      AsyncStorage.getItem('AuthenticationType').then(async val => {
+        if (!(await AsyncStorage.getItem('walletKey'))) {
           return;
-        if (!!val)
+        }
+        if (val) {
           await UpdateFeatures();
+        }
         AskForUnlock();
       });
     }
@@ -78,7 +80,9 @@ export const SecurityProvider = (props: any) => {
     setSupportedBiometry(await Keychain.getSupportedBiometryType({}));
 
     while (currentAuthenticationType == -1) {
-      await new Promise((res, _) => { setInterval(res, 100)});
+      await new Promise((res, _) => {
+        setInterval(res, 100);
+      });
     }
   };
 
@@ -89,9 +93,15 @@ export const SecurityProvider = (props: any) => {
      * settings have changed.
      */
     const subscription = AppState.addEventListener('change', nextAppState => {
-      if (nextAppState === 'background' &&
-          appState.current === 'inactive') {
-        if (refreshWallet && !(connected == Connection_Stats_Enum.Bootstrapping || connected == Connection_Stats_Enum.Connecting || connected == Connection_Stats_Enum.Syncing)) {
+      if (nextAppState === 'background' && appState.current === 'inactive') {
+        if (
+          refreshWallet &&
+          !(
+            connected == Connection_Stats_Enum.Bootstrapping ||
+            connected == Connection_Stats_Enum.Connecting ||
+            connected == Connection_Stats_Enum.Syncing
+          )
+        ) {
           refreshWallet();
         }
         if (lockAfterBackground === 'true') {
@@ -123,8 +133,9 @@ export const SecurityProvider = (props: any) => {
 
   const [supportedType, setSupportedType] =
     useState<SecurityAuthenticationTypes>(SecurityAuthenticationTypes.NONE);
-  const [currentAuthenticationType, setCurrentAuthenticationType] =
-    useState<SecurityAuthenticationTypes | number>(-1);
+  const [currentAuthenticationType, setCurrentAuthenticationType] = useState<
+    SecurityAuthenticationTypes | number
+  >(-1);
 
   const [error, setError] = useState<string | undefined>(undefined);
 
@@ -298,12 +309,12 @@ export const SecurityProvider = (props: any) => {
 
       while (!authType) {
         authType = authType_
-            ? authType_
-            : ((await AsyncStorage.getItem(
-                'AuthenticationType',
+          ? authType_
+          : ((await AsyncStorage.getItem(
+              'AuthenticationType',
             )) as unknown as SecurityAuthenticationTypes);
         await new Promise((res, _) => {
-            setInterval(res, 100)
+          setInterval(res, 100);
         });
       }
 
@@ -362,7 +373,7 @@ export const SecurityProvider = (props: any) => {
             res(ret);
           }
         })
-        .catch((e) => {
+        .catch(e => {
           console.log(e);
           rej(e);
         });
@@ -423,15 +434,15 @@ export const SecurityProvider = (props: any) => {
       changeMode,
       currentAuthenticationType,
       lockedScreen,
-      setLockedScreen
+      setLockedScreen,
     }),
     [
-        readPassword,
-        supportedType,
-        changeMode,
-        currentAuthenticationType,
-        lockedScreen,
-        setLockedScreen
+      readPassword,
+      supportedType,
+      changeMode,
+      currentAuthenticationType,
+      lockedScreen,
+      setLockedScreen,
     ],
   );
 

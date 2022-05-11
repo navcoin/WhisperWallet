@@ -57,20 +57,20 @@ const CreateNewWallet = () => {
 
   useEffect(() => {
     if (loading) {
-      openModal(<LoadingModalContent loading={!!loading} text={loading}/>);
+      openModal(<LoadingModalContent loading={!!loading} text={loading} />);
       return;
     }
     closeModal();
   }, [loading]);
   return (
     <Container useSafeArea>
-      <TopNavigationComponent title={'New wallet'} pressBack={onBackPress}/>
+      <TopNavigationComponent title={'New wallet'} pressBack={onBackPress} />
       <KeyboardAwareScrollView
         contentContainerStyle={{flexGrow: 1}}
         enableOnAndroid
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}>
-        <AnimatedStep style={styles.animatedStep} step={index} steps={5}/>
+        <AnimatedStep style={styles.animatedStep} step={index} steps={5} />
 
         {index == 0 ? (
           <View style={[styles.container, styles.horizontalPadding24]}>
@@ -166,10 +166,7 @@ const CreateNewWallet = () => {
                       setLoading(undefined);
                       promptErrorToaster(e.toString(), false, false, () => {
                         const errorMsg = errorTextParser(e.toString(), false);
-                        openModal(
-                          <ErrorModalContent
-                            errorText={errorMsg}></ErrorModalContent>,
-                        );
+                        openModal(<ErrorModalContent errorText={errorMsg} />);
                       });
                     });
                 }}
@@ -179,7 +176,7 @@ const CreateNewWallet = () => {
         ) : index == 2 ? (
           <View style={styles.container}>
             <View style={{marginBottom: scale(90)}}>
-              <Mnemonic mnemonic={mnemonic}/>
+              <Mnemonic mnemonic={mnemonic} />
             </View>
             <View
               style={[styles.bottomButtonWrapper, styles.horizontalPadding24]}>
@@ -228,8 +225,9 @@ const CreateNewWallet = () => {
                       autoCapitalize="none"
                       value={words[wordpos]}
                       onSubmitEditing={() => {
-                        if (elements[wordpos + 1])
+                        if (elements[wordpos + 1]) {
                           elements[wordpos + 1].focus();
+                        }
                       }}
                       onChangeText={(name: string) => {
                         let newWords = [...words];
@@ -291,7 +289,9 @@ const CreateNewWallet = () => {
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={async () => {
-                  const lockSetting = await AsyncStorage.getItem('lockAfterBackground');
+                  const lockSetting = await AsyncStorage.getItem(
+                    'lockAfterBackground',
+                  );
                   if (!(lockSetting == 'true' || lockSetting == 'false')) {
                     Alert.alert(
                       'Security',
@@ -300,14 +300,20 @@ const CreateNewWallet = () => {
                         {
                           text: 'Yes',
                           onPress: async () => {
-                            await AsyncStorage.setItem('lockAfterBackground', 'true');
+                            await AsyncStorage.setItem(
+                              'lockAfterBackground',
+                              'true',
+                            );
                             navigate('Wallet');
                           },
                         },
                         {
                           text: 'No',
                           onPress: async () => {
-                            await AsyncStorage.setItem('lockAfterBackground', 'false');
+                            await AsyncStorage.setItem(
+                              'lockAfterBackground',
+                              'false',
+                            );
                             navigate('Wallet');
                           },
                         },
@@ -380,8 +386,7 @@ const styles = StyleSheet.create({
     padding: scale(16),
     width: scale(120),
   },
-  animatedStep: {
-  },
+  animatedStep: {},
   layout: {
     marginBottom: verticalScale(24),
   },

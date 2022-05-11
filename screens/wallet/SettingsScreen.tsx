@@ -13,11 +13,14 @@ import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {screenHeight} from '../../utils/layout';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useSecurity from '../../hooks/useSecurity';
-import {GetAuthenticationName, SecurityAuthenticationTypes} from '../../contexts/SecurityContext';
+import {
+  GetAuthenticationName,
+  SecurityAuthenticationTypes,
+} from '../../contexts/SecurityContext';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
 import BottomSheetOptions from '../../components/BottomSheetOptions';
 import {useModal} from '../../hooks/useModal';
-import { useTheme } from '@tsejerome/ui-kitten-components';
+import {useTheme} from '@tsejerome/ui-kitten-components';
 import DeleteWalletModalContent from '../../components/Modals/DeleteWalletModalContent';
 
 interface SettingsItem {
@@ -45,7 +48,11 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       supportedType == SecurityAuthenticationTypes.LOCALAUTH
     ) {
       deviceAuth = [
-        {text: GetAuthenticationName(supportedType), mode: supportedType, icon: 'biometrics'},
+        {
+          text: GetAuthenticationName(supportedType),
+          mode: supportedType,
+          icon: 'biometrics',
+        },
       ];
     }
 
@@ -176,16 +183,21 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       icon: 'eye',
       show: currentAuthenticationType != SecurityAuthenticationTypes.NONE,
       rightElement: (
-          <Switch
-          trackColor={{ false: '#fff', true: theme['color-staking'] }}
-          onValueChange={(val) => {
-            setLockAfterBackground(lockAfterBackground !== 'true' ? 'true' : 'false')
+        <Switch
+          trackColor={{false: '#fff', true: theme['color-staking']}}
+          onValueChange={val => {
+            setLockAfterBackground(
+              lockAfterBackground !== 'true' ? 'true' : 'false',
+            );
           }}
           value={lockAfterBackground === 'true'}
-          style={{ marginRight: scale(12) }}
-      />),
+          style={{marginRight: scale(12)}}
+        />
+      ),
       onPress: () => {
-        setLockAfterBackground(lockAfterBackground !== 'true' ? 'true' : 'false')
+        setLockAfterBackground(
+          lockAfterBackground !== 'true' ? 'true' : 'false',
+        );
       },
     },
     {

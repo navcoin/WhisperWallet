@@ -58,7 +58,8 @@ const BalanceCircle = memo(() => {
             ? -1
             : syncProgress / 100
         }
-        segments={segments}></AnimatedSegments>
+        segments={segments}
+      />
       {connected == Connection_Stats_Enum.Connecting ? (
         <Text style={{position: 'absolute', textAlign: 'center'}}>
           Connecting...

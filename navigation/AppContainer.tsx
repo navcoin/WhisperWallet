@@ -22,9 +22,10 @@ const AppContainer = (props: any) => {
   const {walletLibLoaded} = useWallet();
   return walletLibLoaded && props.shownWelcome !== null ? (
     <View style={{flex: 1, backgroundColor: theme['color-basic-700']}}>
-      <NavigationContainer onStateChange={() => {
-        Toast.hide();
-      }}>
+      <NavigationContainer
+        onStateChange={() => {
+          Toast.hide();
+        }}>
         <SecurityProvider>
           <Stack.Navigator
             screenOptions={{

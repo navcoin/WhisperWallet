@@ -1,9 +1,6 @@
 import React, {memo} from 'react';
 import {useWindowDimensions, View} from 'react-native';
-import {
-  StyleService,
-  useStyleSheet,
-} from '@tsejerome/ui-kitten-components';
+import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 
 import Container from '../components/Container';

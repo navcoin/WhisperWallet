@@ -14,7 +14,9 @@ function useAsyncStorageHook(key: string, initialValue: any) {
   useEffect(() => {
     AsyncStorage.getItem(key)
       .then(value => {
-        if (value === null) return initialValue;
+        if (value === null) {
+          return initialValue;
+        }
         return JSON.parse(value);
       })
       .then(setStoredValue);

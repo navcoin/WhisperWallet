@@ -42,7 +42,7 @@ import {useModal} from './hooks/useModal';
 import ErrorModalContent from './components/Modals/ErrorModalContent';
 import {AsyncStoredItems} from './utils/asyncStorageManager';
 
-const App = (props: { theme: string }) => {
+const App = (props: {theme: string}) => {
   const {theme} = props;
   const {openModal, closeModal} = useModal();
 
@@ -62,12 +62,14 @@ const App = (props: { theme: string }) => {
       return;
     }
     setPromptPreviousError(false);
-    if (!temporaryErrorRecords.length) return;
+    if (!temporaryErrorRecords.length) {
+      return;
+    }
     const errorMessage = temporaryErrorRecords[0];
     closeModal();
     promptErrorToaster(errorMessage, true, true, () => {
       const errorMsg = errorTextParser(errorMessage, true);
-      openModal(<ErrorModalContent errorText={errorMsg}></ErrorModalContent>);
+      openModal(<ErrorModalContent errorText={errorMsg} />);
     });
   };
 
@@ -77,7 +79,7 @@ const App = (props: { theme: string }) => {
     closeModal();
     promptErrorToaster(error, isFatal, false, () => {
       const errorMsg = errorTextParser(error, isFatal);
-      openModal(<ErrorModalContent errorText={errorMsg}></ErrorModalContent>);
+      openModal(<ErrorModalContent errorText={errorMsg} />);
     });
   };
 
@@ -110,8 +112,8 @@ const App = (props: { theme: string }) => {
         translucent={true}
         backgroundColor={'#00000000'}
       />
-      <AppContainer shownWelcome={shownWelcome}/>
-      <Toast config={toastConfig}/>
+      <AppContainer shownWelcome={shownWelcome} />
+      <Toast config={toastConfig} />
     </WalletProvider>
   );
 };
@@ -135,7 +137,7 @@ const AppWrapper = () => {
   return (
     <SafeAreaProvider>
       <ThemeContext.Provider value={{theme, toggleTheme}}>
-        <IconRegistry icons={[AssetIconsPack, EvaIconsPack]}/>
+        <IconRegistry icons={[AssetIconsPack, EvaIconsPack]} />
         <ApplicationProvider
           {...eva}
           theme={
@@ -146,7 +148,7 @@ const AppWrapper = () => {
           /* @ts-ignore */
           customMapping={customMapping}>
           <ModalProvider>
-            <App theme={theme}/>
+            <App theme={theme} />
           </ModalProvider>
         </ApplicationProvider>
       </ThemeContext.Provider>
