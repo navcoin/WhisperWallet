@@ -104,6 +104,7 @@
     "@types/react-test-renderer": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^5.7.0",
     "@typescript-eslint/parser": "^5.7.0",
+    "@ui-kitten/metro-config": "^5.1.2",
     "babel-jest": "^26.6.3",
     "eslint": "^7.14.0",
     "jest": "^26.6.3",

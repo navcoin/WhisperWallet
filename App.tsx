@@ -144,9 +144,7 @@ const AppWrapper = () => {
             theme === 'light'
               ? {...eva.light, ...customTheme, ...lightTheme}
               : {...eva.dark, ...customTheme, ...darkTheme}
-          }
-          /* @ts-ignore */
-          customMapping={customMapping}>
+          }>
           <ModalProvider>
             <App theme={theme} />
           </ModalProvider>
