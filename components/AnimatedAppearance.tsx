@@ -21,6 +21,8 @@ const AnimatedAppearance = ({
   index,
   type = Animation_Types_Enum.SlideBottom,
 }: Props) => {
+  return children;
+  
   const play = useSharedValue(false);
   const progress = useDerivedValue(() => {
     return play.value
@@ -94,7 +96,7 @@ const AnimatedAppearance = ({
     }
   }, []);
 
-  return <Animated.View style={getType(type)}>{children}</Animated.View>;
+  //return <Animated.View style={getType(type)}>{children}</Animated.View>;
 };
 
 export default AnimatedAppearance;
