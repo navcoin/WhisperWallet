@@ -377,7 +377,7 @@ export const WalletProvider = (props: any) => {
       });
 
       walletFile.on('connected', async (serverName: string) => {
-        console.log('connected to ',servername)
+        console.log('connected to ',serverName)
         setServer(serverName);
         if ((await walletFile.GetCandidates()).length < 100) {
           connectP2P();
