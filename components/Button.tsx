@@ -1,5 +1,5 @@
 import React, {memo, useEffect, useState} from 'react';
-import {Button, ButtonProps} from '@tsejerome/ui-kitten-components';
+import {Button, ButtonProps, useTheme} from '@tsejerome/ui-kitten-components';
 import BUTTON_SIZE from '../constants/theme/ButtonSize';
 import {StyleProp, TextStyle} from 'react-native';
 import {scale} from 'react-native-size-matters';
@@ -19,6 +19,7 @@ type sizeOptions =
 
 export interface MyButtonProps extends ButtonProps {
   sizeMatters?: boolean;
+  colorStyle?: ButtonColorStyle;
 }
 
 const ButtonStyleOptionsWithNumbers = [
@@ -27,6 +28,12 @@ const ButtonStyleOptionsWithNumbers = [
   'borderWidth',
   'paddingHorizontal',
 ];
+
+export enum ButtonColorStyle {
+  default = 'default',
+  white = 'white',
+  radical = 'radical',
+}
 
 const parseUiKittenStyle = (size: sizeOptions) => {
   let styles: StyleProp<TextStyle> = {};
@@ -45,14 +52,36 @@ const parseUiKittenStyle = (size: sizeOptions) => {
 };
 
 export default memo(
-  ({size = 'medium', children, style, ...rest}: MyButtonProps) => {
-    let [finalizedStyle, setFinalizedStyle] = useState<StyleProp<TextStyle>>(
-      {},
-    );
+  ({size = 'medium', children, colorStyle, style, ...rest}: MyButtonProps) => {
+    const theme = useTheme();
+    const defaultColorStyle = (
+      cStyle: ButtonColorStyle = ButtonColorStyle.default,
+    ) => {
+      if (cStyle === ButtonColorStyle.radical) {
+        return {
+          buttonStyle: {backgroundColor: theme['color-radical-100']},
+          textStyle: {},
+        };
+      }
+      if (cStyle === ButtonColorStyle.white) {
+        return {
+          buttonStyle: {backgroundColor: 'white'},
+          textStyle: {color: theme['color-basic-800']},
+        };
+      }
+      return {buttonStyle: {}, textStyle: {}};
+    };
+    let [finalizedButtonStyle, setFinalizedStyle] = useState<
+      StyleProp<TextStyle>
+    >({});
+    let [finalizedTextStyle, setFinalizedTextStyle] = useState<
+      StyleProp<TextStyle>
+    >({});
     useEffect(() => {
-      let defaultStyles: StyleProp<TextStyle> = {};
-      defaultStyles = {
-        ...defaultStyles,
+      let defaultStyles = defaultColorStyle(colorStyle);
+      let defaultButtonStyles: StyleProp<TextStyle> = defaultStyles.buttonStyle;
+      defaultButtonStyles = {
+        ...defaultButtonStyles,
         ...parseUiKittenStyle(size as sizeOptions),
       };
       let injectedStyles: StyleProp<TextStyle> = {};
@@ -63,12 +92,15 @@ export default memo(
       } else {
         injectedStyles = style;
       }
-      setFinalizedStyle([defaultStyles, injectedStyles]);
+      setFinalizedStyle([defaultButtonStyles, injectedStyles]);
+      setFinalizedTextStyle(defaultStyles.textStyle);
     }, [size, style]);
     return (
-      <Button style={finalizedStyle} {...rest}>
+      <Button style={finalizedButtonStyle} {...rest}>
         {evaProps => (
-          <Text style={{fontWeight: '700'}} category={'call-out'}>
+          <Text
+            style={[{fontWeight: '700'}, finalizedTextStyle]}
+            category={'call-out'}>
             {children}
           </Text>
         )}

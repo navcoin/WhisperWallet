@@ -47,8 +47,12 @@ const DestinationComponent = (props: any) => {
       );
       if (props.setTo) {
         props.setTo(
-          parsedAddresses.filter(el => el.type_id == toType?.destination_id)[0]
-            ?.address,
+          parsedAddresses.filter(
+            el =>
+              el.type_id == toType?.destination_id &&
+              (!toType?.address ||
+                (toType?.address && el.stakingAddress == toType?.address)),
+          )[0]?.address,
         );
       }
     } else {
@@ -116,6 +120,7 @@ const DestinationComponent = (props: any) => {
           {toType?.destination_id == Destination_Types_Enum.Address ? (
             <View style={styles.cardNumber}>
               <Input
+                autoFocus
                 ref={destinationInputRef}
                 keyboardType={'ascii-capable'}
                 status={'transparent'}

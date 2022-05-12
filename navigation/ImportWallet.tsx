@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {BackHandler, StyleSheet, View} from 'react-native';
+import {BackHandler, StyleSheet, View, Platform} from 'react-native';
 import {Button, Input} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 
@@ -8,15 +8,17 @@ import Container from '../components/Container';
 import AnimatedStep from '../components/AnimatedStep';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useWallet from '../hooks/useWallet';
-import Loading from '../components/Loading';
-import useNjs from '../hooks/useNjs';
+import LoadingModalContent from '../components/Modals/LoadingModalContent';
 import {IsValidMnemonic} from '../utils/Mnemonic';
 import OptionCard from '../components/OptionCard';
 import {NetworkTypes, WalletTypes} from '../constants/Type';
-import useKeychain from '../utils/Keychain';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
+import useSecurity from '../hooks/useSecurity';
+import {useModal} from '../hooks/useModal';
+import {errorTextParser, promptErrorToaster} from '../utils/errors';
+import ErrorModalContent from '../components/Modals/ErrorModalContent';
 
 const ImportWallet = () => {
   const {navigate, goBack} = useNavigation();
@@ -28,8 +30,17 @@ const ImportWallet = () => {
   const {createWallet} = useWallet();
   const [loading, setLoading] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
-  const {njs} = useNjs();
-  const {read} = useKeychain();
+  const {walletsList} = useWallet();
+  const {readPassword} = useSecurity();
+  const {openModal, closeModal} = useModal();
+
+  useEffect(() => {
+    if (loading) {
+      openModal(<LoadingModalContent loading={!!loading} text={loading} />);
+      return;
+    }
+    closeModal();
+  }, [loading]);
 
   const onBackPress = useCallback(() => {
     if (index == 0) {
@@ -50,7 +61,6 @@ const ImportWallet = () => {
 
   return (
     <Container useSafeArea>
-      <Loading loading={!!loading} text={loading} />
       <TopNavigationComponent title={'Import wallet'} pressBack={onBackPress} />
       <AnimatedStep style={styles.animatedStep} step={index} />
 
@@ -96,10 +106,15 @@ const ImportWallet = () => {
                 styles.layout,
               ]}>
               <Input
+                autoCapitalize={'none'}
                 multiline={true}
+                keyboardType={
+                  // Platform.OS === 'ios' ? 'default' : 'visible-password'
+                  Platform.OS === 'ios' ? 'default' : 'email-address'
+                }
                 numberOfLines={3}
                 autoFocus={true}
-                style={styles.flex1}
+                style={[styles.flex1, {height: scale(100), color: 'black'}]}
                 value={mnemonic}
                 onChangeText={(m: string) => {
                   setMnemonic(m.toLowerCase());
@@ -186,11 +201,10 @@ const ImportWallet = () => {
               status={'primary-whisper'}
               style={styles.button}
               onPressOut={async () => {
-                const walletList = await njs.wallet.WalletFile.ListWallets();
-                if (walletList.indexOf(walletName) > -1) {
+                if (walletsList.indexOf(walletName) > -1) {
                   setError('There is already a wallet with that name.');
                 } else if (walletName) {
-                  read(walletName)
+                  readPassword()
                     .then((password: string) => {
                       setLoading('Creating wallet keys...');
                       createWallet(
@@ -210,6 +224,10 @@ const ImportWallet = () => {
                     })
                     .catch((e: any) => {
                       setLoading(undefined);
+                      promptErrorToaster(e.toString(), false, false, () => {
+                        const errorMsg = errorTextParser(e.toString(), false);
+                        openModal(<ErrorModalContent errorText={errorMsg} />);
+                      });
                     });
                 }
               }}
@@ -290,9 +308,7 @@ const styles = StyleSheet.create({
     padding: scale(16),
     width: scale(120),
   },
-  animatedStep: {
-    marginTop: scale(28),
-  },
+  animatedStep: {},
   layout: {
     flexDirection: 'row',
     marginBottom: verticalScale(24),

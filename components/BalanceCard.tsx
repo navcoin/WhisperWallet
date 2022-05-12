@@ -27,7 +27,6 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
   const {connected, firstSyncCompleted} = useWallet();
 
   const {name, amount, pending_amount, type_id, currency, tokenId} = item;
-
   return (
     <AnimatedAppearance type={Animation_Types_Enum.SlideInRight} index={index}>
       <TouchableOpacity
@@ -63,8 +62,10 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
               />
             )}
           </View>
-          <View>
-            <Text category="headline">{name}</Text>
+          <View style={styles.textContent}>
+            <Text adjustsFontSizeToFit numberOfLines={2} category="headline">
+              {name}
+            </Text>
             {connected === Connection_Stats_Enum.Connecting &&
             !firstSyncCompleted ? (
               <Text style={{fontSize: scale(13)}}>Connecting...</Text>
@@ -72,6 +73,7 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
               <Text style={{fontSize: scale(13)}}>Synchronizing...</Text>
             ) : (
               <CurrencyText
+                adjustsFontSizeToFit
                 category="footnote"
                 children={(amount + pending_amount).toFixed(8)}
                 marginTop={4}
@@ -104,6 +106,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  textContent: {
+    flex: 1,
+    paddingRight: scale(16),
+  },
+
   content: {
     flexDirection: 'row',
     alignItems: 'center',

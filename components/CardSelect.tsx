@@ -1,22 +1,13 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, TouchableOpacity} from 'react-native';
 import {
   useTheme,
-  Icon,
   Layout,
   useStyleSheet,
   StyleService,
 } from '@tsejerome/ui-kitten-components';
 
 import Text from './Text';
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetView,
-  useBottomSheetDynamicSnapPoints,
-} from '@gorhom/bottom-sheet';
-import BottomSheetMenu from './BottomSheetMenu';
-import {Balance_Types_Enum} from '../constants/Type';
 import BottomSheetOptions from './BottomSheetOptions';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -39,6 +30,10 @@ const CardSelect = ({
   const styles = useStyleSheet(themedStyles);
   const bottomSheet = useBottomSheet();
 
+  useEffect(() => {
+    setSelectedOption(defaultOption);
+  }, [defaultOption]);
+
   const showOptions = () =>
     bottomSheet.expand(
       <BottomSheetOptions
@@ -60,8 +55,16 @@ const CardSelect = ({
         }}>
         <Layout level="2" style={styles.card}>
           <View style={styles.row}>
-            <Text category="headline">{text}</Text>
-            <Text category="headline">{selectedOption}</Text>
+            <Text style={{marginRight: scale(6)}} category="headline">
+              {text}
+            </Text>
+            <Text
+              adjustsFontSizeToFit
+              numberOfLines={1}
+              style={{flex: 1}}
+              category="headline">
+              {selectedOption}
+            </Text>
           </View>
         </Layout>
       </TouchableOpacity>
@@ -83,6 +86,7 @@ const themedStyles = StyleService.create({
     marginBottom: verticalScale(24),
   },
   row: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

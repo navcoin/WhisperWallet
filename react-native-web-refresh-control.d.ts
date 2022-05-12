@@ -1,1 +1,1 @@
-declare module "react-native-web-refresh-control";
+declare module 'react-native-web-refresh-control';

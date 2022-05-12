@@ -17,6 +17,7 @@ const TopNavigationComponent = memo((props: TopNavigationProps_) => {
   const {goBack} = useNavigation();
   return (
     <TopNavigation
+      style={{marginBottom: scale(12)}}
       {...props}
       accessoryLeft={
         !props.hideBack ? (

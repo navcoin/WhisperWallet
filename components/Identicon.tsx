@@ -6,11 +6,12 @@ import {View, StyleSheet} from 'react-native';
 export default class Identicon extends React.Component {
   render() {
     let value = this.props.value;
-    if (value.length != 64)
+    if (value.length != 64) {
       value = require('crypto')
         .createHash('sha256')
         .update(value)
         .digest('hex');
+    }
 
     let colors = [];
 

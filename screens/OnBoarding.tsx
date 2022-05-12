@@ -1,38 +1,26 @@
 import React, {memo} from 'react';
-import {useWindowDimensions, View, Alert} from 'react-native';
-import {
-  useTheme,
-  StyleService,
-  useStyleSheet,
-} from '@tsejerome/ui-kitten-components';
+import {useWindowDimensions, View} from 'react-native';
+import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import Container from '../components/Container';
 import Button from '../components/Button';
 import Animated, {
-  interpolateColor,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
 import Card from '../components/Card';
 import {OnBoarding} from '../constants/Data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import useAsyncStorage from '../hooks/useAsyncStorage';
-import {maxComponentWidth, screenWidth} from '../utils/layout';
+import {screenWidth} from '../utils/layout';
 import {scale} from 'react-native-size-matters';
+import useSecurity from '../hooks/useSecurity';
 
 const OnBoardingPage = memo(() => {
   const {navigate} = useNavigation();
   const {height, width} = useWindowDimensions();
-  const {top, bottom} = useSafeAreaInsets();
-  const theme = useTheme();
+  const {supportedType} = useSecurity();
   const styles = useStyleSheet(themedStyles);
-  const [lockAfterBackground, setLockAfterBackground] = useAsyncStorage(
-    'lockAfterBackground',
-    'false',
-  );
 
   const translationX = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(event => {
@@ -70,31 +58,11 @@ const OnBoardingPage = memo(() => {
       <View style={styles.bottomView}>
         <Button
           size={'large'}
-          children="Start using Whisper Wallet"
-          style={{flex: 1}}
+          children="Start using Whisper"
+          style={{flex: 1, marginBottom: scale(16)}}
           onPress={() => {
             AsyncStorage.setItem('shownWelcome', 'true').then(() => {
-              Alert.alert(
-                'Security',
-                'Do you want to lock automatically the wallet when it goes to background?',
-                [
-                  {
-                    text: 'Yes',
-                    onPress: () => {
-                      setLockAfterBackground('true');
-                      navigate('Intro');
-                    },
-                  },
-                  {
-                    text: 'No',
-                    onPress: () => {
-                      AsyncStorage.setItem('shownWelcome', 'true').then(() => {
-                        navigate('Intro');
-                      });
-                    },
-                  },
-                ],
-              );
+              navigate('Intro');
             });
           }}
           status="primary-whisper"

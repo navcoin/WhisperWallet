@@ -23,7 +23,7 @@ interface OptionProps {
   item: ItemProps;
   index: number;
   selected: string;
-  id: string;
+  id?: string;
   color?: string;
   icon?: string;
   onPress?: () => void;
@@ -32,6 +32,7 @@ interface OptionProps {
   animationType?: Animation_Types_Enum;
   cardType?: 'outline' | 'fill';
   leftElement?: any;
+  rightElement?: any;
 }
 
 const OptionCard = ({
@@ -47,6 +48,7 @@ const OptionCard = ({
   animationType = Animation_Types_Enum.SlideInRight,
   cardType = 'fill',
   leftElement,
+  rightElement,
 }: OptionProps) => {
   const theme = useTheme();
 
@@ -66,7 +68,7 @@ const OptionCard = ({
     if (type === 'outline') {
       Object.assign(styleResult, {
         borderStyle: 'dashed',
-        borderColor: '#FFFFFF99',
+        borderColor: color || '#FFFFFF99',
       });
     }
     return styleResult;
@@ -94,12 +96,14 @@ const OptionCard = ({
             )}
           </View>
           <Text
-            numberOfLines={3}
+            adjustsFontSizeToFit
             style={[styles.content, {color: color || 'white'}]}
             category="headline">
             {text ? text : ''}
           </Text>
-          {iconRight ? (
+          {rightElement ? (
+            rightElement
+          ) : iconRight ? (
             <View style={[styles.iconWrapper, styles.rightIconWrapper]}>
               <TouchableOpacity
                 style={[styles.rightIconTouchables]}

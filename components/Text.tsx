@@ -149,7 +149,9 @@ const getLineHeight = (category: TextCategory): number => {
 const getFontSize = (category: TextCategory): number => {
   if (TEXT_CATEGORIES[category] && TEXT_CATEGORIES[category].fontSize) {
     const matchedStyle = TEXT_CATEGORIES[category].fontSize;
-    return moderateScale(Number.parseInt(TEXT_STYLE_VARIABLES[matchedStyle], 0.8) as number);
+    return moderateScale(
+      Number.parseInt(TEXT_STYLE_VARIABLES[matchedStyle], 0.8) as number,
+    );
   }
   return scale(12);
 };

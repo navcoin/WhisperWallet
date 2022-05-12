@@ -4,8 +4,11 @@ const LocalAuth = (res: any) => {
   try {
     LocalAuthentication.authenticateAsync().then(
       (authResult: LocalAuthentication.LocalAuthenticationResult) => {
-        if (authResult.success) res(undefined);
-        else res(authResult.error);
+        if (authResult.success) {
+          res(undefined);
+        } else {
+          res(authResult.error);
+        }
       },
     );
   } catch (error) {

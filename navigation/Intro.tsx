@@ -44,6 +44,7 @@ const Intro = memo(props => {
             style={[styles.wallet]}
             status="primary-whisper"
             onPress={() => {
+              // openModal(<LoadingModal loading />);
               navigate('CreateNewWallet');
             }}
           />

@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import useNjs from '../hooks/useNjs';
 import {WalletContext, WalletContextValue} from './WalletContext';
 import {
   AddressFragment,
@@ -8,15 +7,20 @@ import {
   Connection_Stats_Enum,
   Destination_Types_Enum,
 } from '../constants/Type';
-import useTraceUpdate from '../hooks/useTraceUpdates';
 import Identicon from '../components/Identicon';
 import Db from '../utils/Db';
+import RNBootSplash from 'react-native-bootsplash';
+const njs = require('navcoin-js');
+const P2pPool = require('@aguycalled/bitcore-p2p').Pool;
 
 export const WalletProvider = (props: any) => {
-  const {njs, p2pPool} = useNjs();
+  const [p2pPool, setP2pPool] = useState<any>(undefined);
   const [wallet, setWallet] = useState<any>(undefined);
+  const [server, setServer] = useState('');
   const [walletName, setWalletName] = useState('');
   const [walletsList, setWalletsList] = useState<string[]>([]);
+  const [myTokens, setMyTokens] = useState([]);
+  const [walletLibLoaded, setWalletLibLoaded] = useState(false);
   const [network, setNetwork] = useState('livenet');
   const [mnemonic, setMnemonic] = useState('');
   const [syncProgress, setSyncProgress] = useState(0);
@@ -67,6 +71,19 @@ export const WalletProvider = (props: any) => {
       currency: 'NAV',
     },
   ]);
+
+  useEffect(() => {
+    if (walletLibLoaded) {
+      RNBootSplash.hide({fade: true});
+      njs.wallet.WalletFile.ListWallets().then(setWalletsList);
+    }
+  }, [walletLibLoaded]);
+
+  useEffect(() => {
+    njs.wallet.Init().then(async () => {
+      setWalletLibLoaded(true);
+    });
+  }, []);
 
   useEffect(() => {
     let parsed: AddressFragment[] = [];
@@ -121,28 +138,28 @@ export const WalletProvider = (props: any) => {
   }, []);
 
   const newCandidate = useCallback(
-    function (session: string, candidate: any) {
+    async function (session: string, candidate: any) {
       if (wallet && p2pPool) {
-        wallet.AddCandidate(
+        await wallet.AddCandidate(
           candidate,
           p2pPool.network.name == 'livenet' ? 'mainnet' : 'testnet',
         );
-        //wallet.GetCandidates().then((l: any) => console.log(l.length));
       }
     },
     [wallet, p2pPool],
   );
 
   useEffect(() => {
-    if (p2pPool && wallet) {
+    if (p2pPool) {
+      console.log('connecting to p2p');
       p2pPool.on('candidate', newCandidate);
-
-      p2pPool.connect().then(() => {
+      p2pPool.on('peerready', (_: string, server: number) => {
         let sessionId = p2pPool.startSession();
         console.log('started session', sessionId);
       });
+      p2pPool.connect();
     }
-  }, [p2pPool, wallet]);
+  }, [p2pPool]);
 
   const parseAccounts = useCallback(() => {
     if (balances?.nav) {
@@ -172,7 +189,9 @@ export const WalletProvider = (props: any) => {
 
       for (let address in addresses.staking) {
         let label = addresses.staking[address].label?.name;
-        if (!label) label = address.substring(0, 8) + '...';
+        if (!label) {
+          label = address.substring(0, 8) + '...';
+        }
         accs.push({
           name: label + ' staking',
           amount: (addresses.staking[address].staking.confirmed || 0) / 1e8,
@@ -201,7 +220,7 @@ export const WalletProvider = (props: any) => {
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
           currency: balances.tokens[tokenId].code,
-          leftElement: <Identicon value={tokenId}></Identicon>,
+          leftElement: <Identicon value={tokenId} />,
         });
       }
 
@@ -218,7 +237,12 @@ export const WalletProvider = (props: any) => {
           type_id: Balance_Types_Enum.Nft,
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
-          leftElement: <Identicon value={tokenId}></Identicon>,
+          leftElement: <Identicon value={tokenId} />,
+          items: {
+            confirmed: balances.nfts[tokenId].confirmed,
+            pending: balances.nfts[tokenId].pending,
+          },
+          mine: myTokens.filter(el => el.id == tokenId).length != 0,
           currency: 'NFT',
         });
       }
@@ -242,6 +266,25 @@ export const WalletProvider = (props: any) => {
     parseAccounts();
   }, [balances, addresses]);
 
+  const connectP2P = useCallback(() => {
+    setP2pPool(
+      new P2pPool({
+        dnsSeed: false, // prevent seeding with DNS discovered known peers upon connecting
+        listenAddr: false, // prevent new peers being added from addr messages
+        network: network,
+        maxSize: 1,
+        addrs: [
+          // initial peers to connect to
+          {
+            ip: {
+              v4: server.split(':')[0],
+            },
+          },
+        ],
+      }),
+    );
+  }, [server, network]);
+
   const createWallet = useCallback(
     async (
       name: string,
@@ -256,6 +299,11 @@ export const WalletProvider = (props: any) => {
     ) => {
       if (wallet) {
         wallet.Disconnect();
+      }
+
+      if (p2pPool) {
+        p2pPool.disconnect();
+        setP2pPool(undefined);
       }
 
       const walletFile = new njs.wallet.WalletFile({
@@ -285,11 +333,16 @@ export const WalletProvider = (props: any) => {
         console.log('loaded');
         walletFile.GetBalance().then(setBalances);
         walletFile.GetHistory().then(setHistory);
+        walletFile.GetMyTokens(spendingPassword).then(setMyTokens);
         njs.wallet.WalletFile.ListWallets().then(setWalletsList);
         walletFile.Connect();
         onLoaded();
         setNetwork(walletFile.network);
         setAddresses(await walletFile.GetAllAddresses());
+      });
+
+      walletFile.on('new_token', async () => {
+        walletFile.GetMyTokens(spendingPassword).then(setMyTokens);
       });
 
       walletFile.on('sync_status', (progress: number) => {
@@ -304,12 +357,20 @@ export const WalletProvider = (props: any) => {
         setConnected(Connection_Stats_Enum.Disconnected);
       });
 
-      walletFile.on('connected', () => {
+      walletFile.on('connected', async (serverName: string) => {
+        setServer(serverName);
+        if ((await walletFile.GetCandidates()).length < 100) {
+          connectP2P();
+        } else {
+          setP2pPool(undefined);
+        }
         setConnected(Connection_Stats_Enum.Connected);
       });
 
       walletFile.on('new_tx', async () => {
-        console.log('new_tx');
+        if (!p2pPool && (await walletFile.GetCandidates()).length < 100) {
+          connectP2P();
+        }
         setBalances(await walletFile.GetBalance());
         setHistory(await walletFile.GetHistory());
         setAddresses(await walletFile.GetAllAddresses());
@@ -473,14 +534,30 @@ export const WalletProvider = (props: any) => {
   };
 
   const refreshWallet = useCallback(async () => {
-    if (wallet) {
-      try {
-        await wallet.Sync();
-      } catch (e) {
-        console.log(e);
-      }
+    if (
+      wallet &&
+      !(
+        connected == Connection_Stats_Enum.Connecting ||
+        connected == Connection_Stats_Enum.Bootstrapping ||
+        connected == Connection_Stats_Enum.Syncing
+      )
+    ) {
+      await wallet.Sync();
+      setBalances(await wallet.GetBalance());
+      setHistory(await wallet.GetHistory());
+      setAddresses(await wallet.GetAllAddresses());
     }
-  }, [wallet]);
+  }, [wallet, connected]);
+
+  const removeWallet = useCallback(
+    async (name: string) => {
+      if (njs) {
+        await njs.wallet.WalletFile.RemoveWallet(name);
+        njs.wallet.WalletFile.ListWallets().then(setWalletsList);
+      }
+    },
+    [njs],
+  );
 
   const walletContext: WalletContextValue = useMemo(
     () => ({
@@ -509,6 +586,9 @@ export const WalletProvider = (props: any) => {
       nfts,
       updateAccounts,
       bootstrapProgress,
+      removeWallet,
+      njs,
+      walletLibLoaded,
     }),
     [
       njs,
@@ -529,6 +609,10 @@ export const WalletProvider = (props: any) => {
       nfts,
       updateAccounts,
       bootstrapProgress,
+      removeWallet,
+      njs,
+      walletLibLoaded,
+      refreshWallet,
     ],
   );
 

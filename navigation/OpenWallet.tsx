@@ -1,33 +1,37 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, Input, useTheme} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 
-import Text from '../components/Text';
 import Container from '../components/Container';
-import useLayout from '../hooks/useLayout';
 import useWallet from '../hooks/useWallet';
-import Loading from '../components/Loading';
-import useNjs from '../hooks/useNjs';
+import LoadingModalContent from '../components/Modals/LoadingModalContent';
 import OptionCard from '../components/OptionCard';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import useKeychain from '../utils/Keychain';
 import {layoutStyles} from '../utils/layout';
 import TopNavigationComponent from '../components/TopNavigation';
+import useSecurity from '../hooks/useSecurity';
+import {useModal} from '../hooks/useModal';
+import {errorTextParser, promptErrorToaster} from '../utils/errors';
+import ErrorModalContent from '../components/Modals/ErrorModalContent';
 
 const OpenWallet = () => {
   const {navigate} = useNavigation();
-  const [walletName] = useState('');
-  const {createWallet, walletsList} = useWallet();
+  const {njs, createWallet, walletsList} = useWallet();
   const [loading, setLoading] = useState<string | undefined>(undefined);
-  const [error, setError] = useState('');
-  const {njs} = useNjs();
-  const {read} = useKeychain();
+  const {readPassword} = useSecurity();
 
+  const {openModal, closeModal} = useModal();
+
+  useEffect(() => {
+    if (loading) {
+      openModal(<LoadingModalContent loading={!!loading} text={loading} />);
+      return;
+    }
+    closeModal();
+  }, [loading]);
   return (
     <Container useSafeArea>
-      <Loading loading={!!loading} text={loading} />
-      <TopNavigationComponent title={'Open wallet'} />
+      <TopNavigationComponent title={'Open Wallet'} />
       <View style={styles.container}>
         <KeyboardAwareScrollView
           style={styles.content}
@@ -43,9 +47,8 @@ const OpenWallet = () => {
                   item={{text: el}}
                   index={index}
                   icon={'creditCard'}
-                  selected={walletName}
                   onPress={() => {
-                    read(el)
+                    readPassword()
                       .then((password: string) => {
                         setLoading('Loading wallet...');
                         createWallet(
@@ -58,13 +61,17 @@ const OpenWallet = () => {
                           true,
                           'mainnet',
                           () => {
-                            setLoading(undefined);
                             navigate('Wallet');
+                            setLoading(undefined);
                           },
                         );
                       })
                       .catch((e: any) => {
                         setLoading(undefined);
+                        promptErrorToaster(e.toString(), false, false, () => {
+                          const errorMsg = errorTextParser(e.toString(), false);
+                          openModal(<ErrorModalContent errorText={errorMsg} />);
+                        });
                       });
                   }}
                 />
@@ -72,14 +79,6 @@ const OpenWallet = () => {
             );
           })}
         </KeyboardAwareScrollView>
-
-        {error ? (
-          <Text style={{color: 'red', flex: 1}} center key={'error'}>
-            {error}
-          </Text>
-        ) : (
-          <></>
-        )}
       </View>
     </Container>
   );
@@ -134,9 +133,7 @@ const styles = StyleSheet.create({
     padding: 16,
     width: 120,
   },
-  animatedStep: {
-    marginTop: 28,
-  },
+  animatedStep: {},
   layout: {
     flexDirection: 'row',
     marginBottom: 24,

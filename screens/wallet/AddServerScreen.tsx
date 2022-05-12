@@ -15,7 +15,6 @@ import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {ServerOption} from '../../constants/Type';
 import Text from '../../components/Text';
-import useNjs from '../../hooks/useNjs';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import {networkOptions, protosOptions} from '../../constants/Data';
@@ -26,8 +25,7 @@ import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {scale, verticalScale} from 'react-native-size-matters';
 
 const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
-  const {walletName, wallet} = useWallet();
-  const {njs} = useNjs();
+  const {walletName, wallet, njs} = useWallet();
 
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -65,9 +63,6 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
     setNewServer(temp);
   };
   const addServer = () => {
-    console.log('newserver');
-    console.log(newServer);
-    console.log('newserver');
     if (
       !newServer?.host ||
       !newServer?.port ||
@@ -105,6 +100,7 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
             <Input
               autoFocus={true}
               style={[styles.inputField]}
+              value={newServer.host}
               onChangeText={value => {
                 setNewServerProperty('host', value);
               }}
@@ -116,6 +112,7 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
             </Text>
             <Input
               style={[styles.inputField]}
+              value={newServer.port}
               onChangeText={value => {
                 setNewServerProperty('port', Number.parseInt(value));
               }}

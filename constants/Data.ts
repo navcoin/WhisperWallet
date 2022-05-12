@@ -16,9 +16,19 @@ export const OnBoarding = [
     color: '#61BAAD',
     image: Images.xNavLogo,
     aspectRatio: 1,
-    title: 'Keep your finances secret.',
+    title: 'Privacy for everyone',
     description:
-      'Enjoy the convenience of having separated public and private wallets. You are the one who decides who has access to your financial data.',
+      'Enjoy the convenience of having separated public and private accounts. Easily transfer between accounts to protect your privacy.',
+  },
+  {
+    id: 2,
+    color: '#61BAAD',
+    bgColor: '#61BAAD',
+    image: Images.chicken,
+    aspectRatio: 2,
+    title: 'Earn with cold staking',
+    description:
+      'Delegate your coins to a staking pool or your own Navcoin full node and earn up to 8% per year.',
   },
 ];
 

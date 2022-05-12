@@ -14,9 +14,9 @@ export enum Balance_Types_Enum {
 }
 
 export enum Destination_Types_Enum {
-  PublicWallet = 'My public wallet',
-  PrivateWallet = 'My private wallet',
-  StakingWallet = 'My staking wallet',
+  PublicWallet = 'My public account',
+  PrivateWallet = 'My private account',
+  StakingWallet = 'My staking account',
   Address = 'Navcoin address',
 }
 
@@ -36,6 +36,7 @@ export interface BalanceFragment {
   destination_id: Destination_Types_Enum;
   currency: string;
   address?: string;
+  items?: any;
   tokenId?: string;
   nftId?: number;
 }
@@ -52,7 +53,7 @@ export enum Connection_Stats_Enum {
   Connecting = 'Connecting',
   Connected = 'Connected',
   Syncing = 'Syncing',
-  Synced = 'Sync',
+  Synced = 'Synced',
   Disconnected = 'Disconnected',
   NoServers = 'No servers',
   Bootstrapping = 'Bootstrapping',

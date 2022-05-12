@@ -16,6 +16,7 @@ target 'navcash' do
   config = use_native_modules!
 
   permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-FaceID', :path => "#{permissions_path}/FaceID"
   pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
 
   use_react_native!(
