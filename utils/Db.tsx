@@ -201,10 +201,14 @@ const algorithm = 'aes-256-cbc';
 export default class Db extends events.EventEmitter {
   db?: Realm;
   dbTx?: Realm;
+  open: boolean;
 
-  constructor(filename: string, secret: string) {
+  constructor() {
     super();
+    this.open = false;
+  }
 
+  async Open(filename: string, secret: string) {
     let key = new Buffer(
       crypto
         .createHash('sha512')
@@ -235,41 +239,45 @@ export default class Db extends events.EventEmitter {
       });
     }
 
-    DB.openDatabase({name: filename, key: key});
-
-    Realm.open({
-      path: filename,
-      schema: [
-        KeySchema,
-        EncryptedSettingSchema,
-        SettingSchema,
-        StakingAddressSchema,
-        OutPointSchema,
-        ScriptHistorySchema,
-        StatusSchema,
-        TokenSchema,
-        NftSchema,
-        NameSchema,
-        WalletTxSchema,
-        LabelSchema,
-      ],
-      encryptionKey: key,
-    })
-      .progress(console.log)
-      .then(db => {
-        self.db = db;
-        Realm.open({
-          path: 'txDb',
-          schema: [TxKeysSchema, TxSchema, CandidateSchema],
-        }).then(dbTx => {
-          self.dbTx = dbTx;
-          this.emit('db_open');
-        });
+    await new Promise((res, rej) => {
+      Realm.open({
+        path: filename,
+        schema: [
+          KeySchema,
+          EncryptedSettingSchema,
+          SettingSchema,
+          StakingAddressSchema,
+          OutPointSchema,
+          ScriptHistorySchema,
+          StatusSchema,
+          TokenSchema,
+          NftSchema,
+          NameSchema,
+          WalletTxSchema,
+          LabelSchema,
+        ],
+        encryptionKey: key,
       })
-      .catch(e => {
-        console.log(e);
-        this.emit('db_load_error', e);
-      });
+        .progress(console.log)
+        .then(db => {
+          self.db = db;
+          Realm.open({
+            path: 'txDb',
+            schema: [TxKeysSchema, TxSchema, CandidateSchema],
+          }).then(dbTx => {
+            self.dbTx = dbTx;
+            res(true);
+            this.open = true;
+            this.emit('db_open');
+          });
+        })
+        .catch(e => {
+          console.log(e);
+          rej(e);
+          this.emit('db_load_error', e);
+        });
+    })
+
   }
 
   static SetBackend(indexedDB: any, IDBKeyRange: any) {}
@@ -279,6 +287,7 @@ export default class Db extends events.EventEmitter {
     if (this.dbTx) this.dbTx.close();
     this.db = undefined;
     this.dbTx = undefined;
+    this.open = false;
 
     this.emit('db_closed');
   }
@@ -941,7 +950,7 @@ export default class Db extends events.EventEmitter {
     if (!this.db) return;
 
     let ret = this.db.objectForPrimaryKey('Label', address);
-    return ret ? ret : address;
+    return ret ? ret.toJSON() : address;
   }
 
   async GetScriptHashHistory(scriptHash: string) {
