@@ -316,7 +316,7 @@ const CreateNewWallet = () => {
                               'lockAfterBackground',
                               'true',
                             );
-                            navigate('Wallet');
+                            navigate('MainWalletScreen');
                           },
                         },
                         {
@@ -326,13 +326,13 @@ const CreateNewWallet = () => {
                               'lockAfterBackground',
                               'false',
                             );
-                            navigate('Wallet');
+                            navigate('MainWalletScreen');
                           },
                         },
                       ],
                     );
                   } else {
-                    navigate('Wallet');
+                    navigate('MainWalletScreen');
                   }
                 }}
               />
