@@ -19,6 +19,7 @@ import {useModal} from '../hooks/useModal';
 import {errorTextParser, promptErrorToaster} from '../utils/errors';
 import ErrorModalContent from '../components/Modals/ErrorModalContent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SkipMnemonicConfirmationModalContent from '../components/Modals/SkipMnemonicConfirmationModalContent';
 
 function useArrayRef() {
   const refs = [];
@@ -62,6 +63,17 @@ const CreateNewWallet = () => {
     }
     closeModal();
   }, [loading]);
+
+  const skipMenmonicConfirmation = () => {
+    openModal(
+      <SkipMnemonicConfirmationModalContent
+        skip={() => {
+          setIndex(4);
+        }}
+      />,
+    );
+  };
+
   return (
     <Container useSafeArea>
       <TopNavigationComponent title={'New wallet'} pressBack={onBackPress} />
