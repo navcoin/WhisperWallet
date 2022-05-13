@@ -112,7 +112,9 @@ const DestinationComponent = (props: any) => {
         <Layout level="2" style={styles.card}>
           <View style={styles.row}>
             <Text category="headline">Destination</Text>
-            <Text style={{marginTop: scale(11)}} category="headline">
+            <Text
+              style={{marginTop: scale(11), marginLeft: scale(8)}}
+              category="headline">
               {toType?.destination_id != Destination_Types_Enum.Address &&
                 toType?.name}
             </Text>
