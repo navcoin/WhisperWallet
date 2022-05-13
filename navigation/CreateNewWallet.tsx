@@ -267,7 +267,7 @@ const CreateNewWallet = () => {
                 style={[styles.button, {marginRight: scale(20)}]}
                 status={'primary-whisper'}
                 onPress={() => {
-                  setIndex(4);
+                  skipMenmonicConfirmation();
                 }}
               />
               <Button
