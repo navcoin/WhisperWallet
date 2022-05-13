@@ -49,12 +49,9 @@ const AccountsTab = (props: {
           options={options}
           bottomSheetRef={bottomSheet.getRef}
           onSelect={(el: any) => {
-            navigate('Wallet', {
-              screen: 'SendToScreen',
-              params: {
-                from: account_,
-                toType: el,
-              },
+            navigate('SendToScreen', {
+              from: account_,
+              toType: el,
             });
           }}
         />,
