@@ -226,43 +226,49 @@ const AccountsTab = (props: {
   }, [accounts]);
 
   useEffect(() => {
-    setNftsContent(<>
-      {nfts.length == 0
-        ? <Text center marginBottom={scale(24)}>No private NFTs found</Text>
-        : nfts.map((el, i) => {
-          return (
-            <View style={styles.item} key={i}>
-              <BalanceCard
-                item={{...el, name: el.name}}
-                key={i}
-                index={i}
-                onPress={() => {
-                  setAccount(el);
-                  expandMenuNft(el);
-                }}
-              />
-            </View>
-          );
-        })}
-      <View style={styles.item}>
-        <OptionCard
-          color={theme['color-basic-1200']}
-          key={'add'}
-          index={nfts.length+1}
-          item={{text: 'Create collection'}}
-          selected={''}
-          onPress={() => {
-            navigate('Wallet', {
-              screen: 'CreateNftCollectionScreen'
-            });
-          }}
-          icon={'add'}
-          cardType={'outline'}
-        />
-      </View>
-    </>)
-  }, [nfts])
-  
+    setNftsContent(
+      <>
+        {nfts.length == 0 ? (
+          <Text center marginBottom={scale(24)}>
+            No private NFTs found
+          </Text>
+        ) : (
+          nfts.map((el, i) => {
+            return (
+              <View style={styles.item} key={i}>
+                <BalanceCard
+                  item={{...el, name: el.name}}
+                  key={i}
+                  index={i}
+                  onPress={() => {
+                    setAccount(el);
+                    expandMenuNft(el);
+                  }}
+                />
+              </View>
+            );
+          })
+        )}
+        <View style={styles.item}>
+          <OptionCard
+            color={theme['color-basic-1200']}
+            key={'add'}
+            index={nfts.length + 1}
+            item={{text: 'Create collection'}}
+            selected={''}
+            onPress={() => {
+              navigate('Wallet', {
+                screen: 'CreateNftCollectionScreen',
+              });
+            }}
+            icon={'add'}
+            cardType={'outline'}
+          />
+        </View>
+      </>,
+    );
+  }, [nfts]);
+
   useEffect(() => {
     setTokensContent(
       <>

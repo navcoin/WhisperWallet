@@ -89,7 +89,7 @@ const MainWalletScreen = () => {
             onPress={() => {
               refreshWallet();
             }}>
-            <Icon pack="assets" name={'refresh'} style={[styles.icon]}/>
+            <Icon pack="assets" name={'refresh'} style={[styles.icon]} />
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback
             style={{padding: scale(12)}}
@@ -98,12 +98,12 @@ const MainWalletScreen = () => {
                 screen: 'SettingsScreen',
               });
             }}>
-            <Icon pack="assets" name={'menuBtn'} style={[styles.icon]}/>
+            <Icon pack="assets" name={'menuBtn'} style={[styles.icon]} />
           </TouchableWithoutFeedback>
         </View>
       </Layout>
-      <BalanceCircle/>
-      <AccountsTab refreshing={refreshing} onRefresh={refreshWallet}/>
+      <BalanceCircle />
+      <AccountsTab refreshing={refreshing} onRefresh={refreshWallet} />
     </Container>
   );
 };
