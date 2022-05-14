@@ -38,6 +38,7 @@
 		EA038D4138F049BD923D3EB5 /* Celias-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0FEA3C3A9E0F41FD91E420CA /* Celias-BlackItalic.ttf */; };
 		F917794371E14389854C6511 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B7B1135CF3ED4DD5BBE8A747 /* Roboto-BlackItalic.ttf */; };
 		FA208EB7279BFDFD0055BF58 /* Empty.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA208EB6279BFDFD0055BF58 /* Empty.swift */; };
+		FA559A12282F99A2002DAF4E /* D____tx___.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = FA559A11282F99A2002DAF4E /* D____tx___.sqlite */; };
 		FADA6CC827D8B2CE003CD0C1 /* bls_framework.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FADA6CC727D8B2CE003CD0C1 /* bls_framework.xcframework */; };
 		FADA6CC927D8B2CE003CD0C1 /* bls_framework.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FADA6CC727D8B2CE003CD0C1 /* bls_framework.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -105,6 +106,7 @@
 		D07AC2FA46194585B3622EE4 /* Celias-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Medium.ttf"; path = "../assets/fonts/Celias-Medium.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FA208EB6279BFDFD0055BF58 /* Empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Empty.swift; path = navcash/Empty.swift; sourceTree = "<group>"; };
+		FA559A11282F99A2002DAF4E /* D____tx___.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = "D____tx___.sqlite"; path = "../android/app/src/main/assets/D____tx___.sqlite"; sourceTree = "<group>"; };
 		FA98F77B385A42578ACDAEA0 /* Overpass-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Overpass-SemiBold.ttf"; path = "../assets/fonts/Overpass-SemiBold.ttf"; sourceTree = "<group>"; };
 		FADA6CC727D8B2CE003CD0C1 /* bls_framework.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = bls_framework.xcframework; sourceTree = "<group>"; };
 		FB50A099BD944FB699673756 /* Overpass-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Overpass-Bold.ttf"; path = "../assets/fonts/Overpass-Bold.ttf"; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 		13B07FAE1A68108700A75B9A /* navcash */ = {
 			isa = PBXGroup;
 			children = (
+				FA559A11282F99A2002DAF4E /* D____tx___.sqlite */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				40CE3F64280115A800B6C566 /* BootSplash.storyboard */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -374,6 +377,7 @@
 				F917794371E14389854C6511 /* Roboto-BlackItalic.ttf in Resources */,
 				6A76946D6A394A6F8D00C5F4 /* SFPro-Display-Bold.otf in Resources */,
 				206B3A9EE8104C79864F3F94 /* SFPro-Display-Heavy-Italic.otf in Resources */,
+				FA559A12282F99A2002DAF4E /* D____tx___.sqlite in Resources */,
 				1E23B3B455B54FB7A0ED01C3 /* SpaceMono-Regular.ttf in Resources */,
 				7B7C0937FD1D498ABFFA52BD /* Celias-Hairline.ttf in Resources */,
 				C783B75188C84B81ABDC6765 /* Celias-Light.ttf in Resources */,
@@ -697,7 +701,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Whisper";
+				INFOPLIST_KEY_CFBundleDisplayName = Whisper;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
