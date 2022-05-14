@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
+import {StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native';
 import {useTheme, Layout} from '@tsejerome/ui-kitten-components';
 import Animated, {
   useAnimatedStyle,
@@ -14,6 +14,7 @@ interface Props {
   style?: ViewStyle;
   selectedIndex: number;
   tabs: string[];
+
   onChange(index: number): void;
 }
 
@@ -22,24 +23,6 @@ const FrequencyTab = ({style, selectedIndex, onChange, tabs}: Props) => {
   const transX = useSharedValue(0);
 
   const [widthItem, setWidthItem] = React.useState(0);
-
-  React.useEffect(() => {
-    transX.value = widthItem * selectedIndex;
-  }, [selectedIndex, transX, widthItem]);
-
-  const animatedStyles = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: withSpring(transX.value, {
-            stiffness: 200,
-            damping: 15,
-          }),
-        },
-      ],
-      backgroundColor: theme['color-primary-100'],
-    };
-  });
 
   return (
     <Layout style={[styles.container, style]}>
@@ -64,11 +47,18 @@ const FrequencyTab = ({style, selectedIndex, onChange, tabs}: Props) => {
           </TouchableOpacity>
         );
       })}
-      <Animated.View
+      <View
         style={[
           styles.boxAni,
-          animatedStyles,
-          {width: `${100 / tabs.length}%`},
+          {
+            transform: [
+              {
+                translateX: widthItem * selectedIndex,
+              },
+            ],
+            backgroundColor: theme['color-primary-100'],
+            width: `${100 / tabs.length}%`
+          },
         ]}
         onLayout={({nativeEvent}) => setWidthItem(nativeEvent.layout.width)}
       />
