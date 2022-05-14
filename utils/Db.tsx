@@ -653,7 +653,7 @@ export default class Db extends events.EventEmitter {
 
     documents = documents.map(el => {
       return {
-        ...el,
+        hash: el.hash ? el.hash : el.txidkeys,
         vin: JSON.stringify(el.vin),
         vout: JSON.stringify(el.vout),
       };
