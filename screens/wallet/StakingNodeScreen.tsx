@@ -75,9 +75,7 @@ const StakingNodeScreen = () => {
             item={{text: 'Add new node'}}
             selected={''}
             onPress={() => {
-              navigate('Wallet', {
-                screen: 'AddStakingNodeScreen',
-              });
+              navigate('AddStakingNodeScreen');
             }}
             icon={'add'}
             cardType={'outline'}

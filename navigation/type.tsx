@@ -1,8 +1,4 @@
-import {
-  NavigationProp,
-  NavigatorScreenParams,
-  RouteProp,
-} from '@react-navigation/native';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {ServerOption} from '../constants/Type';
 
 type AllParamList = WalletParamList & RootStackParamList;
@@ -31,21 +27,6 @@ export type RootStackParamList = {
   OpenWallet: undefined;
   ImportWallet: undefined;
   AskPinScreen: AskPinScreenProps;
-  Wallet: NavigatorScreenParams<WalletParamList>;
-};
-
-export type MnemonicScreenProps = {mnemonic: string};
-export type AddressScreenProps = {
-  from: string;
-};
-export type ViewTxScreenProps = {
-  item: any;
-};
-export type AddServerScreenProps = {
-  addServer: (newServer: ServerOption, cb: () => void) => void;
-};
-
-export type WalletParamList = {
   MainWalletScreen: undefined;
   SendToScreen: undefined;
   AddressScreen: AddressScreenProps;
@@ -59,3 +40,16 @@ export type WalletParamList = {
   AddStakingNodeScreen: undefined;
   ErrorLogsScreen: undefined;
 };
+
+export type MnemonicScreenProps = {mnemonic: string};
+export type AddressScreenProps = {
+  from: string;
+};
+export type ViewTxScreenProps = {
+  item: any;
+};
+export type AddServerScreenProps = {
+  addServer: (newServer: ServerOption, cb: () => void) => void;
+};
+
+export type WalletParamList = {};

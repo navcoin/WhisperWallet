@@ -95,9 +95,7 @@ const MainWalletScreen = () => {
             <TouchableWithoutFeedback
               style={{padding: scale(12)}}
               onPress={() => {
-                navigate('Wallet', {
-                  screen: 'SettingsScreen',
-                });
+                navigate('SettingsScreen');
               }}>
               <Icon pack="assets" name={'menuBtn'} style={[styles.icon]} />
             </TouchableWithoutFeedback>

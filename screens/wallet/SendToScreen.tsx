@@ -237,7 +237,7 @@ const SendToScreen = (props: any) => {
                       keyboardType={'decimal-pad'}
                       returnKeyType={'done'}
                       status={'transparent'}
-                      style={styles.flex1}
+                      style={[styles.flex1, {paddingLeft: 0}]}
                       value={amountInString}
                       placeholder={'0'}
                       onChangeText={(text: string) => {
