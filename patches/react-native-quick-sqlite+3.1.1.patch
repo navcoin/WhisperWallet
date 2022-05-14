@@ -1,0 +1,187 @@
+diff --git a/node_modules/react-native-quick-sqlite/android/.cxx/abi_configuration_323y6l1b.json b/node_modules/react-native-quick-sqlite/android/.cxx/abi_configuration_323y6l1b.json
+new file mode 100644
+index 0000000..e542dae
+--- /dev/null
++++ b/node_modules/react-native-quick-sqlite/android/.cxx/abi_configuration_323y6l1b.json
+@@ -0,0 +1,14 @@
++{
++  "allAbis": [
++    "armeabi-v7a",
++    "arm64-v8a",
++    "x86",
++    "x86_64"
++  ],
++  "validAbis": [
++    "ARMEABI_V7A",
++    "ARM64_V8A",
++    "X86",
++    "X86_64"
++  ]
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-quick-sqlite/android/.cxx/abi_configuration_323y6l1b.log b/node_modules/react-native-quick-sqlite/android/.cxx/abi_configuration_323y6l1b.log
+new file mode 100644
+index 0000000..0637a08
+--- /dev/null
++++ b/node_modules/react-native-quick-sqlite/android/.cxx/abi_configuration_323y6l1b.log
+@@ -0,0 +1 @@
++[]
+\ No newline at end of file
+diff --git a/node_modules/react-native-quick-sqlite/android/.cxx/abi_configuration_323y6l1b_key.json b/node_modules/react-native-quick-sqlite/android/.cxx/abi_configuration_323y6l1b_key.json
+new file mode 100644
+index 0000000..a444d81
+--- /dev/null
++++ b/node_modules/react-native-quick-sqlite/android/.cxx/abi_configuration_323y6l1b_key.json
+@@ -0,0 +1,23 @@
++{
++  "ndkHandlerSupportedAbis": [
++    "ARMEABI_V7A",
++    "ARM64_V8A",
++    "X86",
++    "X86_64"
++  ],
++  "ndkHandlerDefaultAbis": [
++    "ARMEABI_V7A",
++    "ARM64_V8A",
++    "X86",
++    "X86_64"
++  ],
++  "externalNativeBuildAbiFilters": [
++    "x86_64",
++    "x86",
++    "armeabi-v7a",
++    "arm64-v8a"
++  ],
++  "ndkConfigAbiFilters": [],
++  "splitsFilterAbis": [],
++  "ideBuildOnlyTargetAbi": true
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-quick-sqlite/android/.cxx/ndk_locator_record_4w3n4m3b.json b/node_modules/react-native-quick-sqlite/android/.cxx/ndk_locator_record_4w3n4m3b.json
+new file mode 100644
+index 0000000..a46d3a3
+--- /dev/null
++++ b/node_modules/react-native-quick-sqlite/android/.cxx/ndk_locator_record_4w3n4m3b.json
+@@ -0,0 +1,11 @@
++{
++  "ndk": "/Users/alex/Library/Android/sdk/ndk/21.4.7075529",
++  "revision": {
++    "mMajor": 21,
++    "mMinor": 4,
++    "mMicro": 7075529,
++    "mPreview": 0,
++    "mPrecision": "MICRO",
++    "mPreviewSeparator": " "
++  }
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-quick-sqlite/android/.cxx/ndk_locator_record_4w3n4m3b.log b/node_modules/react-native-quick-sqlite/android/.cxx/ndk_locator_record_4w3n4m3b.log
+new file mode 100644
+index 0000000..e3e73a8
+--- /dev/null
++++ b/node_modules/react-native-quick-sqlite/android/.cxx/ndk_locator_record_4w3n4m3b.log
+@@ -0,0 +1,32 @@
++[
++  {
++    "level": "INFO",
++    "message": "android.ndkVersion from module build.gradle is [not set]",
++    "diagnosticCode": "UNKNOWN"
++  },
++  {
++    "level": "INFO",
++    "message": "android.ndkPath from module build.gradle is not set",
++    "diagnosticCode": "UNKNOWN"
++  },
++  {
++    "level": "INFO",
++    "message": "ndk.dir in local.properties is not set",
++    "diagnosticCode": "UNKNOWN"
++  },
++  {
++    "level": "INFO",
++    "message": "Not considering ANDROID_NDK_HOME because support was removed after deprecation period.",
++    "diagnosticCode": "UNKNOWN"
++  },
++  {
++    "level": "INFO",
++    "message": "sdkFolder is /Users/alex/Library/Android/sdk",
++    "diagnosticCode": "UNKNOWN"
++  },
++  {
++    "level": "INFO",
++    "message": "Because no explicit NDK was requested, the default version [21.4.7075529] for this Android Gradle Plugin will be used",
++    "diagnosticCode": "UNKNOWN"
++  }
++]
+\ No newline at end of file
+diff --git a/node_modules/react-native-quick-sqlite/android/.cxx/ndk_locator_record_4w3n4m3b_key.json b/node_modules/react-native-quick-sqlite/android/.cxx/ndk_locator_record_4w3n4m3b_key.json
+new file mode 100644
+index 0000000..6acf0a6
+--- /dev/null
++++ b/node_modules/react-native-quick-sqlite/android/.cxx/ndk_locator_record_4w3n4m3b_key.json
+@@ -0,0 +1,7 @@
++{
++  "sdkFolder": "/Users/alex/Library/Android/sdk",
++  "sideBySideNdkFolderNames": [
++    "21.4.7075529",
++    "22.1.7171670"
++  ]
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-quick-sqlite/android/build/intermediates/aar_metadata/debug/aar-metadata.properties b/node_modules/react-native-quick-sqlite/android/build/intermediates/aar_metadata/debug/aar-metadata.properties
+new file mode 100644
+index 0000000..d8560bd
+--- /dev/null
++++ b/node_modules/react-native-quick-sqlite/android/build/intermediates/aar_metadata/debug/aar-metadata.properties
+@@ -0,0 +1,2 @@
++aarFormatVersion=1.0
++aarMetadataVersion=1.0
+diff --git a/node_modules/react-native-quick-sqlite/android/build/intermediates/incremental/mergeDebugShaders/merger.xml b/node_modules/react-native-quick-sqlite/android/build/intermediates/incremental/mergeDebugShaders/merger.xml
+new file mode 100644
+index 0000000..c991b38
+--- /dev/null
++++ b/node_modules/react-native-quick-sqlite/android/build/intermediates/incremental/mergeDebugShaders/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/alex/Dev/WW2/node_modules/react-native-quick-sqlite/android/src/main/shaders"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/alex/Dev/WW2/node_modules/react-native-quick-sqlite/android/src/debug/shaders"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-quick-sqlite/android/build/intermediates/incremental/packageDebugAssets/merger.xml b/node_modules/react-native-quick-sqlite/android/build/intermediates/incremental/packageDebugAssets/merger.xml
+new file mode 100644
+index 0000000..43613b1
+--- /dev/null
++++ b/node_modules/react-native-quick-sqlite/android/build/intermediates/incremental/packageDebugAssets/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/alex/Dev/WW2/node_modules/react-native-quick-sqlite/android/src/main/assets"/><source path="/Users/alex/Dev/WW2/node_modules/react-native-quick-sqlite/android/build/intermediates/shader_assets/debug/out"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/alex/Dev/WW2/node_modules/react-native-quick-sqlite/android/src/debug/assets"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-quick-sqlite/src/index.ts b/node_modules/react-native-quick-sqlite/src/index.ts
+index 2892569..b4469bb 100644
+--- a/node_modules/react-native-quick-sqlite/src/index.ts
++++ b/node_modules/react-native-quick-sqlite/src/index.ts
+@@ -169,7 +169,7 @@ const enhanceQueryResult = (result: QueryResult): void => {
+ 
+ const _open = sqlite.open;
+ sqlite.open = (dbName: string, location?: string) => {
+-  const res = _open(dbName, location);
++  const res = _open(dbName, location || '');
+   if (res.status === 0) {
+     locks[dbName] = {
+       queue: [],
+@@ -197,7 +197,7 @@ sqlite.executeSql = (
+   query: string,
+   params: any[] | undefined
+ ): QueryResult => {
+-  const result = _executeSql(dbName, query, params);
++  const result = _executeSql(dbName, query, params || []);
+   enhanceQueryResult(result);
+   return result;
+ };
+@@ -394,6 +394,8 @@ export const openDatabase = (
+     };
+ 
+     ok(connection);
++
++    return connection;
+   } catch (e) {
+     fail(e);
+   }

@@ -1,3 +1,4 @@
+import WebSQLite from 'react-native-quick-websql';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {WalletContext, WalletContextValue} from './WalletContext';
 import {
@@ -9,14 +10,11 @@ import {
 } from '../constants/Type';
 import Identicon from '../components/Identicon';
 import RNBootSplash from 'react-native-bootsplash';
-import SQLite from 'react-native-sqlite-2';
 
 import setGlobalVars from 'indexeddbshim/dist/indexeddbshim-noninvasive';
 
 const win = {};
 
-setGlobalVars(win, {win: SQLite});
-win.indexedDB.__useShim();
 const njs = require('navcoin-js');
 const P2pPool = require('@aguycalled/bitcore-p2p').Pool;
 
@@ -88,6 +86,8 @@ export const WalletProvider = (props: any) => {
 
   useEffect(() => {
     njs.wallet.Init().then(async () => {
+      setGlobalVars(win, {checkOrigin: false, win: WebSQLite});
+      win.indexedDB.__useShim();
       njs.wallet.WalletFile.SetBackend(win.indexedDB, win.IDBKeyRange);
       setWalletLibLoaded(true);
     });
