@@ -12,6 +12,8 @@ import Identicon from '../components/Identicon';
 import RNBootSplash from 'react-native-bootsplash';
 
 import setGlobalVars from 'indexeddbshim/dist/indexeddbshim-noninvasive';
+import {Platform} from 'react-native';
+import useTraceUpdates from '../hooks/useTraceUpdates';
 
 const win = {};
 
@@ -146,18 +148,6 @@ export const WalletProvider = (props: any) => {
     [wallet, p2pPool],
   );
 
-  useEffect(() => {
-    if (p2pPool) {
-      console.log('connecting to p2p');
-      p2pPool.on('candidate', newCandidate);
-      p2pPool.on('peerready', (_: string, server: number) => {
-        let sessionId = p2pPool.startSession();
-        console.log('started session', sessionId);
-      });
-      p2pPool.connect();
-    }
-  }, [p2pPool]);
-
   const parseAccounts = useCallback(() => {
     if (balances?.nav) {
       let accs = [
@@ -250,36 +240,42 @@ export const WalletProvider = (props: any) => {
     }
   }, [balances, addresses]);
 
-  const updateAccounts = async () => {
+  const updateAccounts = useCallback(async () => {
     if (wallet) {
       setBalances(await wallet.GetBalance());
       setHistory(await wallet.GetHistory());
       setAddresses(await wallet.GetAllAddresses());
     }
     parseAccounts();
-  };
+  }, []);
 
   useEffect(() => {
     parseAccounts();
   }, [balances, addresses]);
 
   const connectP2P = useCallback(() => {
-    setP2pPool(
-      new P2pPool({
-        dnsSeed: false, // prevent seeding with DNS discovered known peers upon connecting
-        listenAddr: false, // prevent new peers being added from addr messages
-        network: network,
-        maxSize: 1,
-        addrs: [
-          // initial peers to connect to
-          {
-            ip: {
-              v4: server.split(':')[0],
-            },
+    let pool = new P2pPool({
+      dnsSeed: false, // prevent seeding with DNS discovered known peers upon connecting
+      listenAddr: false, // prevent new peers being added from addr messages
+      network: network,
+      maxSize: 1,
+      addrs: [
+        // initial peers to connect to
+        {
+          ip: {
+            v4: server.split(':')[0],
           },
-        ],
-      }),
-    );
+        },
+      ],
+    });
+    console.log('connecting to p2p');
+    pool.on('candidate', newCandidate);
+    pool.on('peerready', (_: string, server: number) => {
+      let sessionId = p2pPool.startSession();
+      console.log('started session', sessionId);
+    });
+    pool.connect();
+    setP2pPool(pool);
   }, [server, network]);
 
   const createWallet = useCallback(
@@ -314,6 +310,7 @@ export const WalletProvider = (props: any) => {
         network: network_,
         indexedDB: win.indexedDB,
         IDBKeyRange: win.IDBKeyRange,
+        queueSize: Platform.OS == 'android' ? 1 : 4,
       });
 
       setFirstSyncCompleted(false);
@@ -366,9 +363,6 @@ export const WalletProvider = (props: any) => {
       });
 
       walletFile.on('new_tx', async () => {
-        if (!p2pPool && (await walletFile.GetCandidates()).length < 100) {
-          connectP2P();
-        }
         setBalances(await walletFile.GetBalance());
         setHistory(await walletFile.GetHistory());
         setAddresses(await walletFile.GetAllAddresses());
@@ -614,6 +608,33 @@ export const WalletProvider = (props: any) => {
       refreshWallet,
     ],
   );
+
+  useTraceUpdates('walletprovider', {
+    win,
+    njs,
+    wallet,
+    walletName,
+    mnemonic,
+    syncProgress,
+    network,
+    balances,
+    connected,
+    addresses,
+    walletsList,
+    history,
+    accounts,
+    parsedAddresses,
+    firstSyncCompleted,
+    tokens,
+    nfts,
+    updateAccounts,
+    bootstrapProgress,
+    removeWallet,
+    njs,
+    walletLibLoaded,
+    refreshWallet,
+    p2pPool,
+  });
 
   return (
     <WalletContext.Provider value={walletContext}>
