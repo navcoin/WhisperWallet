@@ -42,6 +42,18 @@ export interface BalanceFragment {
   mine?: boolean;
 }
 
+export interface NftItem {
+  attributes: {
+    content_type: string;
+    thumbnail_url: string;
+  };
+  description: string;
+  external_url: string;
+  image: string;
+  name: string;
+  version: number;
+}
+
 export enum View_Types_Enum {
   Full = 'full',
   Left = 'left',
