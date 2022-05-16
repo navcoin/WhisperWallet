@@ -11,7 +11,7 @@ import useWallet from '../hooks/useWallet';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import Text from './Text';
 import BottomSheetView from './BottomSheetView';
-import {View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import SwipeButton from '../components/SwipeButton';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/type';
@@ -39,124 +39,127 @@ const SendTransactionButton = (props: any) => {
   }, [loading]);
   return (
     <>
-      <Button
-        status={'primary-whisper'}
-        activeOpacity={0.7}
-        children="Send"
-        onPress={() => {
-          readPassword()
-            .then((password: string) => {
-              setLoading('Creating transaction...');
-              createTransaction(
-                from.type_id,
-                to,
-                amount,
-                password,
-                memo,
-                subtractFee,
-                from.address,
-                from.tokenId,
-                props.nftId,
-              )
-                .then((tx: any) => {
-                  setLoading(undefined);
-                  bottomSheet.expand(
-                    <BottomSheetView>
-                      <TopNavigation title="Confirm Transaction" />
-                      <Layout level="2" style={styles.card}>
-                        <View style={styles.row}>
-                          <Text category="headline" style={{marginRight: 16}}>
-                            To:
-                          </Text>
-                          <Text
-                            category="headline"
-                            style={{flex: 1, flexWrap: 'wrap'}}>
-                            {to}
-                          </Text>
-                        </View>
-                      </Layout>
-                      <Layout level="2" style={styles.card}>
-                        <View style={styles.row}>
-                          <Text category="headline" style={{marginRight: 16}}>
-                            Amount:
-                          </Text>
-                          <Text category="headline">
-                            {(
-                              amount -
-                              (subtractFee &&
-                              from.type_id != Balance_Types_Enum.PrivateToken &&
-                              from.type_id != Balance_Types_Enum.Nft
-                                ? tx.fee / 1e8
-                                : 0)
-                            ).toFixed(8)}{' '}
-                            {from.currency}
-                          </Text>
-                        </View>
-                      </Layout>
+      <ScrollView scrollEnabled={false} nestedScrollEnabled={false}>
+        <Button
+          status={'primary-whisper'}
+          activeOpacity={0.7}
+          children="Send"
+          onPress={() => {
+            readPassword()
+              .then((password: string) => {
+                setLoading('Creating transaction...');
+                createTransaction(
+                  from.type_id,
+                  to,
+                  amount,
+                  password,
+                  memo,
+                  subtractFee,
+                  from.address,
+                  from.tokenId,
+                  props.nftId,
+                )
+                  .then((tx: any) => {
+                    setLoading(undefined);
+                    bottomSheet.expand(
+                      <BottomSheetView>
+                        <TopNavigation title="Confirm Transaction" />
+                        <Layout level="2" style={styles.card}>
+                          <View style={styles.row}>
+                            <Text category="headline" style={{marginRight: 16}}>
+                              To:
+                            </Text>
+                            <Text
+                              category="headline"
+                              style={{flex: 1, flexWrap: 'wrap'}}>
+                              {to}
+                            </Text>
+                          </View>
+                        </Layout>
+                        <Layout level="2" style={styles.card}>
+                          <View style={styles.row}>
+                            <Text category="headline" style={{marginRight: 16}}>
+                              Amount:
+                            </Text>
+                            <Text category="headline">
+                              {(
+                                amount -
+                                (subtractFee &&
+                                from.type_id !=
+                                  Balance_Types_Enum.PrivateToken &&
+                                from.type_id != Balance_Types_Enum.Nft
+                                  ? tx.fee / 1e8
+                                  : 0)
+                              ).toFixed(8)}{' '}
+                              {from.currency}
+                            </Text>
+                          </View>
+                        </Layout>
 
-                      <Layout
-                        level="2"
-                        style={{...styles.card, marginBottom: 24}}>
-                        <View style={styles.row}>
-                          <Text category="headline" style={{marginRight: 16}}>
-                            Fee:
-                          </Text>
-                          <Text category="headline">
-                            {(tx.fee / 1e8).toFixed(8)}{' '}
-                            {from.destination_id ==
-                            Destination_Types_Enum.PrivateWallet
-                              ? 'xNAV'
-                              : 'NAV'}
-                          </Text>
-                        </View>
-                      </Layout>
+                        <Layout
+                          level="2"
+                          style={{...styles.card, marginBottom: 24}}>
+                          <View style={styles.row}>
+                            <Text category="headline" style={{marginRight: 16}}>
+                              Fee:
+                            </Text>
+                            <Text category="headline">
+                              {(tx.fee / 1e8).toFixed(8)}{' '}
+                              {from.destination_id ==
+                              Destination_Types_Enum.PrivateWallet
+                                ? 'xNAV'
+                                : 'NAV'}
+                            </Text>
+                          </View>
+                        </Layout>
 
-                      <SwipeButton
-                        goBackToStart={true}
-                        onComplete={() => {
-                          setLoading('Broadcasting...');
-                          sendTransaction(tx.tx).then(() => {
-                            setLoading(undefined);
-                            collapse();
-                            goBack();
-                          });
-                        }}
-                        title="Swipe to confirm"
-                      />
-                    </BottomSheetView>,
-                  );
-                })
-                .catch(e => {
-                  console.log(e.stack);
-                  bottomSheet.expand(
-                    <BottomSheetView>
-                      <Text center style={{paddingBottom: 16}}>
-                        Unable to create transaction
-                      </Text>
-                      <Text center style={{paddingBottom: 16}}>
-                        {e.message}
-                      </Text>
-                    </BottomSheetView>,
-                  );
-                  setLoading(undefined);
-                });
-            })
-            .catch(e => {
-              setLoading(undefined);
+                        <SwipeButton
+                          goBackToStart={true}
+                          onComplete={() => {
+                            setLoading('Broadcasting...');
+                            sendTransaction(tx.tx).then(() => {
+                              setLoading(undefined);
+                              collapse();
+                              goBack();
+                            });
+                          }}
+                          title="Swipe to confirm"
+                        />
+                      </BottomSheetView>,
+                    );
+                  })
+                  .catch(e => {
+                    console.log(e.stack);
+                    bottomSheet.expand(
+                      <BottomSheetView>
+                        <Text center style={{paddingBottom: 16}}>
+                          Unable to create transaction
+                        </Text>
+                        <Text center style={{paddingBottom: 16}}>
+                          {e.message}
+                        </Text>
+                      </BottomSheetView>,
+                    );
+                    setLoading(undefined);
+                  });
+              })
+              .catch(e => {
+                setLoading(undefined);
 
-              bottomSheet.expand(
-                <BottomSheetView>
-                  <Text center style={{paddingBottom: 16}}>
-                    Unable to create transaction
-                  </Text>
-                  <Text center style={{paddingBottom: 16}}>
-                    {e.message}
-                  </Text>
-                </BottomSheetView>,
-              );
-            });
-        }}
-      />
+                bottomSheet.expand(
+                  <BottomSheetView>
+                    <Text center style={{paddingBottom: 16}}>
+                      Unable to create transaction
+                    </Text>
+                    <Text center style={{paddingBottom: 16}}>
+                      {e.message}
+                    </Text>
+                  </BottomSheetView>,
+                );
+              });
+          }}
+        />
+      </ScrollView>
     </>
   );
 };
