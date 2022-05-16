@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  Icon,
   StyleService,
   useStyleSheet,
   useTheme,
@@ -15,11 +16,14 @@ import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {RootStackParamList} from '../../navigation/type';
 import {scale} from 'react-native-size-matters';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {View, ScrollView} from 'react-native';
+import {View, ScrollView, FlatList, TouchableOpacity} from 'react-native';
 import Text from '../../components/Text';
 import {useModal} from '../../hooks/useModal';
 import {IImageInfo} from 'react-native-image-zoom-viewer/built/image-viewer.type';
 import FastImage from 'react-native-fast-image';
+import {screenWidth} from '../../utils/layout';
+import {Modal} from 'react-native';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface GalleryNftItem extends NftItem {
   galleryData: IImageInfo;
@@ -27,18 +31,19 @@ interface GalleryNftItem extends NftItem {
 }
 
 const CollectionScreen = (props: any) => {
-  const {openModal, closeModal} = useModal();
   const styles = useStyleSheet(themedStyles);
   const [collection, setCollection] = useState<BalanceFragment | undefined>(
     props.route.params.collection,
   );
   const [nfts, setNfts] = useState<GalleryNftItem[]>([]);
-
+  const [previewIndex, setPreviewIndex] = useState(0);
+  const [previewMode, setPreviewMode] = useState(false);
+  const {bottom, top} = useSafeAreaInsets();
   useEffect(() => {
     if (!collection) {
       return;
     }
-    const tempCol = {...collection};
+    const tempCol = JSON.parse(JSON.stringify(props.route.params.collection));
     const tempNfts: GalleryNftItem[] = [];
     let canEdit = false;
     if (
@@ -47,7 +52,6 @@ const CollectionScreen = (props: any) => {
       typeof tempCol.items.confirmed['0'] === 'string'
     ) {
       canEdit = true;
-      console.log('canedittttt');
       for (const [key, value] of Object.entries<string>(
         tempCol.items.confirmed,
       )) {
@@ -87,18 +91,15 @@ const CollectionScreen = (props: any) => {
       setCollection(tempCol);
       setNfts(tempNfts);
     }
-    console.log('wtf');
-  }, [collection]);
+  }, [props.route.params.collection]);
 
-  useEffect(() => {
-    console.log(nfts);
-    console.log('nfts');
-  }, [nfts]);
-
-  const previewImage = (index: number) => {
-    openModal(
-      <ImageViewer imageUrls={nfts.map(n => n.galleryData)} index={index} />,
-    );
+  const openImagePreview = (index: number) => {
+    setPreviewIndex(index);
+    setPreviewMode(true);
+  };
+  const closeImagePreview = () => {
+    setPreviewIndex(0);
+    setPreviewMode(false);
   };
 
   return (
@@ -110,30 +111,88 @@ const CollectionScreen = (props: any) => {
       />
       {nfts.length ? (
         <>
-          <ScrollView>
-            <Text>{JSON.stringify(nfts.length)}</Text>
-            {nfts.map((n, index) => (
+          <Modal visible={previewMode} transparent={true}>
+            <ImageViewer
+              onSwipeDown={() => {
+                closeImagePreview();
+              }}
+              enableSwipeDown
+              useNativeDriver
+              enablePreload
+              backgroundColor="#1f2932F0"
+              index={previewIndex}
+              imageUrls={nfts.map(n => n.galleryData)}
+              /* This is intentionally here to remove the indicator*/
+              renderIndicator={() => {}}
+              // renderHeader={currentIndex => (
+              //   <View style={{paddingTop: top, position: 'absolute'}} />
+              // )}
+              renderFooter={currentIndex => (
+                <View
+                  style={{
+                    paddingBottom: bottom + top + scale(20),
+                    marginLeft: scale(20),
+                  }}>
+                  <Text category="body" left>
+                    Name: {nfts[currentIndex].name}
+                  </Text>
+                  <Text category="body" left>
+                    Description: {nfts[currentIndex].description}
+                  </Text>
+                  <Text category="body" left>
+                    Version: {nfts[currentIndex].version}
+                  </Text>
+                  {nfts[currentIndex].type === 'pending' ? (
+                    <Text category="body" left>
+                      Status: Pending
+                    </Text>
+                  ) : null}
+                </View>
+              )}
+            />
+          </Modal>
+          <FlatList
+            data={nfts}
+            renderItem={({item, index}) => (
               <View
-                key={index}
-                style={{
-                  width: 300,
-                  height: 300,
-                  marginBottom: 20,
-                  backgroundColor: 'blue',
-                }}>
-                <FastImage
-                  style={{width: 200, height: 200}}
-                  source={{
-                    uri: n.image,
-                    priority: FastImage.priority.normal,
-                  }}
-                  resizeMode={FastImage.resizeMode.cover}
-                />
-                <Text>{n.image}</Text>
-                <View />
+                style={styles.singleImageContainerStyle}
+                opacity={item.type === 'pending' ? 0.7 : 1}>
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    openImagePreview(index);
+                  }}>
+                  <FastImage
+                    style={{
+                      width: (screenWidth - 24) / 3,
+                      height: (screenWidth - 24) / 3,
+                    }}
+                    source={{
+                      uri: item.image,
+                      priority: FastImage.priority.normal,
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                  {item.type === 'pending' ? (
+                    <Icon
+                      pack="assets"
+                      name={'refresh'}
+                      style={{
+                        position: 'absolute',
+                        bottom: scale(6),
+                        right: scale(6),
+                        tintColor: 'white',
+                        width: scale(16),
+                        height: scale(16),
+                      }}
+                    />
+                  ) : null}
+                </TouchableOpacity>
               </View>
-            ))}
-          </ScrollView>
+            )}
+            numColumns={3}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </>
       ) : (
         <View>
@@ -166,5 +225,12 @@ const themedStyles = StyleService.create({
     width: scale(18),
     height: scale(18),
     tintColor: '$icon-basic-color',
+  },
+  singleImageContainerStyle: {
+    flex: 1,
+    width: (screenWidth - 24) / 3,
+    height: (screenWidth - 24) / 3,
+    marginBottom: scale(12),
+    flexDirection: 'row',
   },
 });
