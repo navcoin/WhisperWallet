@@ -85,8 +85,7 @@ const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
             item={{text: 'Add new server'}}
             selected={''}
             onPress={() => {
-              navigate('Wallet', {
-                screen: 'AddServerScreen',
+              navigate('AddServerScreen', {
                 params: {
                   addServer: (newServer: ServerOption, cb: () => void) => {
                     const temp = [...currentServers];

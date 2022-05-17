@@ -33,7 +33,11 @@ const BottomSheetMenu = (props: any) => {
               if (el.onPress) {
                 el.onPress();
               } else if (el.navigate) {
-                navigate('Wallet', el.navigate);
+                if (el.navigate.params) {
+                  navigate(el.navigate.screen, el.navigate.params);
+                  return;
+                }
+                navigate(el.navigate.screen);
               }
               if (!el.skipCollapse) {
                 collapse();

@@ -112,7 +112,9 @@ const DestinationComponent = (props: any) => {
         <Layout level="2" style={styles.card}>
           <View style={styles.row}>
             <Text category="headline">Destination</Text>
-            <Text category="headline">
+            <Text
+              style={{marginTop: scale(11), marginLeft: scale(8)}}
+              category="headline">
               {toType?.destination_id != Destination_Types_Enum.Address &&
                 toType?.name}
             </Text>
@@ -151,8 +153,9 @@ const DestinationComponent = (props: any) => {
             <></>
           )}
           {!(
-            props.from.type_id == Balance_Types_Enum.Nft ||
-            props.from.type_id == Balance_Types_Enum.PrivateToken
+            props.from &&
+            (props.from.type_id == Balance_Types_Enum.Nft ||
+              props.from.type_id == Balance_Types_Enum.PrivateToken)
           ) && (
             <TouchableOpacity
               style={styles.iconView}
@@ -201,8 +204,8 @@ const themedStyles = StyleService.create({
     paddingHorizontal: scale(16),
     marginBottom: verticalScale(24),
   },
-  row: {
-    flexDirection: 'row',
+  column: {
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-between',
   },

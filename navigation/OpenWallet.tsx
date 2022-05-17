@@ -61,7 +61,7 @@ const OpenWallet = () => {
                           true,
                           'mainnet',
                           () => {
-                            navigate('Wallet');
+                            navigate('MainWalletScreen');
                             setLoading(undefined);
                           },
                         );
