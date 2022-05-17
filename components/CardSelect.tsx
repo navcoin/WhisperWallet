@@ -60,7 +60,7 @@ const CardSelect = ({
               adjustsFontSizeToFit
               numberOfLines={1}
               style={{
-                marginLeft: scale(8),
+                marginLeft: scale(17),
                 marginTop: scale(11),
                 flex: 1,
               }}
