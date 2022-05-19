@@ -161,7 +161,8 @@ const AccountsTab = (props: {
     account_ => {
       bottomSheet.expand(
         <BottomSheetMenu
-          title={account_.name}
+          title={account_.name + ' Collection'}
+          ignoreSuffix={true}
           options={[
             {
               text: 'Open collection',

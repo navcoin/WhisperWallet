@@ -217,7 +217,7 @@ export const WalletProvider = (props: any) => {
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
           currency: balances.tokens[tokenId].code,
-          leftElement: <Identicon value={tokenId} />,
+          identicon: tokenId,
         });
       }
 
@@ -236,7 +236,7 @@ export const WalletProvider = (props: any) => {
           type_id: Balance_Types_Enum.Nft,
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
-          leftElement: <Identicon value={tokenId} />,
+          identicon: tokenId,
           items: {
             confirmed: balances.nfts[tokenId].confirmed,
             pending: balances.nfts[tokenId].pending,
@@ -256,7 +256,7 @@ export const WalletProvider = (props: any) => {
             type_id: Balance_Types_Enum.Nft,
             destination_id: Destination_Types_Enum.PrivateWallet,
             tokenId: token.id,
-            leftElement: <Identicon value={token.id}></Identicon>,
+            identicon: token.id,
             items: {confirmed: [], pending: []},
             mine: true,
             currency: 'NFT',
@@ -377,7 +377,7 @@ export const WalletProvider = (props: any) => {
       });
 
       walletFile.on('connected', async (serverName: string) => {
-        console.log('connected to ',serverName)
+        console.log('connected to ', serverName);
         setServer(serverName);
         if ((await walletFile.GetCandidates()).length < 100) {
           connectP2P();
@@ -429,7 +429,12 @@ export const WalletProvider = (props: any) => {
     [njs, wallet, win],
   );
 
-  const createNftCollection = async (name: string, scheme: string, amount: number, spendingPassword: string) => {
+  const createNftCollection = async (
+    name: string,
+    scheme: string,
+    amount: number,
+    spendingPassword: string,
+  ) => {
     if (!wallet) {
       throw new Error('Wallet not loaded');
     }
@@ -471,7 +476,7 @@ export const WalletProvider = (props: any) => {
     }
 
     return ret;
-  }
+  };
 
   const createTransaction = async (
     from: string,

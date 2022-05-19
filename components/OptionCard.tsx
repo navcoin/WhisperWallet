@@ -13,6 +13,7 @@ import AnimatedAppearance from './AnimatedAppearance';
 
 import {Animation_Types_Enum} from '../constants/Type';
 import {scale, verticalScale} from 'react-native-size-matters';
+import Identicon from './Identicon';
 
 interface ItemProps {
   text: string;
@@ -31,7 +32,7 @@ interface OptionProps {
   iconRightOnPress?: () => void;
   animationType?: Animation_Types_Enum;
   cardType?: 'outline' | 'fill';
-  leftElement?: any;
+  identicon?: any;
   rightElement?: any;
 }
 
@@ -47,7 +48,7 @@ const OptionCard = ({
   iconRightOnPress,
   animationType = Animation_Types_Enum.SlideInRight,
   cardType = 'fill',
-  leftElement,
+  identicon,
   rightElement,
 }: OptionProps) => {
   const theme = useTheme();
@@ -82,8 +83,8 @@ const OptionCard = ({
         style={[styles.container, setContainerStyle(cardType)]}>
         <View style={styles.contentWrapper}>
           <View style={[styles.iconWrapper, styles.leftIconWrapper]}>
-            {leftElement ? (
-              leftElement
+            {identicon ? (
+              <Identicon value={identicon || ''} />
             ) : (
               <Icon
                 pack="assets"

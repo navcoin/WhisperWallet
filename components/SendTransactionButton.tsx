@@ -37,6 +37,7 @@ const SendTransactionButton = (props: any) => {
     }
     closeModal();
   }, [loading]);
+
   return (
     <>
       <Button
@@ -77,20 +78,37 @@ const SendTransactionButton = (props: any) => {
                       </Layout>
                       <Layout level="2" style={styles.card}>
                         <View style={styles.row}>
-                          <Text category="headline" style={{marginRight: 16}}>
-                            Amount:
-                          </Text>
-                          <Text category="headline">
-                            {(
-                              amount -
-                              (subtractFee &&
-                              from.type_id != Balance_Types_Enum.PrivateToken &&
-                              from.type_id != Balance_Types_Enum.Nft
-                                ? tx.fee / 1e8
-                                : 0)
-                            ).toFixed(8)}{' '}
-                            {from.currency}
-                          </Text>
+                          {from.type_id != Balance_Types_Enum.Nft ? (
+                            <>
+                              {' '}
+                              <Text
+                                category="headline"
+                                style={{marginRight: 16}}>
+                                Amount:
+                              </Text>
+                              <Text category="headline">
+                                {(
+                                  amount -
+                                  (subtractFee &&
+                                  from.type_id !=
+                                    Balance_Types_Enum.PrivateToken &&
+                                  from.type_id != Balance_Types_Enum.Nft
+                                    ? tx.fee / 1e8
+                                    : 0)
+                                ).toFixed(8)}{' '}
+                                {from.currency}
+                              </Text>
+                            </>
+                          ) : (
+                            <>
+                              <Text
+                                category="headline"
+                                style={{marginRight: 16}}>
+                                Item:
+                              </Text>
+                              <Text category="headline">#{props.nftId}</Text>
+                            </>
+                          )}
                         </View>
                       </Layout>
 
