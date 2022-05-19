@@ -116,6 +116,17 @@ const CollectionScreen = (props: any) => {
           collection?.name || collection?.tokenId?.substring(0, 16) + '...'
         }
         style={{marginBottom: scale(0)}}
+        accessoryRight={
+          collection?.mine && (
+            <TouchableOpacity
+              style={{paddingRight: scale(24)}}
+              onPress={() => {
+                console.log(collection);
+              }}>
+              <Icon name={'add'} style={{tintColor: '#fff'}} />
+            </TouchableOpacity>
+          )
+        }
       />
       {nfts.length ? (
         <>
@@ -249,8 +260,8 @@ const CollectionScreen = (props: any) => {
         </>
       ) : (
         <View>
-          <Text category="title4" center>
-            There are no art in this collection 🤨
+          <Text category="" center>
+            There are no items in this collection 🤨
           </Text>
         </View>
       )}
