@@ -1,27 +1,20 @@
 import BottomSheet, {
   BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetProps,
   BottomSheetView,
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet';
-import React, {
-  ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {
   BottomSheetContextValue,
   BottomSheetContext,
 } from './BottomSheetContext';
+import {Platform} from 'react-native';
 
 export const BottomSheetProvider = (props: any) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [content, setContent] = useState(null);
+  const [contentPan, setContentPan] = useState(true);
 
   const styles = useStyleSheet(themedStyles);
 
@@ -45,6 +38,12 @@ export const BottomSheetProvider = (props: any) => {
     () => ({
       expand: c => {
         setContent(c);
+        setContentPan(
+          Platform.OS == 'android' &&
+            !JSON.stringify(c).includes('Swipe to confirm')
+            ? false
+            : true,
+        );
       },
       collapse: () => {
         setContent(null);
@@ -66,6 +65,7 @@ export const BottomSheetProvider = (props: any) => {
           contentHeight={animatedContentHeight}
           ref={bottomSheetRef}
           enablePanDownToClose={true}
+          enableContentPanningGesture={contentPan}
           handleStyle={styles.handleStyle}
           backgroundStyle={styles.backgroundStyle}
           animateOnMount={true}

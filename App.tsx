@@ -114,16 +114,17 @@ const App = (props: {theme: string}) => {
         translucent={true}
         backgroundColor={'#00000000'}
       />
-      <View style={{flex: 1, backgroundColor: theme['color-basic-700']}}>
-        <NavigationContainer
-          onStateChange={() => {
-            Toast.hide();
-          }}>
-          <SecurityProvider>
+      <NavigationContainer
+        onStateChange={() => {
+          Toast.hide();
+        }}>
+        <SecurityProvider>
+          <View style={{flex: 1, backgroundColor: theme['color-basic-700']}}>
             <AppContainer shownWelcome={shownWelcome} />
-          </SecurityProvider>
-        </NavigationContainer>
-      </View>
+          </View>
+        </SecurityProvider>
+      </NavigationContainer>
+
       <Toast config={toastConfig} />
     </WalletProvider>
   );

@@ -100,7 +100,7 @@ const MainWalletScreen = () => {
   );
 };
 
-export default gestureHandlerRootHOC(MainWalletScreen);
+export default MainWalletScreen;
 
 const themedStyles = StyleService.create({
   container: {
