@@ -20,10 +20,13 @@ export type AskPinScreenProps = {
   askManualPin: any;
   pinLength: number;
 };
+export type RootAppStackParamList = {
+  App: undefined;
+  OnBoarding: undefined;
+};
 export type RootStackParamList = {
   Intro: undefined;
   CreateNewWallet: undefined;
-  OnBoarding: undefined;
   OpenWallet: undefined;
   ImportWallet: undefined;
   AskPinScreen: AskPinScreenProps;
@@ -39,6 +42,8 @@ export type RootStackParamList = {
   AddServerScreen: AddServerScreenProps;
   AddStakingNodeScreen: undefined;
   ErrorLogsScreen: undefined;
+  CreateNftCollectionScreen: undefined;
+  CollectionScreen: undefined;
 };
 
 export type MnemonicScreenProps = {mnemonic: string};

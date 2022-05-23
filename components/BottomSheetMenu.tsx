@@ -20,7 +20,6 @@ const BottomSheetMenu = (props: any) => {
       <Text category={'title4'} center style={{marginBottom: 32}}>
         {props.title} {props.ignoreSuffix ? '' : 'Account'}
       </Text>
-
       {props.options &&
         props.options.map((el: any) => (
           <OptionCard
@@ -30,17 +29,17 @@ const BottomSheetMenu = (props: any) => {
             key={el.text}
             icon={el.icon}
             onPress={() => {
+              if (!el.skipCollapse) {
+                collapse();
+              }
               if (el.onPress) {
                 el.onPress();
               } else if (el.navigate) {
                 if (el.navigate.params) {
                   navigate(el.navigate.screen, el.navigate.params);
-                  return;
+                } else {
+                  navigate(el.navigate.screen);
                 }
-                navigate(el.navigate.screen);
-              }
-              if (!el.skipCollapse) {
-                collapse();
               }
             }}
             selected={''}

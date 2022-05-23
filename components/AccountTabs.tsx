@@ -22,7 +22,7 @@ import OptionCard from './OptionCard';
 
 const AccountsTab = (props: {
   onRefresh: () => Promise<void>;
-  refreshing: boolean;
+  refreshing?: boolean;
 }) => {
   const {onRefresh, refreshing} = props;
   const [selectedTab, setSelectedTab] = useState(0);
@@ -151,7 +151,51 @@ const AccountsTab = (props: {
         />,
       );
     },
-    [bottomSheet, pickDestination],
+    [bottomSheet],
+  );
+
+  const expandMenuNft = useCallback(
+    account_ => {
+      bottomSheet.expand(
+        <BottomSheetMenu
+          title={account_.name + ' Collection'}
+          ignoreSuffix={true}
+          options={[
+            {
+              text: 'Open collection',
+              icon: 'image',
+              navigate: {
+                screen: 'CollectionScreen',
+                params: {
+                  collection: account_,
+                },
+              },
+            },
+            {
+              text: 'View address to receive',
+              icon: 'download',
+              navigate: {
+                screen: 'AddressScreen',
+                params: {
+                  from: account_,
+                },
+              },
+            },
+            {
+              text: 'Transaction history',
+              icon: 'suitcase',
+              navigate: {
+                screen: 'HistoryScreen',
+                params: {
+                  filter: account_,
+                },
+              },
+            },
+          ]}
+        />,
+      );
+    },
+    [bottomSheet],
   );
 
   const [accountsContent, setAccountContent] = useState(<></>);
@@ -180,6 +224,50 @@ const AccountsTab = (props: {
   }, [accounts]);
 
   useEffect(() => {
+    setNftsContent(
+      <>
+        {nfts.length == 0 ? (
+          <Text center marginBottom={scale(24)}>
+            No private NFTs found
+          </Text>
+        ) : (
+          nfts.map((el, i) => {
+            return (
+              <View style={styles.item} key={i}>
+                <BalanceCard
+                  item={{...el, name: el.name}}
+                  key={i}
+                  index={i}
+                  onPress={() => {
+                    setAccount(el);
+                    expandMenuNft(el);
+                  }}
+                />
+              </View>
+            );
+          })
+        )}
+        <View style={styles.item}>
+          <OptionCard
+            color={theme['color-basic-1200']}
+            key={'add'}
+            index={nfts.length + 1}
+            item={{text: 'Create collection'}}
+            selected={''}
+            onPress={() => {
+              navigate('Wallet', {
+                screen: 'CreateNftCollectionScreen',
+              });
+            }}
+            icon={'add'}
+            cardType={'outline'}
+          />
+        </View>
+      </>,
+    );
+  }, [nfts]);
+
+  useEffect(() => {
     setTokensContent(
       <>
         {tokens.length == 0 ? (
@@ -206,46 +294,6 @@ const AccountsTab = (props: {
     );
   }, [tokens]);
 
-  useEffect(() => {
-    setNftsContent(
-      <>
-        {nfts.length == 0 ? (
-          <Text center marginBottom={scale(24)}>
-            No private NFTs found
-          </Text>
-        ) : (
-          nfts.map((el, i) => {
-            return (
-              <View style={styles.item} key={i}>
-                <BalanceCard
-                  item={{...el, name: el.name}}
-                  key={i}
-                  index={i}
-                  onPress={() => {
-                    setAccount(el);
-                    expandMenuToken(el);
-                  }}
-                />
-              </View>
-            );
-          })
-        )}
-        <View style={styles.item}>
-          <OptionCard
-            color={theme['color-basic-1200']}
-            key={'add'}
-            index={nfts.length + 1}
-            item={{text: 'Create collection'}}
-            selected={''}
-            onPress={() => {}}
-            icon={'add'}
-            cardType={'outline'}
-          />
-        </View>
-      </>,
-    );
-  }, [nfts]);
-
   return (
     <>
       <Tab
@@ -257,7 +305,7 @@ const AccountsTab = (props: {
       <ScrollView
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}
+            refreshing={false}
             onRefresh={onRefresh}
             tintColor="#fff"
             titleColor="#fff"

@@ -30,7 +30,7 @@ const BottomSheetOptions = (props: any) => {
               id={el.text}
               key={el.text}
               icon={el.icon}
-              leftElement={el.leftElement}
+              identicon={el.identicon}
               onPress={() => {
                 props.onSelect(el);
                 collapse();
