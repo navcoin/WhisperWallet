@@ -18,6 +18,8 @@ import {
   BottomSheetContextValue,
   BottomSheetContext,
 } from './BottomSheetContext';
+import {FullWindowOverlay} from 'react-native-screens';
+import {StyleSheet} from 'react-native';
 
 export const BottomSheetProvider = (props: any) => {
   const bottomSheetRef = useRef<BottomSheet>(null);

@@ -32,6 +32,7 @@ export interface WalletContextValue {
   removeWallet: (name: string) => Promise<void>;
   njs: any;
   walletLibLoaded: boolean;
+  closeWallet: () => void;
 }
 
 export const WalletContext = createContext<WalletContextValue | undefined>(

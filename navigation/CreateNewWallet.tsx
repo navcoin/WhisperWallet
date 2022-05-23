@@ -29,7 +29,7 @@ const CreateNewWallet = () => {
   const {navigate, goBack} = useNavigation();
   const [index, setIndex] = useState(0);
   const [walletName, setWalletName] = useState('');
-  const {mnemonic, createWallet, njs} = useWallet();
+  const {mnemonic, createWallet, njs, walletsList} = useWallet();
   const [loading, setLoading] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
   const [network, setNetwork] = useState('mainnet');
@@ -100,8 +100,7 @@ const CreateNewWallet = () => {
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={async () => {
-                  const walletList = await njs.wallet.WalletFile.ListWallets();
-                  if (walletList.indexOf(walletName) > -1) {
+                  if (walletsList.indexOf(walletName) > -1) {
                     setError('There is already a wallet with that name.');
                   } else if (walletName) {
                     setIndex(1);

@@ -35,7 +35,7 @@ interface SettingsItem {
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const {readPassword} = useSecurity();
   const [loading, setLoading] = useState<string | undefined>(undefined);
-  const {walletName, wallet, createWallet, njs, removeWallet} = useWallet();
+  const {walletName, createWallet, closeWallet, removeWallet} = useWallet();
   const bottomSheet = useBottomSheet();
   const {changeMode, supportedType, currentAuthenticationType} = useSecurity();
   const [authTypes, setAuthTypes] = useState<any>([]);
@@ -89,8 +89,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const {openModal, closeModal} = useModal();
 
   const disconnectWallet = async (deleteWallet: boolean = false) => {
-    wallet.Disconnect();
-    wallet.CloseDb();
+    closeWallet();
     if (deleteWallet) {
       await removeWallet(walletName);
     }
@@ -100,8 +99,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
 
   const resyncWallet = () => {
     try {
-      wallet.Disconnect();
-      wallet.CloseDb();
+      closeWallet();
     } catch (e) {}
 
     readPassword().then((password: string) => {
