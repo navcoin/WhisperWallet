@@ -74,7 +74,9 @@ export const BottomSheetProvider = (props: any) => {
               {...props}
               disappearsOnIndex={-1}
               appearsOnIndex={0}
-              close={() => bottomSheetRef.current?.close()}
+              close={() => {
+                bottomSheetRef.current?.close();
+              }}
             />
           )}>
           <BottomSheetView onLayout={handleContentLayout}>

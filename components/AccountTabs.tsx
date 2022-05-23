@@ -22,7 +22,7 @@ import OptionCard from './OptionCard';
 
 const AccountsTab = (props: {
   onRefresh: () => Promise<void>;
-  refreshing: boolean;
+  refreshing?: boolean;
 }) => {
   const {onRefresh, refreshing} = props;
   const [selectedTab, setSelectedTab] = useState(0);
@@ -49,12 +49,9 @@ const AccountsTab = (props: {
           options={options}
           bottomSheetRef={bottomSheet.getRef}
           onSelect={(el: any) => {
-            navigate('Wallet', {
-              screen: 'SendToScreen',
-              params: {
-                from: account_,
-                toType: el,
-              },
+            navigate('SendToScreen', {
+              from: account_,
+              toType: el,
             });
           }}
         />,
@@ -308,7 +305,7 @@ const AccountsTab = (props: {
       <ScrollView
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}
+            refreshing={false}
             onRefresh={onRefresh}
             tintColor="#fff"
             titleColor="#fff"

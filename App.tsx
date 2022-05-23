@@ -3,7 +3,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, View} from 'react-native';
 import {patchFlatListProps} from 'react-native-web-refresh-control';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -18,7 +18,6 @@ import {
 import {default as darkTheme} from './constants/theme/dark.json';
 import {default as lightTheme} from './constants/theme/light.json';
 import {default as customTheme} from './constants/theme/appTheme.json';
-import {default as customMapping} from './constants/theme/mapping.json';
 import AppContainer from './navigation/AppContainer';
 
 patchFlatListProps();
@@ -41,6 +40,9 @@ import ModalProvider from './contexts/ModalProvider';
 import {useModal} from './hooks/useModal';
 import ErrorModalContent from './components/Modals/ErrorModalContent';
 import {AsyncStoredItems} from './utils/asyncStorageManager';
+import {NavigationContainer} from '@react-navigation/native';
+import SecurityProvider from './contexts/SecurityProvider';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const App = (props: {theme: string}) => {
   const {theme} = props;
@@ -112,7 +114,16 @@ const App = (props: {theme: string}) => {
         translucent={true}
         backgroundColor={'#00000000'}
       />
-      <AppContainer shownWelcome={shownWelcome} />
+      <View style={{flex: 1, backgroundColor: theme['color-basic-700']}}>
+        <NavigationContainer
+          onStateChange={() => {
+            Toast.hide();
+          }}>
+          <SecurityProvider>
+            <AppContainer shownWelcome={shownWelcome} />
+          </SecurityProvider>
+        </NavigationContainer>
+      </View>
       <Toast config={toastConfig} />
     </WalletProvider>
   );
@@ -135,22 +146,24 @@ const AppWrapper = () => {
     });
   }, []);
   return (
-    <SafeAreaProvider>
-      <ThemeContext.Provider value={{theme, toggleTheme}}>
-        <IconRegistry icons={[AssetIconsPack, EvaIconsPack]} />
-        <ApplicationProvider
-          {...eva}
-          theme={
-            theme === 'light'
-              ? {...eva.light, ...customTheme, ...lightTheme}
-              : {...eva.dark, ...customTheme, ...darkTheme}
-          }>
-          <ModalProvider>
-            <App theme={theme} />
-          </ModalProvider>
-        </ApplicationProvider>
-      </ThemeContext.Provider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <SafeAreaProvider>
+        <ThemeContext.Provider value={{theme, toggleTheme}}>
+          <IconRegistry icons={[AssetIconsPack, EvaIconsPack]} />
+          <ApplicationProvider
+            {...eva}
+            theme={
+              theme === 'light'
+                ? {...eva.light, ...customTheme, ...lightTheme}
+                : {...eva.dark, ...customTheme, ...darkTheme}
+            }>
+            <ModalProvider>
+              <App theme={theme} />
+            </ModalProvider>
+          </ApplicationProvider>
+        </ThemeContext.Provider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 };
 

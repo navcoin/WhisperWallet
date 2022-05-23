@@ -1,11 +1,10 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import {
   Icon,
   Layout,
   StyleService,
   useStyleSheet,
-  useTheme,
 } from '@tsejerome/ui-kitten-components';
 
 import Container from '../../components/Container';
@@ -18,20 +17,17 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 import BalanceCircle from '../../components/BalanceCircle';
 
-import {BottomSheetProvider} from '../../contexts/BottomSheetProvider';
 import AccountsTab from '../../components/AccountTabs';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {RootStackParamList} from '../../navigation/type';
 import {scale} from 'react-native-size-matters';
 import {TouchableWithoutFeedback} from '@tsejerome/ui-kitten-components/devsupport';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const MainWalletScreen = () => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
-  const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
   const {refreshWallet, connected} = useWallet();
 
-  const [refreshing, setRefreshing] = useState(false);
   const [dotColor, setDotColor] = useState('gray');
 
   useEffect(() => {
@@ -55,33 +51,31 @@ const MainWalletScreen = () => {
   return (
     <Container style={styles.container}>
       <Layout style={styles.topTab}>
-        <View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            left: 0,
+          }}>
           <View
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              left: 0,
-            }}>
-            <View
-              style={{
-                width: scale(8),
-                borderRadius: scale(4),
-                marginLeft: scale(12),
-                height: scale(8),
-                backgroundColor: dotColor,
-                alignSelf: 'center',
-              }}
-            />
-            <Text
-              style={{
-                alignSelf: 'center',
-                marginLeft: scale(12),
-              }}
-              category={'caption1'}>
-              {connected}
-            </Text>
-          </View>
+              width: scale(8),
+              borderRadius: scale(4),
+              marginLeft: scale(12),
+              height: scale(8),
+              backgroundColor: dotColor,
+              alignSelf: 'center',
+            }}
+          />
+          <Text
+            style={{
+              alignSelf: 'center',
+              marginLeft: scale(12),
+            }}
+            category={'caption1'}>
+            {connected}
+          </Text>
         </View>
         <View style={[styles.iconGrp]}>
           <TouchableWithoutFeedback
@@ -94,16 +88,14 @@ const MainWalletScreen = () => {
           <TouchableWithoutFeedback
             style={{padding: scale(12)}}
             onPress={() => {
-              navigate('Wallet', {
-                screen: 'SettingsScreen',
-              });
+              navigate('SettingsScreen');
             }}>
             <Icon pack="assets" name={'menuBtn'} style={[styles.icon]} />
           </TouchableWithoutFeedback>
         </View>
       </Layout>
       <BalanceCircle />
-      <AccountsTab refreshing={refreshing} onRefresh={refreshWallet} />
+      <AccountsTab onRefresh={refreshWallet} />
     </Container>
   );
 };
