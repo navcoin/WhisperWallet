@@ -1,29 +1,20 @@
 import BottomSheet, {
   BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetProps,
   BottomSheetView,
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet';
-import React, {
-  ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {
   BottomSheetContextValue,
   BottomSheetContext,
 } from './BottomSheetContext';
-import {FullWindowOverlay} from 'react-native-screens';
-import {StyleSheet} from 'react-native';
+import {Platform} from 'react-native';
 
 export const BottomSheetProvider = (props: any) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [content, setContent] = useState(null);
+  const [contentPan, setContentPan] = useState(true);
 
   const styles = useStyleSheet(themedStyles);
 
@@ -47,6 +38,12 @@ export const BottomSheetProvider = (props: any) => {
     () => ({
       expand: c => {
         setContent(c);
+        setContentPan(
+          Platform.OS == 'android' &&
+            !JSON.stringify(c).includes('Swipe to confirm')
+            ? false
+            : true,
+        );
       },
       collapse: () => {
         setContent(null);
@@ -68,6 +65,7 @@ export const BottomSheetProvider = (props: any) => {
           contentHeight={animatedContentHeight}
           ref={bottomSheetRef}
           enablePanDownToClose={true}
+          enableContentPanningGesture={contentPan}
           handleStyle={styles.handleStyle}
           backgroundStyle={styles.backgroundStyle}
           animateOnMount={true}
@@ -76,7 +74,9 @@ export const BottomSheetProvider = (props: any) => {
               {...props}
               disappearsOnIndex={-1}
               appearsOnIndex={0}
-              close={() => bottomSheetRef.current?.close()}
+              close={() => {
+                bottomSheetRef.current?.close();
+              }}
             />
           )}>
           <BottomSheetView onLayout={handleContentLayout}>
@@ -100,57 +100,3 @@ const themedStyles = StyleService.create({
     backgroundColor: 'background-basic-color-3',
   },
 });
-
-/*const BottomSheetProvider = (props: any) => {
-  const [content, setBottomContent] = useState(<></>);
-
-  const styles = useStyleSheet(themedStyles);
-
-  const initialSnapPoints = useMemo(() => ['CONTENT_HEIGHT'], []);
-  const bottomSheetRef = useRef<BottomSheetModal>(null);
-  const {
-    animatedHandleHeight,
-    animatedSnapPoints,
-    animatedContentHeight,
-    handleContentLayout,
-  } = useBottomSheetDynamicSnapPoints(initialSnapPoints);
-
-  // callbacks
-  const handleSheetChanges = useCallback((index: number) => {
-    return;
-  }, []);
-
-  const [bottomSheetIndex, setBottomSheetIndex] = useState(-1);
-
-  const setContent = (c: ReactElement) => {
-    setBottomContent(c);
-  };
-
-  return (
-    <>
-      {props.children}
-      <BottomSheet
-        ref={bottomSheetRef}
-        snapPoints={animatedSnapPoints}
-        handleHeight={animatedHandleHeight}
-        contentHeight={animatedContentHeight}
-        index={bottomSheetIndex}
-        onChange={handleSheetChanges}
-        enablePanDownToClose={true}
-        handleStyle={styles.handleStyle}
-        animateOnMount={true}
-        backdropComponent={props => (
-          <BottomSheetBackdrop
-            {...props}
-            disappearsOnIndex={-1}
-            appearsOnIndex={0}
-            close={() => bottomSheetRef.current?.close()}
-          />
-        )}>
-        <BottomSheetView onLayout={handleContentLayout}>
-          {content}
-        </BottomSheetView>
-      </BottomSheet>
-    </>
-  );
-};*/

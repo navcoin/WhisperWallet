@@ -12,7 +12,7 @@ import {useBottomSheet} from '../hooks/useBottomSheet';
 import Text from './Text';
 import BottomSheetView from './BottomSheetView';
 import {View} from 'react-native';
-import SwipeButton from '../components/SwipeButton';
+import {SwipeButton} from '../components/SwipeButton';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/type';
 import {Balance_Types_Enum, Destination_Types_Enum} from '../constants/Type';
@@ -37,6 +37,7 @@ const SendTransactionButton = (props: any) => {
     }
     closeModal();
   }, [loading]);
+
   return (
     <>
       <Button
@@ -93,7 +94,6 @@ const SendTransactionButton = (props: any) => {
                           </Text>
                         </View>
                       </Layout>
-
                       <Layout
                         level="2"
                         style={{...styles.card, marginBottom: 24}}>

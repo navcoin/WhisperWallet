@@ -247,7 +247,7 @@ const ImportWallet = () => {
               children="Finish"
               style={styles.button}
               onPress={() => {
-                navigate('Wallet');
+                navigate('MainWalletScreen');
               }}
             />
           </KeyboardAwareScrollView>

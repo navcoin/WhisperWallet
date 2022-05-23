@@ -1,8 +1,4 @@
-import {
-  NavigationProp,
-  NavigatorScreenParams,
-  RouteProp,
-} from '@react-navigation/native';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {ServerOption} from '../constants/Type';
 
 type AllParamList = WalletParamList & RootStackParamList;
@@ -24,32 +20,16 @@ export type AskPinScreenProps = {
   askManualPin: any;
   pinLength: number;
 };
+export type RootAppStackParamList = {
+  App: undefined;
+  OnBoarding: undefined;
+};
 export type RootStackParamList = {
   Intro: undefined;
   CreateNewWallet: undefined;
-  OnBoarding: undefined;
   OpenWallet: undefined;
   ImportWallet: undefined;
   AskPinScreen: AskPinScreenProps;
-  Wallet: NavigatorScreenParams<WalletParamList>;
-};
-
-export type MnemonicScreenProps = {mnemonic: string};
-export type AddressScreenProps = {
-  from: string;
-};
-export type ViewTxScreenProps = {
-  item: any;
-};
-export type AddServerScreenProps = {
-  addServer: (newServer: ServerOption, cb: () => void) => void;
-};
-
-export type CollectionScreenProps = {
-  collection: any;
-};
-
-export type WalletParamList = {
   MainWalletScreen: undefined;
   SendToScreen: undefined;
   AddressScreen: AddressScreenProps;
@@ -63,5 +43,18 @@ export type WalletParamList = {
   AddStakingNodeScreen: undefined;
   ErrorLogsScreen: undefined;
   CreateNftCollectionScreen: undefined;
-  CollectionScreen: CollectionScreenProps;
+  CollectionScreen: undefined;
 };
+
+export type MnemonicScreenProps = {mnemonic: string};
+export type AddressScreenProps = {
+  from: string;
+};
+export type ViewTxScreenProps = {
+  item: any;
+};
+export type AddServerScreenProps = {
+  addServer: (newServer: ServerOption, cb: () => void) => void;
+};
+
+export type WalletParamList = {};

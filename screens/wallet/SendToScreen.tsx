@@ -21,7 +21,6 @@ import {
   Destination_Types_Enum,
 } from '../../constants/Type';
 import DialogInput from 'react-native-dialog-input';
-import BottomSheetProvider from '../../contexts/BottomSheetProvider';
 import DestinationComponent from '../../components/DestinationComponent';
 import {QrProvider} from '../../contexts/QrProvider';
 import SendTransactionButton from '../../components/SendTransactionButton';
@@ -53,8 +52,9 @@ const SendToScreen = (props: any) => {
   const [subtractFee, setSubtractFee] = useState(false);
   const {bitcore, accounts, tokens, nfts, walletName, balances} = useWallet();
   const [isMemoDialogVisible, showMemoDialog] = useState(false);
+  const [accountStr, setAccountStr] = useState('account');
 
-  const [nftId, setNftId] = useState(-1);
+  const [nftId, setNftId] = useState(props.route.params.nftId || -1);
 
   const amountInputRef = useRef<Input>();
   const [sources, setSources] = useState(accounts);
@@ -63,6 +63,7 @@ const SendToScreen = (props: any) => {
     if (from?.type_id == Balance_Types_Enum.PrivateToken) {
       setSources(tokens);
     } else if (from?.type_id == Balance_Types_Enum.Nft) {
+      setAccountStr('collection');
       setAmount((1 / 1e8).toFixed(8));
       setSources(nfts);
     }
@@ -127,8 +128,8 @@ const SendToScreen = (props: any) => {
             (from?.type_id == Balance_Types_Enum.PrivateToken
               ? 'tokens'
               : from?.type_id == Balance_Types_Enum.Nft
-                ? 'nfts'
-                : 'coins')
+              ? 'NFTs'
+              : 'coins')
           }
         />
         <Content contentContainerStyle={styles.contentContainerStyle}>
@@ -138,7 +139,9 @@ const SendToScreen = (props: any) => {
                 ...el,
                 text:
                   el.name +
-                  ' account (' +
+                  ' ' +
+                  accountStr +
+                  ' (' +
                   el.spendable_amount +
                   ' ' +
                   el.currency +
@@ -158,7 +161,9 @@ const SendToScreen = (props: any) => {
               }
               return (
                 el.name +
-                ' account (' +
+                ' ' +
+                accountStr +
+                ' (' +
                 el.spendable_amount +
                 ' ' +
                 el.currency +
@@ -219,7 +224,32 @@ const SendToScreen = (props: any) => {
           )}
 
           {from?.type_id == Balance_Types_Enum.Nft ? (
-            <></>
+            <CardSelect
+              options={Object.keys(from.items.confirmed).map(el => {
+                let obj =
+                  typeof from.items.confirmed[el] === 'object'
+                    ? from.items.confirmed[el]
+                    : JSON.parse(from.items.confirmed[el]);
+                return {
+                  ...from.items.confirmed[el],
+                  text: obj.name + ' (#' + el + ')',
+                  id: el,
+                };
+              })}
+              text={'Item'}
+              defaultOption={(() => {
+                if (!from.items.confirmed[nftId]) return '';
+                let obj =
+                  typeof from.items.confirmed[nftId] === 'object'
+                    ? from.items.confirmed[nftId]
+                    : JSON.parse(from.items.confirmed[nftId]);
+
+                return obj.name + ' (#' + nftId + ')';
+              })()}
+              onSelect={el => {
+                setNftId(el.id);
+              }}
+            />
           ) : (
             <TouchableOpacity
               onPress={() => {
@@ -228,7 +258,7 @@ const SendToScreen = (props: any) => {
               <Layout level="2" style={styles.card}>
                 <View style={styles.row}>
                   <Text category="headline">Amount</Text>
-                  <Text category="headline" uppercase/>
+                  <Text category="headline" uppercase />
                 </View>
                 <View style={styles.cardNumber}>
                   <Input
@@ -264,10 +294,7 @@ const SendToScreen = (props: any) => {
           )}
         </Content>
         <Layout
-          style={[
-            styles.bottom,
-            {paddingBottom: verticalScale(bottom + 16)},
-          ]}>
+          style={[styles.bottom, {paddingBottom: verticalScale(bottom + 16)}]}>
           <SendTransactionButton
             walletName={walletName}
             from={from}

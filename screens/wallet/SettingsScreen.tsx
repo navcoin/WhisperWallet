@@ -144,9 +144,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       icon: 'factory',
       show: true,
       onPress: () => {
-        navigate('Wallet', {
-          screen: 'StakingNodeScreen',
-        });
+        navigate('StakingNodeScreen');
       },
     },
     {
@@ -154,9 +152,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       icon: 'book',
       show: true,
       onPress: () => {
-        navigate('Wallet', {
-          screen: 'ServersScreen',
-        });
+        navigate('ServersScreen');
       },
     },
     {
@@ -208,9 +204,8 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
             'mnemonic',
             password,
           );
-          navigate('Wallet', {
-            screen: 'MnemonicScreen',
-            params: {mnemonic: updatedMnemonic},
+          navigate('MnemonicScreen', {
+            mnemonic: updatedMnemonic,
           });
         });
       },
@@ -226,9 +221,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       icon: 'search',
       show: true,
       onPress: () => {
-        navigate('Wallet', {
-          screen: 'ErrorLogsScreen',
-        });
+        navigate('ErrorLogsScreen');
       },
     },
     {

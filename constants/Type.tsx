@@ -43,6 +43,7 @@ export interface BalanceFragment {
 }
 
 export interface NftItem {
+  id: string;
   attributes: {
     content_type: string;
     thumbnail_url: string;

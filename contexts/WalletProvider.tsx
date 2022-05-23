@@ -258,7 +258,7 @@ export const WalletProvider = (props: any) => {
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
           currency: balances.tokens[tokenId].code,
-          leftElement: <Identicon value={tokenId} />,
+          identicon: tokenId,
         });
       }
 
@@ -277,7 +277,7 @@ export const WalletProvider = (props: any) => {
           type_id: Balance_Types_Enum.Nft,
           destination_id: Destination_Types_Enum.PrivateWallet,
           tokenId: tokenId,
-          leftElement: <Identicon value={tokenId} />,
+          identicon: tokenId,
           items: {
             confirmed: balances.nfts[tokenId].confirmed,
             pending: balances.nfts[tokenId].pending,
@@ -297,7 +297,7 @@ export const WalletProvider = (props: any) => {
             type_id: Balance_Types_Enum.Nft,
             destination_id: Destination_Types_Enum.PrivateWallet,
             tokenId: token.id,
-            leftElement: <Identicon value={token.id}></Identicon>,
+            identicon: token.id,
             items: {confirmed: [], pending: []},
             mine: true,
             currency: 'NFT',

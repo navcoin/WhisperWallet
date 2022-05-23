@@ -19,6 +19,7 @@ import {useModal} from '../hooks/useModal';
 import {errorTextParser, promptErrorToaster} from '../utils/errors';
 import ErrorModalContent from '../components/Modals/ErrorModalContent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SkipMnemonicConfirmationModalContent from '../components/Modals/SkipMnemonicConfirmationModalContent';
 
 function useArrayRef() {
   const refs = [];
@@ -62,6 +63,17 @@ const CreateNewWallet = () => {
     }
     closeModal();
   }, [loading]);
+
+  const skipMenmonicConfirmation = () => {
+    openModal(
+      <SkipMnemonicConfirmationModalContent
+        skip={() => {
+          setIndex(4);
+        }}
+      />,
+    );
+  };
+
   return (
     <Container useSafeArea>
       <TopNavigationComponent title={'New wallet'} pressBack={onBackPress} />
@@ -254,7 +266,7 @@ const CreateNewWallet = () => {
                 style={[styles.button, {marginRight: scale(20)}]}
                 status={'primary-whisper'}
                 onPress={() => {
-                  setIndex(4);
+                  skipMenmonicConfirmation();
                 }}
               />
               <Button
@@ -303,7 +315,7 @@ const CreateNewWallet = () => {
                               'lockAfterBackground',
                               'true',
                             );
-                            navigate('Wallet');
+                            navigate('MainWalletScreen');
                           },
                         },
                         {
@@ -313,13 +325,13 @@ const CreateNewWallet = () => {
                               'lockAfterBackground',
                               'false',
                             );
-                            navigate('Wallet');
+                            navigate('MainWalletScreen');
                           },
                         },
                       ],
                     );
                   } else {
-                    navigate('Wallet');
+                    navigate('MainWalletScreen');
                   }
                 }}
               />

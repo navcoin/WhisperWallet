@@ -55,13 +55,15 @@ const CardSelect = ({
         }}>
         <Layout level="2" style={styles.card}>
           <View style={styles.row}>
-            <Text style={{marginRight: scale(6)}} category="headline">
-              {text}
-            </Text>
+            <Text category="headline">{text}</Text>
             <Text
               adjustsFontSizeToFit
               numberOfLines={1}
-              style={{flex: 1}}
+              style={{
+                marginLeft: scale(17),
+                marginTop: scale(11),
+                flex: 1,
+              }}
               category="headline">
               {selectedOption}
             </Text>
@@ -85,10 +87,10 @@ const themedStyles = StyleService.create({
     paddingHorizontal: scale(16),
     marginBottom: verticalScale(24),
   },
-  row: {
+  column: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
   },
 });
