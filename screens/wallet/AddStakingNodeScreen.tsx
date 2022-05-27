@@ -14,7 +14,6 @@ import Text from '../../components/Text';
 import {RootStackParamList} from '../../navigation/type';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const AddStakingNodeScreen = () => {
   const {updateAccounts, ExecWrapperPromise, ExecWrapperSyncPromise} = useWallet();
@@ -119,7 +118,7 @@ const AddStakingNodeScreen = () => {
   );
 };
 
-export default gestureHandlerRootHOC(AddStakingNodeScreen);
+export default AddStakingNodeScreen;
 
 const styles = StyleSheet.create({
   inputCard: {

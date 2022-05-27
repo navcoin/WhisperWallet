@@ -1056,7 +1056,6 @@ wallet.Load({
           ExecWrapper('wallet.GetMyTokens', [`"${spendingPassword}"`]);
           ExecWrapper('wallet.Connect');
           ExecWrapper('wallet.GetAllAddresses');
-          setSpendingPassword('');
           setFirstSyncCompleted(false);
           setConnected(Connection_Stats_Enum.Connecting);
           setSyncProgress(0);
@@ -1096,6 +1095,7 @@ wallet.Load({
           ExecWrapper('wallet.GetHistory');
           ExecWrapper('wallet.GetMyTokens', [`"${spendingPassword}"`]);
           ExecWrapper('wallet.GetAllAddresses');
+          setSpendingPassword('');
         } else if (dataPayload.type === 'new_staking_address') {
           updateAccounts();
         } else {

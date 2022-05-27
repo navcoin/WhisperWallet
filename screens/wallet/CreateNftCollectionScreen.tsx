@@ -15,7 +15,6 @@ import Text from '../../components/Text';
 import {RootStackParamList} from '../../navigation/type';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import useSecurity from '../../hooks/useSecurity';
 import BottomSheetView from '../../components/BottomSheetView';
 import {SwipeButton} from '../../components/SwipeButton';
@@ -232,7 +231,7 @@ const CreateNftCollectionScreen = () => {
     </Container>
   );
 };
-export default gestureHandlerRootHOC(CreateNftCollectionScreen);
+export default CreateNftCollectionScreen;
 
 const styles = StyleSheet.create({
   inputCard: {

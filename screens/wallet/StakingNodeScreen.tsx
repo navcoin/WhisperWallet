@@ -10,7 +10,6 @@ import OptionCard from '../../components/OptionCard';
 import {RootStackParamList} from '../../navigation/type';
 import DialogInput from 'react-native-dialog-input';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {scale} from 'react-native-size-matters';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
@@ -107,7 +106,7 @@ const StakingNodeScreen = () => {
   );
 };
 
-export default gestureHandlerRootHOC(StakingNodeScreen);
+export default StakingNodeScreen;
 
 const styles = StyleSheet.create({
   summary: {textAlign: 'center', paddingHorizontal: 24},

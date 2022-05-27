@@ -4,7 +4,6 @@ import Container from '../../components/Container';
 import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import {AsyncStoredItems} from '../../utils/asyncStorageManager';
 import {useModal} from '../../hooks/useModal';
@@ -55,7 +54,7 @@ const ErrorLogsScreen = (props: any) => {
   );
 };
 
-export default gestureHandlerRootHOC(ErrorLogsScreen);
+export default ErrorLogsScreen;
 
 const styles = StyleSheet.create({
   header: {

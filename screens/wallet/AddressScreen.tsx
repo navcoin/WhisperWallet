@@ -9,7 +9,6 @@ import QRCode from 'react-native-qrcode-svg';
 import {BalanceFragment} from '../../constants/Type';
 import useWallet from '../../hooks/useWallet';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {verticalScale, scale} from 'react-native-size-matters';
 import Toast from 'react-native-toast-message';
 
@@ -90,7 +89,7 @@ const AddressScreen = (props: any) => {
   );
 };
 
-export default gestureHandlerRootHOC(AddressScreen);
+export default AddressScreen;
 
 const styles = StyleSheet.create({
   container: {

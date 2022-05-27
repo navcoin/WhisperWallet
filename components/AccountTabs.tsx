@@ -23,10 +23,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 
 const TabNavigator = createMaterialTopTabNavigator();
 
-const AccountsTab = (props: {
-  onRefresh: () => Promise<void>;
-  refreshing?: boolean;
-}) => {
+const AccountsTab = () => {
   const theme = useTheme();
 
   return (
@@ -54,10 +51,7 @@ const AccountsTab = (props: {
   );
 };
 
-const Accounts = (props: {
-  onRefresh: () => Promise<void>;
-  refreshing?: boolean;
-}) => {
+const Accounts = () => {
   const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
   );
@@ -165,7 +159,7 @@ const Accounts = (props: {
       </>,
     );
   }, [accounts]);
-
+  
   return (
     <View style={{backgroundColor: theme['color-basic-700'], flex: 1}}>
       <ScrollView
@@ -185,10 +179,7 @@ const Accounts = (props: {
   );
 };
 
-const NFTs = (props: {
-  onRefresh: () => Promise<void>;
-  refreshing?: boolean;
-}) => {
+const NFTs = () => {
   const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
   );
@@ -303,10 +294,7 @@ const NFTs = (props: {
   );
 };
 
-const Tokens = (props: {
-  onRefresh: () => Promise<void>;
-  refreshing?: boolean;
-}) => {
+const Tokens = () => {
   const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
   );

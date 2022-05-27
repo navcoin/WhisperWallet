@@ -282,10 +282,6 @@ export const AnimatedSegments: FC<CircularProgressProps> = ({
     return {opacity: stakingBalanceAlpha.value};
   }, [stakingBalanceAlpha.value]);
 
-  console.log('rerender');
-
-  useTraceUpdates('AnimatedSegments', {progressVisible, progress, segments, })
-
   return (
     <View style={[{...styles.container}, {height: size, width: size}]}>
       <Svg
@@ -338,8 +334,6 @@ export const AnimatedSegments: FC<CircularProgressProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
     height: 400,
   },
 });

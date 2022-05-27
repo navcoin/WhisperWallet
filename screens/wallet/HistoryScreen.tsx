@@ -13,7 +13,6 @@ import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
 import {RootStackParamList} from '../../navigation/type';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const HistoryScreen = (props: any) => {
   const {history, connected} = useWallet();
@@ -129,7 +128,7 @@ const HistoryScreen = (props: any) => {
   );
 };
 
-export default gestureHandlerRootHOC(HistoryScreen);
+export default HistoryScreen;
 
 const styles = StyleSheet.create({
   header: {

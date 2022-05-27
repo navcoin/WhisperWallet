@@ -21,7 +21,6 @@ import {networkOptions, protosOptions} from '../../constants/Data';
 import {validateIp, validatePort} from '../../utils/server';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {scale, verticalScale} from 'react-native-size-matters';
 
 const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
@@ -159,7 +158,7 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
   );
 };
 
-export default gestureHandlerRootHOC(AddServerScreen);
+export default AddServerScreen;
 
 const styles = StyleSheet.create({
   inputCard: {

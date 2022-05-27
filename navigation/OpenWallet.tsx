@@ -16,7 +16,7 @@ import ErrorModalContent from '../components/Modals/ErrorModalContent';
 
 const OpenWallet = () => {
   const {navigate} = useNavigation();
-  const {njs, createWallet, walletsList} = useWallet();
+  const {createWallet, walletsList} = useWallet();
   const [loading, setLoading] = useState<string | undefined>(undefined);
   const {readPassword} = useSecurity();
 

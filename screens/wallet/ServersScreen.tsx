@@ -15,7 +15,6 @@ import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import {networkOptions} from '../../constants/Data';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {scale} from 'react-native-size-matters';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
@@ -130,7 +129,7 @@ const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
   );
 };
 
-export default gestureHandlerRootHOC(ServersScreen);
+export default ServersScreen;
 
 const styles = StyleSheet.create({
   summary: {textAlign: 'center', paddingHorizontal: 24},

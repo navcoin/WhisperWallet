@@ -9,7 +9,6 @@ import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import LoadingModalContent from '../../components/Modals/LoadingModalContent';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {screenHeight} from '../../utils/layout';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useSecurity from '../../hooks/useSecurity';
@@ -279,7 +278,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   );
 };
 
-export default gestureHandlerRootHOC(SettingsScreen);
+export default SettingsScreen;
 
 const styles = StyleSheet.create({
   contentWrapper: {

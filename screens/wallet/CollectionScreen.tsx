@@ -8,7 +8,6 @@ import {
 import Container from '../../components/Container';
 import {BalanceFragment, NftItem} from '../../constants/Type';
 import ImageViewer from 'react-native-image-zoom-viewer';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {scale} from 'react-native-size-matters';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {
@@ -275,7 +274,7 @@ const CollectionScreen = (props: any) => {
   );
 };
 
-export default gestureHandlerRootHOC(CollectionScreen);
+export default CollectionScreen;
 
 const themedStyles = StyleService.create({
   container: {

@@ -21,8 +21,6 @@ import AccountsTab from '../../components/AccountTabs';
 import {RootStackParamList} from '../../navigation/type';
 import {scale} from 'react-native-size-matters';
 import {TouchableWithoutFeedback} from '@tsejerome/ui-kitten-components/devsupport';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const MainWalletScreen = () => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -79,24 +77,20 @@ const MainWalletScreen = () => {
           </Text>
         </View>
         <View style={[styles.iconGrp]}>
-          <TouchableOpacity
-            onPressOut={() => {
+          <TouchableWithoutFeedback
+            style={{padding: scale(12)}}
+            onPress={() => {
               refreshWallet();
             }}>
-            <View            style={[styles.iconContainer]}
-            >
             <Icon pack="assets" name={'refresh'} style={[styles.icon]} />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPressOut={() => {
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            style={{padding: scale(12)}}
+            onPress={() => {
               navigate('SettingsScreen');
             }}>
-            <View            style={[styles.iconContainer]}
-            >
             <Icon pack="assets" name={'menuBtn'} style={[styles.icon]} />
-            </View>
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
         </View>
       </Layout>
       <BalanceCircle />
@@ -117,15 +111,14 @@ const themedStyles = StyleService.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: scale(12),
+    zIndex: 9999,
   },
   iconGrp: {
     flexDirection: 'row',
   },
   iconContainer: {
-    width: scale(18 * 2),
-    height: scale(18 * 2),
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#ff0000',
+    padding: 12,
   },
   icon: {
     width: scale(18),

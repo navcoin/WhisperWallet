@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import Container from '../../components/Container';
 import {ScreenProps} from '../../navigation/type';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import PINCode from '@haskkor/react-native-pincode';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -96,7 +95,7 @@ const AskPinScreen: React.FC<ScreenProps<'AskPinScreen'>> = (props: any) => {
   );
 };
 
-export default gestureHandlerRootHOC(AskPinScreen);
+export default AskPinScreen;
 
 const styles = StyleService.create({
   wallet: {
