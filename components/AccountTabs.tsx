@@ -19,17 +19,49 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {RootStackParamList} from '../navigation/type';
 import OptionCard from './OptionCard';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+
+const TabNavigator = createMaterialTopTabNavigator();
 
 const AccountsTab = (props: {
   onRefresh: () => Promise<void>;
   refreshing?: boolean;
 }) => {
-  const {onRefresh, refreshing} = props;
-  const [selectedTab, setSelectedTab] = useState(0);
+  const theme = useTheme();
+
+  return (
+    <View
+      style={{
+        backgroundColor: theme['color-basic-700'],
+        flex: 1,
+        marginLeft: scale(16),
+        marginRight: scale(16),
+      }}>
+      <TabNavigator.Navigator
+        tabBarPosition={'top'}
+        screenOptions={{
+          tabBarLabelStyle: {fontSize: 12},
+          tabBarStyle: {backgroundColor: theme['color-basic-700']},
+          tabBarIndicatorStyle: {
+            backgroundColor: theme['color-primary-100'],
+          },
+        }}>
+        <TabNavigator.Screen name="Accounts" component={Accounts} listeners={({navigation}) => ({blur: () => navigation.setParams({screen: undefined})})}/>
+        <TabNavigator.Screen name="Tokens" component={Tokens} listeners={({navigation}) => ({blur: () => navigation.setParams({screen: undefined})})}/>
+        <TabNavigator.Screen name="NFTs" component={NFTs} listeners={({navigation}) => ({blur: () => navigation.setParams({screen: undefined})})}/>
+      </TabNavigator.Navigator>
+    </View>
+  );
+};
+
+const Accounts = (props: {
+  onRefresh: () => Promise<void>;
+  refreshing?: boolean;
+}) => {
   const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
   );
-  const {accounts, tokens, nfts} = useWallet();
+  const {accounts, refreshWallet} = useWallet();
   const bottomSheet = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -111,48 +143,60 @@ const AccountsTab = (props: {
     [bottomSheet, pickDestination],
   );
 
-  const expandMenuToken = useCallback(
-    account_ => {
-      bottomSheet.expand(
-        <BottomSheetMenu
-          title={account_.name}
-          options={[
-            {
-              text: 'View address to receive',
-              icon: 'download',
-              navigate: {
-                screen: 'AddressScreen',
-                params: {
-                  from: account_,
-                },
-              },
-            },
-            {
-              text: 'Send to someone',
-              icon: 'diagonalArrow3',
-              navigate: {
-                screen: 'SendToScreen',
-                params: {
-                  from: account_,
-                },
-              },
-            },
-            {
-              text: 'Transaction history',
-              icon: 'suitcase',
-              navigate: {
-                screen: 'HistoryScreen',
-                params: {
-                  filter: account_,
-                },
-              },
-            },
-          ]}
-        />,
-      );
-    },
-    [bottomSheet],
+  const [accountsContent, setAccountContent] = useState(<></>);
+
+  useEffect(() => {
+    setAccountContent(
+      <>
+        {accounts.map((el, i) => {
+          return (
+            <View style={styles.item} key={i}>
+              <BalanceCard
+                item={{...el, name: el.name + ' account'}}
+                index={i}
+                onPress={() => {
+                  setAccount(el);
+                  expandMenu(el);
+                }}
+              />
+            </View>
+          );
+        })}
+      </>,
+    );
+  }, [accounts]);
+
+  return (
+    <View style={{backgroundColor: theme['color-basic-700'], flex: 1}}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={refreshWallet}
+            tintColor="#fff"
+            titleColor="#fff"
+          />
+        }>
+        <Content style={{paddingTop: verticalScale(24)}}>
+          {accountsContent}
+        </Content>
+      </ScrollView>
+    </View>
   );
+};
+
+const NFTs = (props: {
+  onRefresh: () => Promise<void>;
+  refreshing?: boolean;
+}) => {
+  const [account, setAccount] = useState<BalanceFragment | undefined>(
+    undefined,
+  );
+  const {refreshWallet, nfts} = useWallet();
+  const bottomSheet = useBottomSheet();
+  const styles = useStyleSheet(themedStyles);
+  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+  const theme = useTheme();
 
   const expandMenuNft = useCallback(
     account_ => {
@@ -198,30 +242,7 @@ const AccountsTab = (props: {
     [bottomSheet],
   );
 
-  const [accountsContent, setAccountContent] = useState(<></>);
-  const [tokensContent, setTokensContent] = useState(<></>);
   const [nftsContent, setNftsContent] = useState(<></>);
-
-  useEffect(() => {
-    setAccountContent(
-      <>
-        {accounts.map((el, i) => {
-          return (
-            <View style={styles.item} key={i}>
-              <BalanceCard
-                item={{...el, name: el.name + ' account'}}
-                index={i}
-                onPress={() => {
-                  setAccount(el);
-                  expandMenu(el);
-                }}
-              />
-            </View>
-          );
-        })}
-      </>,
-    );
-  }, [accounts]);
 
   useEffect(() => {
     setNftsContent(
@@ -255,9 +276,7 @@ const AccountsTab = (props: {
             item={{text: 'Create collection'}}
             selected={''}
             onPress={() => {
-              navigate('Wallet', {
-                screen: 'CreateNftCollectionScreen',
-              });
+              navigate('CreateNftCollectionScreen');
             }}
             icon={'add'}
             cardType={'outline'}
@@ -266,6 +285,81 @@ const AccountsTab = (props: {
       </>,
     );
   }, [nfts]);
+
+  return (
+    <View style={{backgroundColor: theme['color-basic-700'], flex: 1}}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={refreshWallet}
+            tintColor="#fff"
+            titleColor="#fff"
+          />
+        }>
+        <Content style={{paddingTop: verticalScale(24)}}>{nftsContent}</Content>
+      </ScrollView>
+    </View>
+  );
+};
+
+const Tokens = (props: {
+  onRefresh: () => Promise<void>;
+  refreshing?: boolean;
+}) => {
+  const [account, setAccount] = useState<BalanceFragment | undefined>(
+    undefined,
+  );
+  const {refreshWallet, tokens} = useWallet();
+  const bottomSheet = useBottomSheet();
+  const styles = useStyleSheet(themedStyles);
+  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+  const theme = useTheme();
+
+  const expandMenuToken = useCallback(
+    account_ => {
+      bottomSheet.expand(
+        <BottomSheetMenu
+          title={account_.name}
+          options={[
+            {
+              text: 'View address to receive',
+              icon: 'download',
+              navigate: {
+                screen: 'AddressScreen',
+                params: {
+                  from: account_,
+                },
+              },
+            },
+            {
+              text: 'Send to someone',
+              icon: 'diagonalArrow3',
+              navigate: {
+                screen: 'SendToScreen',
+                params: {
+                  from: account_,
+                },
+              },
+            },
+            {
+              text: 'Transaction history',
+              icon: 'suitcase',
+              navigate: {
+                screen: 'HistoryScreen',
+                params: {
+                  filter: account_,
+                },
+              },
+            },
+          ]}
+        />,
+      );
+    },
+    [bottomSheet],
+  );
+
+  const [tokensContent, setTokensContent] = useState(<></>);
 
   useEffect(() => {
     setTokensContent(
@@ -295,35 +389,21 @@ const AccountsTab = (props: {
   }, [tokens]);
 
   return (
-    <>
-      <Tab
-        tabs={['Accounts', 'Tokens', 'NFTs']}
-        selectedIndex={selectedTab}
-        onChange={setSelectedTab}
-        style={{marginHorizontal: scale(16)}}
-      />
+    <View style={{backgroundColor: theme['color-basic-700'], flex: 1}}>
       <ScrollView
         refreshControl={
           <RefreshControl
             refreshing={false}
-            onRefresh={onRefresh}
+            onRefresh={refreshWallet}
             tintColor="#fff"
             titleColor="#fff"
           />
         }>
         <Content style={{paddingTop: verticalScale(24)}}>
-          {selectedTab == 0 ? (
-            accountsContent
-          ) : selectedTab == 1 ? (
-            tokensContent
-          ) : selectedTab == 2 ? (
-            nftsContent
-          ) : (
-            <></>
-          )}
+          {tokensContent}
         </Content>
       </ScrollView>
-    </>
+    </View>
   );
 };
 
@@ -331,7 +411,6 @@ export default AccountsTab;
 
 const themedStyles = StyleService.create({
   item: {
-    paddingHorizontal: scale(16),
     marginBottom: verticalScale(16),
   },
 });

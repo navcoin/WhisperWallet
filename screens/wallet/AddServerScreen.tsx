@@ -25,20 +25,20 @@ import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {scale, verticalScale} from 'react-native-size-matters';
 
 const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
-  const {walletName, wallet, njs} = useWallet();
+  const {walletName, network} = useWallet();
 
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
 
   const [currentServers, setCurrentServers] = useAsyncStorage(
     'currentServers',
-    networkOptions[wallet.network],
+    networkOptions[network],
   );
   const [editMode, setEditMode] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [error, setError] = useState('');
 
   const [newServer, setNewServer] = useState<ServerOption>({
-    type: wallet.network,
+    type: network,
     proto: protosOptions[0],
   });
 
@@ -141,7 +141,7 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
             <Text category="headline" style={[styles.inputTitle]}>
               Network:
             </Text>
-            <Text category="headline">{wallet.network}</Text>
+            <Text category="headline">{network}</Text>
           </View>
           <Button status={'primary-whisper'} onPress={() => addServer()}>
             Add

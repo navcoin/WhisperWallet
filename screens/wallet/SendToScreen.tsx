@@ -50,7 +50,7 @@ const SendToScreen = (props: any) => {
   const [amountInString, setAmount] = useState('');
   const [showMemo, setShowMemo] = useState(false);
   const [subtractFee, setSubtractFee] = useState(false);
-  const {bitcore, accounts, tokens, nfts, walletName, balances} = useWallet();
+  const {accounts, tokens, nfts, walletName, ExecWrapperSyncPromise} = useWallet();
   const [isMemoDialogVisible, showMemoDialog] = useState(false);
   const [accountStr, setAccountStr] = useState('account');
 
@@ -85,15 +85,18 @@ const SendToScreen = (props: any) => {
   }, [from, sources]);
 
   useEffect(() => {
-    if (
-      toType == Destination_Types_Enum.Address &&
-      to &&
-      bitcore.Address(to).isXnav()
-    ) {
-      setShowMemo(true);
-    } else {
-      setShowMemo(false);
-    }
+    ExecWrapperSyncPromise(
+      'bitcore.Address("'+to+'").isXnav').then(isxNav => {
+      if (
+        toType == Destination_Types_Enum.Address &&
+        to &&
+        !isxNav
+      ) {
+        setShowMemo(true);
+      } else {
+        setShowMemo(false);
+      }
+    })
   }, [to, toType]);
 
   useEffect(() => {

@@ -21,6 +21,7 @@ import AccountsTab from '../../components/AccountTabs';
 import {RootStackParamList} from '../../navigation/type';
 import {scale} from 'react-native-size-matters';
 import {TouchableWithoutFeedback} from '@tsejerome/ui-kitten-components/devsupport';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const MainWalletScreen = () => {
@@ -78,24 +79,28 @@ const MainWalletScreen = () => {
           </Text>
         </View>
         <View style={[styles.iconGrp]}>
-          <TouchableWithoutFeedback
-            style={{padding: scale(12)}}
-            onPress={() => {
+          <TouchableOpacity
+            onPressOut={() => {
               refreshWallet();
             }}>
+            <View            style={[styles.iconContainer]}
+            >
             <Icon pack="assets" name={'refresh'} style={[styles.icon]} />
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            style={{padding: scale(12)}}
-            onPress={() => {
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPressOut={() => {
               navigate('SettingsScreen');
             }}>
+            <View            style={[styles.iconContainer]}
+            >
             <Icon pack="assets" name={'menuBtn'} style={[styles.icon]} />
-          </TouchableWithoutFeedback>
+            </View>
+          </TouchableOpacity>
         </View>
       </Layout>
       <BalanceCircle />
-      <AccountsTab onRefresh={refreshWallet} />
+      <AccountsTab />
     </Container>
   );
 };
@@ -115,6 +120,12 @@ const themedStyles = StyleService.create({
   },
   iconGrp: {
     flexDirection: 'row',
+  },
+  iconContainer: {
+    width: scale(18 * 2),
+    height: scale(18 * 2),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   icon: {
     width: scale(18),

@@ -59,14 +59,17 @@ const CollectionScreen = (props: any) => {
       for (const [key, value] of Object.entries<string>(
         tempCol.items.confirmed,
       )) {
-        tempCol.items.confirmed[key] = JSON.parse(value);
+        tempCol.items.confirmed[key] = {name: value};
+        try {
+          tempCol.items.confirmed[key] = JSON.parse(value);
+        } catch (e) {}
         tempNfts.push({
-          ...JSON.parse(value),
+          ...tempCol.items.confirmed[key],
           type: 'confirmed',
           id: key,
           galleryData: {
-            url: tempCol.items.confirmed[key].attributes.thumbnail_url,
-            originUrl: tempCol.items.confirmed[key].image,
+            url: tempCol.items.confirmed[key].attributes?.thumbnail_url || 'https://www.worldartfoundations.com/wp-content/uploads/2022/04/placeholder-image-300x225.png',
+            originUrl: tempCol.items.confirmed[key].image || 'https://www.worldartfoundations.com/wp-content/uploads/2022/04/placeholder-image-300x225.png',
           },
         });
       }
@@ -81,14 +84,17 @@ const CollectionScreen = (props: any) => {
       for (const [key, value] of Object.entries<string>(
         tempCol.items.pending,
       )) {
-        tempCol.items.pending[key] = JSON.parse(value);
+        tempCol.items.pending[key] = {name: value};
+        try {
+          tempCol.items.pending[key] = JSON.parse(value);
+        } catch (e) {}
         tempNfts.push({
-          ...JSON.parse(value),
+          ...tempCol.items.pending[key],
           type: 'pending',
           id: key,
           galleryData: {
-            url: tempCol.items.confirmed[key].attributes.thumbnail_url,
-            originUrl: tempCol.items.confirmed[key].image,
+            url: tempCol.items.confirmed[key].attributes?.thumbnail_url || 'https://www.worldartfoundations.com/wp-content/uploads/2022/04/placeholder-image-300x225.png',
+            originUrl: tempCol.items.confirmed[key].image || 'https://www.worldartfoundations.com/wp-content/uploads/2022/04/placeholder-image-300x225.png',
           },
         });
       }

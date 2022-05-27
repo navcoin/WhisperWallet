@@ -40,7 +40,7 @@ import ModalProvider from './contexts/ModalProvider';
 import {useModal} from './hooks/useModal';
 import ErrorModalContent from './components/Modals/ErrorModalContent';
 import {AsyncStoredItems} from './utils/asyncStorageManager';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, DarkTheme} from '@react-navigation/native';
 import SecurityProvider from './contexts/SecurityProvider';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
@@ -115,6 +115,7 @@ const App = (props: {theme: string}) => {
         backgroundColor={'#00000000'}
       />
       <NavigationContainer
+        theme={DarkTheme}
         onStateChange={() => {
           Toast.hide();
         }}>

@@ -18,7 +18,7 @@ import TopNavigationComponent from '../../components/TopNavigation';
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import useSecurity from '../../hooks/useSecurity';
 import BottomSheetView from '../../components/BottomSheetView';
-import SwipeButton from '../../components/SwipeButton';
+import {SwipeButton} from '../../components/SwipeButton';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
 import {useModal} from '../../hooks/useModal';
 import LoadingModalContent from '../../components/Modals/LoadingModalContent';

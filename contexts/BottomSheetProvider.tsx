@@ -41,8 +41,8 @@ export const BottomSheetProvider = (props: any) => {
         setContentPan(
           Platform.OS == 'android' &&
             !JSON.stringify(c).includes('Swipe to confirm')
-            ? false
-            : true,
+            ? true
+            : false,
         );
       },
       collapse: () => {

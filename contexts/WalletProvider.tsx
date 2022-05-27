@@ -7,17 +7,12 @@ import {
   Connection_Stats_Enum,
   Destination_Types_Enum,
 } from '../constants/Type';
-import Identicon from '../components/Identicon';
 import RNBootSplash from 'react-native-bootsplash';
 import WebView from 'react-native-webview';
 import {Platform} from 'react-native';
 import useTraceUpdate from '../hooks/useTraceUpdates';
-const njs = require('navcoin-js');
-const P2pPool = require('@aguycalled/bitcore-p2p').Pool;
 
 export const WalletProvider = (props: any) => {
-  const [p2pPool, setP2pPool] = useState<any>(undefined);
-  const [wallet, setWallet] = useState<any>(undefined);
   const [server, setServer] = useState('');
   const [walletName, setWalletName] = useState('');
   const [walletsList, setWalletsList] = useState([]);
@@ -95,25 +90,84 @@ export const WalletProvider = (props: any) => {
     [walletWebView.current],
   );
 
-  const ExecWrapper = useCallback((func: string, params?: string[], cb?: any) => {
-    callbacks[func] = cb;
-    setCallbacks(callbacks);
-    InjectJavascript(
-      `wallet.${func}(${
-        params ? params.join(',') : ''
-      }).then((a) => sendToRN("${func}", a));`,
-    );
-  }, []);
+  const [callbacks, setCallbacks] = useState({});
 
-  const ExecWrapperSync = useCallback((func: string, params?: string[], cb?: any) => {
-    callbacks[func] = cb;
-    setCallbacks(callbacks);
-    InjectJavascript(
-      `sendToRN("${func}", wallet.${func}(${
-        params ? params.join(',') : ''
-      }));`,
-    );
-  }, []);
+  const ExecWrapper = useCallback(
+    (func: string, params?: string[], cb?: any, cb2?: any) => {
+      callbacks[func] = [cb, cb2];
+      setCallbacks(callbacks);
+      InjectJavascript(
+        `${func}(${
+          params ? params.join(',') : ''
+        }).then((a) => sendToRN("${func}", a))${
+          cb2 !== undefined ? '' : '.catch(e => sendToRN("E-' + func + '", e))'
+        };`,
+      );
+    },
+    [callbacks, InjectJavascript],
+  );
+
+  const ExecWrapperSyncPromise = useCallback(
+    (func: string, params?: string[]) => {
+      const parsedFunc = func.replace(/[ \n"]/g, '');
+      console.log(parsedFunc);
+      return new Promise((res, rej) => {
+        callbacks[parsedFunc] = [res, rej];
+        setCallbacks(callbacks);
+        InjectJavascript(`
+try {
+  let res = ${func}(${params ? params.join(',') : ''});
+  sendToRN("${parsedFunc}", res);
+} catch(e) {
+  sendToRN("${parsedFunc}", false);
+}`);
+      });
+    },
+    [callbacks, InjectJavascript],
+  );
+
+  const ExecWrapperPromise = useCallback(
+    (func: string, params?: string[]) => {
+      return new Promise((res, rej) => {
+        let parsedFunc = func.replace(/"/g, '');
+        callbacks[parsedFunc] = [res, rej];
+        setCallbacks(callbacks);
+        InjectJavascript(
+          `${func}(${
+            params ? params.join(',') : ''
+          }).then((a) => sendToRN("${parsedFunc}", a)).catch(e => sendToRN("E-${parsedFunc}", e))`,
+        );
+      });
+    },
+    [callbacks, InjectJavascript],
+  );
+
+  const ExecWrapperSync = useCallback(
+    (func: string, params?: string[], cb?: any, cb2?: any) => {
+      callbacks[func] = [cb, cb2];
+      setCallbacks(callbacks);
+      InjectJavascript(`
+try {
+  let res = ${func}(${params ? params.join(',') : ''});
+  sendToRN("${func}", res);
+} catch(e) {
+  sendToRN("E-${func}", e);
+}`);
+    },
+    [callbacks, InjectJavascript],
+  );
+
+  const IsValidMnemonic = useCallback(
+    async (mnemonic: string, type: string) => {
+      return type == 'navcash'
+        ? await ExecWrapperSyncPromise(`electrumMnemonic.validateMnemonic`, [
+            `"${mnemonic}"`,
+            'electrumMnemonic.PREFIXES.standard',
+          ])
+        : await ExecWrapperSyncPromise(`Mnemonic.isValid`, [`"${mnemonic}"`]);
+    },
+    [ExecWrapperSyncPromise],
+  );
 
   const RequestWallets = useCallback(() => {
     InjectJavascript(
@@ -121,11 +175,14 @@ export const WalletProvider = (props: any) => {
     );
   }, [InjectJavascript]);
 
-  const RemoveWallet = useCallback((name: string) => {
-    InjectJavascript(
-      `njs.wallet.WalletFile.RemoveWallet("${name}").then(l => sendToRN('RemoveWallet', l));`,
-    );
-  }, [InjectJavascript]);
+  const RemoveWallet = useCallback(
+    (name: string) => {
+      InjectJavascript(
+        `njs.wallet.WalletFile.RemoveWallet("${name}").then(l => sendToRN('RemoveWallet', l));`,
+      );
+    },
+    [InjectJavascript],
+  );
 
   useEffect(() => {
     if (walletLibLoaded) {
@@ -135,69 +192,42 @@ export const WalletProvider = (props: any) => {
   }, [walletLibLoaded]);
 
   useEffect(() => {
-    let parsed: AddressFragment[] = [];
-    for (let type in addresses.spending) {
-      for (let address in addresses.spending[type]) {
-        parsed.push({
-          address: address,
-          type_id:
-            type == 'public'
-              ? Destination_Types_Enum.PublicWallet
-              : Destination_Types_Enum.PrivateWallet,
-          used: addresses.spending[type][address].used,
-        });
+    if (firstSyncCompleted) {
+      const updateAddress = async () => {
+        let parsed: AddressFragment[] = [];
+        for (let type in addresses.spending) {
+          for (let address in addresses.spending[type]) {
+            parsed.push({
+              address: address,
+              type_id:
+                type == 'public'
+                  ? Destination_Types_Enum.PublicWallet
+                  : Destination_Types_Enum.PrivateWallet,
+              used: addresses.spending[type][address].used,
+            });
+          }
+        }
+        parsed.sort((a, b) => (a.used > b.used && 1) || -1);
+        for (let address in addresses.staking) {
+          parsed.push({
+            address: await ExecWrapperSyncPromise(`
+            njs.wallet.bitcore.Address.fromAddresses(
+            [
+            "${address}","${parsed.filter(
+              el => el.type_id == Destination_Types_Enum.PublicWallet,
+            )[0]?.address}"
+            ],"${network}").toString`),
+            stakingAddress: address,
+            type_id: Destination_Types_Enum.StakingWallet,
+            used: false,
+          });
+        }
+        return parsed;
       }
-    }
-    parsed.sort((a, b) => (a.used > b.used && 1) || -1);
-    for (let address in addresses.staking) {
-      parsed.push({
-        address: njs.wallet.bitcore.Address.fromBuffers(
-          [
-            new Buffer([njs.wallet.bitcore.Networks[network].coldstaking]),
-            njs.wallet.bitcore.Address(address).toBuffer().slice(1),
-            njs.wallet.bitcore
-              .Address(
-                parsed.filter(
-                  el => el.type_id == Destination_Types_Enum.PublicWallet,
-                )[0]?.address,
-              )
-              .toBuffer()
-              .slice(1),
-          ],
-          network,
-          'coldstaking',
-        ).toString(),
-        stakingAddress: address,
-        type_id: Destination_Types_Enum.StakingWallet,
-        used: false,
-      });
-    }
-    setParsedAddresses(parsed);
-  }, [njs, network, addresses]);
 
-  const newCandidate = useCallback(
-    async function (session: string, candidate: any) {
-      if (wallet && p2pPool) {
-        await wallet.AddCandidate(
-          candidate,
-          p2pPool.network.name == 'livenet' ? 'mainnet' : 'testnet',
-        );
-      }
-    },
-    [wallet, p2pPool],
-  );
-
-  useEffect(() => {
-    if (p2pPool) {
-      console.log('connecting to p2p');
-      p2pPool.on('candidate', newCandidate);
-      p2pPool.on('peerready', (_: string, server: number) => {
-        let sessionId = p2pPool.startSession();
-        console.log('started session', sessionId);
-      });
-      p2pPool.connect();
+      updateAddress().then(setParsedAddresses)
     }
-  }, [p2pPool]);
+  }, [network, addresses, firstSyncCompleted]);
 
   const parseAccounts = useCallback(() => {
     if (balances?.nav) {
@@ -312,38 +342,16 @@ export const WalletProvider = (props: any) => {
   }, [balances, addresses, myTokens]);
 
   const updateAccounts = useCallback(async () => {
-    if (wallet) {
-      setBalances(await wallet.GetBalance());
-      setHistory(await wallet.GetHistory());
-      setAddresses(await wallet.GetAllAddresses());
-    }
+    ExecWrapper('wallet.GetBalance');
+    ExecWrapper('wallet.GetHistory');
+    ExecWrapper('wallet.GetAllAddresses');
     parseAccounts();
-  }, [wallet]);
+  }, []);
 
   useEffect(() => {
     parseAccounts();
   }, [balances, addresses]);
 
-  const connectP2P = useCallback(() => {
-    setP2pPool(
-      new P2pPool({
-        dnsSeed: false, // prevent seeding with DNS discovered known peers upon connecting
-        listenAddr: false, // prevent new peers being added from addr messages
-        network: network,
-        maxSize: 1,
-        addrs: [
-          // initial peers to connect to
-          {
-            ip: {
-              v4: server.split(':')[0],
-            },
-          },
-        ],
-      }),
-    );
-  }, [server, network]);
-
-  const [onLoaded, setOnLoaded] = useState(() => () => {});
   const [spendingPassword, setSpendingPassword] = useState('');
 
   const createWallet = useCallback(
@@ -358,12 +366,13 @@ export const WalletProvider = (props: any) => {
       network_: string,
       onLoaded_: any,
     ) => {
-      if (p2pPool) {
-        p2pPool.disconnect();
-        setP2pPool(undefined);
-      }
-
-      setOnLoaded(onLoaded_);
+      callbacks['loaded'] = [
+        onLoaded_,
+        e => {
+          throw e;
+        },
+      ];
+      setCallbacks(callbacks);
       setSpendingPassword(spendingPassword_);
       setWalletName(name);
 
@@ -429,6 +438,10 @@ wallet.on('sync_finished', async () => {
 
 wallet.on('new_staking_address', async () => {
   sendToRN('new_staking_address');
+});
+
+wallet.on('new_mnemonic', (m) => {
+  sendToRN('new_mnemonic', m);
 });
 
 wallet.Load({
@@ -539,59 +552,176 @@ wallet.Load({
         //bootstrap: njs.wallet.xNavBootstrap,
       });*/
     },
-    [njs, wallet],
+    [],
   );
 
-  const createNftCollection = useCallback(
+  const CreateNft = useCallback(
     async (
       name: string,
       scheme: string,
       amount: number,
       spendingPassword: string,
     ) => {
-      if (!wallet) {
-        throw new Error('Wallet not loaded');
-      }
-
-      let candidates = (await wallet.GetCandidates())
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 5);
-
-      let fee = 0;
-
-      for (let c of candidates) {
-        //fee += parseInt(BigInt(c.fee.words).toString());
-      }
-
-      let obj = await wallet.CreateNft(name, scheme, amount, spendingPassword);
-
-      if (!obj) {
-        throw new Error("Can't access you wallet keys");
-      }
-      let ret = {fee: obj.fee + fee, tx: undefined};
-      let toCombine = [obj.tx[0]];
-      for (let c of candidates) {
-        //toCombine.push(c.tx);
-      }
-      ret.tx = toCombine;
-
-      if (false && toCombine.length > 1) {
-        ret.tx = [
-          await njs.wallet.bitcore.Transaction.Blsct.CombineTransactions(
-            toCombine,
-          ),
-        ];
-        if (ret.tx.length == 1) {
-          ret.tx[0].version |= 0x10;
-          ret.tx[0] = ret.tx[0].toString();
-        } else {
-          throw new Error('Could not create transaction');
-        }
-      }
-
-      return ret;
+      return new Promise((res, rej) => {
+        ExecWrapper(
+          'wallet.CreateNft',
+          [
+            JSON.stringify(name),
+            JSON.stringify(scheme),
+            amount.toString(10),
+            JSON.stringify(spendingPassword),
+          ],
+          res,
+          rej,
+        );
+      });
     },
-    [njs, wallet],
+    [ExecWrapper],
+  );
+
+  const GetCandidates = useCallback(async (): Promise<any> => {
+    return new Promise((res, rej) => {
+      ExecWrapper('wallet.GetCandidates', undefined, res, rej);
+    });
+  }, [ExecWrapper]);
+
+  const TokenCreateTransaction = useCallback(
+    async (
+      to: string,
+      amount: number,
+      memo: string,
+      password: string,
+      tokenId: Buffer | string,
+      tokenNftId: number,
+      vData: Buffer | undefined,
+      extraKey: Buffer | undefined,
+      ignoreInputs: boolean,
+      ignoreFee: boolean,
+      fee: number,
+    ) => {
+      return new Promise((res, rej) => {
+        ExecWrapper(
+          'wallet.tokenCreateTransaction',
+          [
+            JSON.stringify(to),
+            Math.floor(amount * 1e8).toString(10),
+            JSON.stringify(memo),
+            JSON.stringify(password),
+            JSON.stringify(
+              tokenId
+                ? tokenId.toString('hex')
+                : Buffer.alloc(32).toString('hex'),
+            ),
+            JSON.stringify(tokenNftId),
+            'undefined',
+            'undefined',
+            ignoreInputs ? 'true' : 'false',
+            ignoreFee ? 'true' : 'false',
+            fee ? JSON.stringify(fee) : '0',
+          ],
+          res,
+          rej,
+        );
+      });
+    },
+    [ExecWrapper],
+  );
+
+  const XNavCreateTransaction = useCallback(
+    async (
+      to: string,
+      amount: number,
+      memo: string,
+      password: string,
+      subtractFee: boolean,
+      tokenId: Buffer | string,
+      tokenNftId: number,
+      vData: Buffer | undefined,
+      extraKey: Buffer | undefined,
+      extraIn: number,
+      fee: number,
+    ) => {
+      return new Promise((res, rej) => {
+        ExecWrapper(
+          'wallet.xNavCreateTransaction',
+          [
+            JSON.stringify(to),
+            Math.floor(amount * 1e8).toString(10),
+            JSON.stringify(memo),
+            JSON.stringify(password),
+            subtractFee ? 'true' : 'false',
+            JSON.stringify(
+              tokenId
+                ? tokenId.toString('hex')
+                : Buffer.alloc(32).toString('hex'),
+            ),
+            JSON.stringify(tokenNftId),
+            'undefined',
+            'undefined',
+            extraIn ? extraIn.toString(10) : '0',
+            fee ? fee.toString(10) : '0',
+          ],
+          res,
+          rej,
+        );
+      });
+    },
+    [ExecWrapper],
+  );
+
+  const NavCreateTransaction = useCallback(
+    (
+      dest: string,
+      amount: number,
+      memo: string,
+      spendingPassword: string,
+      subtractFee: boolean,
+      fee: number,
+      type: number,
+      fromAddress: string,
+    ) => {
+      return new Promise((res, rej) => {
+        ExecWrapper(
+          'wallet.NavCreateTransaction',
+          [
+            JSON.stringify(dest),
+            Math.floor(amount * 1e8).toString(10),
+            JSON.stringify(memo),
+            JSON.stringify(spendingPassword),
+            subtractFee ? 'true' : 'false',
+            fee ? fee.toString(10) : '0',
+            type ? type.toString(10) : '0',
+            JSON.stringify(fromAddress),
+          ],
+          res,
+          rej,
+        );
+      });
+    },
+    [ExecWrapper],
+  );
+
+  const CombineTransactions = useCallback(
+    (txs: string | string[]) => {
+      return new Promise((res, rej) => {
+        ExecWrapper(
+          'njs.wallet.bitcore.Transaction.Blsct.CombineTransactions',
+          [JSON.stringify(txs)],
+          res,
+          rej,
+        );
+      });
+    },
+    [ExecWrapper],
+  );
+
+  const SendTransaction = useCallback(
+    (txs: string | string[]) => {
+      return new Promise((res, rej) => {
+        ExecWrapper('wallet.SendTransaction', [JSON.stringify(txs)], res, rej);
+      });
+    },
+    [ExecWrapper],
   );
 
   const createTransaction = useCallback(
@@ -607,13 +737,9 @@ wallet.Load({
       tokenNftId = undefined,
     ) => {
       return new Promise(async (res, rej) => {
-        if (!wallet) {
-          rej('Wallet not loaded');
-          return;
-        }
         try {
           if (from == 'xnav' || from == 'token' || from == 'nft') {
-            let candidates = (await wallet.GetCandidates())
+            let candidates = (await GetCandidates())
               .sort(() => 0.5 - Math.random())
               .slice(0, 5);
 
@@ -625,32 +751,33 @@ wallet.Load({
 
             let obj =
               from == 'token' || from == 'nft'
-                ? await wallet.tokenCreateTransaction(
+                ? await TokenCreateTransaction(
                     to,
-                    Math.floor(amount * 1e8),
+                    amount,
                     memo,
                     password,
                     tokenId,
                     tokenNftId,
-                    new Buffer([]),
+                    undefined,
                     undefined,
                     false,
                     false,
                     fee,
                   )
-                : await wallet.xNavCreateTransaction(
+                : await XNavCreateTransaction(
                     to,
-                    Math.floor(amount * 1e8),
+                    amount,
                     memo,
                     password,
                     subtractFee,
                     new Buffer(new Uint8Array(32)),
                     -1,
-                    new Buffer([]),
+                    undefined,
                     undefined,
                     0,
                     fee,
                   );
+
             if (!obj) {
               rej("Can't access you wallet keys");
             } else {
@@ -662,11 +789,7 @@ wallet.Load({
               ret.tx = toCombine;
 
               if (toCombine.length > 1) {
-                ret.tx = [
-                  await njs.wallet.bitcore.Transaction.Blsct.CombineTransactions(
-                    toCombine,
-                  ),
-                ];
+                ret.tx = [await CombineTransactions(toCombine)];
                 if (ret.tx.length == 1) {
                   ret.tx[0].version |= 0x10;
                   ret.tx[0] = ret.tx[0].toString();
@@ -678,9 +801,9 @@ wallet.Load({
               res(ret);
             }
           } else if (from == 'nav') {
-            let ret = await wallet.NavCreateTransaction(
+            let ret = await NavCreateTransaction(
               to,
-              Math.floor(amount * 1e8),
+              amount,
               memo,
               password,
               subtractFee,
@@ -690,9 +813,9 @@ wallet.Load({
             );
             res(ret);
           } else if (from == 'cold_staking') {
-            let ret = await wallet.NavCreateTransaction(
+            let ret = await NavCreateTransaction(
               to,
-              Math.floor(amount * 1e8),
+              amount,
               memo,
               password,
               subtractFee,
@@ -705,6 +828,7 @@ wallet.Load({
             console.log('unknown wallet type', from);
           }
         } catch (e) {
+          console.log(e.toString());
           console.log(e.stack);
           rej(e);
         }
@@ -713,16 +837,54 @@ wallet.Load({
     [],
   );
 
-  const sendTransaction = useCallback(
-    async (tx: any) => {
-      if (!wallet) {
-        throw new Error('Wallet not loaded');
+  const createNftCollection = useCallback(
+    async (
+      name: string,
+      scheme: string,
+      amount: number,
+      spendingPassword: string,
+    ) => {
+      let candidates = (await GetCandidates())
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 5);
+
+      let fee = 0;
+
+      for (let c of candidates) {
+        //fee += parseInt(BigInt(c.fee.words).toString());
       }
-      let hash = await wallet.SendTransaction(tx);
-      return hash;
+
+      let obj = await CreateNft(name, scheme, amount, spendingPassword);
+
+      if (!obj) {
+        throw new Error("Can't access you wallet keys");
+      }
+      let ret = {fee: obj.fee + fee, tx: undefined};
+      let toCombine = [obj.tx[0]];
+      for (let c of candidates) {
+        //toCombine.push(c.tx);
+      }
+      ret.tx = toCombine;
+
+      if (false && toCombine.length > 1) {
+        ret.tx = [await CombineTransactions(toCombine)];
+        if (ret.tx.length == 1) {
+          ret.tx[0].version |= 0x10;
+          ret.tx[0] = ret.tx[0].toString();
+        } else {
+          throw new Error('Could not create transaction');
+        }
+      }
+
+      return ret;
     },
-    [wallet],
+    [CreateNft, CombineTransactions, GetCandidates],
   );
+
+  const sendTransaction = useCallback(async (tx: any) => {
+    let hash = await SendTransaction(tx);
+    return hash;
+  }, []);
 
   const refreshWallet = useCallback(async () => {
     if (
@@ -732,9 +894,11 @@ wallet.Load({
         connected == Connection_Stats_Enum.Syncing
       )
     ) {
-      ExecWrapper('Sync');
+      return new Promise((res, rej) =>
+        ExecWrapper('wallet.Sync', undefined, res, rej),
+      );
     }
-  }, [wallet, connected]);
+  }, [connected]);
 
   const removeWallet = useCallback(
     async (name: string) => {
@@ -743,21 +907,18 @@ wallet.Load({
     [RemoveWallet],
   );
 
-  const closeWallet = useCallback(
-    async () => {
-      await new Promise((res, _) => {
-        ExecWrapperSync('Disconnect', undefined, () => {
-          ExecWrapperSync('CloseDb', undefined, () => {
-            res(true);
-          })
-        })
+  const closeWallet = useCallback(async () => {
+    await new Promise((res, _) => {
+      ExecWrapperSync('wallet.Disconnect', undefined, () => {
+        ExecWrapperSync('wallet.CloseDb', undefined, () => {
+          res(true);
+        });
       });
-    }, [ExecWrapperSync]
-  )
+    });
+  }, [ExecWrapperSync]);
 
   const walletContext: WalletContextValue = useMemo(
     () => ({
-      bitcore: njs?.wallet.bitcore,
       walletName,
       mnemonic,
       createWallet: createWallet,
@@ -784,7 +945,10 @@ wallet.Load({
       removeWallet,
       walletLibLoaded,
       createNftCollection,
-      closeWallet
+      closeWallet,
+      ExecWrapperPromise,
+      ExecWrapperSyncPromise,
+      IsValidMnemonic
     }),
     [
       walletName,
@@ -807,7 +971,10 @@ wallet.Load({
       walletLibLoaded,
       refreshWallet,
       createNftCollection,
-      closeWallet
+      closeWallet,
+      ExecWrapperPromise,
+      ExecWrapperSyncPromise,
+      IsValidMnemonic
     ],
   );
 
@@ -838,103 +1005,106 @@ wallet.Load({
     createNftCollection,
   });
 
-  const debugging = `
-  try {
-  console.log('hallo');
-  njs.wallet.Init().then(async () => {
-  console.log('ready');
-    sendToRN('WalletInit');
-  });
-  } catch(e) { console.log(e.toString()); }
-`;
-
-  const [callbacks, setCallbacks] = useState({});
-
-  const onMessage = payload => {
-    let dataPayload;
-    try {
-      dataPayload = JSON.parse(payload.nativeEvent.data);
-    } catch (e) {}
-    if (dataPayload) {
-      if (callbacks[dataPayload.type]) {
-        callbacks[dataPayload.type](dataPayload.data);
-        delete callbacks[dataPayload.type];
-        setCallbacks(callbacks);
-      }
-      if (dataPayload.type === 'Console') {
-        console.info(
-          `[navcoin-js:${dataPayload.data.type}] ${dataPayload.data.log}`,
-        );
-      } else if (dataPayload.type === 'WalletInit') {
-        setWalletLibLoaded(true);
-      } else if (dataPayload.type === 'WalletsList') {
-        setWalletsList(dataPayload.data);
-      } else if (dataPayload.type === 'GetBalance') {
-        setBalances(dataPayload.data);
-      } else if (dataPayload.type === 'GetAllAddresses') {
-        setAddresses(dataPayload.data);
-      } else if (dataPayload.type === 'GetHistory') {
-        setHistory(dataPayload.data);
-      } else if (dataPayload.type === 'GetMyTokens') {
-        setMyTokens(dataPayload.data);
-      } else if (dataPayload.type === 'Sync') {
-        ExecWrapper('GetBalance');
-        ExecWrapper('GetHistory');
-        ExecWrapper('GetAllAddresses');
-      } else if (dataPayload.type === 'RemoveWallet') {
-        RequestWallets();
-      } else if (dataPayload.type === 'loaded') {
-        ExecWrapper('GetBalance');
-        ExecWrapper('GetHistory');
-        ExecWrapper('GetMyTokens', [`"${spendingPassword}"`]);
-        ExecWrapper('Connect');
-        ExecWrapper('GetAllAddresses');
-        if (onLoaded !== undefined) onLoaded();
-        setSpendingPassword('');
-        setFirstSyncCompleted(false);
-        setConnected(Connection_Stats_Enum.Connecting);
-        setSyncProgress(0);
-        setNetwork(dataPayload.data.network);
-      } else if (dataPayload.type === 'new_token') {
-        ExecWrapper('GetMyTokens', [`"${spendingPassword}"`]);
-      } else if (dataPayload.type === 'sync_status') {
-        setSyncProgress(dataPayload.data.progress);
-      } else if (dataPayload.type === 'disconnected') {
-        setConnected(Connection_Stats_Enum.Disconnected);
-      } else if (dataPayload.type === 'connection_failed') {
-        setConnected(Connection_Stats_Enum.Disconnected);
-      } else if (dataPayload.type === 'connected') {
-        console.log('connected to ', dataPayload.data.serverName);
-        setServer(dataPayload.data.serverName);
-        setConnected(Connection_Stats_Enum.Connected);
-      } else if (dataPayload.type === 'new_tx') {
-        if (firstSyncCompleted) {
-          ExecWrapper('GetBalance');
-          ExecWrapper('GetHistory');
-          ExecWrapper('GetAllAddresses');
+  const onMessage = useCallback(
+    payload => {
+      let dataPayload;
+      try {
+        dataPayload = JSON.parse(payload.nativeEvent.data);
+      } catch (e) {}
+      if (dataPayload) {
+        if (
+          dataPayload.type.substring(0, 2) == 'E-' &&
+          callbacks[dataPayload.type.substring(2)] &&
+          callbacks[dataPayload.type.substring(2)][1]
+        ) {
+          callbacks[dataPayload.type.substring(2)][1](dataPayload.data);
+          delete callbacks[dataPayload.type.substring(2)];
+          setCallbacks(callbacks);
+        } else if (
+          callbacks[dataPayload.type] &&
+          callbacks[dataPayload.type][0]
+        ) {
+          callbacks[dataPayload.type][0](dataPayload.data);
+          delete callbacks[dataPayload.type];
+          setCallbacks(callbacks);
         }
-      } else if (dataPayload.type === 'sync_started') {
-        setConnected(Connection_Stats_Enum.Syncing);
-      } else if (dataPayload.type === 'bootstrap_started') {
-        setConnected(Connection_Stats_Enum.Bootstrapping);
-      } else if (dataPayload.type === 'bootstrap_progress') {
-        setBootstrapProgress(dataPayload.data.count);
-      } else if (dataPayload.type === 'sync_finished') {
-        console.log('sync_finished');
-        setSyncProgress(100);
-        setFirstSyncCompleted(true);
-        setConnected(Connection_Stats_Enum.Synced);
-        ExecWrapper('GetBalance');
-        ExecWrapper('GetHistory');
-        ExecWrapper('GetMyTokens', [`"${spendingPassword}"`]);
-        ExecWrapper('GetAllAddresses');
-      } else if (dataPayload.type === 'new_staking_address') {
-        updateAccounts();
-      } else {
-        console.log(dataPayload.type, dataPayload.data);
+        if (dataPayload.type === 'Console') {
+          console.info(
+            `[navcoin-js:${dataPayload.data.type}] ${dataPayload.data.log}`,
+          );
+        } else if (dataPayload.type === 'WalletInit') {
+          setWalletLibLoaded(true);
+        } else if (dataPayload.type === 'WalletsList') {
+          setWalletsList(dataPayload.data);
+        } else if (dataPayload.type === 'wallet.GetBalance') {
+          setBalances(dataPayload.data);
+        } else if (dataPayload.type === 'wallet.GetAllAddresses') {
+          setAddresses(dataPayload.data);
+        } else if (dataPayload.type === 'wallet.GetHistory') {
+          setHistory(dataPayload.data);
+        } else if (dataPayload.type === 'wallet.GetMyTokens') {
+          setMyTokens(dataPayload.data);
+        } else if (dataPayload.type === 'wallet.Sync') {
+          ExecWrapper('wallet.GetBalance');
+          ExecWrapper('wallet.GetHistory');
+          ExecWrapper('wallet.GetAllAddresses');
+        } else if (dataPayload.type === 'RemoveWallet') {
+          RequestWallets();
+        } else if (dataPayload.type === 'loaded') {
+          ExecWrapper('wallet.GetBalance');
+          ExecWrapper('wallet.GetHistory');
+          ExecWrapper('wallet.GetMyTokens', [`"${spendingPassword}"`]);
+          ExecWrapper('wallet.Connect');
+          ExecWrapper('wallet.GetAllAddresses');
+          setSpendingPassword('');
+          setFirstSyncCompleted(false);
+          setConnected(Connection_Stats_Enum.Connecting);
+          setSyncProgress(0);
+          setNetwork(dataPayload.data.network);
+        } else if (dataPayload.type === 'new_token') {
+          ExecWrapper('wallet.GetMyTokens', [`"${spendingPassword}"`]);
+        } else if (dataPayload.type === 'sync_status') {
+          setSyncProgress(dataPayload.data.progress);
+        } else if (dataPayload.type === 'disconnected') {
+          setConnected(Connection_Stats_Enum.Disconnected);
+        } else if (dataPayload.type === 'connection_failed') {
+          setConnected(Connection_Stats_Enum.Disconnected);
+        } else if (dataPayload.type === 'connected') {
+          console.log('connected to ', dataPayload.data.serverName);
+          setServer(dataPayload.data.serverName);
+          setConnected(Connection_Stats_Enum.Connected);
+        } else if (dataPayload.type === 'new_tx') {
+          if (firstSyncCompleted) {
+            ExecWrapper('wallet.GetBalance');
+            ExecWrapper('wallet.GetHistory');
+            ExecWrapper('wallet.GetAllAddresses');
+          }
+        } else if (dataPayload.type === 'sync_started') {
+          setConnected(Connection_Stats_Enum.Syncing);
+        } else if (dataPayload.type === 'bootstrap_started') {
+          setConnected(Connection_Stats_Enum.Bootstrapping);
+        } else if (dataPayload.type === 'bootstrap_progress') {
+          setBootstrapProgress(dataPayload.data.count);
+        } else if (dataPayload.type === 'new_mnemonic') {
+          setMnemonic(dataPayload.data);
+        } else if (dataPayload.type === 'sync_finished') {
+          console.log('sync_finished');
+          setSyncProgress(100);
+          setFirstSyncCompleted(true);
+          setConnected(Connection_Stats_Enum.Synced);
+          ExecWrapper('wallet.GetBalance');
+          ExecWrapper('wallet.GetHistory');
+          ExecWrapper('wallet.GetMyTokens', [`"${spendingPassword}"`]);
+          ExecWrapper('wallet.GetAllAddresses');
+        } else if (dataPayload.type === 'new_staking_address') {
+          updateAccounts();
+        } else {
+          console.log(dataPayload.type, dataPayload.data);
+        }
       }
-    }
-  };
+    },
+    [firstSyncCompleted, updateAccounts, ExecWrapper, callbacks],
+  );
 
   return (
     <WalletContext.Provider value={walletContext}>
@@ -942,7 +1112,13 @@ wallet.Load({
         containerStyle={{position: 'absolute', width: 0, height: 0}} // <=== your prop
         ref={walletWebView}
         originWhitelist={['*']}
-        injectedJavaScript={debugging}
+        injectedJavaScript={`
+  try {
+  njs.wallet.Init().then(async () => {
+    sendToRN('WalletInit');
+  });
+  } catch(e) { console.log(e.toString()); }
+`}
         onMessage={onMessage}
         onError={console.log}
         source={{

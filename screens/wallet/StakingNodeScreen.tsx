@@ -28,7 +28,7 @@ const renderRightActions = (editMode: boolean, onPress: () => void) => (
 );
 
 const StakingNodeScreen = () => {
-  const {accounts, wallet, updateAccounts} = useWallet();
+  const {accounts, ExecWrapperPromise, updateAccounts} = useWallet();
   const [isEditVisible, showEditDialog] = useState(false);
   const [editingNode, setEditingNode] = useState<string>('');
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -50,7 +50,7 @@ const StakingNodeScreen = () => {
         }
         hintInput={'Name'}
         submitInput={async (inputText: string) => {
-          await wallet.db.AddLabel(editingNode, inputText);
+          await ExecWrapperPromise('wallet.db.AddLabel', [editingNode, inputText].map(el => JSON.stringify(el)));
           await updateAccounts();
           showEditDialog(false);
         }}

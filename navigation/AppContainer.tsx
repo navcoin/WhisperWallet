@@ -32,6 +32,12 @@ import CollectionScreen from '../screens/wallet/CollectionScreen';
 const Stack = createStackNavigator<RootStackParamList>();
 const StackApp = createStackNavigator<RootAppStackParamList>();
 
+const blurProps = {
+  listeners: ({navigation}) => ({
+    blur: () => navigation.setParams({screen: undefined}),
+  }),
+};
+
 const AppContent = (props: any) => {
   const _handleBackButtonClick = React.useCallback(() => true, []);
   const _onBlur = React.useCallback(() => {
@@ -52,11 +58,23 @@ const AppContent = (props: any) => {
           headerShown: false,
         }}
         initialRouteName={'Intro'}>
-        <Stack.Screen name="Intro" component={Intro} />
-        <Stack.Screen name="AskPinScreen" component={AskPinScreen} />
-        <Stack.Screen name="CreateNewWallet" component={CreateNewWallet} />
-        <Stack.Screen name="OpenWallet" component={OpenWallet} />
-        <Stack.Screen name="ImportWallet" component={ImportWallet} />
+        <Stack.Screen {...blurProps} name="Intro" component={Intro} />
+        <Stack.Screen
+          {...blurProps}
+          name="AskPinScreen"
+          component={AskPinScreen}
+        />
+        <Stack.Screen
+          {...blurProps}
+          name="CreateNewWallet"
+          component={CreateNewWallet}
+        />
+        <Stack.Screen {...blurProps} name="OpenWallet" component={OpenWallet} />
+        <Stack.Screen
+          {...blurProps}
+          name="ImportWallet"
+          component={ImportWallet}
+        />
         <Stack.Screen
           name={'MainWalletScreen'}
           component={MainWalletScreen}
@@ -68,28 +86,71 @@ const AppContent = (props: any) => {
             gestureEnabled: false,
           }}
         />
-        <Stack.Screen name={'SendToScreen'} component={SendToScreen} />
-        <Stack.Screen name={'AddressScreen'} component={AddressScreen} />
-        <Stack.Screen name={'HistoryScreen'} component={HistoryScreen} />
-        <Stack.Screen name={'ViewTxScreen'} component={ViewTxScreen} />
-        <Stack.Screen name={'SettingsScreen'} component={SettingsScreen} />
-        <Stack.Screen name={'MnemonicScreen'} component={MnemonicScreen} />
         <Stack.Screen
+          {...blurProps}
+          name={'SendToScreen'}
+          component={SendToScreen}
+        />
+        <Stack.Screen
+          {...blurProps}
+          name={'AddressScreen'}
+          component={AddressScreen}
+        />
+        <Stack.Screen
+          {...blurProps}
+          name={'HistoryScreen'}
+          component={HistoryScreen}
+        />
+        <Stack.Screen
+          {...blurProps}
+          name={'ViewTxScreen'}
+          component={ViewTxScreen}
+        />
+        <Stack.Screen
+          {...blurProps}
+          name={'SettingsScreen'}
+          component={SettingsScreen}
+        />
+        <Stack.Screen
+          {...blurProps}
+          name={'MnemonicScreen'}
+          component={MnemonicScreen}
+        />
+        <Stack.Screen
+          {...blurProps}
           name={'StakingNodeScreen'}
           component={StakingNodeScreen}
         />
-        <Stack.Screen name={'ServersScreen'} component={ServersScreen} />
-        <Stack.Screen name={'AddServerScreen'} component={AddServerScreen} />
-        <Stack.Screen name={'ErrorLogsScreen'} component={ErrorLogsScreen} />
         <Stack.Screen
+          {...blurProps}
+          name={'ServersScreen'}
+          component={ServersScreen}
+        />
+        <Stack.Screen
+          {...blurProps}
+          name={'AddServerScreen'}
+          component={AddServerScreen}
+        />
+        <Stack.Screen
+          {...blurProps}
+          name={'ErrorLogsScreen'}
+          component={ErrorLogsScreen}
+        />
+        <Stack.Screen
+          {...blurProps}
           name={'AddStakingNodeScreen'}
           component={AddStakingNodeScreen}
         />
         <Stack.Screen
+          {...blurProps}
           name={'CreateNftCollectionScreen'}
           component={CreateNftCollectionScreen}
         />
-        <Stack.Screen name={'CollectionScreen'} component={CollectionScreen} />
+        <Stack.Screen
+          {...blurProps}
+          name={'CollectionScreen'}
+          component={CollectionScreen}
+        />
       </Stack.Navigator>
     </BottomSheetProvider>
   );

@@ -35,7 +35,13 @@ interface SettingsItem {
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const {readPassword} = useSecurity();
   const [loading, setLoading] = useState<string | undefined>(undefined);
-  const {walletName, createWallet, closeWallet, removeWallet} = useWallet();
+  const {
+    walletName,
+    createWallet,
+    closeWallet,
+    removeWallet,
+    ExecWrapperPromise,
+  } = useWallet();
   const bottomSheet = useBottomSheet();
   const {changeMode, supportedType, currentAuthenticationType} = useSecurity();
   const [authTypes, setAuthTypes] = useState<any>([]);
@@ -200,9 +206,9 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       show: true,
       onPress: () => {
         readPassword().then(async (password: string) => {
-          const updatedMnemonic: string = await wallet.db.GetMasterKey(
-            'mnemonic',
-            password,
+          const updatedMnemonic: string = await ExecWrapperPromise(
+            'wallet.db.GetMasterKey',
+            ['mnemonic', password].map(el => JSON.stringify(el)),
           );
           navigate('MnemonicScreen', {
             mnemonic: updatedMnemonic,

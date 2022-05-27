@@ -33,13 +33,13 @@ const renderRightActions = (editMode: boolean, onPress: () => void) => (
 );
 
 const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
-  const {walletName, wallet, njs} = useWallet();
+  const {walletName, network} = useWallet();
 
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
 
   const [currentServers, setCurrentServers] = useAsyncStorage(
     'currentServers',
-    networkOptions[wallet.network],
+    networkOptions[network],
   );
   const [editMode, setEditMode] = useState(false);
 
@@ -59,7 +59,7 @@ const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
       {
         text: 'Yes',
         onPress: () => {
-          const network = wallet.network as NetworkOption;
+          const network = network as NetworkOption;
           setCurrentServers(networkOptions[network]);
         },
       },
@@ -87,7 +87,7 @@ const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
             onPress={() => {
               navigate('AddServerScreen', {
                 params: {
-                  addServer: (newServer: ServerOption, cb: () => void) => {
+                  addServer: (newServer: ServerOption, cb: () => void): void => {
                     const temp = [...currentServers];
                     temp.push(newServer);
                     setCurrentServers(temp);
