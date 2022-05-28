@@ -57,7 +57,7 @@ const HistoryScreen = (props: any) => {
       item={item}
       index={index}
       onPress={() => {
-        navigate('ViewTxScreen', {params: {item}});
+        navigate('ViewTxScreen', {item});
       }}
     />
   );
@@ -65,7 +65,7 @@ const HistoryScreen = (props: any) => {
   const goToAddressCoin = () => {
     if (props && props.navigation) {
       navigate('AddressScreen', {
-        params: {from: props.route.params.filter},
+        from: props.route.params.filter,
       });
     }
   };

@@ -186,13 +186,12 @@ const CollectionScreen = (props: any) => {
                           key={'sendTo'}
                           icon={'diagonalArrow3'}
                           onPress={() => {
-                            navigate('Wallet', {
-                              screen: 'SendToScreen',
-                              params: {
+                            navigate('SendToScreen',
+                              {
                                 from: collection,
                                 nftId: parseInt(nfts[currentIndex].id),
                               },
-                            });
+                            );
                             closeImagePreview();
                           }}
                           selected={''}
