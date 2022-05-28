@@ -3,7 +3,7 @@ import {Image, View} from 'react-native';
 import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
 import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Text from '../components/Text';
 import Content from '../components/Content';
 import Container from '../components/Container';
@@ -11,11 +11,61 @@ import {Button} from '@tsejerome/ui-kitten-components';
 import {Images} from '../assets/images';
 import {RootStackParamList} from './type';
 import useWallet from '../hooks/useWallet';
+import useSecurity from '../hooks/useSecurity';
+import { useModal } from '../hooks/useModal';
+import LoadingModalContent from '../components/Modals/LoadingModalContent';
+import {errorTextParser, promptErrorToaster } from '../utils/errors';
+import ErrorModalContent from '../components/Modals/ErrorModalContent';
+import Toast from 'react-native-toast-message';
 
 const Intro = memo(props => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
   const styles = useStyleSheet(themedStyles);
-  const {walletsList} = useWallet();
+  const {walletsList, createWallet, walletName} = useWallet();
+  const [loading, setLoading] = useState<string | undefined>(undefined);
+  const {readPassword} = useSecurity();
+
+  const {openModal, closeModal} = useModal();
+
+  useEffect(() => {
+    if (loading) {
+      openModal(<LoadingModalContent loading={!!loading} text={loading} />);
+      return;
+    }
+    closeModal();
+  }, [loading]);
+  useEffect(() => {
+    if (walletName?.length) return;
+    AsyncStorage.getItem('LastOpenedWalletName').then(async val => {
+      if (val && val.length) {
+        readPassword()
+          .then((password: string) => {
+            setLoading('Loading wallet...');
+            createWallet(
+              val,
+              '',
+              '',
+              password,
+              password,
+              false,
+              true,
+              'mainnet',
+              () => {
+                navigate('MainWalletScreen');
+                setLoading(undefined);
+              },
+            );
+          })
+          .catch((e: any) => {
+            setLoading(undefined);
+            let errorStr = `Could not open wallet ${val}: ${e.toString()}`;
+            Toast.show({
+              type: 'error',
+              text1: errorStr });
+          });
+      }
+    });
+  }, [walletName]);
 
   return (
     <Container style={styles.container}>

@@ -11,6 +11,7 @@ import RNBootSplash from 'react-native-bootsplash';
 import WebView from 'react-native-webview';
 import {Platform} from 'react-native';
 import useTraceUpdate from '../hooks/useTraceUpdates';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const WalletProvider = (props: any) => {
   const [server, setServer] = useState('');
@@ -911,6 +912,8 @@ wallet.Load({
     await new Promise((res, _) => {
       ExecWrapperSync('wallet.Disconnect', undefined, () => {
         ExecWrapperSync('wallet.CloseDb', undefined, () => {
+          setWalletName('');
+          AsyncStorage.setItem('LastOpenedWalletName', '');
           res(true);
         });
       });
@@ -1060,7 +1063,8 @@ wallet.Load({
           setConnected(Connection_Stats_Enum.Connecting);
           setSyncProgress(0);
           setNetwork(dataPayload.data.network);
-        } else if (dataPayload.type === 'new_token') {
+          AsyncStorage.setItem('LastOpenedWalletName', walletName);
+          } else if (dataPayload.type === 'new_token') {
           ExecWrapper('wallet.GetMyTokens', [`"${spendingPassword}"`]);
         } else if (dataPayload.type === 'sync_status') {
           setSyncProgress(dataPayload.data.progress);
@@ -1103,7 +1107,7 @@ wallet.Load({
         }
       }
     },
-    [firstSyncCompleted, updateAccounts, ExecWrapper, callbacks],
+    [firstSyncCompleted, updateAccounts, ExecWrapper, callbacks, walletName, spendingPassword],
   );
 
   return (
