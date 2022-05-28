@@ -97,7 +97,7 @@ const ImportWallet = () => {
             <Text
               center
               style={{marginHorizontal: scale(12), marginBottom: scale(24)}}>
-              Type the recovery words.
+              Type all the recovery words in the original order separated with a blank space.
             </Text>
             <View
               style={[
