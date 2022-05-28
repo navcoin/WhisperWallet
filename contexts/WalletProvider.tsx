@@ -161,11 +161,11 @@ try {
   const IsValidMnemonic = useCallback(
     async (mnemonic: string, type: string) => {
       return type == 'navcash'
-        ? await ExecWrapperSyncPromise(`electrumMnemonic.validateMnemonic`, [
+        ? await ExecWrapperSyncPromise(`njs.wallet.electrumMnemonic.validateMnemonic`, [
             `"${mnemonic}"`,
-            'electrumMnemonic.PREFIXES.standard',
+            'njs.wallet.electrumMnemonic.PREFIXES.standard',
           ])
-        : await ExecWrapperSyncPromise(`Mnemonic.isValid`, [`"${mnemonic}"`]);
+        : await ExecWrapperSyncPromise(`njs.wallet.Mnemonic.isValid`, [`"${mnemonic}"`]);
     },
     [ExecWrapperSyncPromise],
   );

@@ -17,7 +17,6 @@
     window.njs = umd.njs;
 
     try {
-
         window.sendToRN = (type, data) => {
             window.ReactNativeWebView.postMessage(
                 JSON.stringify({type: type, data: data})
