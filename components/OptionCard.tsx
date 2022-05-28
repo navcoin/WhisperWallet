@@ -74,7 +74,6 @@ const OptionCard = ({
     }
     return styleResult;
   };
-  console.log(text);
 
   return (
     <AnimatedAppearance type={animationType} index={index}>

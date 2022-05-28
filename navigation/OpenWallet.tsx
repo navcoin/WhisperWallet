@@ -88,7 +88,6 @@ export default OpenWallet;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 32,
     flex: 1,
   },
   flex1: {
