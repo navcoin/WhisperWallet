@@ -3,25 +3,37 @@ import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {useTheme, Icon} from '@tsejerome/ui-kitten-components';
 
 import Text from './Text';
+import {scale} from 'react-native-size-matters';
 
 interface InputSelectProps {
   title?: string;
   value?: string;
   onPress?(): void;
+  hideArrow?: boolean;
+  flexColumn?: boolean;
 }
 
-const InputSelect = ({title, value, onPress, hideArrow}: InputSelectProps) => {
+const InputSelect = ({
+  title,
+  value,
+  onPress,
+  hideArrow,
+  flexColumn,
+}: InputSelectProps) => {
   const theme = useTheme();
   return (
     <TouchableOpacity
       activeOpacity={onPress ? 0.7 : 1}
       style={[styles.container, {borderBottomColor: theme['color-basic-800']}]}
       onPress={onPress}>
-      <Text category="body" status="snow" marginRight={24}>
-        {title}
-      </Text>
-      <View style={styles.content}>
-        <Text category="headline" status="white">
+      <View style={[styles.content, flexColumn && {flexDirection: 'column'}]}>
+        <Text
+          category="body"
+          status="snow"
+          marginRight={flexColumn ? 0 : scale(24)}>
+          {title}
+        </Text>
+        <Text category="headline" status="white" {...{center: flexColumn }}>
           {value}
         </Text>
         {onPress && !hideArrow && (
