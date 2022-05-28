@@ -18,6 +18,7 @@ import useSecurity from '../hooks/useSecurity';
 import {useModal} from '../hooks/useModal';
 import {errorTextParser, promptErrorToaster} from '../utils/errors';
 import ErrorModalContent from '../components/Modals/ErrorModalContent';
+import ScanQR from '../components/ScanQR';
 
 const ImportWallet = () => {
   const {navigate, goBack} = useNavigation();
@@ -97,7 +98,8 @@ const ImportWallet = () => {
             <Text
               center
               style={{marginHorizontal: scale(12), marginBottom: scale(24)}}>
-              Type all the recovery words in the original order separated with a blank space.
+              Type all the recovery words in the original order separated with a
+              blank space.
             </Text>
             <View
               style={[
@@ -113,11 +115,15 @@ const ImportWallet = () => {
                 }
                 numberOfLines={3}
                 autoFocus={true}
-                style={[styles.flex1, {height: scale(100), color: 'black'}]}
+                style={[
+                  styles.flex1,
+                  {height: scale(100), color: 'black'},
+                ]}
                 value={mnemonic}
                 onChangeText={(m: string) => {
                   setMnemonic(m.toLowerCase());
                 }}
+                accessoryRight={<ScanQR onRead={setMnemonic} />}
               />
             </View>
             {error ? (
@@ -127,13 +133,14 @@ const ImportWallet = () => {
             ) : (
               <></>
             )}
+
             <View style={[layoutStyles.responsiveRowComponentWidth]}>
               <Button
                 status={'primary-whisper'}
                 children="Continue"
                 style={styles.button}
-                onPress={() => {
-                  if (IsValidMnemonic(mnemonic, type)) {
+                onPress={async () => {
+                  if (await IsValidMnemonic(mnemonic, type)) {
                     setError('');
                     setIndex(2);
                   } else {

@@ -1109,6 +1109,7 @@ wallet.Load({
   return (
     <WalletContext.Provider value={walletContext}>
       <WebView
+        onShouldStartLoadWithRequest={() => true}
         containerStyle={{position: 'absolute', width: 0, height: 0}} // <=== your prop
         ref={walletWebView}
         originWhitelist={['*']}

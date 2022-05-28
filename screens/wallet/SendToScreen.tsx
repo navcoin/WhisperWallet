@@ -105,7 +105,7 @@ const SendToScreen = (props: any) => {
       setSubtractFee(false);
     }
   }, [amountInString, currentAmount]);
-
+  
   return (
     <Container useSafeArea>
       <QrProvider>
