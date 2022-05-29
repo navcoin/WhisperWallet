@@ -5,6 +5,7 @@ import expo.modules.ReactActivityDelegateWrapper;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactActivity;
 import com.zoontek.rnbootsplash.RNBootSplash;
+import android.os.Bundle;
 
 public class MainActivity extends ReactActivity {
 
@@ -19,9 +20,9 @@ public class MainActivity extends ReactActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
- super.onCreate(savedInstanceState);
-//SplashScreen.show(this, R.style.SplashScreenTheme);  
-}
+      super.onCreate(null);
+      //SplashScreen.show(this, R.style.SplashScreenTheme);
+  }
 
   @Override
   protected ReactActivityDelegate createReactActivityDelegate() {

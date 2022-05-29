@@ -41,14 +41,14 @@ const blurProps = {
 const AppContent = (props: any) => {
   const _handleBackButtonClick = React.useCallback(() => true, []);
   const _onBlur = React.useCallback(() => {
-    /*BackHandler.removeEventListener(
+    BackHandler.removeEventListener(
       'hardwareBackPress',
       _handleBackButtonClick,
-    );*/
+    );
   }, []);
 
   const _onFocus = React.useCallback(() => {
-    //BackHandler.addEventListener('hardwareBackPress', _handleBackButtonClick);
+    BackHandler.addEventListener('hardwareBackPress', _handleBackButtonClick);
   }, []);
 
   return (

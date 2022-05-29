@@ -1077,7 +1077,7 @@ wallet.Load({
           setServer(dataPayload.data.serverName);
           setConnected(Connection_Stats_Enum.Connected);
         } else if (dataPayload.type === 'new_tx') {
-          if (firstSyncCompleted) {
+          if (firstSyncCompleted && !dataPayload.data.confirmed) {
             ExecWrapper('wallet.GetBalance');
             ExecWrapper('wallet.GetHistory');
             ExecWrapper('wallet.GetAllAddresses');
