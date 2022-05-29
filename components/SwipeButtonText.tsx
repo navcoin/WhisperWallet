@@ -9,7 +9,7 @@ import {
   ViewStyle,
   StyleSheet,
 } from 'react-native';
-import {DEFAULT_HEIGHT} from './SwipeButton';
+import {DEFAULT_HEIGHT} from './SwipeButtonConstants';
 import {SwipeButtonCommonProps} from './SwipeButton';
 
 export interface SwipeButtonTextProps

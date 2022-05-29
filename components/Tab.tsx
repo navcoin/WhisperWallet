@@ -32,7 +32,7 @@ const FrequencyTab = ({style, selectedIndex, onChange, tabs}: Props) => {
             style={styles.btn}
             key={index}
             activeOpacity={0.7}
-            onPress={() => onChange(index)}>
+            onPressOut={() => onChange(index)}>
             <Text
               category="headline"
               marginTop={4}

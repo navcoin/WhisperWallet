@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC, useCallback, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import Animated, {
   Easing,
@@ -11,6 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, {G, Path} from 'react-native-svg';
 import {useTheme} from '@tsejerome/ui-kitten-components';
+import useTraceUpdates from '../hooks/useTraceUpdates';
 
 type CircularProgressProps = {
   strokeWidth: number;
@@ -173,7 +174,7 @@ export const AnimatedSegments: FC<CircularProgressProps> = ({
 
   const FADE_DELAY = 1000;
 
-  const calcArc = (startAng, endA) => {
+  const calcArc = useCallback((startAng, endA) => {
     'worklet';
 
     let endAngle = endA;
@@ -195,7 +196,7 @@ export const AnimatedSegments: FC<CircularProgressProps> = ({
         : `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`;
 
     return d;
-  };
+  }, []);
 
   const arcProgress = useDerivedValue(() => {
     let startAng = progressStartAngle.value;
@@ -247,39 +248,39 @@ export const AnimatedSegments: FC<CircularProgressProps> = ({
 
   const progressAnimatedProps = useAnimatedProps(() => {
     return {d: arcProgress.value};
-  });
+  }, [arcProgress.value]);
 
   const progressAnimatedStyle = useAnimatedStyle(() => {
     return {opacity: progressAlpha.value};
-  });
+  }, [progressAlpha.value]);
 
   const progressBgAnimatedStyle = useAnimatedStyle(() => {
     return {opacity: progressBgAlpha.value};
-  });
+  }, [progressBgAlpha.value]);
 
   const balanceNavAnimatedProps = useAnimatedProps(() => {
     return {d: arcNavBalance.value};
-  });
+  }, [arcNavBalance.value]);
 
   const balanceXnavAnimatedProps = useAnimatedProps(() => {
     return {d: arcXnavBalance.value};
-  });
+  }, [arcXnavBalance.value]);
 
   const balanceStakingAnimatedProps = useAnimatedProps(() => {
     return {d: arcStakingBalance.value};
-  });
+  }, [arcStakingBalance.value]);
 
   const balanceNavAnimatedStyle = useAnimatedStyle(() => {
     return {opacity: navBalanceAlpha.value};
-  });
+  }, [navBalanceAlpha.value]);
 
   const balanceXnavAnimatedStyle = useAnimatedStyle(() => {
     return {opacity: xnavBalanceAlpha.value};
-  });
+  }, [xnavBalanceAlpha.value]);
 
   const balanceStakingAnimatedStyle = useAnimatedStyle(() => {
     return {opacity: stakingBalanceAlpha.value};
-  });
+  }, [stakingBalanceAlpha.value]);
 
   return (
     <View style={[{...styles.container}, {height: size, width: size}]}>
@@ -333,8 +334,6 @@ export const AnimatedSegments: FC<CircularProgressProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
     height: 400,
   },
 });

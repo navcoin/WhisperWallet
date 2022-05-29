@@ -41,8 +41,8 @@ export const BottomSheetProvider = (props: any) => {
         setContentPan(
           Platform.OS == 'android' &&
             !JSON.stringify(c).includes('Swipe to confirm')
-            ? false
-            : true,
+            ? true
+            : false,
         );
       },
       collapse: () => {
@@ -100,57 +100,3 @@ const themedStyles = StyleService.create({
     backgroundColor: 'background-basic-color-3',
   },
 });
-
-/*const BottomSheetProvider = (props: any) => {
-  const [content, setBottomContent] = useState(<></>);
-
-  const styles = useStyleSheet(themedStyles);
-
-  const initialSnapPoints = useMemo(() => ['CONTENT_HEIGHT'], []);
-  const bottomSheetRef = useRef<BottomSheetModal>(null);
-  const {
-    animatedHandleHeight,
-    animatedSnapPoints,
-    animatedContentHeight,
-    handleContentLayout,
-  } = useBottomSheetDynamicSnapPoints(initialSnapPoints);
-
-  // callbacks
-  const handleSheetChanges = useCallback((index: number) => {
-    return;
-  }, []);
-
-  const [bottomSheetIndex, setBottomSheetIndex] = useState(-1);
-
-  const setContent = (c: ReactElement) => {
-    setBottomContent(c);
-  };
-
-  return (
-    <>
-      {props.children}
-      <BottomSheet
-        ref={bottomSheetRef}
-        snapPoints={animatedSnapPoints}
-        handleHeight={animatedHandleHeight}
-        contentHeight={animatedContentHeight}
-        index={bottomSheetIndex}
-        onChange={handleSheetChanges}
-        enablePanDownToClose={true}
-        handleStyle={styles.handleStyle}
-        animateOnMount={true}
-        backdropComponent={props => (
-          <BottomSheetBackdrop
-            {...props}
-            disappearsOnIndex={-1}
-            appearsOnIndex={0}
-            close={() => bottomSheetRef.current?.close()}
-          />
-        )}>
-        <BottomSheetView onLayout={handleContentLayout}>
-          {content}
-        </BottomSheetView>
-      </BottomSheet>
-    </>
-  );
-};*/

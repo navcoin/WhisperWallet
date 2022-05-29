@@ -1,7 +1,5 @@
 import {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import memoize from 'memoizee';
-import {useBetween} from 'use-between';
 
 /*
  * The following hook us built such that we can keep track of AsyncStorage updates within Components

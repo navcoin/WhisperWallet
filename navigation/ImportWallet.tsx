@@ -9,7 +9,6 @@ import AnimatedStep from '../components/AnimatedStep';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useWallet from '../hooks/useWallet';
 import LoadingModalContent from '../components/Modals/LoadingModalContent';
-import {IsValidMnemonic} from '../utils/Mnemonic';
 import OptionCard from '../components/OptionCard';
 import {NetworkTypes, WalletTypes} from '../constants/Type';
 import {layoutStyles} from '../utils/layout';
@@ -19,6 +18,7 @@ import useSecurity from '../hooks/useSecurity';
 import {useModal} from '../hooks/useModal';
 import {errorTextParser, promptErrorToaster} from '../utils/errors';
 import ErrorModalContent from '../components/Modals/ErrorModalContent';
+import ScanQR from '../components/ScanQR';
 
 const ImportWallet = () => {
   const {navigate, goBack} = useNavigation();
@@ -27,7 +27,7 @@ const ImportWallet = () => {
   const [mnemonic, setMnemonic] = useState('');
   const [network, setNetwork] = useState('mainnet');
   const [type, setType] = useState('');
-  const {createWallet} = useWallet();
+  const {createWallet, IsValidMnemonic} = useWallet();
   const [loading, setLoading] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
   const {walletsList} = useWallet();
@@ -98,7 +98,8 @@ const ImportWallet = () => {
             <Text
               center
               style={{marginHorizontal: scale(12), marginBottom: scale(24)}}>
-              Type the recovery words.
+              Type all the recovery words in the original order separated with a
+              blank space.
             </Text>
             <View
               style={[
@@ -114,11 +115,15 @@ const ImportWallet = () => {
                 }
                 numberOfLines={3}
                 autoFocus={true}
-                style={[styles.flex1, {height: scale(100), color: 'black'}]}
+                style={[
+                  styles.flex1,
+                  {height: scale(100), color: 'black'},
+                ]}
                 value={mnemonic}
                 onChangeText={(m: string) => {
                   setMnemonic(m.toLowerCase());
                 }}
+                accessoryRight={<ScanQR onRead={setMnemonic} />}
               />
             </View>
             {error ? (
@@ -128,13 +133,14 @@ const ImportWallet = () => {
             ) : (
               <></>
             )}
+
             <View style={[layoutStyles.responsiveRowComponentWidth]}>
               <Button
                 status={'primary-whisper'}
                 children="Continue"
                 style={styles.button}
-                onPress={() => {
-                  if (IsValidMnemonic(mnemonic, type)) {
+                onPress={async () => {
+                  if (await IsValidMnemonic(mnemonic, type)) {
                     setError('');
                     setIndex(2);
                   } else {

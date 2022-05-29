@@ -4,7 +4,7 @@ import Container from '../../components/Container';
 import {ScreenProps} from '../../navigation/type';
 import Mnemonic from '../../components/Mnemonic';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
+import OptionCard from '../../components/OptionCard';
 
 const MnemonicScreen: React.FC<ScreenProps<'MnemonicScreen'>> = (
   props: any,
@@ -21,10 +21,12 @@ const MnemonicScreen: React.FC<ScreenProps<'MnemonicScreen'>> = (
   );
 };
 
-export default gestureHandlerRootHOC(MnemonicScreen);
+export default MnemonicScreen;
 
 const styles = StyleSheet.create({
   contentWrapper: {
+    flex: 1,
+    flexDirection: 'column',
     marginTop: 40,
     alignItems: 'center',
     justifyContent: 'center',

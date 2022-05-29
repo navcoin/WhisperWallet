@@ -23,6 +23,7 @@ import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 import {BlurView} from '@react-native-community/blur';
 import {Connection_Stats_Enum} from '../constants/Type';
 import {Button} from '@tsejerome/ui-kitten-components';
+import useTraceUpdates from '../hooks/useTraceUpdates';
 
 export const SecurityProvider = (props: any) => {
   const [lockedScreen, setLockedScreen] = useState(false);
@@ -38,7 +39,7 @@ export const SecurityProvider = (props: any) => {
 
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
-  const AskForUnlock = () => {
+  const AskForUnlock = useCallback(() => {
     readPassword()
       .then(() => {
         setLockedScreen(false);
@@ -46,7 +47,7 @@ export const SecurityProvider = (props: any) => {
       .catch(e => {
         AskForUnlock();
       });
-  };
+  }, [AskForUnlock]);
 
   useEffect(() => {
     if (appStateVisible == 'active' && lockedScreen) {
@@ -61,30 +62,6 @@ export const SecurityProvider = (props: any) => {
       });
     }
   }, [appStateVisible, lockedScreen]);
-
-  /*
-   * isPinOrFingerprintSet will be true if the device's screen is locked
-   * with a fingerprint or unlock pin code.
-   * supportedBiometry will refer to the biometry supported by the device.
-   */
-  const UpdateFeatures = async () => {
-    if (Platform.OS == 'ios' && currentAuthenticationType != -1) {
-      const faceIdPermission = await check(PERMISSIONS.IOS.FACE_ID);
-      if (faceIdPermission == RESULTS.DENIED) {
-        await request(PERMISSIONS.IOS.FACE_ID);
-        await AsyncStorage.setItem('RequestedFaceId', 'true');
-      }
-    }
-
-    setIsPinOrFingerprintSet(await DeviceInfo.isPinOrFingerprintSet());
-    setSupportedBiometry(await Keychain.getSupportedBiometryType({}));
-
-    while (currentAuthenticationType == -1) {
-      await new Promise((res, _) => {
-        setInterval(res, 100);
-      });
-    }
-  };
 
   useEffect(() => {
     /*
@@ -138,6 +115,30 @@ export const SecurityProvider = (props: any) => {
   >(-1);
 
   const [error, setError] = useState<string | undefined>(undefined);
+
+  /*
+ * isPinOrFingerprintSet will be true if the device's screen is locked
+ * with a fingerprint or unlock pin code.
+ * supportedBiometry will refer to the biometry supported by the device.
+ */
+  const UpdateFeatures = useCallback(async () => {
+    if (Platform.OS == 'ios' && currentAuthenticationType != -1) {
+      const faceIdPermission = await check(PERMISSIONS.IOS.FACE_ID);
+      if (faceIdPermission == RESULTS.DENIED) {
+        await request(PERMISSIONS.IOS.FACE_ID);
+        await AsyncStorage.setItem('RequestedFaceId', 'true');
+      }
+    }
+
+    setIsPinOrFingerprintSet(await DeviceInfo.isPinOrFingerprintSet());
+    setSupportedBiometry(await Keychain.getSupportedBiometryType({}));
+
+    while (currentAuthenticationType == -1) {
+      await new Promise((res, _) => {
+        setInterval(res, 100);
+      });
+    }
+  }, [currentAuthenticationType, setIsPinOrFingerprintSet, setSupportedBiometry]);
 
   /*
    * Whenever the authentication type or the supported biometry changes we need to:
@@ -213,7 +214,7 @@ export const SecurityProvider = (props: any) => {
    * Encrypts a plaintext with a key, returning a ciphertext
    */
 
-  const Encrypt = (plain: string, key: string): string => {
+  const Encrypt = useCallback((plain: string, key: string): string => {
     const iv = Buffer.from(DeviceInfo.getUniqueId(), 'utf8').slice(0, 16);
     const aes = crypto.createCipheriv(
       'aes-256-cbc',
@@ -223,13 +224,13 @@ export const SecurityProvider = (props: any) => {
     let ciphertext = aes.update(plain);
     ciphertext = Buffer.concat([iv, ciphertext, aes.final()]);
     return ciphertext.toString('base64');
-  };
+  }, []);
 
   /*
    * Decrypts a ciphertext using a key, returning a plaintext
    */
 
-  const Decrypt = (cypher: string, key: string): string => {
+  const Decrypt = useCallback((cypher: string, key: string): string => {
     const ciphertextBytes = Buffer.from(cypher, 'base64');
     const iv = ciphertextBytes.slice(0, 16);
     const data = ciphertextBytes.slice(16);
@@ -241,7 +242,7 @@ export const SecurityProvider = (props: any) => {
     let plaintextBytes = Buffer.from(aes.update(data));
     plaintextBytes = Buffer.concat([plaintextBytes, aes.final()]);
     return plaintextBytes.toString();
-  };
+  }, []);
 
   /*
    * Generates a random key and stores it in the encrypted storage.
@@ -262,7 +263,7 @@ export const SecurityProvider = (props: any) => {
    * Reads the key stored in the encrypted storage
    */
 
-  const readEncrytedStorage = async (suffix: string): Promise<string> => {
+  const readEncrytedStorage = useCallback(async (suffix: string): Promise<string> => {
     try {
       let creds = await EncryptedStorage.getItem(suffix);
 
@@ -286,7 +287,7 @@ export const SecurityProvider = (props: any) => {
       console.log(e);
       throw new Error('Authentication Failed');
     }
-  };
+  }, [writeEncrypedStorage]);
 
   /*
    * This function will return the pin (key) which will be used for encrypting
@@ -445,6 +446,13 @@ export const SecurityProvider = (props: any) => {
       setLockedScreen,
     ],
   );
+
+  useTraceUpdates('SecurityProvider', {securityContext, error, supportedType,
+    readPassword,
+    changeMode,
+    currentAuthenticationType,
+    lockedScreen,
+    setLockedScreen,})
 
   return (
     <SecurityContext.Provider value={securityContext}>

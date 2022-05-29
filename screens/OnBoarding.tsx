@@ -62,7 +62,7 @@ const OnBoardingPage = memo(() => {
           style={{flex: 1, marginBottom: scale(16)}}
           onPress={() => {
             AsyncStorage.setItem('shownWelcome', 'true').then(() => {
-              navigate('Intro');
+              navigate('App');
             });
           }}
           status="primary-whisper"

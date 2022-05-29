@@ -14,10 +14,9 @@ import Text from '../../components/Text';
 import {RootStackParamList} from '../../navigation/type';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const AddStakingNodeScreen = () => {
-  const {bitcore, wallet, updateAccounts} = useWallet();
+  const {updateAccounts, ExecWrapperPromise, ExecWrapperSyncPromise} = useWallet();
 
   const {goBack} = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -42,16 +41,29 @@ const AddStakingNodeScreen = () => {
       setError('Please input node details.');
       return;
     }
-    if (!bitcore.Address.isValid(newNode.address)) {
+    if (
+      !(await ExecWrapperSyncPromise(
+        'bitcore.Address.isValid',
+        [newNode.address].map(el => JSON.stringify(el)),
+      ))
+    ) {
       setError('Invalid Address');
       return;
     }
-    if (!bitcore.Address(newNode.address).isPayToPublicKeyHash()) {
+    if (
+      !(await ExecWrapperSyncPromise(
+        'bitcore.Address("'+newNode.address+'").isPayToPublicKeyHash'))) {
       setError('You need to specify a NAV address from the staking node');
       return;
     }
-    await wallet.AddStakingAddress(newNode.address);
-    await wallet.db.AddLabel(newNode.address, newNode.name);
+    await ExecWrapperPromise(
+      'wallet.AddStakingAddress',
+      [newNode.address].map(el => JSON.stringify(el)),
+    );
+    await ExecWrapperPromise(
+      'wallet.db.AddLabel',
+      [newNode.address, newNode.name].map(el => JSON.stringify(el)),
+    );
     await updateAccounts();
     goBack();
   };
@@ -106,7 +118,7 @@ const AddStakingNodeScreen = () => {
   );
 };
 
-export default gestureHandlerRootHOC(AddStakingNodeScreen);
+export default AddStakingNodeScreen;
 
 const styles = StyleSheet.create({
   inputCard: {

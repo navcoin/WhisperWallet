@@ -8,7 +8,6 @@ import {
 import Container from '../../components/Container';
 import {BalanceFragment, NftItem} from '../../constants/Type';
 import ImageViewer from 'react-native-image-zoom-viewer';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {scale} from 'react-native-size-matters';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {
@@ -59,14 +58,17 @@ const CollectionScreen = (props: any) => {
       for (const [key, value] of Object.entries<string>(
         tempCol.items.confirmed,
       )) {
-        tempCol.items.confirmed[key] = JSON.parse(value);
+        tempCol.items.confirmed[key] = {name: value};
+        try {
+          tempCol.items.confirmed[key] = JSON.parse(value);
+        } catch (e) {}
         tempNfts.push({
-          ...JSON.parse(value),
+          ...tempCol.items.confirmed[key],
           type: 'confirmed',
           id: key,
           galleryData: {
-            url: tempCol.items.confirmed[key].attributes.thumbnail_url,
-            originUrl: tempCol.items.confirmed[key].image,
+            url: tempCol.items.confirmed[key].attributes?.thumbnail_url || 'https://www.worldartfoundations.com/wp-content/uploads/2022/04/placeholder-image-300x225.png',
+            originUrl: tempCol.items.confirmed[key].image || 'https://www.worldartfoundations.com/wp-content/uploads/2022/04/placeholder-image-300x225.png',
           },
         });
       }
@@ -81,14 +83,17 @@ const CollectionScreen = (props: any) => {
       for (const [key, value] of Object.entries<string>(
         tempCol.items.pending,
       )) {
-        tempCol.items.pending[key] = JSON.parse(value);
+        tempCol.items.pending[key] = {name: value};
+        try {
+          tempCol.items.pending[key] = JSON.parse(value);
+        } catch (e) {}
         tempNfts.push({
-          ...JSON.parse(value),
+          ...tempCol.items.pending[key],
           type: 'pending',
           id: key,
           galleryData: {
-            url: tempCol.items.confirmed[key].attributes.thumbnail_url,
-            originUrl: tempCol.items.confirmed[key].image,
+            url: tempCol.items.confirmed[key].attributes?.thumbnail_url || 'https://www.worldartfoundations.com/wp-content/uploads/2022/04/placeholder-image-300x225.png',
+            originUrl: tempCol.items.confirmed[key].image || 'https://www.worldartfoundations.com/wp-content/uploads/2022/04/placeholder-image-300x225.png',
           },
         });
       }
@@ -181,13 +186,12 @@ const CollectionScreen = (props: any) => {
                           key={'sendTo'}
                           icon={'diagonalArrow3'}
                           onPress={() => {
-                            navigate('Wallet', {
-                              screen: 'SendToScreen',
-                              params: {
+                            navigate('SendToScreen',
+                              {
                                 from: collection,
                                 nftId: parseInt(nfts[currentIndex].id),
                               },
-                            });
+                            );
                             closeImagePreview();
                           }}
                           selected={''}
@@ -269,7 +273,7 @@ const CollectionScreen = (props: any) => {
   );
 };
 
-export default gestureHandlerRootHOC(CollectionScreen);
+export default CollectionScreen;
 
 const themedStyles = StyleService.create({
   container: {

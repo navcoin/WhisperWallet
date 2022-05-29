@@ -14,7 +14,7 @@ export const QrProvider = (props: any) => {
   const [qrError, setQrError] = useState('');
   const [to, setTo] = useState('');
   const [cameraPermision, setCameraPermision] = useState(false);
-  const {bitcore} = useWallet();
+  const {ExecWrapperSyncPromise} = useWallet();
 
   const qrContext: QrContextValue = useMemo(
     () => ({
@@ -49,12 +49,15 @@ export const QrProvider = (props: any) => {
     <QrContext.Provider value={qrContext}>
       {showQr ? (
         <QRCodeScanner
-          onRead={data => {
+          onRead={async (data) => {
             let toParse = data.data;
             if (data.data?.substring(0, 8) === 'navcoin:') {
               toParse = data.data.split(':')[1];
             }
-            if (bitcore.Address.isValid(toParse)) {
+            if (!(await ExecWrapperSyncPromise(
+              'bitcore.Address.isValid',
+              [toParse].map(el => JSON.stringify(el)),
+            ))) {
               setTo(toParse);
               setShowQr(false);
               setQrError('');

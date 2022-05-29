@@ -9,7 +9,6 @@ import {RootStackParamList, ScreenProps} from '../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import LoadingModalContent from '../../components/Modals/LoadingModalContent';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {screenHeight} from '../../utils/layout';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useSecurity from '../../hooks/useSecurity';
@@ -35,7 +34,13 @@ interface SettingsItem {
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const {readPassword} = useSecurity();
   const [loading, setLoading] = useState<string | undefined>(undefined);
-  const {walletName, wallet, createWallet, njs, removeWallet} = useWallet();
+  const {
+    walletName,
+    createWallet,
+    closeWallet,
+    removeWallet,
+    ExecWrapperPromise,
+  } = useWallet();
   const bottomSheet = useBottomSheet();
   const {changeMode, supportedType, currentAuthenticationType} = useSecurity();
   const [authTypes, setAuthTypes] = useState<any>([]);
@@ -89,8 +94,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const {openModal, closeModal} = useModal();
 
   const disconnectWallet = async (deleteWallet: boolean = false) => {
-    wallet.Disconnect();
-    wallet.CloseDb();
+    closeWallet();
     if (deleteWallet) {
       await removeWallet(walletName);
     }
@@ -100,8 +104,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
 
   const resyncWallet = () => {
     try {
-      wallet.Disconnect();
-      wallet.CloseDb();
+      closeWallet();
     } catch (e) {}
 
     readPassword().then((password: string) => {
@@ -202,9 +205,9 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       show: true,
       onPress: () => {
         readPassword().then(async (password: string) => {
-          const updatedMnemonic: string = await wallet.db.GetMasterKey(
-            'mnemonic',
-            password,
+          const updatedMnemonic: string = await ExecWrapperPromise(
+            'wallet.db.GetMasterKey',
+            ['mnemonic', password].map(el => JSON.stringify(el)),
           );
           navigate('MnemonicScreen', {
             mnemonic: updatedMnemonic,
@@ -275,7 +278,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   );
 };
 
-export default gestureHandlerRootHOC(SettingsScreen);
+export default SettingsScreen;
 
 const styles = StyleSheet.create({
   contentWrapper: {

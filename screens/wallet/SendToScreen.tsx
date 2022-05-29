@@ -25,7 +25,6 @@ import DestinationComponent from '../../components/DestinationComponent';
 import {QrProvider} from '../../contexts/QrProvider';
 import SendTransactionButton from '../../components/SendTransactionButton';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const SendToScreen = (props: any) => {
   const styles = useStyleSheet(themedStyles);
@@ -50,7 +49,7 @@ const SendToScreen = (props: any) => {
   const [amountInString, setAmount] = useState('');
   const [showMemo, setShowMemo] = useState(false);
   const [subtractFee, setSubtractFee] = useState(false);
-  const {bitcore, accounts, tokens, nfts, walletName, balances} = useWallet();
+  const {accounts, tokens, nfts, walletName, ExecWrapperSyncPromise} = useWallet();
   const [isMemoDialogVisible, showMemoDialog] = useState(false);
   const [accountStr, setAccountStr] = useState('account');
 
@@ -85,15 +84,18 @@ const SendToScreen = (props: any) => {
   }, [from, sources]);
 
   useEffect(() => {
-    if (
-      toType == Destination_Types_Enum.Address &&
-      to &&
-      bitcore.Address(to).isXnav()
-    ) {
-      setShowMemo(true);
-    } else {
-      setShowMemo(false);
-    }
+    ExecWrapperSyncPromise(
+      'bitcore.Address("'+to+'").isXnav').then(isxNav => {
+      if (
+        toType == Destination_Types_Enum.Address &&
+        to &&
+        !isxNav
+      ) {
+        setShowMemo(true);
+      } else {
+        setShowMemo(false);
+      }
+    })
   }, [to, toType]);
 
   useEffect(() => {
@@ -103,7 +105,7 @@ const SendToScreen = (props: any) => {
       setSubtractFee(false);
     }
   }, [amountInString, currentAmount]);
-
+  
   return (
     <Container useSafeArea>
       <QrProvider>
@@ -310,7 +312,7 @@ const SendToScreen = (props: any) => {
   );
 };
 
-export default gestureHandlerRootHOC(SendToScreen);
+export default SendToScreen;
 
 const themedStyles = StyleService.create({
   contentContainerStyle: {

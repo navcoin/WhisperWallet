@@ -1,0 +1,43 @@
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>navcoin-js</title>
+</head>
+
+<body>
+<main>
+    <header>
+
+    </header>
+</main>
+
+<script src="./bundle.js"></script>
+<script type="text/javascript">
+    window.wallet = undefined;
+    window.njs = umd.njs;
+
+    try {
+        window.sendToRN = (type, data) => {
+            window.ReactNativeWebView.postMessage(
+                JSON.stringify({type: type, data: data})
+            );
+        }
+
+        const consoleLog = (type, log) =>
+            sendToRN('Console', {type: type, log: log});
+
+        console = {
+            log: log => consoleLog('log', log),
+            debug: log => consoleLog('debug', log),
+            info: log => consoleLog('info', log),
+            warn: log => consoleLog('warn', log),
+            error: log => consoleLog('error', log),
+        };
+
+        console.log('navcoin-js wrapper loaded');
+    } catch(e) {
+        alert(e.toString())
+    }
+</script>
+</body>
+</html>

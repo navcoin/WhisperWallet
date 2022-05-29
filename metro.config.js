@@ -17,4 +17,5 @@ module.exports = MetroConfig.create(evaConfig, {
       ...require('node-libs-react-native'),
     },
   },
+  assetExts: ['js', 'wasm', 'html'],
 });

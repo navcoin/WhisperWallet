@@ -31,8 +31,12 @@ const DestinationComponent = (props: any) => {
   );
   const [to, setTo] = useState(
     toType?.destination_id != Destination_Types_Enum.Address
-      ? parsedAddresses.filter(el => el.type_id == toType?.destination_id)[0]
-          ?.address
+      ? parsedAddresses.filter(
+          el =>
+            el.type_id == toType?.destination_id &&
+            (!toType?.address ||
+              (toType?.address && el.stakingAddress == toType?.address)),
+        )[0]?.address
       : '',
   );
 

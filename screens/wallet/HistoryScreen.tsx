@@ -13,7 +13,6 @@ import Text from '../../components/Text';
 import OptionCard from '../../components/OptionCard';
 import {RootStackParamList} from '../../navigation/type';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const HistoryScreen = (props: any) => {
   const {history, connected} = useWallet();
@@ -58,7 +57,7 @@ const HistoryScreen = (props: any) => {
       item={item}
       index={index}
       onPress={() => {
-        navigate('ViewTxScreen', {params: {item}});
+        navigate('ViewTxScreen', {item});
       }}
     />
   );
@@ -66,7 +65,7 @@ const HistoryScreen = (props: any) => {
   const goToAddressCoin = () => {
     if (props && props.navigation) {
       navigate('AddressScreen', {
-        params: {from: props.route.params.filter},
+        from: props.route.params.filter,
       });
     }
   };
@@ -129,7 +128,7 @@ const HistoryScreen = (props: any) => {
   );
 };
 
-export default gestureHandlerRootHOC(HistoryScreen);
+export default HistoryScreen;
 
 const styles = StyleSheet.create({
   header: {
@@ -148,6 +147,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cardWrapper: {
+    width: 300,
     maxWidth: 300,
     alignSelf: 'center',
     marginTop: 50,

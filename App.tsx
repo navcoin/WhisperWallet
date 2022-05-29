@@ -2,7 +2,7 @@
  * NavCash - React Native App
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {StatusBar, View} from 'react-native';
 import {patchFlatListProps} from 'react-native-web-refresh-control';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -40,7 +40,7 @@ import ModalProvider from './contexts/ModalProvider';
 import {useModal} from './hooks/useModal';
 import ErrorModalContent from './components/Modals/ErrorModalContent';
 import {AsyncStoredItems} from './utils/asyncStorageManager';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, DarkTheme} from '@react-navigation/native';
 import SecurityProvider from './contexts/SecurityProvider';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
@@ -59,7 +59,7 @@ const App = (props: {theme: string}) => {
 
   const [shownWelcome, setShownWelcome] = useState(null);
 
-  const checkIfAppHadPreviousNativeErrorHandler = async () => {
+  const checkIfAppHadPreviousNativeErrorHandler = useCallback(async () => {
     if (!promptPreviousError) {
       return;
     }
@@ -73,9 +73,9 @@ const App = (props: {theme: string}) => {
       const errorMsg = errorTextParser(errorMessage, true);
       openModal(<ErrorModalContent errorText={errorMsg} />);
     });
-  };
+  }, []);
 
-  const JSLeveErrorPrompt = async (error: Error | string, isFatal: boolean) => {
+  const JSLeveErrorPrompt = useCallback(async (error: Error | string, isFatal: boolean) => {
     await saveGlobalErrorRecord(errorTextParser(error, isFatal));
     await saveTemporaryErrorRecord(errorTextParser(error, isFatal));
     closeModal();
@@ -83,7 +83,7 @@ const App = (props: {theme: string}) => {
       const errorMsg = errorTextParser(error, isFatal);
       openModal(<ErrorModalContent errorText={errorMsg} />);
     });
-  };
+  }, []);
 
   useEffect(() => {
     AsyncStorage.getItem('shownWelcome').then(itemValue => {
@@ -115,6 +115,7 @@ const App = (props: {theme: string}) => {
         backgroundColor={'#00000000'}
       />
       <NavigationContainer
+        theme={DarkTheme}
         onStateChange={() => {
           Toast.hide();
         }}>

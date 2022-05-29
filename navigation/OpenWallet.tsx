@@ -16,7 +16,7 @@ import ErrorModalContent from '../components/Modals/ErrorModalContent';
 
 const OpenWallet = () => {
   const {navigate} = useNavigation();
-  const {njs, createWallet, walletsList} = useWallet();
+  const {createWallet, walletsList} = useWallet();
   const [loading, setLoading] = useState<string | undefined>(undefined);
   const {readPassword} = useSecurity();
 
@@ -88,7 +88,6 @@ export default OpenWallet;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 32,
     flex: 1,
   },
   flex1: {

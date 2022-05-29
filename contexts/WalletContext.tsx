@@ -6,8 +6,6 @@ import {
 } from '../constants/Type';
 
 export interface WalletContextValue {
-  bitcore: any;
-  wallet: any;
   walletName: string;
   mnemonic: string;
   createWallet: any;
@@ -30,8 +28,12 @@ export interface WalletContextValue {
   bootstrapProgress: number;
   firstSyncCompleted: boolean;
   removeWallet: (name: string) => Promise<void>;
-  njs: any;
   walletLibLoaded: boolean;
+  closeWallet: () => void;
+  ExecWrapperPromise: any;
+  ExecWrapperSyncPromise: any;
+  network: string;
+  IsValidMnemonic: (mnemonic: string, type: string) => Promise<any>;
 }
 
 export const WalletContext = createContext<WalletContextValue | undefined>(

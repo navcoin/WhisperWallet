@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useMemo, useState} from 'react';
 import {WalletContext, WalletContextValue} from './WalletContext';
 import {
   AddressFragment,
@@ -7,22 +7,13 @@ import {
   Connection_Stats_Enum,
   Destination_Types_Enum,
 } from '../constants/Type';
-import Identicon from '../components/Identicon';
 import RNBootSplash from 'react-native-bootsplash';
-import SQLite from 'react-native-sqlite-2';
-
-import setGlobalVars from 'indexeddbshim/dist/indexeddbshim-noninvasive';
-
-const win = {};
-
-setGlobalVars(win, {win: SQLite});
-win.indexedDB.__useShim();
-const njs = require('navcoin-js');
-const P2pPool = require('@aguycalled/bitcore-p2p').Pool;
+import WebView from 'react-native-webview';
+import {Platform} from 'react-native';
+import useTraceUpdate from '../hooks/useTraceUpdates';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const WalletProvider = (props: any) => {
-  const [p2pPool, setP2pPool] = useState<any>(undefined);
-  const [wallet, setWallet] = useState<any>(undefined);
   const [server, setServer] = useState('');
   const [walletName, setWalletName] = useState('');
   const [walletsList, setWalletsList] = useState([]);
@@ -79,84 +70,165 @@ export const WalletProvider = (props: any) => {
     },
   ]);
 
+  const walletWebView = useRef();
+
+  const InjectJavascript = useCallback(
+    (code: string) => {
+      let codeCatch = `
+  try { 
+    ${code}
+  } catch(e) { 
+    console.log('error' + e.toString());
+  }
+  true;`;
+      console.log(codeCatch);
+      if (walletWebView.current !== undefined) {
+        walletWebView.current.injectJavaScript(codeCatch);
+      } else {
+        console.log('missing walletWebView ref');
+      }
+    },
+    [walletWebView.current],
+  );
+
+  const [callbacks, setCallbacks] = useState({});
+
+  const ExecWrapper = useCallback(
+    (func: string, params?: string[], cb?: any, cb2?: any) => {
+      callbacks[func] = [cb, cb2];
+      setCallbacks(callbacks);
+      InjectJavascript(
+        `${func}(${
+          params ? params.join(',') : ''
+        }).then((a) => sendToRN("${func}", a))${
+          cb2 !== undefined ? '' : '.catch(e => sendToRN("E-' + func + '", e))'
+        };`,
+      );
+    },
+    [callbacks, InjectJavascript],
+  );
+
+  const ExecWrapperSyncPromise = useCallback(
+    (func: string, params?: string[]) => {
+      const parsedFunc = func.replace(/[ \n"]/g, '');
+      console.log(parsedFunc);
+      return new Promise((res, rej) => {
+        callbacks[parsedFunc] = [res, rej];
+        setCallbacks(callbacks);
+        InjectJavascript(`
+try {
+  let res = ${func}(${params ? params.join(',') : ''});
+  sendToRN("${parsedFunc}", res);
+} catch(e) {
+  sendToRN("${parsedFunc}", false);
+}`);
+      });
+    },
+    [callbacks, InjectJavascript],
+  );
+
+  const ExecWrapperPromise = useCallback(
+    (func: string, params?: string[]) => {
+      return new Promise((res, rej) => {
+        let parsedFunc = func.replace(/"/g, '');
+        callbacks[parsedFunc] = [res, rej];
+        setCallbacks(callbacks);
+        InjectJavascript(
+          `${func}(${
+            params ? params.join(',') : ''
+          }).then((a) => sendToRN("${parsedFunc}", a)).catch(e => sendToRN("E-${parsedFunc}", e))`,
+        );
+      });
+    },
+    [callbacks, InjectJavascript],
+  );
+
+  const ExecWrapperSync = useCallback(
+    (func: string, params?: string[], cb?: any, cb2?: any) => {
+      callbacks[func] = [cb, cb2];
+      setCallbacks(callbacks);
+      InjectJavascript(`
+try {
+  let res = ${func}(${params ? params.join(',') : ''});
+  sendToRN("${func}", res);
+} catch(e) {
+  sendToRN("E-${func}", e);
+}`);
+    },
+    [callbacks, InjectJavascript],
+  );
+
+  const IsValidMnemonic = useCallback(
+    async (mnemonic: string, type: string) => {
+      return type == 'navcash'
+        ? await ExecWrapperSyncPromise(`njs.wallet.electrumMnemonic.validateMnemonic`, [
+            `"${mnemonic}"`,
+            'njs.wallet.electrumMnemonic.PREFIXES.standard',
+          ])
+        : await ExecWrapperSyncPromise(`njs.wallet.Mnemonic.isValid`, [`"${mnemonic}"`]);
+    },
+    [ExecWrapperSyncPromise],
+  );
+
+  const RequestWallets = useCallback(() => {
+    InjectJavascript(
+      `njs.wallet.WalletFile.ListWallets().then(l => sendToRN('WalletsList', l));`,
+    );
+  }, [InjectJavascript]);
+
+  const RemoveWallet = useCallback(
+    (name: string) => {
+      InjectJavascript(
+        `njs.wallet.WalletFile.RemoveWallet("${name}").then(l => sendToRN('RemoveWallet', l));`,
+      );
+    },
+    [InjectJavascript],
+  );
+
   useEffect(() => {
     if (walletLibLoaded) {
       RNBootSplash.hide({fade: true});
-      njs.wallet.WalletFile.ListWallets().then(setWalletsList);
+      RequestWallets();
     }
   }, [walletLibLoaded]);
 
   useEffect(() => {
-    njs.wallet.Init().then(async () => {
-      njs.wallet.WalletFile.SetBackend(win.indexedDB, win.IDBKeyRange);
-      setWalletLibLoaded(true);
-    });
-  }, []);
-
-  useEffect(() => {
-    let parsed: AddressFragment[] = [];
-    for (let type in addresses.spending) {
-      for (let address in addresses.spending[type]) {
-        parsed.push({
-          address: address,
-          type_id:
-            type == 'public'
-              ? Destination_Types_Enum.PublicWallet
-              : Destination_Types_Enum.PrivateWallet,
-          used: addresses.spending[type][address].used,
-        });
+    if (firstSyncCompleted) {
+      const updateAddress = async () => {
+        let parsed: AddressFragment[] = [];
+        for (let type in addresses.spending) {
+          for (let address in addresses.spending[type]) {
+            parsed.push({
+              address: address,
+              type_id:
+                type == 'public'
+                  ? Destination_Types_Enum.PublicWallet
+                  : Destination_Types_Enum.PrivateWallet,
+              used: addresses.spending[type][address].used,
+            });
+          }
+        }
+        parsed.sort((a, b) => (a.used > b.used && 1) || -1);
+        for (let address in addresses.staking) {
+          parsed.push({
+            address: await ExecWrapperSyncPromise(`
+            njs.wallet.bitcore.Address.fromAddresses(
+            [
+            "${address}","${parsed.filter(
+              el => el.type_id == Destination_Types_Enum.PublicWallet,
+            )[0]?.address}"
+            ],"${network}").toString`),
+            stakingAddress: address,
+            type_id: Destination_Types_Enum.StakingWallet,
+            used: false,
+          });
+        }
+        return parsed;
       }
-    }
-    parsed.sort((a, b) => (a.used > b.used && 1) || -1);
-    for (let address in addresses.staking) {
-      parsed.push({
-        address: njs.wallet.bitcore.Address.fromBuffers(
-          [
-            new Buffer([njs.wallet.bitcore.Networks[network].coldstaking]),
-            njs.wallet.bitcore.Address(address).toBuffer().slice(1),
-            njs.wallet.bitcore
-              .Address(
-                parsed.filter(
-                  el => el.type_id == Destination_Types_Enum.PublicWallet,
-                )[0]?.address,
-              )
-              .toBuffer()
-              .slice(1),
-          ],
-          network,
-          'coldstaking',
-        ).toString(),
-        stakingAddress: address,
-        type_id: Destination_Types_Enum.StakingWallet,
-        used: false,
-      });
-    }
-    setParsedAddresses(parsed);
-  }, [njs, network, addresses]);
 
-  const newCandidate = useCallback(
-    async function (session: string, candidate: any) {
-      if (wallet && p2pPool) {
-        await wallet.AddCandidate(
-          candidate,
-          p2pPool.network.name == 'livenet' ? 'mainnet' : 'testnet',
-        );
-      }
-    },
-    [wallet, p2pPool],
-  );
-
-  useEffect(() => {
-    if (p2pPool) {
-      console.log('connecting to p2p');
-      p2pPool.on('candidate', newCandidate);
-      p2pPool.on('peerready', (_: string, server: number) => {
-        let sessionId = p2pPool.startSession();
-        console.log('started session', sessionId);
-      });
-      p2pPool.connect();
+      updateAddress().then(setParsedAddresses)
     }
-  }, [p2pPool]);
+  }, [network, addresses, firstSyncCompleted]);
 
   const parseAccounts = useCallback(() => {
     if (balances?.nav) {
@@ -270,37 +342,18 @@ export const WalletProvider = (props: any) => {
     }
   }, [balances, addresses, myTokens]);
 
-  const updateAccounts = async () => {
-    if (wallet) {
-      setBalances(await wallet.GetBalance());
-      setHistory(await wallet.GetHistory());
-      setAddresses(await wallet.GetAllAddresses());
-    }
+  const updateAccounts = useCallback(async () => {
+    ExecWrapper('wallet.GetBalance');
+    ExecWrapper('wallet.GetHistory');
+    ExecWrapper('wallet.GetAllAddresses');
     parseAccounts();
-  };
+  }, []);
 
   useEffect(() => {
     parseAccounts();
   }, [balances, addresses]);
 
-  const connectP2P = useCallback(() => {
-    setP2pPool(
-      new P2pPool({
-        dnsSeed: false, // prevent seeding with DNS discovered known peers upon connecting
-        listenAddr: false, // prevent new peers being added from addr messages
-        network: network,
-        maxSize: 1,
-        addrs: [
-          // initial peers to connect to
-          {
-            ip: {
-              v4: server.split(':')[0],
-            },
-          },
-        ],
-      }),
-    );
-  }, [server, network]);
+  const [spendingPassword, setSpendingPassword] = useState('');
 
   const createWallet = useCallback(
     async (
@@ -308,22 +361,96 @@ export const WalletProvider = (props: any) => {
       mnemonic_: string,
       type: string,
       password: string,
-      spendingPassword: string,
+      spendingPassword_: string,
       zapwallettxes: boolean,
       log: boolean,
       network_: string,
-      onLoaded: any,
+      onLoaded_: any,
     ) => {
-      if (wallet) {
-        wallet.Disconnect();
-      }
+      callbacks['loaded'] = [
+        onLoaded_,
+        e => {
+          throw e;
+        },
+      ];
+      setCallbacks(callbacks);
+      setSpendingPassword(spendingPassword_);
+      setWalletName(name);
 
-      if (p2pPool) {
-        p2pPool.disconnect();
-        setP2pPool(undefined);
-      }
+      InjectJavascript(`
+if (wallet) {
+  wallet.Disconnect();
+}
 
-      const walletFile = new njs.wallet.WalletFile({
+wallet = new njs.wallet.WalletFile({
+ file: "${name}",
+ mnemonic: ${mnemonic_ ? `"${mnemonic_}"` : 'undefined'},
+ type: "${type}",
+ password: "${password}",
+ spendingPassword: "${spendingPassword_}",
+ zapwallettxes: ${zapwallettxes ? 'true' : 'false'},
+ log: ${log ? 'true' : 'false'},
+ network: "${network_}"
+});
+
+wallet.on('loaded', async () => {
+  sendToRN('loaded', {network: wallet.network});
+});
+
+wallet.on('new_token', async () => {
+  sendToRN('new_token');
+});
+
+wallet.on('sync_status', (progress) => {
+  sendToRN('sync_status', {progress: progress});
+});
+
+wallet.on('disconnected', () => {
+  sendToRN('disconnected');
+});
+
+wallet.on('connection_failed', () => {
+  sendToRN('connection_failed');
+});
+
+wallet.on('connected', async (serverName) => {
+  sendToRN('connected', {serverName: serverName});
+});
+
+wallet.on('new_tx', async () => {
+  sendToRN('new_tx');
+});
+
+wallet.on('sync_started', async () => {
+  sendToRN('sync_started');
+});
+
+wallet.on('bootstrap_started', async () => {
+  sendToRN('bootstrap_started');
+});
+
+wallet.on('bootstrap_progress', async count => {
+  sendToRN('bootstrap_progress', {count: count});
+});
+
+wallet.on('sync_finished', async () => {
+  sendToRN('sync_finished');
+});
+
+wallet.on('new_staking_address', async () => {
+  sendToRN('new_staking_address');
+});
+
+wallet.on('new_mnemonic', (m) => {
+  sendToRN('new_mnemonic', m);
+});
+
+wallet.Load({
+  bootstrap: njs.wallet.xNavBootstrap,
+});
+`);
+
+      /*   const walletFile = new njs.wallet.WalletFile({
         file: name,
         mnemonic: mnemonic_,
         type: type,
@@ -353,7 +480,7 @@ export const WalletProvider = (props: any) => {
         walletFile.GetHistory().then(setHistory);
         walletFile.GetMyTokens(spendingPassword).then(setMyTokens);
         walletFile.GetMyTokens(spendingPassword).then(console.log);
-        njs.wallet.WalletFile.ListWallets().then(setWalletsList);
+        //njs.wallet.WalletFile.ListWallets().then(setWalletsList);
         walletFile.Connect();
         onLoaded();
         setNetwork(walletFile.network);
@@ -388,9 +515,9 @@ export const WalletProvider = (props: any) => {
       });
 
       walletFile.on('new_tx', async () => {
-        /*if (!p2pPool && (await walletFile.GetCandidates()).length < 100) {
-          connectP2P();
-        }*/
+        //if (!p2pPool && (await walletFile.GetCandidates()).length < 100) {
+        //  connectP2P();
+        //}
         setBalances(await walletFile.GetBalance());
         setHistory(await walletFile.GetHistory());
         setAddresses(await walletFile.GetAllAddresses());
@@ -424,214 +551,377 @@ export const WalletProvider = (props: any) => {
 
       walletFile.Load({
         //bootstrap: njs.wallet.xNavBootstrap,
-      });
+      });*/
     },
-    [njs, wallet, win],
+    [],
   );
 
-  const createNftCollection = async (
-    name: string,
-    scheme: string,
-    amount: number,
-    spendingPassword: string,
-  ) => {
-    if (!wallet) {
-      throw new Error('Wallet not loaded');
-    }
+  const CreateNft = useCallback(
+    async (
+      name: string,
+      scheme: string,
+      amount: number,
+      spendingPassword: string,
+    ) => {
+      return new Promise((res, rej) => {
+        ExecWrapper(
+          'wallet.CreateNft',
+          [
+            JSON.stringify(name),
+            JSON.stringify(scheme),
+            amount.toString(10),
+            JSON.stringify(spendingPassword),
+          ],
+          res,
+          rej,
+        );
+      });
+    },
+    [ExecWrapper],
+  );
 
-    let candidates = (await wallet.GetCandidates())
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 5);
-
-    let fee = 0;
-
-    for (let c of candidates) {
-      //fee += parseInt(BigInt(c.fee.words).toString());
-    }
-
-    let obj = await wallet.CreateNft(name, scheme, amount, spendingPassword);
-
-    if (!obj) {
-      throw new Error("Can't access you wallet keys");
-    }
-    let ret = {fee: obj.fee + fee, tx: undefined};
-    let toCombine = [obj.tx[0]];
-    for (let c of candidates) {
-      //toCombine.push(c.tx);
-    }
-    ret.tx = toCombine;
-
-    if (false && toCombine.length > 1) {
-      ret.tx = [
-        await njs.wallet.bitcore.Transaction.Blsct.CombineTransactions(
-          toCombine,
-        ),
-      ];
-      if (ret.tx.length == 1) {
-        ret.tx[0].version |= 0x10;
-        ret.tx[0] = ret.tx[0].toString();
-      } else {
-        throw new Error('Could not create transaction');
-      }
-    }
-
-    return ret;
-  };
-
-  const createTransaction = async (
-    from: string,
-    to: string,
-    amount: number,
-    password: string,
-    memo = '',
-    subtractFee = false,
-    fromAddress = undefined,
-    tokenId = undefined,
-    tokenNftId = undefined,
-  ) => {
-    return new Promise(async (res, rej) => {
-      if (!wallet) {
-        rej('Wallet not loaded');
-        return;
-      }
-      try {
-        if (from == 'xnav' || from == 'token' || from == 'nft') {
-          let candidates = (await wallet.GetCandidates())
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 5);
-
-          let fee = 0;
-
-          for (let c of candidates) {
-            fee += parseInt(BigInt(c.fee.words).toString());
-          }
-
-          let obj =
-            from == 'token' || from == 'nft'
-              ? await wallet.tokenCreateTransaction(
-                  to,
-                  Math.floor(amount * 1e8),
-                  memo,
-                  password,
-                  tokenId,
-                  tokenNftId,
-                  new Buffer([]),
-                  undefined,
-                  false,
-                  false,
-                  fee,
-                )
-              : await wallet.xNavCreateTransaction(
-                  to,
-                  Math.floor(amount * 1e8),
-                  memo,
-                  password,
-                  subtractFee,
-                  new Buffer(new Uint8Array(32)),
-                  -1,
-                  new Buffer([]),
-                  undefined,
-                  0,
-                  fee,
-                );
-          if (!obj) {
-            rej("Can't access you wallet keys");
-          } else {
-            let ret = {fee: obj.fee + fee, tx: undefined};
-            let toCombine = [obj.tx[0]];
-            for (let c of candidates) {
-              toCombine.push(c.tx);
-            }
-            ret.tx = toCombine;
-
-            if (toCombine.length > 1) {
-              ret.tx = [
-                await njs.wallet.bitcore.Transaction.Blsct.CombineTransactions(
-                  toCombine,
-                ),
-              ];
-              if (ret.tx.length == 1) {
-                ret.tx[0].version |= 0x10;
-                ret.tx[0] = ret.tx[0].toString();
-              } else {
-                throw new Error('Could not create transaction');
-              }
-            }
-
-            res(ret);
-          }
-        } else if (from == 'nav') {
-          let ret = await wallet.NavCreateTransaction(
-            to,
-            Math.floor(amount * 1e8),
-            memo,
-            password,
-            subtractFee,
-            100000,
-            0x1,
-            fromAddress,
-          );
-          res(ret);
-        } else if (from == 'cold_staking') {
-          let ret = await wallet.NavCreateTransaction(
-            to,
-            Math.floor(amount * 1e8),
-            memo,
-            password,
-            subtractFee,
-            100000,
-            0x2,
-            fromAddress,
-          );
-          res(ret);
-        } else {
-          console.log('unknown wallet type', from);
-        }
-      } catch (e) {
-        console.log(e.stack);
-        rej(e);
-      }
+  const GetCandidates = useCallback(async (): Promise<any> => {
+    return new Promise((res, rej) => {
+      ExecWrapper('wallet.GetCandidates', undefined, res, rej);
     });
-  };
+  }, [ExecWrapper]);
 
-  const sendTransaction = async (tx: any) => {
-    if (!wallet) {
-      throw new Error('Wallet not loaded');
-    }
-    let hash = await wallet.SendTransaction(tx);
+  const TokenCreateTransaction = useCallback(
+    async (
+      to: string,
+      amount: number,
+      memo: string,
+      password: string,
+      tokenId: Buffer | string,
+      tokenNftId: number,
+      vData: Buffer | undefined,
+      extraKey: Buffer | undefined,
+      ignoreInputs: boolean,
+      ignoreFee: boolean,
+      fee: number,
+    ) => {
+      return new Promise((res, rej) => {
+        ExecWrapper(
+          'wallet.tokenCreateTransaction',
+          [
+            JSON.stringify(to),
+            Math.floor(amount * 1e8).toString(10),
+            JSON.stringify(memo),
+            JSON.stringify(password),
+            JSON.stringify(
+              tokenId
+                ? tokenId.toString('hex')
+                : Buffer.alloc(32).toString('hex'),
+            ),
+            JSON.stringify(tokenNftId),
+            'undefined',
+            'undefined',
+            ignoreInputs ? 'true' : 'false',
+            ignoreFee ? 'true' : 'false',
+            fee ? JSON.stringify(fee) : '0',
+          ],
+          res,
+          rej,
+        );
+      });
+    },
+    [ExecWrapper],
+  );
+
+  const XNavCreateTransaction = useCallback(
+    async (
+      to: string,
+      amount: number,
+      memo: string,
+      password: string,
+      subtractFee: boolean,
+      tokenId: Buffer | string,
+      tokenNftId: number,
+      vData: Buffer | undefined,
+      extraKey: Buffer | undefined,
+      extraIn: number,
+      fee: number,
+    ) => {
+      return new Promise((res, rej) => {
+        ExecWrapper(
+          'wallet.xNavCreateTransaction',
+          [
+            JSON.stringify(to),
+            Math.floor(amount * 1e8).toString(10),
+            JSON.stringify(memo),
+            JSON.stringify(password),
+            subtractFee ? 'true' : 'false',
+            JSON.stringify(
+              tokenId
+                ? tokenId.toString('hex')
+                : Buffer.alloc(32).toString('hex'),
+            ),
+            JSON.stringify(tokenNftId),
+            'undefined',
+            'undefined',
+            extraIn ? extraIn.toString(10) : '0',
+            fee ? fee.toString(10) : '0',
+          ],
+          res,
+          rej,
+        );
+      });
+    },
+    [ExecWrapper],
+  );
+
+  const NavCreateTransaction = useCallback(
+    (
+      dest: string,
+      amount: number,
+      memo: string,
+      spendingPassword: string,
+      subtractFee: boolean,
+      fee: number,
+      type: number,
+      fromAddress: string,
+    ) => {
+      return new Promise((res, rej) => {
+        ExecWrapper(
+          'wallet.NavCreateTransaction',
+          [
+            JSON.stringify(dest),
+            Math.floor(amount * 1e8).toString(10),
+            JSON.stringify(memo),
+            JSON.stringify(spendingPassword),
+            subtractFee ? 'true' : 'false',
+            fee ? fee.toString(10) : '0',
+            type ? type.toString(10) : '0',
+            JSON.stringify(fromAddress),
+          ],
+          res,
+          rej,
+        );
+      });
+    },
+    [ExecWrapper],
+  );
+
+  const CombineTransactions = useCallback(
+    (txs: string | string[]) => {
+      return new Promise((res, rej) => {
+        ExecWrapper(
+          'njs.wallet.bitcore.Transaction.Blsct.CombineTransactions',
+          [JSON.stringify(txs)],
+          res,
+          rej,
+        );
+      });
+    },
+    [ExecWrapper],
+  );
+
+  const SendTransaction = useCallback(
+    (txs: string | string[]) => {
+      return new Promise((res, rej) => {
+        ExecWrapper('wallet.SendTransaction', [JSON.stringify(txs)], res, rej);
+      });
+    },
+    [ExecWrapper],
+  );
+
+  const createTransaction = useCallback(
+    async (
+      from: string,
+      to: string,
+      amount: number,
+      password: string,
+      memo = '',
+      subtractFee = false,
+      fromAddress = undefined,
+      tokenId = undefined,
+      tokenNftId = undefined,
+    ) => {
+      return new Promise(async (res, rej) => {
+        try {
+          if (from == 'xnav' || from == 'token' || from == 'nft') {
+            let candidates = (await GetCandidates())
+              .sort(() => 0.5 - Math.random())
+              .slice(0, 5);
+
+            let fee = 0;
+
+            for (let c of candidates) {
+              fee += parseInt(BigInt(c.fee.words).toString());
+            }
+
+            let obj =
+              from == 'token' || from == 'nft'
+                ? await TokenCreateTransaction(
+                    to,
+                    amount,
+                    memo,
+                    password,
+                    tokenId,
+                    tokenNftId,
+                    undefined,
+                    undefined,
+                    false,
+                    false,
+                    fee,
+                  )
+                : await XNavCreateTransaction(
+                    to,
+                    amount,
+                    memo,
+                    password,
+                    subtractFee,
+                    new Buffer(new Uint8Array(32)),
+                    -1,
+                    undefined,
+                    undefined,
+                    0,
+                    fee,
+                  );
+
+            if (!obj) {
+              rej("Can't access you wallet keys");
+            } else {
+              let ret = {fee: obj.fee + fee, tx: undefined};
+              let toCombine = [obj.tx[0]];
+              for (let c of candidates) {
+                toCombine.push(c.tx);
+              }
+              ret.tx = toCombine;
+
+              if (toCombine.length > 1) {
+                ret.tx = [await CombineTransactions(toCombine)];
+                if (ret.tx.length == 1) {
+                  ret.tx[0].version |= 0x10;
+                  ret.tx[0] = ret.tx[0].toString();
+                } else {
+                  throw new Error('Could not create transaction');
+                }
+              }
+
+              res(ret);
+            }
+          } else if (from == 'nav') {
+            let ret = await NavCreateTransaction(
+              to,
+              amount,
+              memo,
+              password,
+              subtractFee,
+              100000,
+              0x1,
+              fromAddress,
+            );
+            res(ret);
+          } else if (from == 'cold_staking') {
+            let ret = await NavCreateTransaction(
+              to,
+              amount,
+              memo,
+              password,
+              subtractFee,
+              100000,
+              0x2,
+              fromAddress,
+            );
+            res(ret);
+          } else {
+            console.log('unknown wallet type', from);
+          }
+        } catch (e) {
+          console.log(e.toString());
+          console.log(e.stack);
+          rej(e);
+        }
+      });
+    },
+    [],
+  );
+
+  const createNftCollection = useCallback(
+    async (
+      name: string,
+      scheme: string,
+      amount: number,
+      spendingPassword: string,
+    ) => {
+      let candidates = (await GetCandidates())
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 5);
+
+      let fee = 0;
+
+      for (let c of candidates) {
+        //fee += parseInt(BigInt(c.fee.words).toString());
+      }
+
+      let obj = await CreateNft(name, scheme, amount, spendingPassword);
+
+      if (!obj) {
+        throw new Error("Can't access you wallet keys");
+      }
+      let ret = {fee: obj.fee + fee, tx: undefined};
+      let toCombine = [obj.tx[0]];
+      for (let c of candidates) {
+        //toCombine.push(c.tx);
+      }
+      ret.tx = toCombine;
+
+      if (false && toCombine.length > 1) {
+        ret.tx = [await CombineTransactions(toCombine)];
+        if (ret.tx.length == 1) {
+          ret.tx[0].version |= 0x10;
+          ret.tx[0] = ret.tx[0].toString();
+        } else {
+          throw new Error('Could not create transaction');
+        }
+      }
+
+      return ret;
+    },
+    [CreateNft, CombineTransactions, GetCandidates],
+  );
+
+  const sendTransaction = useCallback(async (tx: any) => {
+    let hash = await SendTransaction(tx);
     return hash;
-  };
+  }, []);
 
   const refreshWallet = useCallback(async () => {
     if (
-      wallet &&
       !(
         connected == Connection_Stats_Enum.Connecting ||
         connected == Connection_Stats_Enum.Bootstrapping ||
         connected == Connection_Stats_Enum.Syncing
       )
     ) {
-      await wallet.Sync();
-      setBalances(await wallet.GetBalance());
-      setHistory(await wallet.GetHistory());
-      setAddresses(await wallet.GetAllAddresses());
+      return new Promise((res, rej) =>
+        ExecWrapper('wallet.Sync', undefined, res, rej),
+      );
     }
-  }, [wallet, connected]);
+  }, [connected]);
 
   const removeWallet = useCallback(
     async (name: string) => {
-      if (njs) {
-        await njs.wallet.WalletFile.RemoveWallet(name);
-        njs.wallet.WalletFile.ListWallets().then(setWalletsList);
-      }
+      RemoveWallet(name);
     },
-    [njs],
+    [RemoveWallet],
   );
+
+  const closeWallet = useCallback(async () => {
+    await new Promise((res, _) => {
+      ExecWrapperSync('wallet.Disconnect', undefined, () => {
+        ExecWrapperSync('wallet.CloseDb', undefined, () => {
+          setWalletName('');
+          AsyncStorage.setItem('LastOpenedWalletName', '');
+          res(true);
+        });
+      });
+    });
+  }, [ExecWrapperSync]);
 
   const walletContext: WalletContextValue = useMemo(
     () => ({
-      bitcore: njs?.wallet.bitcore,
-      wallet: wallet,
       walletName,
       mnemonic,
       createWallet: createWallet,
@@ -656,14 +946,14 @@ export const WalletProvider = (props: any) => {
       updateAccounts,
       bootstrapProgress,
       removeWallet,
-      njs,
       walletLibLoaded,
       createNftCollection,
+      closeWallet,
+      ExecWrapperPromise,
+      ExecWrapperSyncPromise,
+      IsValidMnemonic
     }),
     [
-      win,
-      njs,
-      wallet,
       walletName,
       mnemonic,
       syncProgress,
@@ -681,15 +971,167 @@ export const WalletProvider = (props: any) => {
       updateAccounts,
       bootstrapProgress,
       removeWallet,
-      njs,
       walletLibLoaded,
       refreshWallet,
       createNftCollection,
+      closeWallet,
+      ExecWrapperPromise,
+      ExecWrapperSyncPromise,
+      IsValidMnemonic
     ],
+  );
+
+  useTraceUpdate('wp', {
+    walletContext,
+    walletName,
+    mnemonic,
+    createWallet,
+    refreshWallet,
+    syncProgress,
+    balances,
+    connected,
+    addresses,
+    walletsList,
+    history,
+    accounts,
+    parsedAddresses,
+    createTransaction: createTransaction,
+    sendTransaction: sendTransaction,
+    network,
+    firstSyncCompleted,
+    tokens,
+    nfts,
+    updateAccounts,
+    bootstrapProgress,
+    removeWallet,
+    walletLibLoaded,
+    createNftCollection,
+  });
+
+  const onMessage = useCallback(
+    payload => {
+      let dataPayload;
+      try {
+        dataPayload = JSON.parse(payload.nativeEvent.data);
+      } catch (e) {}
+      if (dataPayload) {
+        if (
+          dataPayload.type.substring(0, 2) == 'E-' &&
+          callbacks[dataPayload.type.substring(2)] &&
+          callbacks[dataPayload.type.substring(2)][1]
+        ) {
+          callbacks[dataPayload.type.substring(2)][1](dataPayload.data);
+          delete callbacks[dataPayload.type.substring(2)];
+          setCallbacks(callbacks);
+        } else if (
+          callbacks[dataPayload.type] &&
+          callbacks[dataPayload.type][0]
+        ) {
+          callbacks[dataPayload.type][0](dataPayload.data);
+          delete callbacks[dataPayload.type];
+          setCallbacks(callbacks);
+        }
+        if (dataPayload.type === 'Console') {
+          console.info(
+            `[navcoin-js:${dataPayload.data.type}] ${dataPayload.data.log}`,
+          );
+        } else if (dataPayload.type === 'WalletInit') {
+          setWalletLibLoaded(true);
+        } else if (dataPayload.type === 'WalletsList') {
+          setWalletsList(dataPayload.data);
+        } else if (dataPayload.type === 'wallet.GetBalance') {
+          setBalances(dataPayload.data);
+        } else if (dataPayload.type === 'wallet.GetAllAddresses') {
+          setAddresses(dataPayload.data);
+        } else if (dataPayload.type === 'wallet.GetHistory') {
+          setHistory(dataPayload.data);
+        } else if (dataPayload.type === 'wallet.GetMyTokens') {
+          setMyTokens(dataPayload.data);
+        } else if (dataPayload.type === 'wallet.Sync') {
+          ExecWrapper('wallet.GetBalance');
+          ExecWrapper('wallet.GetHistory');
+          ExecWrapper('wallet.GetAllAddresses');
+        } else if (dataPayload.type === 'RemoveWallet') {
+          RequestWallets();
+        } else if (dataPayload.type === 'loaded') {
+          ExecWrapper('wallet.GetBalance');
+          ExecWrapper('wallet.GetHistory');
+          ExecWrapper('wallet.GetMyTokens', [`"${spendingPassword}"`]);
+          ExecWrapper('wallet.Connect');
+          ExecWrapper('wallet.GetAllAddresses');
+          setFirstSyncCompleted(false);
+          setConnected(Connection_Stats_Enum.Connecting);
+          setSyncProgress(0);
+          setNetwork(dataPayload.data.network);
+          AsyncStorage.setItem('LastOpenedWalletName', walletName);
+          } else if (dataPayload.type === 'new_token') {
+          ExecWrapper('wallet.GetMyTokens', [`"${spendingPassword}"`]);
+        } else if (dataPayload.type === 'sync_status') {
+          setSyncProgress(dataPayload.data.progress);
+        } else if (dataPayload.type === 'disconnected') {
+          setConnected(Connection_Stats_Enum.Disconnected);
+        } else if (dataPayload.type === 'connection_failed') {
+          setConnected(Connection_Stats_Enum.Disconnected);
+        } else if (dataPayload.type === 'connected') {
+          console.log('connected to ', dataPayload.data.serverName);
+          setServer(dataPayload.data.serverName);
+          setConnected(Connection_Stats_Enum.Connected);
+        } else if (dataPayload.type === 'new_tx') {
+          if (firstSyncCompleted && !dataPayload.data.confirmed) {
+            ExecWrapper('wallet.GetBalance');
+            ExecWrapper('wallet.GetHistory');
+            ExecWrapper('wallet.GetAllAddresses');
+          }
+        } else if (dataPayload.type === 'sync_started') {
+          setConnected(Connection_Stats_Enum.Syncing);
+        } else if (dataPayload.type === 'bootstrap_started') {
+          setConnected(Connection_Stats_Enum.Bootstrapping);
+        } else if (dataPayload.type === 'bootstrap_progress') {
+          setBootstrapProgress(dataPayload.data.count);
+        } else if (dataPayload.type === 'new_mnemonic') {
+          setMnemonic(dataPayload.data);
+        } else if (dataPayload.type === 'sync_finished') {
+          console.log('sync_finished');
+          setSyncProgress(100);
+          setFirstSyncCompleted(true);
+          setConnected(Connection_Stats_Enum.Synced);
+          ExecWrapper('wallet.GetBalance');
+          ExecWrapper('wallet.GetHistory');
+          ExecWrapper('wallet.GetMyTokens', [`"${spendingPassword}"`]);
+          ExecWrapper('wallet.GetAllAddresses');
+          setSpendingPassword('');
+        } else if (dataPayload.type === 'new_staking_address') {
+          updateAccounts();
+        } else {
+          console.log(dataPayload.type, dataPayload.data);
+        }
+      }
+    },
+    [firstSyncCompleted, updateAccounts, ExecWrapper, callbacks, walletName, spendingPassword],
   );
 
   return (
     <WalletContext.Provider value={walletContext}>
+      <WebView
+        onShouldStartLoadWithRequest={() => true}
+        containerStyle={{position: 'absolute', width: 0, height: 0}} // <=== your prop
+        ref={walletWebView}
+        originWhitelist={['*']}
+        injectedJavaScript={`
+  try {
+  njs.wallet.Init().then(async () => {
+    sendToRN('WalletInit');
+  });
+  } catch(e) { console.log(e.toString()); }
+`}
+        onMessage={onMessage}
+        onError={console.log}
+        source={{
+          uri:
+            Platform.OS == 'ios'
+              ? './www/index.html'
+              : 'file:///android_asset/www/index.html',
+        }}></WebView>
       {props.children}
     </WalletContext.Provider>
   );

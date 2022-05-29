@@ -21,7 +21,6 @@ import AccountsTab from '../../components/AccountTabs';
 import {RootStackParamList} from '../../navigation/type';
 import {scale} from 'react-native-size-matters';
 import {TouchableWithoutFeedback} from '@tsejerome/ui-kitten-components/devsupport';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 
 const MainWalletScreen = () => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -95,7 +94,7 @@ const MainWalletScreen = () => {
         </View>
       </Layout>
       <BalanceCircle />
-      <AccountsTab onRefresh={refreshWallet} />
+      <AccountsTab />
     </Container>
   );
 };
@@ -112,9 +111,14 @@ const themedStyles = StyleService.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: scale(12),
+    zIndex: 9999,
   },
   iconGrp: {
     flexDirection: 'row',
+  },
+  iconContainer: {
+    backgroundColor: '#ff0000',
+    padding: 12,
   },
   icon: {
     width: scale(18),

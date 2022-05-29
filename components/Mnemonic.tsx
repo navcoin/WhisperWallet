@@ -1,9 +1,17 @@
 import React from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
+import QRCode from 'react-native-qrcode-svg';
 import {scale, verticalScale} from 'react-native-size-matters';
+import { useBottomSheet } from '../hooks/useBottomSheet';
+import useLayout from '../hooks/useLayout';
+import BottomSheetView from './BottomSheetView';
+import OptionCard from './OptionCard';
 import Text from './Text';
 
 const Mnemonic = (props: {mnemonic: string}) => {
+  const bottomSheet = useBottomSheet();
+  const {height} = useLayout();
+
   return (
     <View style={[styles.mainWrapper]}>
       <View style={[styles.innerWrapper]}>
@@ -29,6 +37,21 @@ const Mnemonic = (props: {mnemonic: string}) => {
                 );
               })
             : null}
+        </View>
+        <View style={[{width: scale(200), marginTop: scale(24)}]}>
+          <OptionCard
+            id={'1'}
+            index={1}
+            item={{text: 'Show QR code'}}
+            selected={''}
+            onPress={() => {
+              bottomSheet.expand(<BottomSheetView>
+                <QRCode value={props.mnemonic} size={height * 0.4} />
+              </BottomSheetView>)
+            }}
+            icon={'qr'}
+            color={'white'}
+          />
         </View>
       </View>
     </View>
@@ -59,5 +82,6 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 'auto',
     justifySelf: 'center',
+    alignItems: 'center',
   },
 });

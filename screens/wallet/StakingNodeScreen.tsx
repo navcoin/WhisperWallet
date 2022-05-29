@@ -10,7 +10,6 @@ import OptionCard from '../../components/OptionCard';
 import {RootStackParamList} from '../../navigation/type';
 import DialogInput from 'react-native-dialog-input';
 import TopNavigationComponent from '../../components/TopNavigation';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import {scale} from 'react-native-size-matters';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
@@ -28,7 +27,7 @@ const renderRightActions = (editMode: boolean, onPress: () => void) => (
 );
 
 const StakingNodeScreen = () => {
-  const {accounts, wallet, updateAccounts} = useWallet();
+  const {accounts, ExecWrapperPromise, updateAccounts} = useWallet();
   const [isEditVisible, showEditDialog] = useState(false);
   const [editingNode, setEditingNode] = useState<string>('');
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -50,7 +49,7 @@ const StakingNodeScreen = () => {
         }
         hintInput={'Name'}
         submitInput={async (inputText: string) => {
-          await wallet.db.AddLabel(editingNode, inputText);
+          await ExecWrapperPromise('wallet.db.AddLabel', [editingNode, inputText].map(el => JSON.stringify(el)));
           await updateAccounts();
           showEditDialog(false);
         }}
@@ -107,7 +106,7 @@ const StakingNodeScreen = () => {
   );
 };
 
-export default gestureHandlerRootHOC(StakingNodeScreen);
+export default StakingNodeScreen;
 
 const styles = StyleSheet.create({
   summary: {textAlign: 'center', paddingHorizontal: 24},
