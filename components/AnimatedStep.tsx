@@ -16,79 +16,75 @@ interface AnimatedStepProps {
   style?: StyleProp<ViewStyle>;
 }
 
-const AnimatedStep = ({step, steps = 4, style}: AnimatedStepProps) => {
+const Step = ({start, active}: {start?: boolean; active?: boolean}) => {
+  const [width, setWidth] = React.useState<number>(1);
   const theme = useTheme();
 
-  const stepsArray = [...Array(steps)];
+  const onLayout = React.useCallback(({nativeEvent}) => {
+    setWidth(prev => {
+      if (prev !== nativeEvent.layout.width) {
+        return nativeEvent.layout.width;
+      }
+      return prev;
+    });
+  }, []);
 
-  const Step = React.useCallback(
-    ({start, active}: {start?: boolean; active?: boolean}) => {
-      const [width, setWidth] = React.useState<number>(1);
+  const progress = useDerivedValue(() => {
+    return active ? withTiming(1) : withTiming(0);
+  }, [active]);
 
-      const onLayout = React.useCallback(({nativeEvent}) => {
-        setWidth(prev => {
-          if (prev !== nativeEvent.layout.width) {
-            return nativeEvent.layout.width;
-          }
-          return prev;
-        });
-      }, []);
+  const style = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      progress.value,
+      [0, 0.99, 1],
+      [
+        theme['color-basic-1300'],
+        theme['color-basic-1300'],
+        theme['color-xnav'],
+      ],
+    );
 
-      const progress = useDerivedValue(() => {
-        return active ? withTiming(1) : withTiming(0);
-      }, [active]);
+    return {
+      backgroundColor: backgroundColor,
+    };
+  });
 
-      const style = useAnimatedStyle(() => {
-        const backgroundColor = interpolateColor(
-          progress.value,
-          [0, 0.99, 1],
-          [
-            theme['color-basic-1300'],
-            theme['color-basic-1300'],
-            theme['color-xnav'],
-          ],
-        );
+  const lineStyle = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      progress.value,
+      [0, 1],
+      [theme['color-basic-1300'], theme['color-xnav']],
+    );
 
-        return {
-          backgroundColor: backgroundColor,
-        };
-      });
+    const widthX = interpolate(progress.value, [0, 1], [0, width]);
 
-      const lineStyle = useAnimatedStyle(() => {
-        const backgroundColor = interpolateColor(
-          progress.value,
-          [0, 1],
-          [theme['color-basic-1300'], theme['color-xnav']],
-        );
+    return {
+      flex: 1,
+      width: widthX,
+      backgroundColor: backgroundColor,
+    };
+  });
 
-        const widthX = interpolate(progress.value, [0, 1], [0, width]);
-
-        return {
-          flex: 1,
-          width: widthX,
-          backgroundColor: backgroundColor,
-        };
-      });
-
-      return (
-        <View
-          style={[
-            styles.step,
-            {
-              flex: start ? 0 : 1,
-            },
-          ]}>
-          <View
-            onLayout={onLayout}
-            style={[styles.line, {backgroundColor: theme['color-basic-1300']}]}>
-            <Animated.View style={lineStyle} />
-          </View>
-          <Animated.View style={[styles.dot, style]} />
-        </View>
-      );
-    },
-    [],
+  return (
+    <View
+      style={[
+        styles.step,
+        {
+          flex: start ? 0 : 1,
+        },
+      ]}>
+      <View
+        onLayout={onLayout}
+        style={[styles.line, {backgroundColor: theme['color-basic-1300']}]}>
+        <Animated.View style={lineStyle} />
+      </View>
+      <Animated.View style={[styles.dot, style]} />
+    </View>
   );
+};
+
+const AnimatedStep = ({step, steps = 4, style}: AnimatedStepProps) => {
+  const stepsArray = [...Array(steps)];
 
   return (
     <View style={[styles.container, style]}>
