@@ -161,11 +161,13 @@ try {
   const IsValidMnemonic = useCallback(
     async (mnemonic: string, type: string) => {
       return type == 'navcash'
-        ? await ExecWrapperSyncPromise(`njs.wallet.electrumMnemonic.validateMnemonic`, [
+        ? await ExecWrapperSyncPromise(
+            `njs.wallet.electrumMnemonic.validateMnemonic`,
+            [`"${mnemonic}"`, 'njs.wallet.electrumMnemonic.PREFIXES.standard'],
+          )
+        : await ExecWrapperSyncPromise(`njs.wallet.Mnemonic.isValid`, [
             `"${mnemonic}"`,
-            'njs.wallet.electrumMnemonic.PREFIXES.standard',
-          ])
-        : await ExecWrapperSyncPromise(`njs.wallet.Mnemonic.isValid`, [`"${mnemonic}"`]);
+          ]);
     },
     [ExecWrapperSyncPromise],
   );
@@ -214,9 +216,11 @@ try {
             address: await ExecWrapperSyncPromise(`
             njs.wallet.bitcore.Address.fromAddresses(
             [
-            "${address}","${parsed.filter(
-              el => el.type_id == Destination_Types_Enum.PublicWallet,
-            )[0]?.address}"
+            "${address}","${
+              parsed.filter(
+                el => el.type_id == Destination_Types_Enum.PublicWallet,
+              )[0]?.address
+            }"
             ],"${network}").toString`),
             stakingAddress: address,
             type_id: Destination_Types_Enum.StakingWallet,
@@ -224,9 +228,9 @@ try {
           });
         }
         return parsed;
-      }
+      };
 
-      updateAddress().then(setParsedAddresses)
+      updateAddress().then(setParsedAddresses);
     }
   }, [network, addresses, firstSyncCompleted]);
 
@@ -417,8 +421,8 @@ wallet.on('connected', async (serverName) => {
   sendToRN('connected', {serverName: serverName});
 });
 
-wallet.on('new_tx', async () => {
-  sendToRN('new_tx');
+wallet.on('new_tx', async (tx) => {
+  sendToRN('new_tx', tx);
 });
 
 wallet.on('sync_started', async () => {
@@ -951,7 +955,7 @@ wallet.Load({
       closeWallet,
       ExecWrapperPromise,
       ExecWrapperSyncPromise,
-      IsValidMnemonic
+      IsValidMnemonic,
     }),
     [
       walletName,
@@ -977,7 +981,7 @@ wallet.Load({
       closeWallet,
       ExecWrapperPromise,
       ExecWrapperSyncPromise,
-      IsValidMnemonic
+      IsValidMnemonic,
     ],
   );
 
@@ -1064,7 +1068,7 @@ wallet.Load({
           setSyncProgress(0);
           setNetwork(dataPayload.data.network);
           AsyncStorage.setItem('LastOpenedWalletName', walletName);
-          } else if (dataPayload.type === 'new_token') {
+        } else if (dataPayload.type === 'new_token') {
           ExecWrapper('wallet.GetMyTokens', [`"${spendingPassword}"`]);
         } else if (dataPayload.type === 'sync_status') {
           setSyncProgress(dataPayload.data.progress);
@@ -1077,7 +1081,7 @@ wallet.Load({
           setServer(dataPayload.data.serverName);
           setConnected(Connection_Stats_Enum.Connected);
         } else if (dataPayload.type === 'new_tx') {
-          if (firstSyncCompleted && !dataPayload.data.confirmed) {
+          if (firstSyncCompleted && !dataPayload.data?.confirmed) {
             ExecWrapper('wallet.GetBalance');
             ExecWrapper('wallet.GetHistory');
             ExecWrapper('wallet.GetAllAddresses');
@@ -1107,7 +1111,14 @@ wallet.Load({
         }
       }
     },
-    [firstSyncCompleted, updateAccounts, ExecWrapper, callbacks, walletName, spendingPassword],
+    [
+      firstSyncCompleted,
+      updateAccounts,
+      ExecWrapper,
+      callbacks,
+      walletName,
+      spendingPassword,
+    ],
   );
 
   return (
