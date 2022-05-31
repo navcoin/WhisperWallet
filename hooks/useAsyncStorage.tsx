@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /*
@@ -19,11 +19,11 @@ function useAsyncStorageHook(key: string, initialValue: any) {
       })
       .then(setStoredValue);
   }, [key, storedValue, initialValue]);
-  const setValue = (value: any) => {
+  const setValue = useCallback((value: any) => {
     const valueToStore = value instanceof Function ? value(storedValue) : value;
     setStoredValue(valueToStore);
     AsyncStorage.setItem(key, JSON.stringify(valueToStore));
-  };
+  }, []);
   return [storedValue, setValue];
 }
 

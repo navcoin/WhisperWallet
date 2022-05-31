@@ -1,12 +1,11 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Alert, ScrollView, Switch} from 'react-native';
+import {StyleSheet, View, ScrollView, Switch} from 'react-native';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Animation_Types_Enum} from '../../constants/Type';
 import OptionCard from '../../components/OptionCard';
 import {RootStackParamList, ScreenProps} from '../../navigation/type';
-import useAsyncStorage from '../../hooks/useAsyncStorage';
 import LoadingModalContent from '../../components/Modals/LoadingModalContent';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {screenHeight} from '../../utils/layout';
@@ -42,7 +41,13 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     ExecWrapperPromise,
   } = useWallet();
   const bottomSheet = useBottomSheet();
-  const {changeMode, supportedType, currentAuthenticationType} = useSecurity();
+  const {
+    changeMode,
+    supportedType,
+    currentAuthenticationType,
+    lockAfterBackground,
+    setLockAfterBackground,
+  } = useSecurity();
   const [authTypes, setAuthTypes] = useState<any>([]);
   const theme = useTheme();
 
@@ -87,10 +92,6 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const {navigate, goBack} =
     useNavigation<NavigationProp<RootStackParamList>>();
 
-  const [lockAfterBackground, setLockAfterBackground] = useAsyncStorage(
-    'lockAfterBackground',
-    'false',
-  );
   const {openModal, closeModal} = useModal();
 
   const disconnectWallet = async (deleteWallet: boolean = false) => {
@@ -185,18 +186,14 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
         <Switch
           trackColor={{false: '#fff', true: theme['color-staking']}}
           onValueChange={val => {
-            setLockAfterBackground(
-              lockAfterBackground !== 'true' ? 'true' : 'false',
-            );
+            setLockAfterBackground(!lockAfterBackground);
           }}
-          value={lockAfterBackground === 'true'}
+          value={lockAfterBackground}
           style={{marginRight: scale(12)}}
         />
       ),
       onPress: () => {
-        setLockAfterBackground(
-          lockAfterBackground !== 'true' ? 'true' : 'false',
-        );
+        setLockAfterBackground(!lockAfterBackground);
       },
     },
     {

@@ -21,7 +21,6 @@ import {default as customTheme} from './constants/theme/appTheme.json';
 import AppContainer from './navigation/AppContainer';
 
 patchFlatListProps();
-import useAsyncStorage from './hooks/useAsyncStorage';
 import WalletProvider from './contexts/WalletProvider';
 import {
   setJSExceptionHandler,
@@ -43,19 +42,26 @@ import {AsyncStoredItems} from './utils/asyncStorageManager';
 import {NavigationContainer, DarkTheme} from '@react-navigation/native';
 import SecurityProvider from './contexts/SecurityProvider';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import useTraceUpdates from './hooks/useTraceUpdates';
 
 const App = (props: {theme: string}) => {
   const {theme} = props;
   const {openModal, closeModal} = useModal();
 
-  const [promptPreviousError, setPromptPreviousError] = useAsyncStorage(
-    AsyncStoredItems.PROMPT_ERROR_ON_NEXT_LAUNCH,
-    '',
-  );
-  const [temporaryErrorRecords, setTemporaryErrorRecords] = useAsyncStorage(
-    AsyncStoredItems.TEMP_ERROR_RECORDS,
-    '',
-  );
+  const [promptPreviousError, setPromptPreviousError] = useState(false);
+
+  const [temporaryErrorRecords, setTemporaryErrorRecords] = useState('');
+
+  useEffect(() => {
+    AsyncStorage.getItem(AsyncStoredItems.PROMPT_ERROR_ON_NEXT_LAUNCH).then(
+      val => {
+        if (val !== null) setPromptPreviousError(val === 'true' ? true : false);
+      },
+    );
+    AsyncStorage.getItem(AsyncStoredItems.TEMP_ERROR_RECORDS).then(val => {
+      if (val !== null) setTemporaryErrorRecords(val);
+    });
+  }, []);
 
   const [shownWelcome, setShownWelcome] = useState(null);
 
@@ -63,6 +69,7 @@ const App = (props: {theme: string}) => {
     if (!promptPreviousError) {
       return;
     }
+    AsyncStorage.setItem(AsyncStoredItems.PROMPT_ERROR_ON_NEXT_LAUNCH, 'false');
     setPromptPreviousError(false);
     if (!temporaryErrorRecords.length) {
       return;
@@ -75,15 +82,18 @@ const App = (props: {theme: string}) => {
     });
   }, []);
 
-  const JSLeveErrorPrompt = useCallback(async (error: Error | string, isFatal: boolean) => {
-    await saveGlobalErrorRecord(errorTextParser(error, isFatal));
-    await saveTemporaryErrorRecord(errorTextParser(error, isFatal));
-    closeModal();
-    promptErrorToaster(error, isFatal, false, () => {
-      const errorMsg = errorTextParser(error, isFatal);
-      openModal(<ErrorModalContent errorText={errorMsg} />);
-    });
-  }, []);
+  const JSLeveErrorPrompt = useCallback(
+    async (error: Error | string, isFatal: boolean) => {
+      await saveGlobalErrorRecord(errorTextParser(error, isFatal));
+      await saveTemporaryErrorRecord(errorTextParser(error, isFatal));
+      closeModal();
+      promptErrorToaster(error, isFatal, false, () => {
+        const errorMsg = errorTextParser(error, isFatal);
+        openModal(<ErrorModalContent errorText={errorMsg} />);
+      });
+    },
+    [],
+  );
 
   useEffect(() => {
     AsyncStorage.getItem('shownWelcome').then(itemValue => {
@@ -106,6 +116,22 @@ const App = (props: {theme: string}) => {
 
     checkIfAppHadPreviousNativeErrorHandler();
   }, []);
+
+  useTraceUpdates('app', {
+    shownWelcome,
+    toastConfig,
+    DarkTheme,
+    theme,
+    openModal,
+    closeModal,
+    setShownWelcome,
+    checkIfAppHadPreviousNativeErrorHandler,
+    JSLeveErrorPrompt,
+    promptPreviousError,
+    setPromptPreviousError,
+    temporaryErrorRecords,
+    setTemporaryErrorRecords,
+  });
 
   return (
     <WalletProvider>
@@ -133,12 +159,12 @@ const App = (props: {theme: string}) => {
 
 const AppWrapper = () => {
   const [theme, setTheme] = React.useState<'light' | 'dark'>('dark');
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
     AsyncStorage.setItem('theme', nextTheme).then(() => {
       setTheme(nextTheme);
     });
-  };
+  }, []);
 
   useEffect(() => {
     AsyncStorage.getItem('theme').then(value => {
@@ -147,6 +173,7 @@ const AppWrapper = () => {
       }
     });
   }, []);
+
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaProvider>

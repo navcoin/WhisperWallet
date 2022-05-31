@@ -33,6 +33,8 @@ export interface SecurityContextValue {
   currentAuthenticationType: SecurityAuthenticationTypes | number;
   lockedScreen: boolean;
   setLockedScreen(locked: boolean): any;
+  lockAfterBackground: boolean;
+  setLockAfterBackground(shouldLock: boolean): any;
 }
 
 export const SecurityContext = createContext<SecurityContextValue | undefined>(

@@ -4,21 +4,14 @@ import {scale} from 'react-native-size-matters';
 import {useModal} from '../../hooks/useModal';
 import {Button} from '@tsejerome/ui-kitten-components';
 import Text from '../Text';
-import {AsyncStoredItems} from '../../utils/asyncStorageManager';
-import useAsyncStorage from '../../hooks/useAsyncStorage';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const DeleteWalletModalContent = (props: {
   deleteWallet: () => void;
   walletName: string;
 }) => {
-  const insets = useSafeAreaInsets();
   const {deleteWallet, walletName} = props;
   const {closeModal} = useModal();
-  const [tempErrorRecords, setErrorRecords] = useAsyncStorage(
-    AsyncStoredItems.TEMP_ERROR_RECORDS,
-    null,
-  );
+
   const buttonOptions = [
     {
       text: 'Cancel',

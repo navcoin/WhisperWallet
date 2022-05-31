@@ -15,22 +15,28 @@ import {Text} from '@tsejerome/ui-kitten-components';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Container from '../components/Container';
 import {scale} from 'react-native-size-matters';
-import useAsyncStorage from '../hooks/useAsyncStorage';
 import useWallet from '../hooks/useWallet';
-import {AppState, Platform, StyleSheet, View} from 'react-native';
+import {AppState, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
-import {BlurView} from '@react-native-community/blur';
 import {Connection_Stats_Enum} from '../constants/Type';
-import {Button} from '@tsejerome/ui-kitten-components';
 import useTraceUpdates from '../hooks/useTraceUpdates';
 
 export const SecurityProvider = (props: any) => {
   const [lockedScreen, setLockedScreen] = useState(false);
-  const [lockAfterBackground, setLockAfterBackground] = useAsyncStorage(
-    'lockAfterBackground',
-    'false',
-  );
+  const [lockAfterBackground, setStateLockAfterBackground] = useState(false);
+
+  useEffect(() => {
+    AsyncStorage.getItem('lockAfterBackground').then(val => {
+      setStateLockAfterBackground(val == 'true' ? true : false);
+    });
+  }, []);
+
+  const setLockAfterBackground = useCallback((val: boolean) => {
+    AsyncStorage.setItem('lockAfterBackground', val ? 'true' : 'false');
+    setStateLockAfterBackground(val ? true : false);
+  }, []);
+
   const {navigate} = useNavigation();
 
   const {refreshWallet, connected} = useWallet();
@@ -70,7 +76,14 @@ export const SecurityProvider = (props: any) => {
      * settings have changed.
      */
     const subscription = AppState.addEventListener('change', nextAppState => {
-      if (nextAppState === 'background' && appState.current === 'inactive') {
+      if (
+        (Platform.OS == 'ios' &&
+          nextAppState === 'background' &&
+          appState.current === 'inactive') ||
+        (Platform.OS == 'android' &&
+          nextAppState === 'active' &&
+          appState.current === 'background')
+      ) {
         if (
           refreshWallet &&
           !(
@@ -81,7 +94,7 @@ export const SecurityProvider = (props: any) => {
         ) {
           refreshWallet();
         }
-        if (lockAfterBackground === 'true') {
+        if (lockAfterBackground === true) {
           setLockedScreen(true);
         }
       }
@@ -117,10 +130,10 @@ export const SecurityProvider = (props: any) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   /*
- * isPinOrFingerprintSet will be true if the device's screen is locked
- * with a fingerprint or unlock pin code.
- * supportedBiometry will refer to the biometry supported by the device.
- */
+   * isPinOrFingerprintSet will be true if the device's screen is locked
+   * with a fingerprint or unlock pin code.
+   * supportedBiometry will refer to the biometry supported by the device.
+   */
   const UpdateFeatures = useCallback(async () => {
     if (Platform.OS == 'ios' && currentAuthenticationType != -1) {
       const faceIdPermission = await check(PERMISSIONS.IOS.FACE_ID);
@@ -138,7 +151,11 @@ export const SecurityProvider = (props: any) => {
         setInterval(res, 100);
       });
     }
-  }, [currentAuthenticationType, setIsPinOrFingerprintSet, setSupportedBiometry]);
+  }, [
+    currentAuthenticationType,
+    setIsPinOrFingerprintSet,
+    setSupportedBiometry,
+  ]);
 
   /*
    * Whenever the authentication type or the supported biometry changes we need to:
@@ -263,31 +280,34 @@ export const SecurityProvider = (props: any) => {
    * Reads the key stored in the encrypted storage
    */
 
-  const readEncrytedStorage = useCallback(async (suffix: string): Promise<string> => {
-    try {
-      let creds = await EncryptedStorage.getItem(suffix);
+  const readEncrytedStorage = useCallback(
+    async (suffix: string): Promise<string> => {
+      try {
+        let creds = await EncryptedStorage.getItem(suffix);
 
-      if (creds) {
-        await new Promise((res, rej) => {
-          LocalAuth((error: any) => {
-            if (!error) {
-              res(true);
-            } else {
-              rej('failed local auth');
-            }
+        if (creds) {
+          await new Promise((res, rej) => {
+            LocalAuth((error: any) => {
+              if (!error) {
+                res(true);
+              } else {
+                rej('failed local auth');
+              }
+            });
           });
-        });
 
-        return creds;
-      } else {
-        await writeEncrypedStorage(suffix);
-        return await readEncrytedStorage(suffix);
+          return creds;
+        } else {
+          await writeEncrypedStorage(suffix);
+          return await readEncrytedStorage(suffix);
+        }
+      } catch (e) {
+        console.log(e);
+        throw new Error('Authentication Failed');
       }
-    } catch (e) {
-      console.log(e);
-      throw new Error('Authentication Failed');
-    }
-  }, [writeEncrypedStorage]);
+    },
+    [writeEncrypedStorage],
+  );
 
   /*
    * This function will return the pin (key) which will be used for encrypting
@@ -436,6 +456,8 @@ export const SecurityProvider = (props: any) => {
       currentAuthenticationType,
       lockedScreen,
       setLockedScreen,
+      lockAfterBackground,
+      setLockAfterBackground,
     }),
     [
       readPassword,
@@ -444,15 +466,23 @@ export const SecurityProvider = (props: any) => {
       currentAuthenticationType,
       lockedScreen,
       setLockedScreen,
+      lockAfterBackground,
+      setLockAfterBackground,
     ],
   );
 
-  useTraceUpdates('SecurityProvider', {securityContext, error, supportedType,
+  useTraceUpdates('SecurityProvider', {
+    securityContext,
+    error,
+    supportedType,
     readPassword,
     changeMode,
     currentAuthenticationType,
     lockedScreen,
-    setLockedScreen,})
+    setLockedScreen,
+    lockAfterBackground,
+    setLockAfterBackground,
+  });
 
   return (
     <SecurityContext.Provider value={securityContext}>

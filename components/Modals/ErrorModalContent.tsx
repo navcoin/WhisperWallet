@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -10,7 +10,7 @@ import {Button} from '@tsejerome/ui-kitten-components';
 import Text from '../Text';
 import {screenHeight} from '../../utils/layout';
 import {AsyncStoredItems} from '../../utils/asyncStorageManager';
-import useAsyncStorage from '../../hooks/useAsyncStorage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ErrorModalContent = (props: {
   errorText: string;
@@ -18,10 +18,16 @@ const ErrorModalContent = (props: {
 }) => {
   const {errorText, focusOneError = false} = props;
   const {closeModal} = useModal();
-  const [tempErrorRecords, setErrorRecords] = useAsyncStorage(
-    AsyncStoredItems.TEMP_ERROR_RECORDS,
-    null,
+  const [tempErrorRecords, setErrorRecords] = useState<string | undefined>(
+    undefined,
   );
+
+  useEffect(() => {
+    AsyncStorage.getItem(AsyncStoredItems.TEMP_ERROR_RECORDS).then(val => {
+      if (val) setErrorRecords(val);
+    });
+  });
+
   const buttonOptions = [
     {
       text: 'Share report',
