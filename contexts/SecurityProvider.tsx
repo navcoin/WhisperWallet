@@ -24,11 +24,14 @@ import useTraceUpdates from '../hooks/useTraceUpdates';
 
 export const SecurityProvider = (props: any) => {
   const [lockedScreen, setLockedScreen] = useState(false);
-  const [lockAfterBackground, setStateLockAfterBackground] = useState(false);
+  const [lockAfterBackground, setStateLockAfterBackground] = useState<
+    boolean | undefined
+  >(undefined);
 
   useEffect(() => {
     AsyncStorage.getItem('lockAfterBackground').then(val => {
-      setStateLockAfterBackground(val == 'true' ? true : false);
+      if (val !== null)
+        setStateLockAfterBackground(val == 'true' ? true : false);
     });
   }, []);
 
@@ -46,14 +49,15 @@ export const SecurityProvider = (props: any) => {
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   const AskForUnlock = useCallback(() => {
-    readPassword()
-      .then(() => {
-        setLockedScreen(false);
-      })
-      .catch(e => {
-        AskForUnlock();
-      });
-  }, [AskForUnlock]);
+    return new Promise((res, rej) => {
+      readPassword()
+        .then(() => {
+          setLockedScreen(false);
+          res(true);
+        })
+        .catch(e => rej(e));
+    });
+  }, []);
 
   useEffect(() => {
     if (appStateVisible == 'active' && lockedScreen) {
@@ -145,12 +149,6 @@ export const SecurityProvider = (props: any) => {
 
     setIsPinOrFingerprintSet(await DeviceInfo.isPinOrFingerprintSet());
     setSupportedBiometry(await Keychain.getSupportedBiometryType({}));
-
-    while (currentAuthenticationType == -1) {
-      await new Promise((res, _) => {
-        setInterval(res, 100);
-      });
-    }
   }, [
     currentAuthenticationType,
     setIsPinOrFingerprintSet,

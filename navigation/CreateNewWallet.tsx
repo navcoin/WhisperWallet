@@ -18,7 +18,6 @@ import useSecurity from '../hooks/useSecurity';
 import {useModal} from '../hooks/useModal';
 import {errorTextParser, promptErrorToaster} from '../utils/errors';
 import ErrorModalContent from '../components/Modals/ErrorModalContent';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import SkipMnemonicConfirmationModalContent from '../components/Modals/SkipMnemonicConfirmationModalContent';
 
 function useArrayRef() {
@@ -30,11 +29,12 @@ const CreateNewWallet = () => {
   const {navigate, goBack} = useNavigation();
   const [index, setIndex] = useState(0);
   const [walletName, setWalletName] = useState('');
-  const {mnemonic, createWallet, njs, walletsList} = useWallet();
+  const {mnemonic, createWallet, walletsList} = useWallet();
   const [loading, setLoading] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
   const [network, setNetwork] = useState('mainnet');
-  const {readPassword} = useSecurity();
+  const {readPassword, lockAfterBackground, setLockAfterBackground} =
+    useSecurity();
   const [elements, ref] = useArrayRef();
   const {openModal, closeModal} = useModal();
   const [words, setWords] = useState<string[]>(new Array(12));
@@ -126,7 +126,7 @@ const CreateNewWallet = () => {
             <Text category="title4" center marginBottom={32}>
               Choose the network
             </Text>
-            {NetworkTypes.map((el, index) => {
+            {NetworkTypes.map((el, index_) => {
               return (
                 <View
                   style={[layoutStyles.responsiveColumnComponentWidth]}
@@ -135,7 +135,7 @@ const CreateNewWallet = () => {
                     key={el[0]}
                     id={el[0]}
                     item={{text: el[1]}}
-                    index={index}
+                    index={index_}
                     selected={network}
                     onPress={() => {
                       setNetwork(el[0]);
@@ -300,10 +300,12 @@ const CreateNewWallet = () => {
                 status={'primary-whisper'}
                 style={styles.button}
                 onPressOut={async () => {
-                  const lockSetting = await AsyncStorage.getItem(
-                    'lockAfterBackground',
-                  );
-                  if (!(lockSetting == 'true' || lockSetting == 'false')) {
+                  if (
+                    !(
+                      lockAfterBackground === true ||
+                      lockAfterBackground === false
+                    )
+                  ) {
                     Alert.alert(
                       'Security',
                       'Do you want to lock the wallet when it goes to background?',
@@ -311,20 +313,14 @@ const CreateNewWallet = () => {
                         {
                           text: 'Yes',
                           onPress: async () => {
-                            await AsyncStorage.setItem(
-                              'lockAfterBackground',
-                              'true',
-                            );
+                            setLockAfterBackground(true);
                             navigate('MainWalletScreen');
                           },
                         },
                         {
                           text: 'No',
                           onPress: async () => {
-                            await AsyncStorage.setItem(
-                              'lockAfterBackground',
-                              'false',
-                            );
+                            setLockAfterBackground(false);
                             navigate('MainWalletScreen');
                           },
                         },
