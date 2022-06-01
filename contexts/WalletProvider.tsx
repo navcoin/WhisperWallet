@@ -1067,6 +1067,7 @@ wallet.Load({
           setConnected(Connection_Stats_Enum.Connecting);
           setSyncProgress(0);
           setNetwork(dataPayload.data.network);
+          RequestWallets();
           AsyncStorage.setItem('LastOpenedWalletName', walletName);
         } else if (dataPayload.type === 'new_token') {
           ExecWrapper('wallet.GetMyTokens', [`"${spendingPassword}"`]);
