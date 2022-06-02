@@ -101,7 +101,11 @@ export const WalletProvider = (props: any) => {
         `${func}(${
           params ? params.join(',') : ''
         }).then((a) => sendToRN("${func}", a))${
-          cb2 !== undefined ? '' : '.catch(e => sendToRN("E-' + func + '", e))'
+          cb2 === undefined
+            ? ''
+            : '.catch(e => sendToRN("E-' +
+              func +
+              '", {message: e.toString(), stack: e.stack}))'
         };`,
       );
     },
@@ -136,7 +140,7 @@ try {
         InjectJavascript(
           `${func}(${
             params ? params.join(',') : ''
-          }).then((a) => sendToRN("${parsedFunc}", a)).catch(e => sendToRN("E-${parsedFunc}", e))`,
+          }).then((a) => sendToRN("${parsedFunc}", a)).catch(e => sendToRN("E-${parsedFunc}", {message: e.toString(), stack: e.stack}))`,
         );
       });
     },
@@ -152,7 +156,7 @@ try {
   let res = ${func}(${params ? params.join(',') : ''});
   sendToRN("${func}", res);
 } catch(e) {
-  sendToRN("E-${func}", e);
+  sendToRN("E-${func}", {message: e.toString(), stack: e.stack});
 }`);
     },
     [callbacks, InjectJavascript],
@@ -565,7 +569,7 @@ wallet.Load({
       name: string,
       scheme: string,
       amount: number,
-      spendingPassword: string,
+      spendingPassword_: string,
     ) => {
       return new Promise((res, rej) => {
         ExecWrapper(
@@ -574,7 +578,7 @@ wallet.Load({
             JSON.stringify(name),
             JSON.stringify(scheme),
             amount.toString(10),
-            JSON.stringify(spendingPassword),
+            JSON.stringify(spendingPassword_),
           ],
           res,
           rej,
