@@ -12,7 +12,7 @@ import useKeychain from '../utils/Keychain';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import LocalAuth from '../utils/LocalAuth';
 import {Text} from '@tsejerome/ui-kitten-components';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import Container from '../components/Container';
 import {scale} from 'react-native-size-matters';
 import useWallet from '../hooks/useWallet';

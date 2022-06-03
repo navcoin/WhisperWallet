@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import {useTheme, Icon} from '@tsejerome/ui-kitten-components';
+import {useTheme} from '@tsejerome/ui-kitten-components';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import Text from './Text';
 import {scale} from 'react-native-size-matters';
@@ -38,14 +39,9 @@ const InputSelect = ({
         </Text>
         {onPress && !hideArrow && (
           <Icon
-            pack="assets"
-            name="arrowRight16"
-            style={[
-              styles.icon,
-              {
-                tintColor: theme['icon-basic-color'],
-              },
-            ]}
+            name="arrow-forward"
+            size={12}
+            color={theme['icon-basic-color']}
           />
         )}
       </View>

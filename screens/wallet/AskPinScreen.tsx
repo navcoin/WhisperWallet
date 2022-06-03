@@ -3,7 +3,7 @@ import Container from '../../components/Container';
 import {ScreenProps} from '../../navigation/type';
 import PINCode from '@haskkor/react-native-pincode';
 import {useNavigation} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import {Button, StyleService, Text} from '@tsejerome/ui-kitten-components';
 

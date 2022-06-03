@@ -1,12 +1,9 @@
-import {Icon, StyleService} from '@tsejerome/ui-kitten-components';
 import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {scale} from 'react-native-size-matters';
 import {useBottomSheet} from '../hooks/useBottomSheet';
-import BottomSheetView from './BottomSheetView';
-import OptionCard from './OptionCard';
-import Text from './Text';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const ScanQR = (props: any) => {
   const bottomSheet = useBottomSheet();
@@ -17,18 +14,10 @@ const ScanQR = (props: any) => {
         onPress={() => {
           bottomSheet.expand(<QRCodeScanner onRead={props.onRead} />);
         }}>
-        <Icon pack="assets" name={'qr'} style={[styles.icon]} />
+        <Icon name={'qr-code'} size={scale(24)} color={'black'} />
       </TouchableOpacity>
     </>
   );
 };
 
 export default ScanQR;
-
-const styles = StyleService.create({
-  icon: {
-    width: scale(24),
-    height: scale(24),
-    tintColor: 'black',
-  },
-});

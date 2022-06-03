@@ -83,7 +83,7 @@ const ImportWallet = () => {
                   <OptionCard
                     item={{text: el[1]}}
                     index={index}
-                    icon={'creditCard'}
+                    icon={'card'}
                     onPress={() => {
                       setType(el[0]);
                       setIndex(1);
@@ -166,7 +166,7 @@ const ImportWallet = () => {
                   key={el[0]}
                   item={{text: el[1]}}
                   index={index}
-                  icon={'creditCard'}
+                  icon={'card'}
                   onPress={() => {
                     setNetwork(el[0]);
                     setIndex(3);

@@ -1,6 +1,4 @@
 import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {useTheme} from '@tsejerome/ui-kitten-components';
 import createStackNavigator from './createStackNavigator';
 import {RootAppStackParamList, RootStackParamList} from './type';
 import {BackHandler, View} from 'react-native';
@@ -10,8 +8,6 @@ import OnBoarding from '../screens/OnBoarding';
 import OpenWallet from './OpenWallet';
 import ImportWallet from './ImportWallet';
 import AskPinScreen from '../screens/wallet/AskPinScreen';
-import SecurityProvider from '../contexts/SecurityProvider';
-import Toast from 'react-native-toast-message';
 import useWallet from '../hooks/useWallet';
 import AddressScreen from '../screens/wallet/AddressScreen';
 import AddServerScreen from '../screens/wallet/AddServerScreen';

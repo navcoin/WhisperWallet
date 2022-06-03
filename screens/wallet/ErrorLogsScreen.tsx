@@ -25,7 +25,7 @@ const ErrorLogsScreen = (props: any) => {
           errorRecords.map((eachError: string, index: number) => {
             return (
               <OptionCard
-                icon={'cancel'}
+                icon={'close-circle-outline'}
                 key={index + 1}
                 id={(index + 1).toString()}
                 index={index + 1}

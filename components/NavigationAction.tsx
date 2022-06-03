@@ -8,9 +8,10 @@ import {
 } from 'react-native';
 import {
   useTheme,
-  Icon,
   TopNavigationAction,
 } from '@tsejerome/ui-kitten-components';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import {useNavigation} from '@react-navigation/native';
 
 import Text from './Text';
@@ -166,15 +167,9 @@ const NavigationAction = memo(
         icon={props => (
           <Icon
             {...props}
-            pack="assets"
-            name={icon || 'cancel'}
-            style={[
-              {
-                height: scale(getSizeIcon(size)),
-                width: scale(getSizeIcon(size)),
-              },
-              {tintColor: getIconColor(status)},
-            ]}
+            name={icon || 'close'}
+            size={scale(getSizeIcon(size))}
+            color={getIconColor(status)}
           />
         )}
       />

@@ -49,7 +49,7 @@ const Mnemonic = (props: {mnemonic: string}) => {
                 <QRCode value={props.mnemonic} size={height * 0.4} />
               </BottomSheetView>)
             }}
-            icon={'qr'}
+            icon={'qr-code'}
             color={'white'}
           />
         </View>

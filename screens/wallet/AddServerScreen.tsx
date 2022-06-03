@@ -3,13 +3,11 @@ import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {
   Button,
-  Icon,
   IndexPath,
   Input,
   Layout,
   Select,
   SelectItem,
-  TopNavigationAction,
 } from '@tsejerome/ui-kitten-components';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';

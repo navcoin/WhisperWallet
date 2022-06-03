@@ -1,7 +1,7 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Icon, TopNavigationAction} from '@tsejerome/ui-kitten-components';
+import {TopNavigationAction} from '@tsejerome/ui-kitten-components';
 import Container from '../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Balance_Types_Enum, BalanceFragment} from '../../constants/Type';
@@ -11,16 +11,17 @@ import {RootStackParamList} from '../../navigation/type';
 import DialogInput from 'react-native-dialog-input';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {scale} from 'react-native-size-matters';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
-  <Icon width={scale(20)} height={scale(20)} {...props} name={props.name} />
+const TopRightIcon = (props: {name: 'checkmark' | 'pencil'}) => (
+  <Icon size={scale(20)} color={'white'} name={props.name} />
 );
 
 const renderRightActions = (editMode: boolean, onPress: () => void) => (
   <React.Fragment>
     <TopNavigationAction
       style={{padding: scale(20)}}
-      icon={TopRightIcon({name: editMode ? 'check' : 'edit'})}
+      icon={TopRightIcon({name: editMode ? 'checkmark' : 'pencil'})}
       onPress={onPress}
     />
   </React.Fragment>
@@ -93,7 +94,7 @@ const StakingNodeScreen = () => {
                 }}
                 selected={''}
                 onPress={() => {}}
-                iconRight={editMode ? 'edit' : undefined}
+                iconRight={editMode ? 'pencil' : undefined}
                 iconRightOnPress={() => {
                   setEditingNode(eachNode.address || '');
                   showEditDialog(true);
