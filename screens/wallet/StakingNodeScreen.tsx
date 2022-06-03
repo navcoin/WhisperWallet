@@ -14,7 +14,7 @@ import {scale} from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
-  <Icon size={scale(20)}  name={props.name} />
+  <Icon size={scale(20)} color={'white'} name={props.name} />
 );
 
 const renderRightActions = (editMode: boolean, onPress: () => void) => (

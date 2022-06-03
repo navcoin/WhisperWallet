@@ -65,17 +65,17 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       {
         text: GetAuthenticationName(SecurityAuthenticationTypes.MANUAL_4),
         mode: SecurityAuthenticationTypes.MANUAL_4,
-        icon: 'pincode',
+        icon: 'md-code-working',
       },
       {
         text: GetAuthenticationName(SecurityAuthenticationTypes.MANUAL),
         mode: SecurityAuthenticationTypes.MANUAL,
-        icon: 'pincode',
+        icon: 'md-code-working',
       },
       {
         text: GetAuthenticationName(SecurityAuthenticationTypes.NONE),
         mode: SecurityAuthenticationTypes.NONE,
-        icon: 'unsecure',
+        icon: 'md-key',
       },
     );
 

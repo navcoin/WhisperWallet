@@ -88,7 +88,7 @@ const OptionCard = ({
               <Icon
                 name={icon || 'card'}
                 size={scale(24)}
-                color={color || theme['icon-basic-color']}
+                color={'white'}
               />
             )}
           </View>
@@ -108,7 +108,7 @@ const OptionCard = ({
                 <Icon
                   name={iconRight}
                   size={scale(24)}
-                  color={theme['icon-basic-color']}
+                  color={'white'}
                 />
               </TouchableOpacity>
             </View>
