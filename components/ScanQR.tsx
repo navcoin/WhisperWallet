@@ -1,4 +1,4 @@
-import {Icon, StyleService} from '@tsejerome/ui-kitten-components';
+import {Icon, StyleService, useTheme} from '@tsejerome/ui-kitten-components';
 import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -10,12 +10,21 @@ import Text from './Text';
 
 const ScanQR = (props: any) => {
   const bottomSheet = useBottomSheet();
+  const theme = useTheme();
 
   return (
     <>
       <TouchableOpacity
         onPress={() => {
-          bottomSheet.expand(<QRCodeScanner onRead={props.onRead} />);
+          bottomSheet.expand(
+            <QRCodeScanner
+              reactivate={true}
+              reactivateTimeout={500}
+              showMarker={true}
+              markerStyle={{borderColor: theme['color-staking']}}
+              onRead={props.onRead}
+            />,
+          );
         }}>
         <Icon pack="assets" name={'qr'} style={[styles.icon]} />
       </TouchableOpacity>

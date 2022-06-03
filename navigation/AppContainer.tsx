@@ -28,6 +28,9 @@ import ViewTxScreen from '../screens/wallet/ViewTxScreen';
 import BottomSheetProvider from '../contexts/BottomSheetProvider';
 import CreateNftCollectionScreen from '../screens/wallet/CreateNftCollectionScreen';
 import CollectionScreen from '../screens/wallet/CollectionScreen';
+import MintNftScreen from '../screens/wallet/MintNftScreen';
+import SellNftScreen from '../screens/wallet/SellNftScreen';
+import ScanQRScreen from '../screens/wallet/ScanQRScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const StackApp = createStackNavigator<RootAppStackParamList>();
@@ -150,6 +153,21 @@ const AppContent = (props: any) => {
           {...blurProps}
           name={'CollectionScreen'}
           component={CollectionScreen}
+        />
+        <Stack.Screen
+          {...blurProps}
+          name={'MintNftScreen'}
+          component={MintNftScreen}
+        />
+        <Stack.Screen
+          {...blurProps}
+          name={'SellNftScreen'}
+          component={SellNftScreen}
+        />
+        <Stack.Screen
+          {...blurProps}
+          name={'ScanQRScreen'}
+          component={ScanQRScreen}
         />
       </Stack.Navigator>
     </BottomSheetProvider>

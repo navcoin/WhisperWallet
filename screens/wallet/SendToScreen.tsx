@@ -49,11 +49,14 @@ const SendToScreen = (props: any) => {
   const [amountInString, setAmount] = useState('');
   const [showMemo, setShowMemo] = useState(false);
   const [subtractFee, setSubtractFee] = useState(false);
-  const {accounts, tokens, nfts, walletName, ExecWrapperSyncPromise} = useWallet();
+  const {accounts, tokens, nfts, walletName, ExecWrapperSyncPromise} =
+    useWallet();
   const [isMemoDialogVisible, showMemoDialog] = useState(false);
   const [accountStr, setAccountStr] = useState('account');
 
-  const [nftId, setNftId] = useState(props.route.params.nftId || -1);
+  const [nftId, setNftId] = useState(
+    props.route.params.nftId !== undefined ? props.route.params.nftId : -1,
+  );
 
   const amountInputRef = useRef<Input>();
   const [sources, setSources] = useState(accounts);
@@ -84,18 +87,15 @@ const SendToScreen = (props: any) => {
   }, [from, sources]);
 
   useEffect(() => {
-    ExecWrapperSyncPromise(
-      'bitcore.Address("'+to+'").isXnav').then(isxNav => {
-      if (
-        toType == Destination_Types_Enum.Address &&
-        to &&
-        !isxNav
-      ) {
-        setShowMemo(true);
-      } else {
-        setShowMemo(false);
-      }
-    })
+    ExecWrapperSyncPromise('bitcore.Address("' + to + '").isXnav').then(
+      isxNav => {
+        if (toType == Destination_Types_Enum.Address && to && !isxNav) {
+          setShowMemo(true);
+        } else {
+          setShowMemo(false);
+        }
+      },
+    );
   }, [to, toType]);
 
   useEffect(() => {
@@ -105,7 +105,7 @@ const SendToScreen = (props: any) => {
       setSubtractFee(false);
     }
   }, [amountInString, currentAmount]);
-  
+
   return (
     <Container useSafeArea>
       <QrProvider>
@@ -240,6 +240,7 @@ const SendToScreen = (props: any) => {
               })}
               text={'Item'}
               defaultOption={(() => {
+                console.log('nftid', nftId);
                 if (!from.items.confirmed[nftId]) return '';
                 let obj =
                   typeof from.items.confirmed[nftId] === 'object'
