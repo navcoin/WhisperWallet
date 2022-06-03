@@ -104,7 +104,7 @@ const Accounts = () => {
             },
             {
               text: 'Send to someone',
-              icon: 'diagonalArrow3',
+              icon: 'arrow-redo',
               navigate: {
                 screen: 'SendToScreen',
                 params: {
@@ -114,7 +114,7 @@ const Accounts = () => {
             },
             {
               text: 'Move to another account',
-              icon: 'exchange',
+              icon: 'move',
               skipCollapse: true,
               onPress: () => {
                 pickDestination(account_);
@@ -122,7 +122,7 @@ const Accounts = () => {
             },
             {
               text: 'Transaction history',
-              icon: 'suitcase',
+              icon: 'recording',
               navigate: {
                 screen: 'HistoryScreen',
                 params: {
@@ -218,7 +218,7 @@ const NFTs = () => {
             },
             {
               text: 'Transaction history',
-              icon: 'suitcase',
+              icon: 'recording',
               navigate: {
                 screen: 'HistoryScreen',
                 params: {
@@ -322,7 +322,7 @@ const Tokens = () => {
             },
             {
               text: 'Send to someone',
-              icon: 'diagonalArrow3',
+              icon: 'arrow-redo',
               navigate: {
                 screen: 'SendToScreen',
                 params: {

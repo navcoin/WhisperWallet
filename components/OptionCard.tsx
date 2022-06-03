@@ -86,7 +86,7 @@ const OptionCard = ({
               <Identicon value={identicon || ''} />
             ) : (
               <Icon
-                name={icon || 'creditCard'}
+                name={icon || 'card'}
                 size={scale(24)}
                 color={color || theme['icon-basic-color']}
               />
