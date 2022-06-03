@@ -5,7 +5,7 @@ import { useTheme} from '@tsejerome/ui-kitten-components';
 import Text from './Text';
 import CurrencyText from './CurrencyText';
 import AnimatedAppearance from './AnimatedAppearance';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import dayjs from '../utils/dayjs';
 import {Category_Types_Enum, TransactionFragment} from '../constants/Type';
@@ -49,7 +49,7 @@ const Transaction = ({item, index, onPress}: TransactionProps) => {
             <Image source={category?.icon?.path} style={[styles.icon]} />
           ) : (
             <Icon
-              name={'credit-card'}
+              name={'card'}
               size={scale(24)}
               color={theme['icon-basic-color']}
             />

@@ -2,8 +2,7 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useTheme} from '@tsejerome/ui-kitten-components';
 
-import IconArrow from 'react-native-vector-icons/MaterialIcons';
-import IconWallet from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import Text from './Text';
 import CurrencyText from './CurrencyText';
@@ -17,7 +16,7 @@ import {
   Connection_Stats_Enum,
 } from '../constants/Type';
 import useWallet from '../hooks/useWallet';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {scale} from 'react-native-size-matters';
 
 interface BalanceProps {
   item: BalanceFragment;
@@ -46,12 +45,12 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
             type_id == Balance_Types_Enum.Nft ? (
               <Identicon value={tokenId} />
             ) : (
-              <IconWallet
+              <Icon
                 name={type_id == Balance_Types_Enum.Staking
-                  ? 'chart-gantt'
+                  ? 'stats-chart'
                   : type_id == Balance_Types_Enum.Nav
-                  ? 'hand-coin'
-                  : 'hand-coin-outline'}
+                  ? 'md-pie-chart'
+                  : 'md-pie-chart-sharp'}
                 size={scale(32)}
                 color={
                   type_id == Balance_Types_Enum.Staking
@@ -94,9 +93,9 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
             )}
           </View>
         </View>
-        <IconArrow
+        <Icon
           style={styles.icon}
-          name="keyboard-arrow-right"
+          name="arrow-forward-outline"
           size={scale(25)}
           color={theme['icon-basic-color']}
         />

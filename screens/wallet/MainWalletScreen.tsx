@@ -20,7 +20,7 @@ import AccountsTab from '../../components/AccountTabs';
 import {RootStackParamList} from '../../navigation/type';
 import {scale} from 'react-native-size-matters';
 import {TouchableWithoutFeedback} from '@tsejerome/ui-kitten-components/devsupport';
-import Icon from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const MainWalletScreen = () => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -83,7 +83,7 @@ const MainWalletScreen = () => {
               refreshWallet();
             }}>
             <Icon
-              name={'refresh-cw'}
+              name={'refresh'}
               size={scale(18)}
               color={'white'}
             />

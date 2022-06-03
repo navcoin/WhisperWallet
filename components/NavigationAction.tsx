@@ -10,7 +10,7 @@ import {
   useTheme,
   TopNavigationAction,
 } from '@tsejerome/ui-kitten-components';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import {useNavigation} from '@react-navigation/native';
 
@@ -167,7 +167,7 @@ const NavigationAction = memo(
         icon={props => (
           <Icon
             {...props}
-            name={icon || 'cancel'}
+            name={icon || 'close'}
             size={scale(getSizeIcon(size))}
             color={getIconColor(status)}
           />

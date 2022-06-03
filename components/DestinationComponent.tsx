@@ -17,7 +17,7 @@ import BottomSheetOptions from './BottomSheetOptions';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import {useQr} from '../hooks/useQr';
 import useWallet from '../hooks/useWallet';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const DestinationComponent = (props: any) => {
   const styles = useStyleSheet(themedStyles);
@@ -92,7 +92,7 @@ const DestinationComponent = (props: any) => {
       type_id: Balance_Types_Enum.Nav,
       destination_id: Destination_Types_Enum.Address,
       currency: 'NAV',
-      icon: 'qrcode',
+      icon: 'qr-code',
     });
 
     bottomSheet.expand(
@@ -141,7 +141,7 @@ const DestinationComponent = (props: any) => {
                   qrContext.show();
                 }}>
                 <Icon
-                  name={'qrcode'}
+                  name={'qr-code'}
                   color={'white'}
                   size={scale(24)}
                   style={{
@@ -165,7 +165,7 @@ const DestinationComponent = (props: any) => {
                 pickDestination();
               }}>
               <View>
-                <Icon name="arrow-down-bold-outline" size={scale(16)} color={'white'}/>
+                <Icon name="arrow-down" size={scale(16)} color={'white'}/>
               </View>
             </TouchableOpacity>
           )}
@@ -191,7 +191,7 @@ const themedStyles = StyleService.create({
     borderColor: 'background-basic-color-1',
     backgroundColor: 'color-salmon-100',
   },
-  
+
   card: {
     borderRadius: scale(12),
     borderWidth: scale(1),

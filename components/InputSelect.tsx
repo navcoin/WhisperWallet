@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {useTheme} from '@tsejerome/ui-kitten-components';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import Text from './Text';
 import {scale} from 'react-native-size-matters';
@@ -39,7 +39,7 @@ const InputSelect = ({
         </Text>
         {onPress && !hideArrow && (
           <Icon
-            name="chevron-right"
+            name="arrow-forward"
             size={12}
             color={theme['icon-basic-color']}
           />

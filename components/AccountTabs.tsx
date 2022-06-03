@@ -66,7 +66,7 @@ const Accounts = () => {
       let options = accounts
         .filter(el => el.name != account_?.name)
         .map(el => {
-          return {...el, text: el.name};
+          return {...el, text: el.name, icon:'qr-code'};
         });
 
       bottomSheet.expand(
@@ -159,7 +159,7 @@ const Accounts = () => {
       </>,
     );
   }, [accounts]);
-  
+
   return (
     <View style={{backgroundColor: theme['color-basic-700'], flex: 1}}>
       <ScrollView

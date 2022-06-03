@@ -11,9 +11,9 @@ import {RootStackParamList} from '../../navigation/type';
 import DialogInput from 'react-native-dialog-input';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {scale} from 'react-native-size-matters';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
+const TopRightIcon = (props: {name: 'checkmark' | 'pencil'}) => (
   <Icon size={scale(20)} color={'white'} name={props.name} />
 );
 
@@ -21,7 +21,7 @@ const renderRightActions = (editMode: boolean, onPress: () => void) => (
   <React.Fragment>
     <TopNavigationAction
       style={{padding: scale(20)}}
-      icon={TopRightIcon({name: editMode ? 'check' : 'edit'})}
+      icon={TopRightIcon({name: editMode ? 'checkmark' : 'pencil'})}
       onPress={onPress}
     />
   </React.Fragment>
