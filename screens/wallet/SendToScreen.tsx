@@ -1,6 +1,5 @@
 import Content from '../../components/Content';
 import {
-  Icon,
   Input,
   Layout,
   StyleService,
@@ -12,6 +11,7 @@ import Container from '../../components/Container';
 import {TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {scale, verticalScale} from 'react-native-size-matters';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import useWallet from '../../hooks/useWallet';
 import CardSelect from '../../components/CardSelect';
@@ -209,14 +209,12 @@ const SendToScreen = (props: any) => {
                 ) : (
                   <>
                     <Icon
-                      pack={'assets'}
-                      name={'add'}
+                      name={'add-circle-outline'}
                       style={{
-                        tintColor: 'white',
-                        width: scale(24),
-                        height: scale(24),
                         marginRight: scale(24),
                       }}
+                      size={scale(24)}
+                      color={'white'}
                     />
                     <Text>Add an encrypted memo</Text>
                   </>

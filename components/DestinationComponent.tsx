@@ -1,6 +1,5 @@
 import {TouchableOpacity, View} from 'react-native';
 import {
-  Icon,
   Input,
   Layout,
   StyleService,
@@ -18,6 +17,7 @@ import BottomSheetOptions from './BottomSheetOptions';
 import {useBottomSheet} from '../hooks/useBottomSheet';
 import {useQr} from '../hooks/useQr';
 import useWallet from '../hooks/useWallet';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const DestinationComponent = (props: any) => {
   const styles = useStyleSheet(themedStyles);
@@ -92,7 +92,7 @@ const DestinationComponent = (props: any) => {
       type_id: Balance_Types_Enum.Nav,
       destination_id: Destination_Types_Enum.Address,
       currency: 'NAV',
-      icon: 'qr',
+      icon: 'qrcode',
     });
 
     bottomSheet.expand(
@@ -141,12 +141,10 @@ const DestinationComponent = (props: any) => {
                   qrContext.show();
                 }}>
                 <Icon
-                  pack="assets"
-                  name={'qr'}
+                  name={'qrcode'}
+                  color={'white'}
+                  size={scale(24)}
                   style={{
-                    tintColor: 'white',
-                    width: scale(24),
-                    height: scale(24),
                     marginRight: scale(8),
                     marginLeft: scale(16),
                   }}
@@ -167,7 +165,7 @@ const DestinationComponent = (props: any) => {
                 pickDestination();
               }}>
               <View>
-                <Icon pack="assets" name="downArrow" style={styles.icon} />
+                <Icon name="arrow-down-bold-outline" size={scale(16)} color={'white'}/>
               </View>
             </TouchableOpacity>
           )}
@@ -193,11 +191,7 @@ const themedStyles = StyleService.create({
     borderColor: 'background-basic-color-1',
     backgroundColor: 'color-salmon-100',
   },
-  icon: {
-    width: scale(16),
-    height: scale(16),
-    tintColor: 'color-basic-100',
-  },
+  
   card: {
     borderRadius: scale(12),
     borderWidth: scale(1),

@@ -1,7 +1,3 @@
-/**
- * NavCash - React Native App
- */
-
 import React, {useEffect, useState, useCallback} from 'react';
 import {StatusBar, View} from 'react-native';
 import {patchFlatListProps} from 'react-native-web-refresh-control';
@@ -10,7 +6,6 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import ThemeContext from './ThemeContext';
 import * as eva from '@eva-design/eva';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
-import AssetIconsPack from './assets/AssetIconsPack';
 import {
   ApplicationProvider,
   IconRegistry,
@@ -151,7 +146,7 @@ const AppWrapper = () => {
     <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaProvider>
         <ThemeContext.Provider value={{theme, toggleTheme}}>
-          <IconRegistry icons={[AssetIconsPack, EvaIconsPack]} />
+          <IconRegistry icons={[EvaIconsPack]} />
           <ApplicationProvider
             {...eva}
             theme={

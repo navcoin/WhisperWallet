@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Icon,
   StyleService,
   useStyleSheet,
 } from '@tsejerome/ui-kitten-components';
@@ -24,6 +23,7 @@ import {Modal} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import OptionCard from '../../components/OptionCard';
 import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 interface GalleryNftItem extends NftItem {
   galleryData: IImageInfo;
@@ -128,7 +128,7 @@ const CollectionScreen = (props: any) => {
               onPress={() => {
                 console.log(collection);
               }}>
-              <Icon name={'add'} style={{tintColor: '#fff'}} />
+              <Icon name={'add-circle-outline'} color={'white'} size={scale(16)} />
             </TouchableOpacity>
           )
         }
@@ -242,15 +242,13 @@ const CollectionScreen = (props: any) => {
                   </View>
                   {item.type === 'pending' ? (
                     <Icon
-                      pack="assets"
-                      name={'refresh'}
+                      name={'refresh-cw'}
+                      color={'white'}
+                      size={scale(16)}
                       style={{
                         position: 'absolute',
                         bottom: scale(6),
                         right: scale(6),
-                        tintColor: 'white',
-                        width: scale(16),
-                        height: scale(16),
                       }}
                     />
                   ) : null}
@@ -288,11 +286,6 @@ const themedStyles = StyleService.create({
   },
   iconGrp: {
     flexDirection: 'row',
-  },
-  icon: {
-    width: scale(18),
-    height: scale(18),
-    tintColor: '$icon-basic-color',
   },
   singleImageContainerStyle: {
     backgroundColor: 'background-basic-color-2',

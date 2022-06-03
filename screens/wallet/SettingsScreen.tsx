@@ -146,7 +146,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
   const items: SettingsItem[] = [
     {
       title: 'Staking nodes',
-      icon: 'factory',
+      icon: 'stats-chart',
       show: true,
       onPress: () => {
         navigate('StakingNodeScreen');
@@ -162,7 +162,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     },
     {
       title: 'Security: ' + GetAuthenticationName(currentAuthenticationType),
-      icon: 'pincode',
+      icon: 'md-code-working',
       show: true,
       onPress: () => {
         bottomSheet.expand(
@@ -201,7 +201,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     },
     {
       title: 'Show mnemonic',
-      icon: 'padLock',
+      icon: 'lock-closed',
       show: true,
       onPress: () => {
         readPassword().then(async (password: string) => {
@@ -231,13 +231,13 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     },
     {
       title: 'Close wallet',
-      icon: 'cancel',
+      icon: 'close-circle-outline',
       show: true,
       onPress: () => leaveWallet(),
     },
     {
       title: 'Delete wallet',
-      icon: 'bin',
+      icon: 'trash',
       show: true,
       onPress: () => deleteWallet(),
     },

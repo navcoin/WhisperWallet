@@ -2,12 +2,11 @@ import React from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
-  TouchableOpacityProps,
   View,
   ViewStyle,
 } from 'react-native';
-import {Icon, useTheme} from '@tsejerome/ui-kitten-components';
-
+import {useTheme} from '@tsejerome/ui-kitten-components';
+import Icon from 'react-native-vector-icons/Ionicons';
 import Text from './Text';
 import AnimatedAppearance from './AnimatedAppearance';
 
@@ -87,12 +86,9 @@ const OptionCard = ({
               <Identicon value={identicon || ''} />
             ) : (
               <Icon
-                pack="assets"
                 name={icon || 'creditCard'}
-                style={[
-                  styles.icon,
-                  {tintColor: color || theme['icon-basic-color']},
-                ]}
+                size={scale(24)}
+                color={color || theme['icon-basic-color']}
               />
             )}
           </View>
@@ -110,9 +106,9 @@ const OptionCard = ({
                 style={[styles.rightIconTouchables]}
                 onPress={iconRightOnPress}>
                 <Icon
-                  pack="assets"
                   name={iconRight}
-                  style={[styles.icon, {tintColor: theme['icon-basic-color']}]}
+                  size={scale(24)}
+                  color={theme['icon-basic-color']}
                 />
               </TouchableOpacity>
             </View>
@@ -142,10 +138,6 @@ const styles = StyleSheet.create({
     justifySelf: 'stretch',
     flexWrap: 'nowrap',
     flex: 1,
-  },
-  icon: {
-    width: scale(24),
-    height: scale(24),
   },
   content: {
     flex: 1,

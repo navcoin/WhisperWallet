@@ -20,9 +20,7 @@ import useWallet from '../hooks/useWallet';
 import {AppState, Platform, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
-import {BlurView} from '@react-native-community/blur';
 import {Connection_Stats_Enum} from '../constants/Type';
-import {Button} from '@tsejerome/ui-kitten-components';
 import useTraceUpdates from '../hooks/useTraceUpdates';
 
 export const SecurityProvider = (props: any) => {

@@ -1,6 +1,9 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Icon, useTheme} from '@tsejerome/ui-kitten-components';
+import {useTheme} from '@tsejerome/ui-kitten-components';
+
+import IconArrow from 'react-native-vector-icons/MaterialIcons';
+import IconWallet from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Text from './Text';
 import CurrencyText from './CurrencyText';
@@ -43,23 +46,20 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
             type_id == Balance_Types_Enum.Nft ? (
               <Identicon value={tokenId} />
             ) : (
-              <Icon
-                pack="assets"
-                name={
+              <IconWallet
+                name={type_id == Balance_Types_Enum.Staking
+                  ? 'chart-gantt'
+                  : type_id == Balance_Types_Enum.Nav
+                  ? 'hand-coin'
+                  : 'hand-coin-outline'}
+                size={scale(32)}
+                color={
                   type_id == Balance_Types_Enum.Staking
-                    ? 'factory'
+                    ? theme['color-staking']
                     : type_id == Balance_Types_Enum.Nav
-                    ? 'nav'
-                    : 'xnav'
+                    ? theme['color-nav-pink']
+                    : theme['color-xnav']
                 }
-                style={{
-                  tintColor:
-                    type_id == Balance_Types_Enum.Staking
-                      ? theme['color-staking']
-                      : undefined,
-                  width: scale(32),
-                  height: scale(32),
-                }}
               />
             )}
           </View>
@@ -68,7 +68,13 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
               <Text adjustsFontSizeToFit numberOfLines={2} category="headline">
                 {name + ' '}
               </Text>
-              {mine && <Text style={{color:theme['color-primary-100']}} category={"caption2"}>MINE</Text>}
+              {mine && (
+                <Text
+                  style={{color: theme['color-primary-100']}}
+                  category={'caption2'}>
+                  MINE
+                </Text>
+              )}
             </View>
             {connected === Connection_Stats_Enum.Connecting &&
             !firstSyncCompleted ? (
@@ -88,10 +94,11 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
             )}
           </View>
         </View>
-        <Icon
-          pack="assets"
-          name="arrowRight16"
-          style={[styles.icon, {tintColor: theme['icon-basic-color']}]}
+        <IconArrow
+          style={styles.icon}
+          name="keyboard-arrow-right"
+          size={scale(25)}
+          color={theme['icon-basic-color']}
         />
       </TouchableOpacity>
     </AnimatedAppearance>
@@ -129,8 +136,6 @@ const styles = StyleSheet.create({
     marginRight: scale(16),
   },
   icon: {
-    width: scale(16),
-    height: scale(16),
-    right: scale(16),
+    right: scale(18),
   },
 });

@@ -137,10 +137,6 @@ const themedStyles = StyleService.create({
     marginTop: verticalScale(48),
     alignSelf: 'center',
   },
-  iconArrow: {
-    tintColor: 'color-primary-100',
-    marginRight: scale(8),
-  },
   input: {
     marginVertical: verticalScale(24),
   },

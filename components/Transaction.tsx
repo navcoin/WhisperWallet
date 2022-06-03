@@ -1,14 +1,16 @@
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import {Icon, useTheme} from '@tsejerome/ui-kitten-components';
+import { useTheme} from '@tsejerome/ui-kitten-components';
 
 import Text from './Text';
 import CurrencyText from './CurrencyText';
 import AnimatedAppearance from './AnimatedAppearance';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import dayjs from '../utils/dayjs';
 import {Category_Types_Enum, TransactionFragment} from '../constants/Type';
 import {Images} from '../assets/images';
+import { scale } from 'react-native-size-matters';
 
 interface TransactionProps {
   item: TransactionFragment;
@@ -47,9 +49,9 @@ const Transaction = ({item, index, onPress}: TransactionProps) => {
             <Image source={category?.icon?.path} style={[styles.icon]} />
           ) : (
             <Icon
-              pack="assets"
-              name={'creditCard'}
-              style={[styles.icon, {tintColor: theme['icon-basic-color']}]}
+              name={'credit-card'}
+              size={scale(24)}
+              color={theme['icon-basic-color']}
             />
           )}
         </View>
@@ -108,9 +110,5 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 24,
     justifyContent: 'center',
-  },
-  icon: {
-    width: 24,
-    height: 24,
   },
 });

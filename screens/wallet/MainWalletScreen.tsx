@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import {
-  Icon,
   Layout,
   StyleService,
   useStyleSheet,
@@ -21,6 +20,7 @@ import AccountsTab from '../../components/AccountTabs';
 import {RootStackParamList} from '../../navigation/type';
 import {scale} from 'react-native-size-matters';
 import {TouchableWithoutFeedback} from '@tsejerome/ui-kitten-components/devsupport';
+import Icon from 'react-native-vector-icons/Feather';
 
 const MainWalletScreen = () => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -82,14 +82,18 @@ const MainWalletScreen = () => {
             onPress={() => {
               refreshWallet();
             }}>
-            <Icon pack="assets" name={'refresh'} style={[styles.icon]} />
+            <Icon
+              name={'refresh-cw'}
+              size={scale(18)}
+              color={'white'}
+            />
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback
             style={{padding: scale(12)}}
             onPress={() => {
               navigate('SettingsScreen');
             }}>
-            <Icon pack="assets" name={'menuBtn'} style={[styles.icon]} />
+            <Icon name={'menu'} size={scale(18)} color={'white'} />
           </TouchableWithoutFeedback>
         </View>
       </Layout>
@@ -119,10 +123,5 @@ const themedStyles = StyleService.create({
   iconContainer: {
     backgroundColor: '#ff0000',
     padding: 12,
-  },
-  icon: {
-    width: scale(18),
-    height: scale(18),
-    tintColor: '$icon-basic-color',
   },
 });

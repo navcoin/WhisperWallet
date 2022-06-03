@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import {
   Button,
-  Icon,
   TopNavigationAction,
 } from '@tsejerome/ui-kitten-components';
 import Container from '../../components/Container';
@@ -16,9 +15,10 @@ import useAsyncStorage from '../../hooks/useAsyncStorage';
 import {networkOptions} from '../../constants/Data';
 import TopNavigationComponent from '../../components/TopNavigation';
 import {scale} from 'react-native-size-matters';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
-  <Icon width={scale(20)} height={scale(20)} {...props} name={props.name} />
+  <Icon size={scale(20)} name={props.name} />
 );
 
 const renderRightActions = (editMode: boolean, onPress: () => void) => (
@@ -111,7 +111,7 @@ const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
               }}
               selected={''}
               onPress={() => {}}
-              iconRight={editMode ? 'bin' : undefined}
+              iconRight={editMode ? 'trash' : undefined}
               iconRightOnPress={() => {
                 removeServer(index);
               }}
