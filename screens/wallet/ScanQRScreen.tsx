@@ -181,7 +181,6 @@ const ScanQRScreen = (props: any) => {
     if (props.route.params?.uri) {
       QRreader(props.route.params?.uri)
         .then(response => {
-          console.log('response', response);
           if (!response) {
             setQrError('Could not find a QR code');
           } else {

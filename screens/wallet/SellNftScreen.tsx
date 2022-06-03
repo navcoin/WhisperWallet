@@ -125,10 +125,6 @@ const SellNftScreen = (props: any) => {
                 <SwipeButton
                   goBackToStart={true}
                   onComplete={() => {
-                    console.log(
-                      'encoding',
-                      'gzo:' + Gzip.zip(JSON.stringify(tx)),
-                    );
                     bottomSheet.expand(
                       <BottomSheetView>
                         <Text

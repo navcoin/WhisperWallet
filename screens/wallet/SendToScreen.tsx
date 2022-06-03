@@ -240,7 +240,6 @@ const SendToScreen = (props: any) => {
               })}
               text={'Item'}
               defaultOption={(() => {
-                console.log('nftid', nftId);
                 if (!from.items.confirmed[nftId]) return '';
                 let obj =
                   typeof from.items.confirmed[nftId] === 'object'
