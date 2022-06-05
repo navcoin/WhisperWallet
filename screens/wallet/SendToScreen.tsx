@@ -294,19 +294,22 @@ const SendToScreen = (props: any) => {
               </Layout>
             </TouchableOpacity>
           )}
+          <View
+            style={[
+              styles.bottom,
+              {paddingBottom: verticalScale(bottom + 16)},
+            ]}>
+            <SendTransactionButton
+              walletName={walletName}
+              from={from}
+              to={to}
+              amount={parseFloat(amountInString)}
+              memo={memo}
+              subtractFee={subtractFee}
+              nftId={nftId}
+            />
+          </View>
         </Content>
-        <Layout
-          style={[styles.bottom, {paddingBottom: verticalScale(bottom + 16)}]}>
-          <SendTransactionButton
-            walletName={walletName}
-            from={from}
-            to={to}
-            amount={parseFloat(amountInString)}
-            memo={memo}
-            subtractFee={subtractFee}
-            nftId={nftId}
-          />
-        </Layout>
       </QrProvider>
     </Container>
   );
@@ -349,10 +352,6 @@ const themedStyles = StyleService.create({
     color: 'color-basic-1100',
   },
   bottom: {
-    position: 'absolute',
-    right: 0,
-    left: 0,
-    bottom: 0,
     paddingTop: verticalScale(8),
     paddingHorizontal: scale(24),
   },

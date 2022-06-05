@@ -1,6 +1,7 @@
 import React from 'react';
 import {ScrollView, ScrollViewProps} from 'react-native';
 import {useTheme} from '@tsejerome/ui-kitten-components';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 interface ContentProps extends ScrollViewProps {
   padder?: boolean;
@@ -17,7 +18,7 @@ const Content: React.FC<ContentProps> = ({
 }) => {
   const theme = useTheme();
   return (
-    <ScrollView
+    <KeyboardAwareScrollView
       {...props}
       style={[
         padder && {paddingHorizontal: 32},
@@ -29,7 +30,7 @@ const Content: React.FC<ContentProps> = ({
       showsVerticalScrollIndicator={false}
       contentContainerStyle={contentContainerStyle}>
       {children}
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 };
 

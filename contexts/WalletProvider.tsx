@@ -88,7 +88,7 @@ export const WalletProvider = (props: any) => {
         console.log('missing walletWebView ref');
       }
     },
-    [walletWebView.current],
+    [walletWebView],
   );
 
   const [callbacks, setCallbacks] = useState({});
