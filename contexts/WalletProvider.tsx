@@ -323,7 +323,7 @@ try {
           },
           mine: myTokens.filter(el => el.id == tokenId).length != 0,
           currency: 'NFT',
-          supply: parseInt(balances.nfts[tokenId].supply * 1e8),
+          supply: parseInt(balances.nfts[tokenId].supply),
         });
       }
 
@@ -1113,7 +1113,7 @@ wallet.Load({
           setCallbacks(callbacks);
         }
         if (dataPayload.type === 'Console') {
-          console.info(
+          console.log(
             `[navcoin-js:${dataPayload.data.type}] ${dataPayload.data.log}`,
           );
         } else if (dataPayload.type === 'WalletInit') {

@@ -226,7 +226,9 @@ const CollectionScreen = (props: any) => {
                           selected={''}
                         />
                       </View>
-                    ) : null}
+                    ) : (
+                      <View style={{padding: scale(24)}}>Pending</View>
+                    )}
                   </View>
                 );
               }}
@@ -247,7 +249,6 @@ const CollectionScreen = (props: any) => {
                     style={{
                       width: (screenWidth - 24) / 3,
                       height: (screenWidth - 24) / 3,
-                      marginTop: scale(10),
                       padding: 0,
                     }}
                     source={{
@@ -260,16 +261,33 @@ const CollectionScreen = (props: any) => {
                   />
                   <View
                     style={{
-                      backgroundColor: '#fff',
                       position: 'absolute',
                       top: scale(10),
                       right: scale(0),
-                      paddingHorizontal: scale(10),
-                      borderRadius: scale(10),
+                      flexDirection: 'row',
                     }}>
-                    <Text category={'caption2'} style={{color: '#000'}}>
-                      #{item.id}
-                    </Text>
+                    <View
+                      style={{
+                        backgroundColor: '#fff',
+                        paddingHorizontal: scale(10),
+                        borderRadius: scale(10),
+                      }}>
+                      <Text category={'caption2'} style={{color: '#000'}}>
+                        #{item.id}
+                      </Text>
+                    </View>
+                    {item.type === 'pending' && (
+                      <View
+                        style={{
+                          backgroundColor: '#fff',
+                          paddingHorizontal: scale(10),
+                          borderRadius: scale(10),
+                        }}>
+                        <Text category={'caption2'} style={{color: 'red'}}>
+                          Pending
+                        </Text>
+                      </View>
+                    )}
                   </View>
                 </TouchableOpacity>
               </View>

@@ -37,7 +37,11 @@ const ViewTxScreen = (props: any) => {
             (props.route.params.item.type == 'nft' ? 1 : 1e8)
           }
         />
-        <InputSelect flexColumn={true} title="Type" value={props.route.params.item.type} />
+        <InputSelect
+          flexColumn={true}
+          title="Type"
+          value={props.route.params.item.type}
+        />
         {props.route.params.item.type == 'token' && (
           <>
             <InputSelect

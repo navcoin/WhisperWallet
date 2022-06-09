@@ -9,7 +9,7 @@ import {
   BottomSheetContextValue,
   BottomSheetContext,
 } from './BottomSheetContext';
-import {Platform} from 'react-native';
+import {Platform, Keyboard} from 'react-native';
 
 export const BottomSheetProvider = (props: any) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -28,6 +28,7 @@ export const BottomSheetProvider = (props: any) => {
 
   useEffect(() => {
     if (content) {
+      Keyboard.dismiss();
       bottomSheetRef.current?.expand();
     } else {
       bottomSheetRef.current?.collapse();

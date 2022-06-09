@@ -176,10 +176,24 @@ const MintNftScreen = (props: any) => {
                   goBackToStart={true}
                   onComplete={() => {
                     setLoading('Broadcasting...');
-                    sendTransaction(tx.tx).then(() => {
-                      setLoading(undefined);
-                      collapse();
-                      navigate('MainWalletScreen');
+                    sendTransaction(tx.tx).then(res => {
+                      if (res.error) {
+                        bottomSheet.expand(
+                          <BottomSheetView>
+                            <Text center style={{paddingBottom: 16}}>
+                              Unable to send transaction
+                            </Text>
+                            <Text center style={{paddingBottom: 16}}>
+                              {res.error.split('[')[0]}
+                            </Text>
+                          </BottomSheetView>,
+                        );
+                        setLoading(undefined);
+                      } else {
+                        setLoading(undefined);
+                        collapse();
+                        navigate('MainWalletScreen');
+                      }
                     });
                   }}
                   title="Swipe to confirm"

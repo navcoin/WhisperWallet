@@ -18,11 +18,13 @@ const ScanQR = (props: any) => {
         onPress={() => {
           bottomSheet.expand(
             <QRCodeScanner
-              reactivate={true}
-              reactivateTimeout={500}
+              reactivate={false}
               showMarker={true}
               markerStyle={{borderColor: theme['color-staking']}}
-              onRead={props.onRead}
+              onRead={data => {
+                bottomSheet.collapse();
+                props.onRead(data);
+              }}
             />,
           );
         }}>

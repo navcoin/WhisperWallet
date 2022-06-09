@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Image, TouchableOpacity, View} from 'react-native';
 import {
   Button,
@@ -95,10 +95,24 @@ const ScanQRScreen = (props: any) => {
                   goBackToStart={true}
                   onComplete={() => {
                     setLoading('Broadcasting...');
-                    sendTransaction(tx.tx).then(() => {
-                      setLoading(undefined);
-                      collapse();
-                      goBack();
+                    sendTransaction(tx.tx).then(res => {
+                      if (res.error) {
+                        bottomSheet.expand(
+                          <BottomSheetView>
+                            <Text center style={{paddingBottom: 16}}>
+                              Unable to send transaction
+                            </Text>
+                            <Text center style={{paddingBottom: 16}}>
+                              {res.error.split('[')[0]}
+                            </Text>
+                          </BottomSheetView>,
+                        );
+                        setLoading(undefined);
+                      } else {
+                        setLoading(undefined);
+                        collapse();
+                        goBack();
+                      }
                     });
                   }}
                   title="Swipe to confirm"
@@ -193,6 +207,8 @@ const ScanQRScreen = (props: any) => {
     }
   }, []);
 
+  const qrScanner = useRef<QRCodeScanner | null>();
+
   return (
     <Container style={styles.container}>
       {props.route.params?.uri ? (
@@ -231,8 +247,10 @@ const ScanQRScreen = (props: any) => {
         </View>
       ) : (
         <QRCodeScanner
-          reactivate={true}
-          reactivateTimeout={500}
+          ref={node => {
+            qrScanner.current = node;
+          }}
+          reactivate={false}
           showMarker={true}
           markerStyle={{borderColor: theme['color-staking']}}
           onRead={processData}

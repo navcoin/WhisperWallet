@@ -83,13 +83,18 @@ const SendTransactionButton = (props: any) => {
                           </Text>
                           <Text category="headline">
                             {(
-                              amount -
+                              amount *
+                                (from.type_id == Balance_Types_Enum.Nft
+                                  ? 1e8
+                                  : 1) -
                               (subtractFee &&
                               from.type_id != Balance_Types_Enum.PrivateToken &&
                               from.type_id != Balance_Types_Enum.Nft
                                 ? tx.fee / 1e8
                                 : 0)
-                            ).toFixed(8)}{' '}
+                            ).toFixed(
+                              from.type_id == Balance_Types_Enum.Nft ? 0 : 8,
+                            )}{' '}
                             {from.currency}
                           </Text>
                         </View>
