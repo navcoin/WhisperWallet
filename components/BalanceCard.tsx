@@ -8,7 +8,7 @@ import Text from './Text';
 import CurrencyText from './CurrencyText';
 import AnimatedAppearance from './AnimatedAppearance';
 import Identicon from './Identicon';
-
+// import LogoSVG from '../assets/images/nav-logo-border.svg'
 import {
   Animation_Types_Enum,
   Balance_Types_Enum,
@@ -46,11 +46,13 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
               <Identicon value={tokenId} />
             ) : (
               <Icon
-                name={type_id == Balance_Types_Enum.Staking
-                  ? 'stats-chart'
-                  : type_id == Balance_Types_Enum.Nav
-                  ? 'md-pie-chart'
-                  : 'md-pie-chart-sharp'}
+                name={
+                  type_id == Balance_Types_Enum.Staking
+                    ? 'stats-chart'
+                    : type_id == Balance_Types_Enum.Nav
+                    ? 'md-pie-chart'
+                    : 'md-pie-chart-sharp'
+                }
                 size={scale(32)}
                 color={
                   type_id == Balance_Types_Enum.Staking
@@ -62,6 +64,7 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
               />
             )}
           </View>
+          {/* <LogoSVG width={100} height={100}/> */}
           <View style={styles.textContent}>
             <View style={{flexDirection: 'row'}}>
               <Text adjustsFontSizeToFit numberOfLines={2} category="headline">

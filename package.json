@@ -85,6 +85,7 @@
     "metro-minify-terser": "^0.66.2",
     "metro-react-native-babel-preset": "^0.66.2",
     "patch-package": "^6.4.7",
+    "react-native-svg-transformer": "^1.0.0",
     "react-test-renderer": "17.0.2",
     "rn-nodeify": "^10.3.0",
     "typescript": "^4.4.4"
