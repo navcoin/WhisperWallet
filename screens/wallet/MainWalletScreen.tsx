@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View} from 'react-native';
 import {
   Icon,
@@ -21,6 +21,10 @@ import AccountsTab from '../../components/AccountTabs';
 import {RootStackParamList} from '../../navigation/type';
 import {scale} from 'react-native-size-matters';
 import {TouchableWithoutFeedback} from '@tsejerome/ui-kitten-components/devsupport';
+import {launchImageLibrary} from 'react-native-image-picker';
+import DocumentPicker, {types} from 'react-native-document-picker';
+import BottomSheetOptions from '../../components/BottomSheetOptions';
+import {useBottomSheet} from '../../hooks/useBottomSheet';
 
 const MainWalletScreen = () => {
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -46,6 +50,53 @@ const MainWalletScreen = () => {
       setDotColor('#FFC09F');
     }
   }, [connected]);
+
+  const bottomSheet = useBottomSheet();
+
+  const pickQrSource = useCallback(() => {
+    bottomSheet.expand(
+      <BottomSheetOptions
+        title={'Select QR code source'}
+        options={[
+          {
+            text: 'Gallery',
+            icon: 'image',
+            onTap: () => {
+              launchImageLibrary({}).then(result => {
+                if (result.assets[0].uri)
+                  navigate('ScanQRScreen', {uri: result.assets[0].uri});
+                else bottomSheet.collapse();
+              });
+            },
+          },
+          /*{
+            text: 'Files',
+            onTap: async () => {
+              try {
+                const result = await DocumentPicker.pickSingle({
+                  type: types.images,
+                });
+                navigate('ScanQRScreen', {uri: result.uri});
+              } catch (e) {
+                bottomSheet.collapse();
+              }
+            },
+          },*/
+          {
+            text: 'Camera',
+            icon: 'camera',
+            onTap: () => {
+              navigate('ScanQRScreen');
+            },
+          },
+        ]}
+        bottomSheetRef={bottomSheet.getRef}
+        onSelect={(el: any) => {
+          el.onTap();
+        }}
+      />,
+    );
+  }, []);
 
   return (
     <Container style={styles.container}>
@@ -77,6 +128,16 @@ const MainWalletScreen = () => {
           </Text>
         </View>
         <View style={[styles.iconGrp]}>
+          <TouchableWithoutFeedback
+            style={{padding: scale(12)}}
+            onPress={async () => {
+              pickQrSource();
+              /*const result = await DocumentPicker.pickSingle();
+              console.log(result);*/
+              //navigate('ScanQRScreen');
+            }}>
+            <Icon pack="assets" name={'qr'} style={[styles.icon]} />
+          </TouchableWithoutFeedback>
           <TouchableWithoutFeedback
             style={{padding: scale(12)}}
             onPress={() => {
@@ -112,6 +173,7 @@ const themedStyles = StyleService.create({
     justifyContent: 'space-between',
     paddingHorizontal: scale(12),
     zIndex: 9999,
+    marginBottom: scale(12),
   },
   iconGrp: {
     flexDirection: 'row',

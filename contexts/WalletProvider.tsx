@@ -88,7 +88,7 @@ export const WalletProvider = (props: any) => {
         console.log('missing walletWebView ref');
       }
     },
-    [walletWebView.current],
+    [walletWebView],
   );
 
   const [callbacks, setCallbacks] = useState({});
@@ -323,6 +323,7 @@ try {
           },
           mine: myTokens.filter(el => el.id == tokenId).length != 0,
           currency: 'NFT',
+          supply: parseInt(balances.nfts[tokenId].supply),
         });
       }
 
@@ -580,6 +581,50 @@ wallet.Load({
             amount.toString(10),
             JSON.stringify(spendingPassword_),
           ],
+          res,
+          rej,
+        );
+      });
+    },
+    [ExecWrapper],
+  );
+
+  const mintNft = useCallback(
+    async (
+      tokenId: string,
+      nftId: number,
+      destination: string,
+      metadata: string,
+      spendingPassword_: string,
+    ) => {
+      return new Promise((res, rej) => {
+        ExecWrapper(
+          'wallet.MintNft',
+          [tokenId, nftId, destination, metadata, spendingPassword_].map(el =>
+            JSON.stringify(el),
+          ),
+          res,
+          rej,
+        );
+      });
+    },
+    [ExecWrapper],
+  );
+
+  const CreateSellOrder = useCallback(
+    async (
+      tokenId: string,
+      nftId: number,
+      destination: string,
+      price: number,
+      spendingPassword_: string,
+    ) => {
+      return new Promise((res, rej) => {
+        ExecWrapper(
+          'wallet.CreateSellNftOrder',
+          [tokenId, nftId, destination, price, spendingPassword_].map(el =>
+            JSON.stringify(el),
+          ),
           res,
           rej,
         );
@@ -890,6 +935,57 @@ wallet.Load({
     [CreateNft, CombineTransactions, GetCandidates],
   );
 
+  const MintNft = useCallback(
+    async (
+      tokenId: string,
+      nftId: number,
+      destination: string,
+      metadata: string,
+      spendingPassword_: string,
+    ) => {
+      let candidates = (await GetCandidates())
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 5);
+
+      let fee = 0;
+
+      for (let c of candidates) {
+        //fee += parseInt(BigInt(c.fee.words).toString());
+      }
+
+      let obj = await mintNft(
+        tokenId,
+        nftId,
+        destination,
+        metadata,
+        spendingPassword_,
+      );
+
+      if (!obj) {
+        throw new Error("Can't access you wallet keys");
+      }
+      let ret = {fee: obj.fee + fee, tx: undefined};
+      let toCombine = [obj.tx[0]];
+      for (let c of candidates) {
+        //toCombine.push(c.tx);
+      }
+      ret.tx = toCombine;
+
+      if (false && toCombine.length > 1) {
+        ret.tx = [await CombineTransactions(toCombine)];
+        if (ret.tx.length == 1) {
+          ret.tx[0].version |= 0x10;
+          ret.tx[0] = ret.tx[0].toString();
+        } else {
+          throw new Error('Could not create transaction');
+        }
+      }
+
+      return ret;
+    },
+    [mintNft, CombineTransactions, GetCandidates],
+  );
+
   const sendTransaction = useCallback(async (tx: any) => {
     let hash = await SendTransaction(tx);
     return hash;
@@ -960,6 +1056,8 @@ wallet.Load({
       ExecWrapperPromise,
       ExecWrapperSyncPromise,
       IsValidMnemonic,
+      MintNft,
+      CreateSellOrder,
     }),
     [
       walletName,
@@ -986,35 +1084,10 @@ wallet.Load({
       ExecWrapperPromise,
       ExecWrapperSyncPromise,
       IsValidMnemonic,
+      MintNft,
+      CreateSellOrder,
     ],
   );
-
-  useTraceUpdate('wp', {
-    walletContext,
-    walletName,
-    mnemonic,
-    createWallet,
-    refreshWallet,
-    syncProgress,
-    balances,
-    connected,
-    addresses,
-    walletsList,
-    history,
-    accounts,
-    parsedAddresses,
-    createTransaction: createTransaction,
-    sendTransaction: sendTransaction,
-    network,
-    firstSyncCompleted,
-    tokens,
-    nfts,
-    updateAccounts,
-    bootstrapProgress,
-    removeWallet,
-    walletLibLoaded,
-    createNftCollection,
-  });
 
   const onMessage = useCallback(
     payload => {
@@ -1040,7 +1113,7 @@ wallet.Load({
           setCallbacks(callbacks);
         }
         if (dataPayload.type === 'Console') {
-          console.info(
+          console.log(
             `[navcoin-js:${dataPayload.data.type}] ${dataPayload.data.log}`,
           );
         } else if (dataPayload.type === 'WalletInit') {

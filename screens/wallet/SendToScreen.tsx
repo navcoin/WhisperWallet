@@ -49,11 +49,14 @@ const SendToScreen = (props: any) => {
   const [amountInString, setAmount] = useState('');
   const [showMemo, setShowMemo] = useState(false);
   const [subtractFee, setSubtractFee] = useState(false);
-  const {accounts, tokens, nfts, walletName, ExecWrapperSyncPromise} = useWallet();
+  const {accounts, tokens, nfts, walletName, ExecWrapperSyncPromise} =
+    useWallet();
   const [isMemoDialogVisible, showMemoDialog] = useState(false);
   const [accountStr, setAccountStr] = useState('account');
 
-  const [nftId, setNftId] = useState(props.route.params.nftId || -1);
+  const [nftId, setNftId] = useState(
+    props.route.params.nftId !== undefined ? props.route.params.nftId : -1,
+  );
 
   const amountInputRef = useRef<Input>();
   const [sources, setSources] = useState(accounts);
@@ -84,18 +87,15 @@ const SendToScreen = (props: any) => {
   }, [from, sources]);
 
   useEffect(() => {
-    ExecWrapperSyncPromise(
-      'bitcore.Address("'+to+'").isXnav').then(isxNav => {
-      if (
-        toType == Destination_Types_Enum.Address &&
-        to &&
-        !isxNav
-      ) {
-        setShowMemo(true);
-      } else {
-        setShowMemo(false);
-      }
-    })
+    ExecWrapperSyncPromise('bitcore.Address("' + to + '").isXnav').then(
+      isxNav => {
+        if (toType == Destination_Types_Enum.Address && to && !isxNav) {
+          setShowMemo(true);
+        } else {
+          setShowMemo(false);
+        }
+      },
+    );
   }, [to, toType]);
 
   useEffect(() => {
@@ -105,7 +105,7 @@ const SendToScreen = (props: any) => {
       setSubtractFee(false);
     }
   }, [amountInString, currentAmount]);
-  
+
   return (
     <Container useSafeArea>
       <QrProvider>
@@ -294,19 +294,22 @@ const SendToScreen = (props: any) => {
               </Layout>
             </TouchableOpacity>
           )}
+          <View
+            style={[
+              styles.bottom,
+              {paddingBottom: verticalScale(bottom + 16)},
+            ]}>
+            <SendTransactionButton
+              walletName={walletName}
+              from={from}
+              to={to}
+              amount={parseFloat(amountInString)}
+              memo={memo}
+              subtractFee={subtractFee}
+              nftId={nftId}
+            />
+          </View>
         </Content>
-        <Layout
-          style={[styles.bottom, {paddingBottom: verticalScale(bottom + 16)}]}>
-          <SendTransactionButton
-            walletName={walletName}
-            from={from}
-            to={to}
-            amount={parseFloat(amountInString)}
-            memo={memo}
-            subtractFee={subtractFee}
-            nftId={nftId}
-          />
-        </Layout>
       </QrProvider>
     </Container>
   );
@@ -349,10 +352,6 @@ const themedStyles = StyleService.create({
     color: 'color-basic-1100',
   },
   bottom: {
-    position: 'absolute',
-    right: 0,
-    left: 0,
-    bottom: 0,
     paddingTop: verticalScale(8),
     paddingHorizontal: scale(24),
   },

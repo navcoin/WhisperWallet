@@ -40,6 +40,7 @@ export interface BalanceFragment {
   tokenId?: string;
   nftId?: number;
   mine?: boolean;
+  supply?: number;
 }
 
 export interface NftItem {
@@ -145,4 +146,9 @@ export interface CollectionOption {
   name?: string;
   description?: string;
   amount?: number;
+}
+
+export interface NftItemOption {
+  name?: string;
+  resource?: string;
 }

@@ -128,10 +128,24 @@ const CreateNftCollectionScreen = () => {
                   goBackToStart={true}
                   onComplete={() => {
                     setLoading('Broadcasting...');
-                    sendTransaction(tx.tx).then(() => {
-                      setLoading(undefined);
-                      collapse();
-                      goBack();
+                    sendTransaction(tx.tx).then(res => {
+                      if (res.error) {
+                        bottomSheet.expand(
+                          <BottomSheetView>
+                            <Text center style={{paddingBottom: 16}}>
+                              Unable to send transaction
+                            </Text>
+                            <Text center style={{paddingBottom: 16}}>
+                              {res.error.split('[')[0]}
+                            </Text>
+                          </BottomSheetView>,
+                        );
+                        setLoading(undefined);
+                      } else {
+                        setLoading(undefined);
+                        collapse();
+                        goBack();
+                      }
                     });
                   }}
                   title="Swipe to confirm"

@@ -220,7 +220,7 @@ dependencies {
         implementation jscFlavor
     }
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 }
 
 // Run this once to be able to run the application with BUCK

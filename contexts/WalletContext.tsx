@@ -21,6 +21,8 @@ export interface WalletContextValue {
   parsedAddresses: AddressFragment[];
   createTransaction: any;
   createNftCollection: any;
+  MintNft: any;
+  CreateSellOrder: any;
   sendTransaction: (tx: any) => Promise<any>;
   tokens: BalanceFragment[];
   nfts: BalanceFragment[];

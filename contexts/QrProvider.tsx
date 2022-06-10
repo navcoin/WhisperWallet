@@ -1,5 +1,9 @@
 import React, {useMemo, useState} from 'react';
-import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
+import {
+  StyleService,
+  useStyleSheet,
+  useTheme,
+} from '@tsejerome/ui-kitten-components';
 import {QrContextValue, QrContext} from './QrContext';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import Text from '../components/Text';
@@ -15,6 +19,7 @@ export const QrProvider = (props: any) => {
   const [to, setTo] = useState('');
   const [cameraPermision, setCameraPermision] = useState(false);
   const {ExecWrapperSyncPromise} = useWallet();
+  const theme = useTheme();
 
   const qrContext: QrContextValue = useMemo(
     () => ({
@@ -49,20 +54,26 @@ export const QrProvider = (props: any) => {
     <QrContext.Provider value={qrContext}>
       {showQr ? (
         <QRCodeScanner
-          onRead={async (data) => {
+          reactivate={true}
+          reactivateTimeout={500}
+          showMarker={true}
+          markerStyle={{borderColor: theme['color-staking']}}
+          onRead={async data => {
             let toParse = data.data;
             if (data.data?.substring(0, 8) === 'navcoin:') {
               toParse = data.data.split(':')[1];
             }
-            if (!(await ExecWrapperSyncPromise(
-              'bitcore.Address.isValid',
-              [toParse].map(el => JSON.stringify(el)),
-            ))) {
+            if (
+              !(await ExecWrapperSyncPromise(
+                'bitcore.Address.isValid',
+                [toParse].map(el => JSON.stringify(el)),
+              ))
+            ) {
+              setQrError('Wrong address');
+            } else {
               setTo(toParse);
               setShowQr(false);
               setQrError('');
-            } else {
-              setQrError('Wrong address');
             }
           }}
           topContent={<Text>Scan a QR code with a Navcoin address.</Text>}

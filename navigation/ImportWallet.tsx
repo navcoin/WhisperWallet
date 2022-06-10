@@ -115,15 +115,14 @@ const ImportWallet = () => {
                 }
                 numberOfLines={3}
                 autoFocus={true}
-                style={[
-                  styles.flex1,
-                  {height: scale(100), color: 'black'},
-                ]}
+                style={[styles.flex1, {height: scale(100), color: 'black'}]}
                 value={mnemonic}
                 onChangeText={(m: string) => {
                   setMnemonic(m.toLowerCase());
                 }}
-                accessoryRight={<ScanQR onRead={setMnemonic} />}
+                accessoryRight={
+                  <ScanQR onRead={data => setMnemonic(data.data)} />
+                }
               />
             </View>
             {error ? (
