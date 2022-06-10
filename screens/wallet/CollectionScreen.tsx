@@ -227,7 +227,9 @@ const CollectionScreen = (props: any) => {
                         />
                       </View>
                     ) : (
-                      <View style={{padding: scale(24)}}>Pending</View>
+                      <View style={{padding: scale(24)}}>
+                        <Text>Pending</Text>
+                      </View>
                     )}
                   </View>
                 );

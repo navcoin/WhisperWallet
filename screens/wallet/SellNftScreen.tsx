@@ -152,6 +152,7 @@ const SellNftScreen = (props: any) => {
                                   url: 'data:image/svg+xml;base64,' + base,
                                 })
                                   .then(res => {
+                                    setError('');
                                     bottomSheet.collapse();
                                     goBack();
                                   })
