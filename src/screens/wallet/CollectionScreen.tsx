@@ -5,24 +5,24 @@ import {
   useStyleSheet,
 } from '@tsejerome/ui-kitten-components';
 
-import Container from '../../components/Container';
-import {BalanceFragment, NftItem} from '../../constants/Type';
+import Container from '../../../components/Container';
+import {BalanceFragment, NftItem} from '../../../constants/Type';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import {scale} from 'react-native-size-matters';
-import TopNavigationComponent from '../../components/TopNavigation';
+import TopNavigationComponent from '../../../components/TopNavigation';
 import {
   View,
   FlatList,
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import Text from '../../components/Text';
+import Text from '../../../components/Text';
 import {IImageInfo} from 'react-native-image-zoom-viewer/built/image-viewer.type';
 import FastImage from 'react-native-fast-image';
-import {screenWidth} from '../../utils/layout';
+import {screenWidth} from '../../../utils/layout';
 import {Modal} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import OptionCard from '../../components/OptionCard';
+import OptionCard from '../../../components/OptionCard';
 import {useNavigation} from '@react-navigation/native';
 
 interface GalleryNftItem extends NftItem {
@@ -182,7 +182,8 @@ const CollectionScreen = (props: any) => {
                     pressBack={() => {
                       closeImagePreview();
                     }}
-                    style={{marginBottom: scale(0)}}></TopNavigationComponent>
+                    style={{marginBottom: scale(0)}}
+                  />
                 </View>
               )}
               renderFooter={currentIndex => {

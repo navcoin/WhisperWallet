@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import Container from '../../components/Container';
-import {ScreenProps} from '../../navigation/type';
+import Container from '../../../components/Container';
+import {ScreenProps} from '../../../navigation/type';
 import PINCode from '@haskkor/react-native-pincode';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';

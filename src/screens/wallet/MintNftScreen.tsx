@@ -7,19 +7,19 @@ import {
   Layout,
   TopNavigation,
 } from '@tsejerome/ui-kitten-components';
-import Container from '../../components/Container';
+import Container from '../../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {Destination_Types_Enum, NftItemOption} from '../../constants/Type';
-import Text from '../../components/Text';
-import {RootStackParamList} from '../../navigation/type';
+import {Destination_Types_Enum, NftItemOption} from '../../../constants/Type';
+import Text from '../../../components/Text';
+import {RootStackParamList} from '../../../navigation/type';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import TopNavigationComponent from '../../components/TopNavigation';
+import TopNavigationComponent from '../../../components/TopNavigation';
 import useSecurity from '../../hooks/useSecurity';
-import BottomSheetView from '../../components/BottomSheetView';
-import {SwipeButton} from '../../components/SwipeButton';
+import BottomSheetView from '../../../components/BottomSheetView';
+import {SwipeButton} from '../../../components/SwipeButton';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
 import {useModal} from '../../hooks/useModal';
-import LoadingModalContent from '../../components/Modals/LoadingModalContent';
+import LoadingModalContent from '../../../components/Modals/LoadingModalContent';
 
 const MintNftScreen = (props: any) => {
   const {MintNft, ExecWrapperPromise, sendTransaction, parsedAddresses} =
@@ -84,7 +84,9 @@ const MintNftScreen = (props: any) => {
       } else if (!found) {
         setFullyMinted(true);
       }
-      if (found) setAssignedId(tempAssignedId);
+      if (found) {
+        setAssignedId(tempAssignedId);
+      }
     });
   }, []);
 
@@ -144,7 +146,7 @@ const MintNftScreen = (props: any) => {
                     <Text
                       category="headline"
                       style={{flex: 1, flexWrap: 'wrap'}}>
-                      {collection['name']}
+                      {collection.name}
                     </Text>
                   </View>
 
@@ -155,7 +157,7 @@ const MintNftScreen = (props: any) => {
                     <Text
                       category="headline"
                       style={{flex: 1, flexWrap: 'wrap'}}>
-                      {collection['resource']}
+                      {collection.resource}
                     </Text>
                   </View>
                 </Layout>
@@ -245,7 +247,7 @@ const MintNftScreen = (props: any) => {
             <Input
               autoFocus={true}
               style={[styles.inputField]}
-              value={collection['name']}
+              value={collection.name}
               onChangeText={value => {
                 setCollectionProperty('name', value);
               }}
@@ -257,7 +259,7 @@ const MintNftScreen = (props: any) => {
             </Text>
             <Input
               style={[styles.inputField]}
-              value={collection['resource']}
+              value={collection.resource}
               onChangeText={value => {
                 setCollectionProperty('resource', value);
               }}
@@ -266,7 +268,9 @@ const MintNftScreen = (props: any) => {
           <Button
             status={'primary-whisper'}
             onPress={() => {
-              if (assignedId != -1) mintNftItem();
+              if (assignedId != -1) {
+                mintNftItem();
+              }
             }}>
             {fullyMinted
               ? 'The collection is already fully minted'

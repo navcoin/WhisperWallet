@@ -7,23 +7,22 @@ import {
   useStyleSheet,
 } from '@tsejerome/ui-kitten-components';
 
-import Container from '../../components/Container';
+import Container from '../../../components/Container';
 import useWallet from '../../hooks/useWallet';
-import Text from '../../components/Text';
+import Text from '../../../components/Text';
 
-import {Connection_Stats_Enum} from '../../constants/Type';
+import {Connection_Stats_Enum} from '../../../constants/Type';
 
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 
-import BalanceCircle from '../../components/BalanceCircle';
+import BalanceCircle from '../../../components/BalanceCircle';
 
-import AccountsTab from '../../components/AccountTabs';
-import {RootStackParamList} from '../../navigation/type';
+import AccountsTab from '../../../components/AccountTabs';
+import {RootStackParamList} from '../../../navigation/type';
 import {scale} from 'react-native-size-matters';
 import {TouchableWithoutFeedback} from '@tsejerome/ui-kitten-components/devsupport';
 import {launchImageLibrary} from 'react-native-image-picker';
-import DocumentPicker, {types} from 'react-native-document-picker';
-import BottomSheetOptions from '../../components/BottomSheetOptions';
+import BottomSheetOptions from '../../../components/BottomSheetOptions';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
 
 const MainWalletScreen = () => {
@@ -63,9 +62,11 @@ const MainWalletScreen = () => {
             icon: 'image',
             onTap: () => {
               launchImageLibrary({}).then(result => {
-                if (result.assets[0].uri)
+                if (result.assets[0].uri) {
                   navigate('ScanQRScreen', {uri: result.assets[0].uri});
-                else bottomSheet.collapse();
+                } else {
+                  bottomSheet.collapse();
+                }
               });
             },
           },

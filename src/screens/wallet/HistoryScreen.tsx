@@ -2,17 +2,17 @@ import useWallet from '../../hooks/useWallet';
 import BigList from 'react-native-big-list';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import Container from '../../components/Container';
-import Transaction from '../../components/Transaction';
+import Container from '../../../components/Container';
+import Transaction from '../../../components/Transaction';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {
   Connection_Stats_Enum,
   Connection_Stats_Text,
-} from '../../constants/Type';
-import Text from '../../components/Text';
-import OptionCard from '../../components/OptionCard';
-import {RootStackParamList} from '../../navigation/type';
-import TopNavigationComponent from '../../components/TopNavigation';
+} from '../../../constants/Type';
+import Text from '../../../components/Text';
+import OptionCard from '../../../components/OptionCard';
+import {RootStackParamList} from '../../../navigation/type';
+import TopNavigationComponent from '../../../components/TopNavigation';
 
 const HistoryScreen = (props: any) => {
   const {history, connected} = useWallet();
