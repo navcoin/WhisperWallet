@@ -15,9 +15,9 @@ import {
 } from '../constants/Type';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import BottomSheetOptions from './BottomSheetOptions';
-import {useBottomSheet} from '../hooks/useBottomSheet';
-import {useQr} from '../hooks/useQr';
-import useWallet from '../hooks/useWallet';
+import {useBottomSheet} from '../src/hooks/useBottomSheet';
+import {useQr} from '../src/hooks/useQr';
+import useWallet from '../src/hooks/useWallet';
 
 const DestinationComponent = (props: any) => {
   const styles = useStyleSheet(themedStyles);

@@ -1,12 +1,12 @@
 import {View} from 'react-native';
 import React, {memo, useEffect, useState} from 'react';
-import useWallet from '../hooks/useWallet';
+import useWallet from '../src/hooks/useWallet';
 import {Connection_Stats_Enum} from '../constants/Type';
 import CurrencyText from './CurrencyText';
 import Text from './Text';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {AnimatedSegments} from './AnimatedSegments';
-import useTraceUpdates from '../hooks/useTraceUpdates';
+import useTraceUpdates from '../src/hooks/useTraceUpdates';
 
 const BalanceCircle = memo(() => {
   const {
@@ -38,7 +38,15 @@ const BalanceCircle = memo(() => {
     }
   }, [balances]);
 
-  useTraceUpdates('BalanceCircle', {connected, syncProgress, segments, firstSyncCompleted, bootstrapProgress, totalBalance, balances})
+  useTraceUpdates('BalanceCircle', {
+    connected,
+    syncProgress,
+    segments,
+    firstSyncCompleted,
+    bootstrapProgress,
+    totalBalance,
+    balances,
+  });
 
   return (
     <View

@@ -1,12 +1,9 @@
 import {Icon, StyleService, useTheme} from '@tsejerome/ui-kitten-components';
 import React from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {scale} from 'react-native-size-matters';
-import {useBottomSheet} from '../hooks/useBottomSheet';
-import BottomSheetView from './BottomSheetView';
-import OptionCard from './OptionCard';
-import Text from './Text';
+import {useBottomSheet} from '../src/hooks/useBottomSheet';
 
 const ScanQR = (props: any) => {
   const bottomSheet = useBottomSheet();
