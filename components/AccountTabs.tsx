@@ -1,14 +1,13 @@
-import Tab from './Tab';
 import Content from './Content';
 import {RefreshControl, ScrollView, View} from 'react-native';
 import {useEffect} from 'react';
 import BalanceCard from './BalanceCard';
 import Text from './Text';
 import React, {useCallback, useState} from 'react';
-import {BalanceFragment, Connection_Stats_Enum} from '../constants/Type';
-import {useBottomSheet} from '../hooks/useBottomSheet';
+import {BalanceFragment} from '../constants/Type';
+import {useBottomSheet} from '../src/hooks/useBottomSheet';
 import BottomSheetMenu from './BottomSheetMenu';
-import useWallet from '../hooks/useWallet';
+import useWallet from '../src/hooks/useWallet';
 import {
   StyleService,
   useStyleSheet,
@@ -43,9 +42,27 @@ const AccountsTab = () => {
             backgroundColor: theme['color-primary-100'],
           },
         }}>
-        <TabNavigator.Screen name="Accounts" component={Accounts} listeners={({navigation}) => ({blur: () => navigation.setParams({screen: undefined})})}/>
-        <TabNavigator.Screen name="Tokens" component={Tokens} listeners={({navigation}) => ({blur: () => navigation.setParams({screen: undefined})})}/>
-        <TabNavigator.Screen name="NFTs" component={NFTs} listeners={({navigation}) => ({blur: () => navigation.setParams({screen: undefined})})}/>
+        <TabNavigator.Screen
+          name="Accounts"
+          component={Accounts}
+          listeners={({navigation}) => ({
+            blur: () => navigation.setParams({screen: undefined}),
+          })}
+        />
+        <TabNavigator.Screen
+          name="Tokens"
+          component={Tokens}
+          listeners={({navigation}) => ({
+            blur: () => navigation.setParams({screen: undefined}),
+          })}
+        />
+        <TabNavigator.Screen
+          name="NFTs"
+          component={NFTs}
+          listeners={({navigation}) => ({
+            blur: () => navigation.setParams({screen: undefined}),
+          })}
+        />
       </TabNavigator.Navigator>
     </View>
   );
@@ -159,7 +176,7 @@ const Accounts = () => {
       </>,
     );
   }, [accounts]);
-  
+
   return (
     <View style={{backgroundColor: theme['color-basic-700'], flex: 1}}>
       <ScrollView

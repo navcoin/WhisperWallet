@@ -1,11 +1,5 @@
-import React, {Component, useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Modal,
-  ActivityIndicator,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, View, Modal, TouchableWithoutFeedback} from 'react-native';
 import Text from './Text';
 import {Button} from '@tsejerome/ui-kitten-components';
 

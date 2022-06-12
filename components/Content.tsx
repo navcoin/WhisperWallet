@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, ScrollViewProps} from 'react-native';
+import {ScrollViewProps} from 'react-native';
 import {useTheme} from '@tsejerome/ui-kitten-components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 

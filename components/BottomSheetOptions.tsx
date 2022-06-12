@@ -1,10 +1,10 @@
 import Text from './Text';
 import OptionCard from './OptionCard';
 import {View} from 'react-native';
-import React, {memo, useMemo, useState} from 'react';
+import React from 'react';
 import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useBottomSheet} from '../hooks/useBottomSheet';
+import {useBottomSheet} from '../src/hooks/useBottomSheet';
 import {scale, verticalScale} from 'react-native-size-matters';
 
 const BottomSheetOptions = (props: any) => {
