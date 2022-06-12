@@ -34,7 +34,7 @@ const ViewTxScreen = (props: any) => {
           title="Amount"
           value={
             props.route.params.item.amount /
-            (props.route.params.item.type == 'nft' ? 1 : 1e8)
+            (props.route.params.item.type === 'nft' ? 1 : 1e8)
           }
         />
         <InputSelect
@@ -42,7 +42,7 @@ const ViewTxScreen = (props: any) => {
           title="Type"
           value={props.route.params.item.type}
         />
-        {props.route.params.item.type == 'token' && (
+        {props.route.params.item.type === 'token' && (
           <>
             <InputSelect
               flexColumn={true}
@@ -56,7 +56,7 @@ const ViewTxScreen = (props: any) => {
             />
           </>
         )}
-        {props.route.params.item.type == 'nft' && (
+        {props.route.params.item.type === 'nft' && (
           <>
             <InputSelect
               flexColumn={true}
