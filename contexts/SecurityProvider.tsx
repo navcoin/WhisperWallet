@@ -15,12 +15,12 @@ import {Text} from '@tsejerome/ui-kitten-components';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Container from '../components/Container';
 import {scale} from 'react-native-size-matters';
-import useWallet from '../hooks/useWallet';
+import useWallet from '../src/hooks/useWallet';
 import {AppState, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 import {Connection_Stats_Enum} from '../constants/Type';
-import useTraceUpdates from '../hooks/useTraceUpdates';
+import useTraceUpdates from '../src/hooks/useTraceUpdates';
 
 export const SecurityProvider = (props: any) => {
   const [lockedScreen, setLockedScreen] = useState(false);
@@ -30,8 +30,9 @@ export const SecurityProvider = (props: any) => {
 
   useEffect(() => {
     AsyncStorage.getItem('lockAfterBackground').then(val => {
-      if (val !== null)
+      if (val !== null) {
         setStateLockAfterBackground(val == 'true' ? true : false);
+      }
     });
   }, []);
 

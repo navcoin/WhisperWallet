@@ -1,36 +1,32 @@
 import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {useTheme} from '@tsejerome/ui-kitten-components';
 import createStackNavigator from './createStackNavigator';
 import {RootAppStackParamList, RootStackParamList} from './type';
 import {BackHandler, View} from 'react-native';
 import Intro from './Intro';
 import CreateNewWallet from './CreateNewWallet';
-import OnBoarding from '../screens/OnBoarding';
+import OnBoarding from '../src/screens/OnBoarding';
 import OpenWallet from './OpenWallet';
 import ImportWallet from './ImportWallet';
-import AskPinScreen from '../screens/wallet/AskPinScreen';
-import SecurityProvider from '../contexts/SecurityProvider';
-import Toast from 'react-native-toast-message';
-import useWallet from '../hooks/useWallet';
-import AddressScreen from '../screens/wallet/AddressScreen';
-import AddServerScreen from '../screens/wallet/AddServerScreen';
-import AddStakingNodeScreen from '../screens/wallet/AddStakingNodeScreen';
-import ErrorLogsScreen from '../screens/wallet/ErrorLogsScreen';
-import HistoryScreen from '../screens/wallet/HistoryScreen';
-import MainWalletScreen from '../screens/wallet/MainWalletScreen';
-import MnemonicScreen from '../screens/wallet/MnemonicScreen';
-import SendToScreen from '../screens/wallet/SendToScreen';
-import ServersScreen from '../screens/wallet/ServersScreen';
-import SettingsScreen from '../screens/wallet/SettingsScreen';
-import StakingNodeScreen from '../screens/wallet/StakingNodeScreen';
-import ViewTxScreen from '../screens/wallet/ViewTxScreen';
+import AskPinScreen from '../src/screens/wallet/AskPinScreen';
+import useWallet from '../src/hooks/useWallet';
+import AddressScreen from '../src/screens/wallet/AddressScreen';
+import AddServerScreen from '../src/screens/wallet/AddServerScreen';
+import AddStakingNodeScreen from '../src/screens/wallet/AddStakingNodeScreen';
+import ErrorLogsScreen from '../src/screens/wallet/ErrorLogsScreen';
+import HistoryScreen from '../src/screens/wallet/HistoryScreen';
+import MainWalletScreen from '../src/screens/wallet/MainWalletScreen';
+import MnemonicScreen from '../src/screens/wallet/MnemonicScreen';
+import SendToScreen from '../src/screens/wallet/SendToScreen';
+import ServersScreen from '../src/screens/wallet/ServersScreen';
+import SettingsScreen from '../src/screens/wallet/SettingsScreen';
+import StakingNodeScreen from '../src/screens/wallet/StakingNodeScreen';
+import ViewTxScreen from '../src/screens/wallet/ViewTxScreen';
 import BottomSheetProvider from '../contexts/BottomSheetProvider';
-import CreateNftCollectionScreen from '../screens/wallet/CreateNftCollectionScreen';
-import CollectionScreen from '../screens/wallet/CollectionScreen';
-import MintNftScreen from '../screens/wallet/MintNftScreen';
-import SellNftScreen from '../screens/wallet/SellNftScreen';
-import ScanQRScreen from '../screens/wallet/ScanQRScreen';
+import CreateNftCollectionScreen from '../src/screens/wallet/CreateNftCollectionScreen';
+import CollectionScreen from '../src/screens/wallet/CollectionScreen';
+import MintNftScreen from '../src/screens/wallet/MintNftScreen';
+import SellNftScreen from '../src/screens/wallet/SellNftScreen';
+import ScanQRScreen from '../src/screens/wallet/ScanQRScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const StackApp = createStackNavigator<RootAppStackParamList>();
@@ -184,7 +180,7 @@ const AppContainer = (props: any) => {
       }}
       initialRouteName={props.shownWelcome == 'true' ? 'App' : 'OnBoarding'}>
       <StackApp.Screen name="OnBoarding" component={OnBoarding} />
-      <StackApp.Screen name="App" component={AppContent}></StackApp.Screen>
+      <StackApp.Screen name="App" component={AppContent} />
     </StackApp.Navigator>
   ) : (
     <View />

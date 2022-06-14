@@ -1,14 +1,14 @@
 import {StyleSheet, TouchableOpacity, View, ScrollView} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
-import Text from '../../components/Text';
+import Text from '../../../components/Text';
 import React, {useEffect, useState} from 'react';
-import Container from '../../components/Container';
+import Container from '../../../components/Container';
 import {useTheme} from '@tsejerome/ui-kitten-components';
 import useLayout from '../../hooks/useLayout';
 import QRCode from 'react-native-qrcode-svg';
-import {BalanceFragment} from '../../constants/Type';
+import {BalanceFragment} from '../../../constants/Type';
 import useWallet from '../../hooks/useWallet';
-import TopNavigationComponent from '../../components/TopNavigation';
+import TopNavigationComponent from '../../../components/TopNavigation';
 import {verticalScale, scale} from 'react-native-size-matters';
 import Toast from 'react-native-toast-message';
 

@@ -1,9 +1,9 @@
 import React from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import {scale, verticalScale} from 'react-native-size-matters';
-import { useBottomSheet } from '../hooks/useBottomSheet';
-import useLayout from '../hooks/useLayout';
+import {useBottomSheet} from '../src/hooks/useBottomSheet';
+import useLayout from '../src/hooks/useLayout';
 import BottomSheetView from './BottomSheetView';
 import OptionCard from './OptionCard';
 import Text from './Text';
@@ -45,9 +45,11 @@ const Mnemonic = (props: {mnemonic: string}) => {
             item={{text: 'Show QR code'}}
             selected={''}
             onPress={() => {
-              bottomSheet.expand(<BottomSheetView>
-                <QRCode value={props.mnemonic} size={height * 0.4} />
-              </BottomSheetView>)
+              bottomSheet.expand(
+                <BottomSheetView>
+                  <QRCode value={props.mnemonic} size={height * 0.4} />
+                </BottomSheetView>,
+              );
             }}
             icon={'qr'}
             color={'white'}

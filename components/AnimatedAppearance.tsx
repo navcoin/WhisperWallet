@@ -1,5 +1,5 @@
 import React, {ReactElement} from 'react';
-import Animated, {
+import {
   useAnimatedStyle,
   useSharedValue,
   useDerivedValue,
@@ -22,7 +22,7 @@ const AnimatedAppearance = ({
   type = Animation_Types_Enum.SlideBottom,
 }: Props) => {
   return children;
-  
+
   const play = useSharedValue(false);
   const progress = useDerivedValue(() => {
     return play.value

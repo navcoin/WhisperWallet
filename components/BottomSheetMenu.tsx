@@ -1,12 +1,12 @@
 import Text from './Text';
 import OptionCard from './OptionCard';
 import {View} from 'react-native';
-import React, {memo, useMemo, useState} from 'react';
+import React, {memo} from 'react';
 import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {RootStackParamList, WalletParamList} from '../navigation/type';
+import {RootStackParamList} from '../navigation/type';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useBottomSheet} from '../hooks/useBottomSheet';
+import {useBottomSheet} from '../src/hooks/useBottomSheet';
 
 const BottomSheetMenu = (props: any) => {
   const styles = useStyleSheet(themedStyles);

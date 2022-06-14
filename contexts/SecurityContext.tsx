@@ -11,16 +11,16 @@ export const GetAuthenticationName = (type: SecurityAuthenticationTypes) => {
   switch (type) {
     case SecurityAuthenticationTypes.KEYCHAIN:
       return 'Face ID or Touch ID';
-      break;
+
     case SecurityAuthenticationTypes.LOCALAUTH:
       return 'Device Lock';
-      break;
+
     case SecurityAuthenticationTypes.MANUAL:
       return '6-digit PIN code';
-      break;
+
     case SecurityAuthenticationTypes.MANUAL_4:
       return '4-digit PIN code';
-      break;
+
     default:
       return 'None';
   }

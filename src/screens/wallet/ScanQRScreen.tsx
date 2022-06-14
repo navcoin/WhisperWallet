@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Image, TouchableOpacity, View} from 'react-native';
 import {
-  Button,
   Layout,
   StyleService,
   TopNavigation,
@@ -9,27 +8,26 @@ import {
   useTheme,
 } from '@tsejerome/ui-kitten-components';
 
-import Container from '../../components/Container';
+import Container from '../../../components/Container';
 import useWallet from '../../hooks/useWallet';
-import Text from '../../components/Text';
+import Text from '../../../components/Text';
 
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../../navigation/type';
+import {RootStackParamList} from '../../../navigation/type';
 import {scale} from 'react-native-size-matters';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import Gzip from 'rn-gzip';
-import BottomSheetView from '../../components/BottomSheetView';
-import {SwipeButton} from '../../components/SwipeButton';
+import BottomSheetView from '../../../components/BottomSheetView';
+import {SwipeButton} from '../../../components/SwipeButton';
 import {useModal} from '../../hooks/useModal';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
-import LoadingModalContent from '../../components/Modals/LoadingModalContent';
+import LoadingModalContent from '../../../components/Modals/LoadingModalContent';
 import useSecurity from '../../hooks/useSecurity';
 import useLayout from '../../hooks/useLayout';
 import {QRreader} from 'react-native-qr-decode-image-camera';
 
 const ScanQRScreen = (props: any) => {
-  const {navigate, goBack} =
-    useNavigation<NavigationProp<RootStackParamList>>();
+  const {goBack} = useNavigation<NavigationProp<RootStackParamList>>();
   const styles = useStyleSheet(themedStyles);
   const {ExecWrapperPromise, ExecWrapperSyncPromise, sendTransaction} =
     useWallet();

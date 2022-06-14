@@ -1,4 +1,4 @@
-import Content from '../../components/Content';
+import Content from '../../../components/Content';
 import {
   Icon,
   Input,
@@ -6,25 +6,25 @@ import {
   StyleService,
   useStyleSheet,
 } from '@tsejerome/ui-kitten-components';
-import Text from '../../components/Text';
+import Text from '../../../components/Text';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import Container from '../../components/Container';
+import Container from '../../../components/Container';
 import {TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {scale, verticalScale} from 'react-native-size-matters';
 
 import useWallet from '../../hooks/useWallet';
-import CardSelect from '../../components/CardSelect';
+import CardSelect from '../../../components/CardSelect';
 import {
   Balance_Types_Enum,
   BalanceFragment,
   Destination_Types_Enum,
-} from '../../constants/Type';
+} from '../../../constants/Type';
 import DialogInput from 'react-native-dialog-input';
-import DestinationComponent from '../../components/DestinationComponent';
-import {QrProvider} from '../../contexts/QrProvider';
-import SendTransactionButton from '../../components/SendTransactionButton';
-import TopNavigationComponent from '../../components/TopNavigation';
+import DestinationComponent from '../../../components/DestinationComponent';
+import {QrProvider} from '../../../contexts/QrProvider';
+import SendTransactionButton from '../../../components/SendTransactionButton';
+import TopNavigationComponent from '../../../components/TopNavigation';
 
 const SendToScreen = (props: any) => {
   const styles = useStyleSheet(themedStyles);
@@ -240,7 +240,9 @@ const SendToScreen = (props: any) => {
               })}
               text={'Item'}
               defaultOption={(() => {
-                if (!from.items.confirmed[nftId]) return '';
+                if (!from.items.confirmed[nftId]) {
+                  return '';
+                }
                 let obj =
                   typeof from.items.confirmed[nftId] === 'object'
                     ? from.items.confirmed[nftId]

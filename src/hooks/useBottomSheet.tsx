@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {BottomSheetContext} from '../contexts/BottomSheetContext';
+import {BottomSheetContext} from '../../contexts/BottomSheetContext';
 
 export const useBottomSheet = () => {
   const context = useContext(BottomSheetContext);

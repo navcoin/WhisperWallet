@@ -9,7 +9,7 @@ import {
 
 import Text from './Text';
 import BottomSheetOptions from './BottomSheetOptions';
-import {useBottomSheet} from '../hooks/useBottomSheet';
+import {useBottomSheet} from '../src/hooks/useBottomSheet';
 import {scale, verticalScale} from 'react-native-size-matters';
 
 interface InputSelectProps {
