@@ -3,16 +3,16 @@ import {useWindowDimensions, View} from 'react-native';
 import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
 
-import Container from '../components/Container';
-import Button from '../components/Button';
+import Container from '../../components/Container';
+import Button from '../../components/Button';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
-import Card from '../components/Card';
-import {OnBoarding} from '../constants/Data';
+import Card from '../../components/Card';
+import {OnBoarding} from '../../constants/Data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {screenWidth} from '../utils/layout';
+import {screenWidth} from '../../utils/layout';
 import {scale} from 'react-native-size-matters';
 import useSecurity from '../hooks/useSecurity';
 

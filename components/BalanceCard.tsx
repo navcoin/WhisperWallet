@@ -13,7 +13,7 @@ import {
   BalanceFragment,
   Connection_Stats_Enum,
 } from '../constants/Type';
-import useWallet from '../hooks/useWallet';
+import useWallet from '../src/hooks/useWallet';
 import {scale, verticalScale} from 'react-native-size-matters';
 
 interface BalanceProps {
@@ -68,7 +68,13 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
               <Text adjustsFontSizeToFit numberOfLines={2} category="headline">
                 {name + ' '}
               </Text>
-              {mine && <Text style={{color:theme['color-primary-100']}} category={"caption2"}>MINE</Text>}
+              {mine && (
+                <Text
+                  style={{color: theme['color-primary-100']}}
+                  category={'caption2'}>
+                  MINE
+                </Text>
+              )}
             </View>
             {connected === Connection_Stats_Enum.Connecting &&
             !firstSyncCompleted ? (

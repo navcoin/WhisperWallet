@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {SecurityContext} from '../contexts/SecurityContext';
+import {SecurityContext} from '../../contexts/SecurityContext';
 
 const useSecurity = () => {
   const context = useContext(SecurityContext);

@@ -1,35 +1,35 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View} from 'react-native';
 import {
-  Icon,
   Layout,
   StyleService,
   useStyleSheet,
+  useTheme,
 } from '@tsejerome/ui-kitten-components';
-
-import Container from '../../components/Container';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Container from '../../../components/Container';
 import useWallet from '../../hooks/useWallet';
-import Text from '../../components/Text';
+import Text from '../../../components/Text';
 
-import {Connection_Stats_Enum} from '../../constants/Type';
+import {Connection_Stats_Enum} from '../../../constants/Type';
 
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 
-import BalanceCircle from '../../components/BalanceCircle';
+import BalanceCircle from '../../../components/BalanceCircle';
 
-import AccountsTab from '../../components/AccountTabs';
-import {RootStackParamList} from '../../navigation/type';
+import AccountsTab from '../../../components/AccountTabs';
+import {RootStackParamList} from '../../../navigation/type';
 import {scale} from 'react-native-size-matters';
 import {TouchableWithoutFeedback} from '@tsejerome/ui-kitten-components/devsupport';
 import {launchImageLibrary} from 'react-native-image-picker';
-import DocumentPicker, {types} from 'react-native-document-picker';
-import BottomSheetOptions from '../../components/BottomSheetOptions';
+import BottomSheetOptions from '../../../components/BottomSheetOptions';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
 
-const MainWalletScreen = () => {
+const MainWalletScreen = ({navigation}) => {
+  const theme = useTheme();
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
   const styles = useStyleSheet(themedStyles);
-  const {refreshWallet, connected} = useWallet();
+  const {refreshWallet, connected, walletName} = useWallet();
 
   const [dotColor, setDotColor] = useState('gray');
 
@@ -56,7 +56,7 @@ const MainWalletScreen = () => {
   const pickQrSource = useCallback(() => {
     bottomSheet.expand(
       <BottomSheetOptions
-        title={'Select QR code source'}
+        title={'Select QR source'}
         options={[
           {
             text: 'Gallery',
@@ -101,60 +101,73 @@ const MainWalletScreen = () => {
   return (
     <Container style={styles.container}>
       <Layout style={styles.topTab}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            left: 0,
-          }}>
-          <View
-            style={{
-              width: scale(8),
-              borderRadius: scale(4),
-              marginLeft: scale(12),
-              height: scale(8),
-              backgroundColor: dotColor,
-              alignSelf: 'center',
-            }}
-          />
-          <Text
-            style={{
-              alignSelf: 'center',
-              marginLeft: scale(12),
-            }}
-            category={'caption1'}>
-            {connected}
-          </Text>
-        </View>
         <View style={[styles.iconGrp]}>
           <TouchableWithoutFeedback
-            style={{padding: scale(12)}}
             onPress={async () => {
               pickQrSource();
               /*const result = await DocumentPicker.pickSingle();
               console.log(result);*/
               //navigate('ScanQRScreen');
             }}>
-            <Icon pack="assets" name={'qr'} style={[styles.icon]} />
+            <Icon
+              size={scale(20)}
+              name={'qr-code'}
+              color={theme['color-basic-1100']}
+            />
           </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            style={{padding: scale(12)}}
-            onPress={() => {
-              refreshWallet();
+        </View>
+        <View>
+          <Text center numberOfLines={1}>
+            {walletName}
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
-            <Icon pack="assets" name={'refresh'} style={[styles.icon]} />
-          </TouchableWithoutFeedback>
+            <Text
+              style={{
+                alignSelf: 'center',
+              }}
+              category={'caption1'}>
+              {connected}
+            </Text>
+            <View
+              style={{
+                width: scale(8),
+                borderRadius: scale(4),
+                marginLeft: scale(8),
+                height: scale(8),
+                backgroundColor: dotColor,
+                alignSelf: 'center',
+              }}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingHorizontal: scale(12),
+            right: 0,
+          }}>
           <TouchableWithoutFeedback
-            style={{padding: scale(12)}}
             onPress={() => {
               navigate('SettingsScreen');
             }}>
-            <Icon pack="assets" name={'menuBtn'} style={[styles.icon]} />
+            <Icon
+              size={scale(20)}
+              name={'settings'}
+              color={theme['color-basic-1100']}
+            />
           </TouchableWithoutFeedback>
         </View>
       </Layout>
-      <BalanceCircle />
+      <View style={{margin: scale(6)}}>
+        <BalanceCircle />
+      </View>
       <AccountsTab />
     </Container>
   );
@@ -172,19 +185,16 @@ const themedStyles = StyleService.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: scale(12),
-    zIndex: 9999,
-    marginBottom: scale(12),
+    marginTop: scale(6),
+    marginBottom: scale(18),
   },
   iconGrp: {
+    padding: scale(12),
+
     flexDirection: 'row',
   },
   iconContainer: {
     backgroundColor: '#ff0000',
     padding: 12,
-  },
-  icon: {
-    width: scale(18),
-    height: scale(18),
-    tintColor: '$icon-basic-color',
   },
 });

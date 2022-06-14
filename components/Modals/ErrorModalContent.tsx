@@ -3,7 +3,7 @@ import {StyleSheet, View, ScrollView} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Toast from 'react-native-toast-message';
-import {useModal} from '../../hooks/useModal';
+import {useModal} from '../../src/hooks/useModal';
 import {cleanTemporaryErrorRecord, errorGroupParser} from '../../utils/errors';
 import {sendErrorCrashEmail} from '../../utils/sendMail';
 import {Button} from '@tsejerome/ui-kitten-components';

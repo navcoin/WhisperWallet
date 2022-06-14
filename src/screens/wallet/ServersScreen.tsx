@@ -6,15 +6,15 @@ import {
   Icon,
   TopNavigationAction,
 } from '@tsejerome/ui-kitten-components';
-import Container from '../../components/Container';
+import Container from '../../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {NetworkOption, ServerOption} from '../../constants/Type';
-import Text from '../../components/Text';
-import OptionCard from '../../components/OptionCard';
-import {RootStackParamList, ScreenProps} from '../../navigation/type';
+import {NetworkOption, ServerOption} from '../../../constants/Type';
+import Text from '../../../components/Text';
+import OptionCard from '../../../components/OptionCard';
+import {RootStackParamList, ScreenProps} from '../../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
-import {networkOptions} from '../../constants/Data';
-import TopNavigationComponent from '../../components/TopNavigation';
+import {networkOptions} from '../../../constants/Data';
+import TopNavigationComponent from '../../../components/TopNavigation';
 import {scale} from 'react-native-size-matters';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
@@ -86,7 +86,10 @@ const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
             onPress={() => {
               navigate('AddServerScreen', {
                 params: {
-                  addServer: (newServer: ServerOption, cb: () => void): void => {
+                  addServer: (
+                    newServer: ServerOption,
+                    cb: () => void,
+                  ): void => {
                     const temp = [...currentServers];
                     temp.push(newServer);
                     setCurrentServers(temp);

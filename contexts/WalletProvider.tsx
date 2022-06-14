@@ -10,7 +10,7 @@ import {
 import RNBootSplash from 'react-native-bootsplash';
 import WebView from 'react-native-webview';
 import {Platform} from 'react-native';
-import useTraceUpdate from '../hooks/useTraceUpdates';
+import useTraceUpdate from '../src/hooks/useTraceUpdates';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const WalletProvider = (props: any) => {

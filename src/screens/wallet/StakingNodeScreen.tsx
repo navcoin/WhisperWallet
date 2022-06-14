@@ -2,14 +2,14 @@ import useWallet from '../../hooks/useWallet';
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Icon, TopNavigationAction} from '@tsejerome/ui-kitten-components';
-import Container from '../../components/Container';
+import Container from '../../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {Balance_Types_Enum, BalanceFragment} from '../../constants/Type';
-import Text from '../../components/Text';
-import OptionCard from '../../components/OptionCard';
-import {RootStackParamList} from '../../navigation/type';
+import {Balance_Types_Enum, BalanceFragment} from '../../../constants/Type';
+import Text from '../../../components/Text';
+import OptionCard from '../../../components/OptionCard';
+import {RootStackParamList} from '../../../navigation/type';
 import DialogInput from 'react-native-dialog-input';
-import TopNavigationComponent from '../../components/TopNavigation';
+import TopNavigationComponent from '../../../components/TopNavigation';
 import {scale} from 'react-native-size-matters';
 
 const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
@@ -49,7 +49,10 @@ const StakingNodeScreen = () => {
         }
         hintInput={'Name'}
         submitInput={async (inputText: string) => {
-          await ExecWrapperPromise('wallet.db.AddLabel', [editingNode, inputText].map(el => JSON.stringify(el)));
+          await ExecWrapperPromise(
+            'wallet.db.AddLabel',
+            [editingNode, inputText].map(el => JSON.stringify(el)),
+          );
           await updateAccounts();
           showEditDialog(false);
         }}

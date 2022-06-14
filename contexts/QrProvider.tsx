@@ -8,7 +8,7 @@ import {QrContextValue, QrContext} from './QrContext';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import Text from '../components/Text';
 import {Platform, TouchableOpacity} from 'react-native';
-import useWallet from '../hooks/useWallet';
+import useWallet from '../src/hooks/useWallet';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {useEffect} from 'react';
 

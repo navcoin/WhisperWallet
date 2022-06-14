@@ -11,16 +11,16 @@ import {
   SelectItem,
   TopNavigationAction,
 } from '@tsejerome/ui-kitten-components';
-import Container from '../../components/Container';
+import Container from '../../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {ServerOption} from '../../constants/Type';
-import Text from '../../components/Text';
-import {RootStackParamList, ScreenProps} from '../../navigation/type';
+import {ServerOption} from '../../../constants/Type';
+import Text from '../../../components/Text';
+import {RootStackParamList, ScreenProps} from '../../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
-import {networkOptions, protosOptions} from '../../constants/Data';
-import {validateIp, validatePort} from '../../utils/server';
+import {networkOptions, protosOptions} from '../../../constants/Data';
+import {validateIp, validatePort} from '../../../utils/server';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import TopNavigationComponent from '../../components/TopNavigation';
+import TopNavigationComponent from '../../../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
 
 const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {

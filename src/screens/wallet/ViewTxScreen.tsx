@@ -1,8 +1,8 @@
 import React from 'react';
 import {View} from 'react-native';
-import TopNavigationComponent from '../../components/TopNavigation';
-import Container from '../../components/Container';
-import InputSelect from '../../components/InputSelect';
+import TopNavigationComponent from '../../../components/TopNavigation';
+import Container from '../../../components/Container';
+import InputSelect from '../../../components/InputSelect';
 import Clipboard from '@react-native-community/clipboard';
 
 const ViewTxScreen = (props: any) => {

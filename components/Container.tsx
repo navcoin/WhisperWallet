@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Layout, LayoutProps} from '@tsejerome/ui-kitten-components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import useSecurity from '../hooks/useSecurity';
+import useSecurity from '../src/hooks/useSecurity';
 import {SecurityAuthenticationTypes} from '../contexts/SecurityContext';
 import {BlurView} from '@react-native-community/blur';
 import {StyleSheet, View} from 'react-native';

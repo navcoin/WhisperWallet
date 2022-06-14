@@ -3,7 +3,7 @@ import {StyleSheet, View, Modal as RawModal} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
 import Toast from 'react-native-toast-message';
 import toastConfig from '../Toast';
-import {useModal} from '../../hooks/useModal';
+import {useModal} from '../../src/hooks/useModal';
 
 const Modal = (props: any) => {
   const {children, visible} = props;
