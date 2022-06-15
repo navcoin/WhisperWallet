@@ -84,6 +84,7 @@ const MintNftScreen = (props: any) => {
       } else if (!found) {
         setFullyMinted(true);
       }
+
       if (found) {
         setAssignedId(tempAssignedId);
       }

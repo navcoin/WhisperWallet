@@ -121,8 +121,10 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
         true,
         '',
         () => {
-          setLoading(undefined);
-          goBack();
+          setTimeout(() => {
+            setLoading(undefined);
+            goBack();
+          }, 500);
         },
       );
     });

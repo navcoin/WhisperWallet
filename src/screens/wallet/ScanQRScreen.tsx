@@ -266,8 +266,8 @@ const ScanQRScreen = (props: any) => {
             <>
               <TouchableOpacity
                 onPress={() => {
-                  goBack();
                   setQrError('');
+                  goBack();
                 }}>
                 <Text>Go back</Text>
               </TouchableOpacity>

@@ -24,6 +24,7 @@ const OnBoardingPage = memo(() => {
   const scrollHandler = useAnimatedScrollHandler(event => {
     translationX.value = event.contentOffset.x;
   });
+
   /*const style = useAnimatedStyle(() => {
     const backgroundColor = interpolateColor(
       translationX.value,

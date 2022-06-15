@@ -89,14 +89,7 @@ export const SecurityProvider = (props: any) => {
           nextAppState === 'active' &&
           appState.current === 'background')
       ) {
-        if (
-          refreshWallet &&
-          !(
-            connected == Connection_Stats_Enum.Bootstrapping ||
-            connected == Connection_Stats_Enum.Connecting ||
-            connected == Connection_Stats_Enum.Syncing
-          )
-        ) {
+        if (refreshWallet) {
           refreshWallet();
         }
         if (lockAfterBackground === true) {

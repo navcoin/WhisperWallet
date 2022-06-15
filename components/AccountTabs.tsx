@@ -178,7 +178,12 @@ const Accounts = () => {
   }, [accounts]);
 
   return (
-    <View style={{backgroundColor: theme['color-basic-700'], flex: 1}}>
+    <View
+      style={{
+        backgroundColor: theme['color-basic-700'],
+        flex: 1,
+        marginTop: scale(-6),
+      }}>
       <ScrollView
         refreshControl={
           <RefreshControl
@@ -295,7 +300,12 @@ const NFTs = () => {
   }, [nfts]);
 
   return (
-    <View style={{backgroundColor: theme['color-basic-700'], flex: 1}}>
+    <View
+      style={{
+        backgroundColor: theme['color-basic-700'],
+        flex: 1,
+        marginTop: scale(-6),
+      }}>
       <ScrollView
         refreshControl={
           <RefreshControl
@@ -394,7 +404,12 @@ const Tokens = () => {
   }, [tokens]);
 
   return (
-    <View style={{backgroundColor: theme['color-basic-700'], flex: 1}}>
+    <View
+      style={{
+        backgroundColor: theme['color-basic-700'],
+        flex: 1,
+        marginTop: scale(-6),
+      }}>
       <ScrollView
         refreshControl={
           <RefreshControl

@@ -31,7 +31,7 @@ const renderRightActions = (editMode: boolean, onPress: () => void) => (
 );
 
 const ServersScreen = () => {
-  const {network} = useWallet();
+  const {walletName, network} = useWallet();
 
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
 
