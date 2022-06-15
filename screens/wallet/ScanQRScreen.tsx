@@ -61,7 +61,7 @@ const ScanQRScreen = (props: any) => {
           [order, spendingPassword].map(el => JSON.stringify(el)),
         )
           .then(tx => {
-            setLoading(undefined);
+            setLoading(false);
             bottomSheet.expand(
               <BottomSheetView>
                 <TopNavigation title="Accept order" />
@@ -107,9 +107,9 @@ const ScanQRScreen = (props: any) => {
                             </Text>
                           </BottomSheetView>,
                         );
-                        setLoading(undefined);
+                        setLoading(false);
                       } else {
-                        setLoading(undefined);
+                        setLoading(false);
                         collapse();
                         goBack();
                       }
@@ -132,11 +132,11 @@ const ScanQRScreen = (props: any) => {
                 </Text>
               </BottomSheetView>,
             );
-            setLoading(undefined);
+            setLoading(false);
           });
       })
       .catch(e => {
-        setLoading(undefined);
+        setLoading(false);
 
         bottomSheet.expand(
           <BottomSheetView>

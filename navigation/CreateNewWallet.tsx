@@ -167,13 +167,13 @@ const CreateNewWallet = () => {
                       true,
                       network,
                       () => {
-                        setLoading(undefined);
+                        setLoading(false);
                         setIndex(2);
                       },
                     );
                   })
                   .catch((e: any) => {
-                    setLoading(undefined);
+                    setLoading(false);
                     promptErrorToaster(e.toString(), false, false, () => {
                       const errorMsg = errorTextParser(e.toString(), false);
                       openModal(<ErrorModalContent errorText={errorMsg} />);

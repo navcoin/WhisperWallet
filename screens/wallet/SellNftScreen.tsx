@@ -83,7 +83,7 @@ const SellNftScreen = (props: any) => {
           spendingPassword,
         )
           .then(tx => {
-            setLoading(undefined);
+            setLoading(false);
             bottomSheet.expand(
               <BottomSheetView>
                 <TopNavigation title="Confirm sell order" />
@@ -185,11 +185,11 @@ const SellNftScreen = (props: any) => {
                 </Text>
               </BottomSheetView>,
             );
-            setLoading(undefined);
+            setLoading(false);
           });
       })
       .catch(e => {
-        setLoading(undefined);
+        setLoading(false);
 
         bottomSheet.expand(
           <BottomSheetView>

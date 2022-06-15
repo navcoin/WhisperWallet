@@ -60,7 +60,7 @@ const SendTransactionButton = (props: any) => {
                 props.nftId,
               )
                 .then((tx: any) => {
-                  setLoading(undefined);
+                  setLoading(false);
                   bottomSheet.expand(
                     <BottomSheetView>
                       <TopNavigation title="Confirm Transaction" />
@@ -121,7 +121,7 @@ const SendTransactionButton = (props: any) => {
                         onComplete={() => {
                           setLoading('Broadcasting...');
                           sendTransaction(tx.tx).then(() => {
-                            setLoading(undefined);
+                            setLoading(false);
                             collapse();
                             goBack();
                           });
@@ -143,11 +143,11 @@ const SendTransactionButton = (props: any) => {
                       </Text>
                     </BottomSheetView>,
                   );
-                  setLoading(undefined);
+                  setLoading(false);
                 });
             })
             .catch(e => {
-              setLoading(undefined);
+              setLoading(false);
 
               bottomSheet.expand(
                 <BottomSheetView>

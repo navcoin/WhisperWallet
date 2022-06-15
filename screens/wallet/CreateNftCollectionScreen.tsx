@@ -73,7 +73,7 @@ const CreateNftCollectionScreen = () => {
           spendingPassword,
         )
           .then(tx => {
-            setLoading(undefined);
+            setLoading(false);
             bottomSheet.expand(
               <BottomSheetView>
                 <TopNavigation title="Confirm collection creation" />
@@ -140,9 +140,9 @@ const CreateNftCollectionScreen = () => {
                             </Text>
                           </BottomSheetView>,
                         );
-                        setLoading(undefined);
+                        setLoading(false);
                       } else {
-                        setLoading(undefined);
+                        setLoading(false);
                         collapse();
                         goBack();
                       }
@@ -165,11 +165,11 @@ const CreateNftCollectionScreen = () => {
                 </Text>
               </BottomSheetView>,
             );
-            setLoading(undefined);
+            setLoading(false);
           });
       })
       .catch(e => {
-        setLoading(undefined);
+        setLoading(false);
 
         bottomSheet.expand(
           <BottomSheetView>

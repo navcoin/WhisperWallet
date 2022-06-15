@@ -12,9 +12,9 @@ import {Images} from '../assets/images';
 import {RootStackParamList} from './type';
 import useWallet from '../hooks/useWallet';
 import useSecurity from '../hooks/useSecurity';
-import { useModal } from '../hooks/useModal';
+import {useModal} from '../hooks/useModal';
 import LoadingModalContent from '../components/Modals/LoadingModalContent';
-import {errorTextParser, promptErrorToaster } from '../utils/errors';
+import {errorTextParser, promptErrorToaster} from '../utils/errors';
 import ErrorModalContent from '../components/Modals/ErrorModalContent';
 import Toast from 'react-native-toast-message';
 
@@ -52,16 +52,17 @@ const Intro = memo(props => {
               'mainnet',
               () => {
                 navigate('MainWalletScreen');
-                setLoading(undefined);
+                setLoading(false);
               },
             );
           })
           .catch((e: any) => {
-            setLoading(undefined);
+            setLoading(false);
             let errorStr = `Could not open wallet ${val}: ${e.toString()}`;
             Toast.show({
               type: 'error',
-              text1: errorStr });
+              text1: errorStr,
+            });
           });
       }
     });
