@@ -7,8 +7,8 @@ import {
 } from '@tsejerome/ui-kitten-components';
 import React, {useState, useEffect} from 'react';
 import LoadingModalContent from './Modals/LoadingModalContent';
-import useWallet from '../hooks/useWallet';
-import {useBottomSheet} from '../hooks/useBottomSheet';
+import useWallet from '../src/hooks/useWallet';
+import {useBottomSheet} from '../src/hooks/useBottomSheet';
 import Text from './Text';
 import BottomSheetView from './BottomSheetView';
 import {View} from 'react-native';
@@ -16,8 +16,8 @@ import {SwipeButton} from '../components/SwipeButton';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/type';
 import {Balance_Types_Enum, Destination_Types_Enum} from '../constants/Type';
-import useSecurity from '../hooks/useSecurity';
-import {useModal} from '../hooks/useModal';
+import useSecurity from '../src/hooks/useSecurity';
+import {useModal} from '../src/hooks/useModal';
 
 const SendTransactionButton = (props: any) => {
   const {from, to, amount, memo, subtractFee} = props;

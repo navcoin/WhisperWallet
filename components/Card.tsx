@@ -12,7 +12,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import useLayout from '../hooks/useLayout';
+import useLayout from '../src/hooks/useLayout';
 import {scale, verticalScale} from 'react-native-size-matters';
 
 interface Product {

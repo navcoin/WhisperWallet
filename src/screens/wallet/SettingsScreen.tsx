@@ -1,25 +1,25 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, ScrollView, Switch} from 'react-native';
-import Container from '../../components/Container';
+import Container from '../../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {Animation_Types_Enum} from '../../constants/Type';
-import OptionCard from '../../components/OptionCard';
-import {RootStackParamList, ScreenProps} from '../../navigation/type';
-import LoadingModalContent from '../../components/Modals/LoadingModalContent';
-import TopNavigationComponent from '../../components/TopNavigation';
-import {screenHeight} from '../../utils/layout';
+import {Animation_Types_Enum} from '../../../constants/Type';
+import OptionCard from '../../../components/OptionCard';
+import {RootStackParamList, ScreenProps} from '../../../navigation/type';
+import LoadingModalContent from '../../../components/Modals/LoadingModalContent';
+import TopNavigationComponent from '../../../components/TopNavigation';
+import {screenHeight} from '../../../utils/layout';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useSecurity from '../../hooks/useSecurity';
 import {
   GetAuthenticationName,
   SecurityAuthenticationTypes,
-} from '../../contexts/SecurityContext';
+} from '../../../contexts/SecurityContext';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
-import BottomSheetOptions from '../../components/BottomSheetOptions';
+import BottomSheetOptions from '../../../components/BottomSheetOptions';
 import {useModal} from '../../hooks/useModal';
 import {useTheme} from '@tsejerome/ui-kitten-components';
-import DeleteWalletModalContent from '../../components/Modals/DeleteWalletModalContent';
+import DeleteWalletModalContent from '../../../components/Modals/DeleteWalletModalContent';
 
 interface SettingsItem {
   title: string;
@@ -121,8 +121,10 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
         true,
         '',
         () => {
-          setLoading(false);
-          goBack();
+          setTimeout(() => {
+            setLoading(false);
+            goBack();
+          }, 500);
         },
       );
     });

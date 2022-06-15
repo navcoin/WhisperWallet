@@ -36,13 +36,13 @@ import {
   saveTemporaryErrorRecord,
 } from './utils/errors';
 import ModalProvider from './contexts/ModalProvider';
-import {useModal} from './hooks/useModal';
+import {useModal} from './src/hooks/useModal';
 import ErrorModalContent from './components/Modals/ErrorModalContent';
 import {AsyncStoredItems} from './utils/asyncStorageManager';
 import {NavigationContainer, DarkTheme} from '@react-navigation/native';
 import SecurityProvider from './contexts/SecurityProvider';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import useTraceUpdates from './hooks/useTraceUpdates';
+import useTraceUpdates from './src/hooks/useTraceUpdates';
 
 const App = (props: {theme: string}) => {
   const {theme} = props;
@@ -55,11 +55,15 @@ const App = (props: {theme: string}) => {
   useEffect(() => {
     AsyncStorage.getItem(AsyncStoredItems.PROMPT_ERROR_ON_NEXT_LAUNCH).then(
       val => {
-        if (val !== null) setPromptPreviousError(val === 'true' ? true : false);
+        if (val !== null) {
+          setPromptPreviousError(val === 'true' ? true : false);
+        }
       },
     );
     AsyncStorage.getItem(AsyncStoredItems.TEMP_ERROR_RECORDS).then(val => {
-      if (val !== null) setTemporaryErrorRecords(val);
+      if (val !== null) {
+        setTemporaryErrorRecords(val);
+      }
     });
   }, []);
 

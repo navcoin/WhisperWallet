@@ -7,7 +7,7 @@ import CurrencyText from './CurrencyText';
 import AnimatedAppearance from './AnimatedAppearance';
 
 import dayjs from '../utils/dayjs';
-import {Category_Types_Enum, TransactionFragment} from '../constants/Type';
+import {TransactionFragment} from '../constants/Type';
 import {Images} from '../assets/images';
 
 interface TransactionProps {
@@ -18,7 +18,7 @@ interface TransactionProps {
 
 const Transaction = ({item, index, onPress}: TransactionProps) => {
   const theme = useTheme();
-  const {name, note, amount, timestamp, type, token_code} = item;
+  const {amount, timestamp, type, token_code} = item;
   const memos = item.memos || {in: [], out: []};
   let category = {};
 

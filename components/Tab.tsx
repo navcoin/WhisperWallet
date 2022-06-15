@@ -1,11 +1,7 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native';
 import {useTheme, Layout} from '@tsejerome/ui-kitten-components';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
+import {useSharedValue} from 'react-native-reanimated';
 
 import Text from './Text';
 import {verticalScale, scale} from 'react-native-size-matters';
@@ -57,7 +53,7 @@ const FrequencyTab = ({style, selectedIndex, onChange, tabs}: Props) => {
               },
             ],
             backgroundColor: theme['color-primary-100'],
-            width: `${100 / tabs.length}%`
+            width: `${100 / tabs.length}%`,
           },
         ]}
         onLayout={({nativeEvent}) => setWidthItem(nativeEvent.layout.width)}

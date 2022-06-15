@@ -8,7 +8,6 @@ import {
   StyleSheet,
   StyleProp,
   ViewStyle,
-  Dimensions,
 } from 'react-native';
 
 import {

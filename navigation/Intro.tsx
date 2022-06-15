@@ -10,12 +10,10 @@ import Container from '../components/Container';
 import {Button} from '@tsejerome/ui-kitten-components';
 import {Images} from '../assets/images';
 import {RootStackParamList} from './type';
-import useWallet from '../hooks/useWallet';
-import useSecurity from '../hooks/useSecurity';
-import {useModal} from '../hooks/useModal';
+import useWallet from '../src/hooks/useWallet';
+import useSecurity from '../src/hooks/useSecurity';
+import {useModal} from '../src/hooks/useModal';
 import LoadingModalContent from '../components/Modals/LoadingModalContent';
-import {errorTextParser, promptErrorToaster} from '../utils/errors';
-import ErrorModalContent from '../components/Modals/ErrorModalContent';
 import Toast from 'react-native-toast-message';
 
 const Intro = memo(props => {
@@ -35,7 +33,9 @@ const Intro = memo(props => {
     closeModal();
   }, [loading]);
   useEffect(() => {
-    if (walletName?.length) return;
+    if (walletName?.length) {
+      return;
+    }
     AsyncStorage.getItem('LastOpenedWalletName').then(async val => {
       if (val && val.length) {
         readPassword()

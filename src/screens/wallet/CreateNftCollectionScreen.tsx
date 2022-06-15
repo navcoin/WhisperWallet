@@ -1,37 +1,34 @@
 import useWallet from '../../hooks/useWallet';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {
   Button,
   Input,
   Layout,
   TopNavigation,
 } from '@tsejerome/ui-kitten-components';
-import Container from '../../components/Container';
+import Container from '../../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {Destination_Types_Enum, NftItemOption} from '../../constants/Type';
-import Text from '../../components/Text';
-import {RootStackParamList} from '../../navigation/type';
+import {CollectionOption} from '../../../constants/Type';
+import Text from '../../../components/Text';
+import {RootStackParamList} from '../../../navigation/type';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import TopNavigationComponent from '../../components/TopNavigation';
+import TopNavigationComponent from '../../../components/TopNavigation';
 import useSecurity from '../../hooks/useSecurity';
-import BottomSheetView from '../../components/BottomSheetView';
-import {SwipeButton} from '../../components/SwipeButton';
+import BottomSheetView from '../../../components/BottomSheetView';
+import {SwipeButton} from '../../../components/SwipeButton';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
 import {useModal} from '../../hooks/useModal';
-import LoadingModalContent from '../../components/Modals/LoadingModalContent';
+import LoadingModalContent from '../../../components/Modals/LoadingModalContent';
 
-const MintNftScreen = (props: any) => {
-  const {MintNft, ExecWrapperPromise, sendTransaction, parsedAddresses} =
-    useWallet();
+const CreateNftCollectionScreen = () => {
+  const {createNftCollection, sendTransaction} = useWallet();
   const {readPassword} = useSecurity();
 
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+  const {goBack} = useNavigation<NavigationProp<RootStackParamList>>();
   const {collapse} = useBottomSheet();
   const {openModal, closeModal} = useModal();
   const bottomSheet = useBottomSheet();
-
-  const nftCollection = props.route.params.from;
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<string | undefined>(undefined);
@@ -44,52 +41,14 @@ const MintNftScreen = (props: any) => {
     closeModal();
   }, [loading]);
 
-  const [collection, setCollection] = useState<NftItemOption>({
+  const [collection, setCollection] = useState<CollectionOption>({
     name: '',
-    resource: '',
+    description: '',
+    amount: 1,
   });
 
-  const [assignedId, setAssignedId] = useState<number>(-1);
-  const [destination, setDestination] = useState<string>('');
-  const [fullyMinted, setFullyMinted] = useState<boolean>(false);
-
-  useEffect(() => {
-    setDestination(
-      parsedAddresses.filter(
-        el => el.type_id == Destination_Types_Enum.PrivateWallet,
-      )[0]?.address,
-    );
-
-    ExecWrapperPromise(
-      'wallet.GetNftInfo',
-      [nftCollection.tokenId, -1].map(el => JSON.stringify(el)),
-    ).then(nftInfo => {
-      if (nftInfo.length == 0) {
-        setAssignedId(0);
-        return;
-      }
-      let tempAssignedId = -1;
-      let found = false;
-      for (let item of nftInfo) {
-        if (item.id > tempAssignedId + 1) {
-          found = true;
-          tempAssignedId += 1;
-          break;
-        }
-        tempAssignedId = item.id;
-      }
-      if (!found && tempAssignedId + 1 < nftCollection.supply) {
-        found = true;
-        tempAssignedId += 1;
-      } else if (!found) {
-        setFullyMinted(true);
-      }
-      if (found) setAssignedId(tempAssignedId);
-    });
-  }, []);
-
   const setCollectionProperty = (
-    type: keyof NftItemOption,
+    type: keyof CollectionOption,
     value: string | number,
   ) => {
     const temp = {...collection};
@@ -97,45 +56,26 @@ const MintNftScreen = (props: any) => {
     setCollection(temp);
   };
 
-  const mintNftItem = async () => {
-    if (!collection?.name || !collection?.resource) {
-      setError('Please fill the item details.');
+  const createCollection = async () => {
+    if (!collection?.name || !collection?.description) {
+      setError('Please fill the collection details.');
       return;
-    }
-
-    if (
-      ['png', 'jpg', 'jpeg', 'gif'].indexOf(
-        collection?.resource.split('.').pop(),
-      ) == -1
-    ) {
-      setError('Supported formats are: png, jpg, jpeg and gif');
-      return;
-    }
-
-    if (assignedId == -1) {
-      setError('Please wait for ID assignment');
     }
 
     readPassword()
       .then(async spendingPassword => {
         setLoading('Creating transaction...');
-        MintNft(
-          nftCollection.tokenId,
-          assignedId,
-          destination,
-          JSON.stringify({
-            ...collection,
-            image: collection.resource,
-            resource: undefined,
-            attributes: {thumbnail_url: collection.resource},
-          }),
+        createNftCollection(
+          collection.name,
+          JSON.stringify({...collection, amount: undefined, name: undefined}),
+          collection.amount,
           spendingPassword,
         )
           .then(tx => {
             setLoading(false);
             bottomSheet.expand(
               <BottomSheetView>
-                <TopNavigation title="Confirm NFT mint" />
+                <TopNavigation title="Confirm collection creation" />
                 <Layout level="2" style={styles.card}>
                   <View style={styles.row}>
                     <Text category="headline" style={{marginRight: 16}}>
@@ -144,18 +84,29 @@ const MintNftScreen = (props: any) => {
                     <Text
                       category="headline"
                       style={{flex: 1, flexWrap: 'wrap'}}>
-                      {collection['name']}
+                      {collection.name}
                     </Text>
                   </View>
 
                   <View style={styles.row}>
                     <Text category="headline" style={{marginRight: 16}}>
-                      Image URL:
+                      Description:
                     </Text>
                     <Text
                       category="headline"
                       style={{flex: 1, flexWrap: 'wrap'}}>
-                      {collection['resource']}
+                      {collection.description}
+                    </Text>
+                  </View>
+
+                  <View style={styles.row}>
+                    <Text category="headline" style={{marginRight: 16}}>
+                      Number of items:
+                    </Text>
+                    <Text
+                      category="headline"
+                      style={{flex: 1, flexWrap: 'wrap'}}>
+                      {collection.amount}
                     </Text>
                   </View>
                 </Layout>
@@ -192,7 +143,7 @@ const MintNftScreen = (props: any) => {
                       } else {
                         setLoading(false);
                         collapse();
-                        navigate('MainWalletScreen');
+                        goBack();
                       }
                     });
                   }}
@@ -235,7 +186,7 @@ const MintNftScreen = (props: any) => {
   return (
     <Container useSafeArea>
       <KeyboardAwareScrollView>
-        <TopNavigationComponent title={'Mint a NFT'} />
+        <TopNavigationComponent title={'Create a private NFT collection'} />
 
         <Layout level="2" style={styles.inputCard}>
           <View style={styles.inputGroup}>
@@ -245,7 +196,7 @@ const MintNftScreen = (props: any) => {
             <Input
               autoFocus={true}
               style={[styles.inputField]}
-              value={collection['name']}
+              value={collection.name}
               onChangeText={value => {
                 setCollectionProperty('name', value);
               }}
@@ -253,26 +204,33 @@ const MintNftScreen = (props: any) => {
           </View>
           <View style={styles.inputGroup}>
             <Text category="headline" style={[styles.inputTitle]}>
-              Image URL:
+              Description:
             </Text>
             <Input
               style={[styles.inputField]}
-              value={collection['resource']}
+              value={collection.description}
               onChangeText={value => {
-                setCollectionProperty('resource', value);
+                setCollectionProperty('description', value);
               }}
             />
           </View>
-          <Button
-            status={'primary-whisper'}
-            onPress={() => {
-              if (assignedId != -1) mintNftItem();
-            }}>
-            {fullyMinted
-              ? 'The collection is already fully minted'
-              : assignedId == -1
-              ? 'Assigning item ID...'
-              : 'Create item #' + assignedId}
+          <View style={styles.inputGroup}>
+            <Text category="headline" style={[styles.inputTitle]}>
+              Number of items:
+            </Text>
+            <Input
+              style={[styles.inputField]}
+              value={collection.amount?.toString()}
+              keyboardType={'number-pad'}
+              returnKeyType={'done'}
+              placeholder={'0'}
+              onChangeText={value => {
+                setCollectionProperty('amount', parseInt(value || '0'));
+              }}
+            />
+          </View>
+          <Button status={'primary-whisper'} onPress={() => createCollection()}>
+            Create
           </Button>
           {error ? (
             <Text style={[styles.errorText]} center>
@@ -286,7 +244,7 @@ const MintNftScreen = (props: any) => {
     </Container>
   );
 };
-export default MintNftScreen;
+export default CreateNftCollectionScreen;
 
 const styles = StyleSheet.create({
   inputCard: {

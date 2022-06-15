@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {scale} from 'react-native-size-matters';
-import {useModal} from '../../hooks/useModal';
+import {useModal} from '../../src/hooks/useModal';
 import {Button} from '@tsejerome/ui-kitten-components';
 import Text from '../Text';
 

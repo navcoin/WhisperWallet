@@ -1,13 +1,13 @@
 import React from 'react';
 import {View, StyleSheet, ScrollView} from 'react-native';
-import Container from '../../components/Container';
-import Text from '../../components/Text';
-import OptionCard from '../../components/OptionCard';
-import TopNavigationComponent from '../../components/TopNavigation';
+import Container from '../../../components/Container';
+import Text from '../../../components/Text';
+import OptionCard from '../../../components/OptionCard';
+import TopNavigationComponent from '../../../components/TopNavigation';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
-import {AsyncStoredItems} from '../../utils/asyncStorageManager';
+import {AsyncStoredItems} from '../../../utils/asyncStorageManager';
 import {useModal} from '../../hooks/useModal';
-import ErrorModalContent from '../../components/Modals/ErrorModalContent';
+import ErrorModalContent from '../../../components/Modals/ErrorModalContent';
 import {scale} from 'react-native-size-matters';
 
 const ErrorLogsScreen = (props: any) => {

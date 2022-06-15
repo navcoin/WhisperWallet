@@ -1,10 +1,9 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import Container from '../../components/Container';
-import {ScreenProps} from '../../navigation/type';
-import Mnemonic from '../../components/Mnemonic';
-import TopNavigationComponent from '../../components/TopNavigation';
-import OptionCard from '../../components/OptionCard';
+import Container from '../../../components/Container';
+import {ScreenProps} from '../../../navigation/type';
+import Mnemonic from '../../../components/Mnemonic';
+import TopNavigationComponent from '../../../components/TopNavigation';
 
 const MnemonicScreen: React.FC<ScreenProps<'MnemonicScreen'>> = (
   props: any,

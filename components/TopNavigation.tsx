@@ -6,7 +6,7 @@ import {
   TopNavigationProps,
 } from '@tsejerome/ui-kitten-components';
 import {useNavigation} from '@react-navigation/native';
-import {verticalScale, scale} from 'react-native-size-matters';
+import {scale} from 'react-native-size-matters';
 
 interface TopNavigationProps_ extends TopNavigationProps {
   hideBack?: boolean | undefined;
