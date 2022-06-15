@@ -14,7 +14,7 @@ import {
   Connection_Stats_Enum,
 } from '../constants/Type';
 import useWallet from '../src/hooks/useWallet';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {scale} from 'react-native-size-matters';
 
 interface BalanceProps {
   item: BalanceFragment;

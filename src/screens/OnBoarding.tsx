@@ -14,19 +14,17 @@ import {OnBoarding} from '../../constants/Data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {screenWidth} from '../../utils/layout';
 import {scale} from 'react-native-size-matters';
-import useSecurity from '../hooks/useSecurity';
 
 const OnBoardingPage = memo(() => {
   const {navigate} = useNavigation();
   const {height, width} = useWindowDimensions();
-  const {supportedType} = useSecurity();
   const styles = useStyleSheet(themedStyles);
 
   const translationX = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(event => {
     translationX.value = event.contentOffset.x;
   });
-  const snapToOffsets = [0, 400];
+
   /*const style = useAnimatedStyle(() => {
     const backgroundColor = interpolateColor(
       translationX.value,

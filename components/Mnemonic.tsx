@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {useBottomSheet} from '../src/hooks/useBottomSheet';

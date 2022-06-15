@@ -10,7 +10,6 @@ import {
 import RNBootSplash from 'react-native-bootsplash';
 import WebView from 'react-native-webview';
 import {Platform} from 'react-native';
-import useTraceUpdate from '../src/hooks/useTraceUpdates';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const WalletProvider = (props: any) => {
@@ -166,10 +165,10 @@ try {
     async (mnemonic: string, type: string) => {
       return type == 'navcash'
         ? await ExecWrapperSyncPromise(
-            `njs.wallet.electrumMnemonic.validateMnemonic`,
+            'njs.wallet.electrumMnemonic.validateMnemonic',
             [`"${mnemonic}"`, 'njs.wallet.electrumMnemonic.PREFIXES.standard'],
           )
-        : await ExecWrapperSyncPromise(`njs.wallet.Mnemonic.isValid`, [
+        : await ExecWrapperSyncPromise('njs.wallet.Mnemonic.isValid', [
             `"${mnemonic}"`,
           ]);
     },
@@ -178,7 +177,7 @@ try {
 
   const RequestWallets = useCallback(() => {
     InjectJavascript(
-      `njs.wallet.WalletFile.ListWallets().then(l => sendToRN('WalletsList', l));`,
+      "njs.wallet.WalletFile.ListWallets().then(l => sendToRN('WalletsList', l));",
     );
   }, [InjectJavascript]);
 
@@ -376,7 +375,7 @@ try {
       network_: string,
       onLoaded_: any,
     ) => {
-      callbacks['loaded'] = [
+      callbacks.loaded = [
         onLoaded_,
         e => {
           throw e;
@@ -1220,7 +1219,8 @@ wallet.Load({
             Platform.OS == 'ios'
               ? './www/index.html'
               : 'file:///android_asset/www/index.html',
-        }}></WebView>
+        }}
+      />
       {props.children}
     </WalletContext.Provider>
   );

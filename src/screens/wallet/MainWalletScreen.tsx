@@ -63,9 +63,11 @@ const MainWalletScreen = ({navigation}) => {
             icon: 'image',
             onTap: () => {
               launchImageLibrary({}).then(result => {
-                if (result.assets[0].uri)
+                if (result.assets[0].uri) {
                   navigate('ScanQRScreen', {uri: result.assets[0].uri});
-                else bottomSheet.collapse();
+                } else {
+                  bottomSheet.collapse();
+                }
               });
             },
           },
@@ -190,11 +192,15 @@ const themedStyles = StyleService.create({
   },
   iconGrp: {
     padding: scale(12),
-
     flexDirection: 'row',
   },
   iconContainer: {
     backgroundColor: '#ff0000',
     padding: 12,
+  },
+  icon: {
+    width: scale(18),
+    height: scale(18),
+    tintColor: '$icon-basic-color',
   },
 });

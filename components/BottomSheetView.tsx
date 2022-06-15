@@ -1,5 +1,3 @@
-import Text from './Text';
-import OptionCard from './OptionCard';
 import {View} from 'react-native';
 import React, {memo} from 'react';
 import {StyleService, useStyleSheet} from '@tsejerome/ui-kitten-components';

@@ -182,7 +182,8 @@ const CollectionScreen = (props: any) => {
                     pressBack={() => {
                       closeImagePreview();
                     }}
-                    style={{marginBottom: scale(0)}}></TopNavigationComponent>
+                    style={{marginBottom: scale(0)}}
+                  />
                 </View>
               )}
               renderFooter={currentIndex => {

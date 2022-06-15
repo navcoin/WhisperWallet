@@ -180,7 +180,7 @@ const AppContainer = (props: any) => {
       }}
       initialRouteName={props.shownWelcome == 'true' ? 'App' : 'OnBoarding'}>
       <StackApp.Screen name="OnBoarding" component={OnBoarding} />
-      <StackApp.Screen name="App" component={AppContent}></StackApp.Screen>
+      <StackApp.Screen name="App" component={AppContent} />
     </StackApp.Navigator>
   ) : (
     <View />

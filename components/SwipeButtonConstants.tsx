@@ -1,6 +1,4 @@
-import {
-  Dimensions,
-} from 'react-native';
+import {Dimensions} from 'react-native';
 
 export const DEFAULT_HEIGHT = 70;
 export const DEFAULT_WIDTH = Dimensions.get('window').width * 0.9;

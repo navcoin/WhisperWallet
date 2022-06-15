@@ -1,11 +1,10 @@
-import Tab from './Tab';
 import Content from './Content';
 import {RefreshControl, ScrollView, View} from 'react-native';
 import {useEffect} from 'react';
 import BalanceCard from './BalanceCard';
 import Text from './Text';
 import React, {useCallback, useState} from 'react';
-import {BalanceFragment, Connection_Stats_Enum} from '../constants/Type';
+import {BalanceFragment} from '../constants/Type';
 import {useBottomSheet} from '../src/hooks/useBottomSheet';
 import BottomSheetMenu from './BottomSheetMenu';
 import useWallet from '../src/hooks/useWallet';

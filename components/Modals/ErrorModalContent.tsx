@@ -24,7 +24,9 @@ const ErrorModalContent = (props: {
 
   useEffect(() => {
     AsyncStorage.getItem(AsyncStoredItems.TEMP_ERROR_RECORDS).then(val => {
-      if (val) setErrorRecords(val);
+      if (val) {
+        setErrorRecords(val);
+      }
     });
   });
 

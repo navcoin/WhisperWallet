@@ -1,9 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {
-  StyleService,
-  useStyleSheet,
-  useTheme,
-} from '@tsejerome/ui-kitten-components';
+import {useTheme} from '@tsejerome/ui-kitten-components';
 import {QrContextValue, QrContext} from './QrContext';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import Text from '../components/Text';
@@ -13,7 +9,6 @@ import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {useEffect} from 'react';
 
 export const QrProvider = (props: any) => {
-  const [content, setContent] = useState(null);
   const [showQr, setShowQr] = useState(false);
   const [qrError, setQrError] = useState('');
   const [to, setTo] = useState('');

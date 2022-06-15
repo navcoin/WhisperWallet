@@ -55,11 +55,15 @@ const App = (props: {theme: string}) => {
   useEffect(() => {
     AsyncStorage.getItem(AsyncStoredItems.PROMPT_ERROR_ON_NEXT_LAUNCH).then(
       val => {
-        if (val !== null) setPromptPreviousError(val === 'true' ? true : false);
+        if (val !== null) {
+          setPromptPreviousError(val === 'true' ? true : false);
+        }
       },
     );
     AsyncStorage.getItem(AsyncStoredItems.TEMP_ERROR_RECORDS).then(val => {
-      if (val !== null) setTemporaryErrorRecords(val);
+      if (val !== null) {
+        setTemporaryErrorRecords(val);
+      }
     });
   }, []);
 

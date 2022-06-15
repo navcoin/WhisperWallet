@@ -3,37 +3,27 @@ import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {
   Button,
-  Icon,
   IndexPath,
   Input,
   Layout,
   Select,
   SelectItem,
-  TopNavigationAction,
 } from '@tsejerome/ui-kitten-components';
 import Container from '../../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {ServerOption} from '../../../constants/Type';
 import Text from '../../../components/Text';
 import {RootStackParamList, ScreenProps} from '../../../navigation/type';
-import useAsyncStorage from '../../hooks/useAsyncStorage';
-import {networkOptions, protosOptions} from '../../../constants/Data';
+import {protosOptions} from '../../../constants/Data';
 import {validateIp, validatePort} from '../../../utils/server';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import TopNavigationComponent from '../../../components/TopNavigation';
 import {scale, verticalScale} from 'react-native-size-matters';
 
 const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
-  const {walletName, network} = useWallet();
+  const {network} = useWallet();
 
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
-
-  const [currentServers, setCurrentServers] = useAsyncStorage(
-    'currentServers',
-    networkOptions[network],
-  );
-  const [editMode, setEditMode] = useState(false);
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [error, setError] = useState('');
 
   const [newServer, setNewServer] = useState<ServerOption>({

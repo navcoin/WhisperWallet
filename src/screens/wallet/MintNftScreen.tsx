@@ -84,7 +84,10 @@ const MintNftScreen = (props: any) => {
       } else if (!found) {
         setFullyMinted(true);
       }
-      if (found) setAssignedId(tempAssignedId);
+
+      if (found) {
+        setAssignedId(tempAssignedId);
+      }
     });
   }, []);
 
@@ -144,7 +147,7 @@ const MintNftScreen = (props: any) => {
                     <Text
                       category="headline"
                       style={{flex: 1, flexWrap: 'wrap'}}>
-                      {collection['name']}
+                      {collection.name}
                     </Text>
                   </View>
 
@@ -155,7 +158,7 @@ const MintNftScreen = (props: any) => {
                     <Text
                       category="headline"
                       style={{flex: 1, flexWrap: 'wrap'}}>
-                      {collection['resource']}
+                      {collection.resource}
                     </Text>
                   </View>
                 </Layout>
@@ -245,7 +248,7 @@ const MintNftScreen = (props: any) => {
             <Input
               autoFocus={true}
               style={[styles.inputField]}
-              value={collection['name']}
+              value={collection.name}
               onChangeText={value => {
                 setCollectionProperty('name', value);
               }}
@@ -257,7 +260,7 @@ const MintNftScreen = (props: any) => {
             </Text>
             <Input
               style={[styles.inputField]}
-              value={collection['resource']}
+              value={collection.resource}
               onChangeText={value => {
                 setCollectionProperty('resource', value);
               }}
@@ -266,7 +269,9 @@ const MintNftScreen = (props: any) => {
           <Button
             status={'primary-whisper'}
             onPress={() => {
-              if (assignedId != -1) mintNftItem();
+              if (assignedId != -1) {
+                mintNftItem();
+              }
             }}>
             {fullyMinted
               ? 'The collection is already fully minted'

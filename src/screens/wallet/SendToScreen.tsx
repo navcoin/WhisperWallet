@@ -240,7 +240,9 @@ const SendToScreen = (props: any) => {
               })}
               text={'Item'}
               defaultOption={(() => {
-                if (!from.items.confirmed[nftId]) return '';
+                if (!from.items.confirmed[nftId]) {
+                  return '';
+                }
                 let obj =
                   typeof from.items.confirmed[nftId] === 'object'
                     ? from.items.confirmed[nftId]

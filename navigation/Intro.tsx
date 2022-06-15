@@ -33,7 +33,9 @@ const Intro = memo(props => {
     closeModal();
   }, [loading]);
   useEffect(() => {
-    if (walletName?.length) return;
+    if (walletName?.length) {
+      return;
+    }
     AsyncStorage.getItem('LastOpenedWalletName').then(async val => {
       if (val && val.length) {
         readPassword()

@@ -30,8 +30,9 @@ export const SecurityProvider = (props: any) => {
 
   useEffect(() => {
     AsyncStorage.getItem('lockAfterBackground').then(val => {
-      if (val !== null)
+      if (val !== null) {
         setStateLockAfterBackground(val == 'true' ? true : false);
+      }
     });
   }, []);
 

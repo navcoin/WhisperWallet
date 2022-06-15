@@ -11,7 +11,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, {G, Path} from 'react-native-svg';
 import {useTheme} from '@tsejerome/ui-kitten-components';
-import useTraceUpdates from '../src/hooks/useTraceUpdates';
 
 type CircularProgressProps = {
   strokeWidth: number;

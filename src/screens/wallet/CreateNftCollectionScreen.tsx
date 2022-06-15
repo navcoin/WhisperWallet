@@ -6,7 +6,6 @@ import {
   Input,
   Layout,
   TopNavigation,
-  useStyleSheet,
 } from '@tsejerome/ui-kitten-components';
 import Container from '../../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -67,9 +66,9 @@ const CreateNftCollectionScreen = () => {
       .then(async spendingPassword => {
         setLoading('Creating transaction...');
         createNftCollection(
-          collection['name'],
+          collection.name,
           JSON.stringify({...collection, amount: undefined, name: undefined}),
-          collection['amount'],
+          collection.amount,
           spendingPassword,
         )
           .then(tx => {
@@ -85,7 +84,7 @@ const CreateNftCollectionScreen = () => {
                     <Text
                       category="headline"
                       style={{flex: 1, flexWrap: 'wrap'}}>
-                      {collection['name']}
+                      {collection.name}
                     </Text>
                   </View>
 
@@ -96,7 +95,7 @@ const CreateNftCollectionScreen = () => {
                     <Text
                       category="headline"
                       style={{flex: 1, flexWrap: 'wrap'}}>
-                      {collection['description']}
+                      {collection.description}
                     </Text>
                   </View>
 
@@ -107,7 +106,7 @@ const CreateNftCollectionScreen = () => {
                     <Text
                       category="headline"
                       style={{flex: 1, flexWrap: 'wrap'}}>
-                      {collection['amount']}
+                      {collection.amount}
                     </Text>
                   </View>
                 </Layout>
@@ -197,7 +196,7 @@ const CreateNftCollectionScreen = () => {
             <Input
               autoFocus={true}
               style={[styles.inputField]}
-              value={collection['name']}
+              value={collection.name}
               onChangeText={value => {
                 setCollectionProperty('name', value);
               }}
@@ -209,7 +208,7 @@ const CreateNftCollectionScreen = () => {
             </Text>
             <Input
               style={[styles.inputField]}
-              value={collection['description']}
+              value={collection.description}
               onChangeText={value => {
                 setCollectionProperty('description', value);
               }}
@@ -221,7 +220,7 @@ const CreateNftCollectionScreen = () => {
             </Text>
             <Input
               style={[styles.inputField]}
-              value={collection['amount']?.toString()}
+              value={collection.amount?.toString()}
               keyboardType={'number-pad'}
               returnKeyType={'done'}
               placeholder={'0'}

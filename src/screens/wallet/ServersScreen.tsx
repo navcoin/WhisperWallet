@@ -9,9 +9,8 @@ import {
 import Container from '../../../components/Container';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {NetworkOption, ServerOption} from '../../../constants/Type';
-import Text from '../../../components/Text';
 import OptionCard from '../../../components/OptionCard';
-import {RootStackParamList, ScreenProps} from '../../../navigation/type';
+import {RootStackParamList} from '../../../navigation/type';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import {networkOptions} from '../../../constants/Data';
 import TopNavigationComponent from '../../../components/TopNavigation';
@@ -31,7 +30,7 @@ const renderRightActions = (editMode: boolean, onPress: () => void) => (
   </React.Fragment>
 );
 
-const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
+const ServersScreen = () => {
   const {walletName, network} = useWallet();
 
   const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -58,7 +57,7 @@ const ServersScreen = (props: ScreenProps<'ServersScreen'>) => {
       {
         text: 'Yes',
         onPress: () => {
-          const network = network as NetworkOption;
+          network as NetworkOption;
           setCurrentServers(networkOptions[network]);
         },
       },

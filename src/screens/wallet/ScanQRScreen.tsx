@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Image, TouchableOpacity, View} from 'react-native';
 import {
-  Button,
   Layout,
   StyleService,
   TopNavigation,
@@ -28,8 +27,7 @@ import useLayout from '../../hooks/useLayout';
 import {QRreader} from 'react-native-qr-decode-image-camera';
 
 const ScanQRScreen = (props: any) => {
-  const {navigate, goBack} =
-    useNavigation<NavigationProp<RootStackParamList>>();
+  const {goBack} = useNavigation<NavigationProp<RootStackParamList>>();
   const styles = useStyleSheet(themedStyles);
   const {ExecWrapperPromise, ExecWrapperSyncPromise, sendTransaction} =
     useWallet();
