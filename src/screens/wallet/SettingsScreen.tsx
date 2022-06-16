@@ -100,7 +100,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       await removeWallet(walletName);
     }
     navigate('Intro');
-    setLoading(undefined);
+    setLoading(false);
   };
 
   const resyncWallet = () => {
@@ -122,7 +122,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
         '',
         () => {
           setTimeout(() => {
-            setLoading(undefined);
+            setLoading(false);
             goBack();
           }, 500);
         },

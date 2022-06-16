@@ -62,12 +62,12 @@ const OpenWallet = () => {
                           'mainnet',
                           () => {
                             navigate('MainWalletScreen');
-                            setLoading(undefined);
+                            setLoading(false);
                           },
                         );
                       })
                       .catch((e: any) => {
-                        setLoading(undefined);
+                        setLoading(false);
                         promptErrorToaster(e.toString(), false, false, () => {
                           const errorMsg = errorTextParser(e.toString(), false);
                           openModal(<ErrorModalContent errorText={errorMsg} />);

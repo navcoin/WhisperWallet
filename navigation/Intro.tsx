@@ -52,12 +52,12 @@ const Intro = memo(props => {
               'mainnet',
               () => {
                 navigate('MainWalletScreen');
-                setLoading(undefined);
+                setLoading(false);
               },
             );
           })
           .catch((e: any) => {
-            setLoading(undefined);
+            setLoading(false);
             let errorStr = `Could not open wallet ${val}: ${e.toString()}`;
             Toast.show({
               type: 'error',

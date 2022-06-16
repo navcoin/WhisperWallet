@@ -135,7 +135,7 @@ const MintNftScreen = (props: any) => {
           spendingPassword,
         )
           .then(tx => {
-            setLoading(undefined);
+            setLoading(false);
             bottomSheet.expand(
               <BottomSheetView>
                 <TopNavigation title="Confirm NFT mint" />
@@ -191,9 +191,9 @@ const MintNftScreen = (props: any) => {
                             </Text>
                           </BottomSheetView>,
                         );
-                        setLoading(undefined);
+                        setLoading(false);
                       } else {
-                        setLoading(undefined);
+                        setLoading(false);
                         collapse();
                         navigate('MainWalletScreen');
                       }
@@ -216,11 +216,11 @@ const MintNftScreen = (props: any) => {
                 </Text>
               </BottomSheetView>,
             );
-            setLoading(undefined);
+            setLoading(false);
           });
       })
       .catch(e => {
-        setLoading(undefined);
+        setLoading(false);
 
         bottomSheet.expand(
           <BottomSheetView>

@@ -222,13 +222,13 @@ const ImportWallet = () => {
                         true,
                         network,
                         () => {
-                          setLoading(undefined);
+                          setLoading(false);
                           setIndex(4);
                         },
                       );
                     })
                     .catch((e: any) => {
-                      setLoading(undefined);
+                      setLoading(false);
                       promptErrorToaster(e.toString(), false, false, () => {
                         const errorMsg = errorTextParser(e.toString(), false);
                         openModal(<ErrorModalContent errorText={errorMsg} />);

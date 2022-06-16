@@ -23,7 +23,7 @@ const SendTransactionButton = (props: any) => {
   const {from, to, amount, memo, subtractFee} = props;
   const {createTransaction, sendTransaction} = useWallet();
   const {readPassword} = useSecurity();
-  const [loading, setLoading] = useState<string | undefined>(undefined);
+  const [loading, setLoading] = useState<string | undefined>(false);
   const bottomSheet = useBottomSheet();
   const {goBack} = useNavigation<NavigationProp<RootStackParamList>>();
   const {collapse} = useBottomSheet();
@@ -60,7 +60,7 @@ const SendTransactionButton = (props: any) => {
                 props.nftId,
               )
                 .then((tx: any) => {
-                  setLoading(undefined);
+                  setLoading(false);
                   bottomSheet.expand(
                     <BottomSheetView>
                       <TopNavigation title="Confirm Transaction" />
@@ -121,7 +121,7 @@ const SendTransactionButton = (props: any) => {
                         onComplete={() => {
                           setLoading('Broadcasting...');
                           sendTransaction(tx.tx).then(() => {
-                            setLoading(undefined);
+                            setLoading(false);
                             collapse();
                             goBack();
                           });
@@ -143,11 +143,11 @@ const SendTransactionButton = (props: any) => {
                       </Text>
                     </BottomSheetView>,
                   );
-                  setLoading(undefined);
+                  setLoading(false);
                 });
             })
             .catch(e => {
-              setLoading(undefined);
+              setLoading(false);
 
               bottomSheet.expand(
                 <BottomSheetView>
