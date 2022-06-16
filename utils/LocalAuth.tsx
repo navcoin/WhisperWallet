@@ -1,19 +1,36 @@
-import * as LocalAuthentication from 'expo-local-authentication';
+import FingerprintScanner from 'react-native-fingerprint-scanner';
 
-const LocalAuth = (res: any) => {
+const isDeviceBiometricCapable = async () => {
   try {
-    LocalAuthentication.authenticateAsync().then(
-      (authResult: LocalAuthentication.LocalAuthenticationResult) => {
-        if (authResult.success) {
-          res(undefined);
-        } else {
-          res(authResult.error);
-        }
-      },
+    if (await FingerprintScanner.isSensorAvailable()) {
+      return true;
+    }
+  } catch (e) {
+    console.log('Biometrics isDeviceBiometricCapable failed');
+    console.log(e);
+    return false;
+  }
+};
+
+const LocalAuth = async (res: any) => {
+  if (await isDeviceBiometricCapable()) {
+    res(
+      await new Promise(resolve => {
+        FingerprintScanner.authenticate({
+          description: 'Authenticate to unlock Whisper',
+          fallbackEnabled: true,
+        })
+          .then(() => resolve(false))
+          .catch(error => {
+            console.log('Biometrics authentication failed');
+            console.log(error);
+            resolve(true);
+          })
+          .finally(() => FingerprintScanner.release());
+      }),
     );
-  } catch (error) {
-    res(error);
-    console.log("Keychain couldn't be accessed!", error);
+  } else {
+    res(true);
   }
 };
 

@@ -6,6 +6,7 @@ import {SecurityAuthenticationTypes} from '../contexts/SecurityContext';
 import {BlurView} from '@react-native-community/blur';
 import {StyleSheet, View} from 'react-native';
 import {scale} from 'react-native-size-matters';
+import {BlurViewContainer} from './BlurViewContainer';
 
 interface ContainerProps extends LayoutProps {
   useSafeArea?: boolean;
@@ -35,12 +36,13 @@ const Container: React.FC<ContainerProps> = ({
         style,
       ]}>
       {children}
+
       {lockedScreen && !props.doNotLock && (
-        <BlurView
-          style={{...StyleSheet.absoluteFillObject}}
-          blurType="dark"
-          blurAmount={10}
-          reducedTransparencyFallbackColor="#1f2933">
+        <View
+          style={{
+            ...StyleSheet.absoluteFillObject,
+            backgroundColor: '#1f2933',
+          }}>
           <View style={styles.contentContainer}>
             {!(
               currentAuthenticationType ==
@@ -63,7 +65,7 @@ const Container: React.FC<ContainerProps> = ({
               />
             )}
           </View>
-        </BlurView>
+        </View>
       )}
     </Layout>
   );
