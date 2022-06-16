@@ -23,7 +23,7 @@ const SendTransactionButton = (props: any) => {
   const {from, to, amount, memo, subtractFee} = props;
   const {createTransaction, sendTransaction} = useWallet();
   const {readPassword} = useSecurity();
-  const [loading, setLoading] = useState<string | undefined>(undefined);
+  const [loading, setLoading] = useState<string | undefined>(false);
   const bottomSheet = useBottomSheet();
   const {goBack} = useNavigation<NavigationProp<RootStackParamList>>();
   const {collapse} = useBottomSheet();
