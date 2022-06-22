@@ -1,6 +1,6 @@
 import FingerprintScanner from 'react-native-fingerprint-scanner';
 
-const isDeviceBiometricCapable = async () => {
+export const isDeviceBiometricCapable = async () => {
   try {
     if (await FingerprintScanner.isSensorAvailable()) {
       return true;

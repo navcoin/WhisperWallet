@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import crypto from 'crypto';
 import useKeychain from '../utils/Keychain';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import LocalAuth from '../utils/LocalAuth';
+import LocalAuth, {isDeviceBiometricCapable} from '../utils/LocalAuth';
 import {Text} from '@tsejerome/ui-kitten-components';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Container from '../components/Container';
@@ -140,7 +140,7 @@ export const SecurityProvider = (props: any) => {
       }
     }
 
-    setIsPinOrFingerprintSet(await DeviceInfo.isPinOrFingerprintSet());
+    setIsPinOrFingerprintSet(await isDeviceBiometricCapable());
     setSupportedBiometry(await Keychain.getSupportedBiometryType({}));
   }, [
     currentAuthenticationType,
