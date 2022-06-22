@@ -19,7 +19,6 @@ import useWallet from '../src/hooks/useWallet';
 import {AppState, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
-import {Connection_Stats_Enum} from '../constants/Type';
 import useTraceUpdates from '../src/hooks/useTraceUpdates';
 
 export const SecurityProvider = (props: any) => {
@@ -43,7 +42,7 @@ export const SecurityProvider = (props: any) => {
 
   const {navigate} = useNavigation();
 
-  const {refreshWallet, connected} = useWallet();
+  const {refreshWallet} = useWallet();
 
   const appState = useRef(AppState.currentState);
 
@@ -101,7 +100,7 @@ export const SecurityProvider = (props: any) => {
     });
 
     /*
-     * Need to remove the susbcription when the component is unmounted
+     * Need to remove the subscription when the component is unmounted
      * */
 
     return () => {
@@ -257,7 +256,7 @@ export const SecurityProvider = (props: any) => {
    * Generates a random key and stores it in the encrypted storage.
    */
 
-  const writeEncrypedStorage = useCallback(async (suffix: string) => {
+  const writeEncryptedStorage = useCallback(async (suffix: string) => {
     try {
       await EncryptedStorage.setItem(
         suffix,
@@ -272,7 +271,7 @@ export const SecurityProvider = (props: any) => {
    * Reads the key stored in the encrypted storage
    */
 
-  const readEncrytedStorage = useCallback(
+  const readEncryptedStorage = useCallback(
     async (suffix: string): Promise<string> => {
       try {
         let creds = await EncryptedStorage.getItem(suffix);
@@ -290,15 +289,15 @@ export const SecurityProvider = (props: any) => {
 
           return creds;
         } else {
-          await writeEncrypedStorage(suffix);
-          return await readEncrytedStorage(suffix);
+          await writeEncryptedStorage(suffix);
+          return await readEncryptedStorage(suffix);
         }
       } catch (e) {
         console.log(e);
         throw new Error('Authentication Failed');
       }
     },
-    [writeEncrypedStorage],
+    [writeEncryptedStorage],
   );
 
   /*
@@ -327,14 +326,14 @@ export const SecurityProvider = (props: any) => {
               'AuthenticationType',
             )) as unknown as SecurityAuthenticationTypes);
         await new Promise((res, _) => {
-          setInterval(res, 100);
+          setTimeout(res, 100);
         });
       }
 
       if (authType == SecurityAuthenticationTypes.KEYCHAIN) {
         return await read('whisperMasterKey');
       } else if (authType == SecurityAuthenticationTypes.LOCALAUTH) {
-        return await readEncrytedStorage('whisperMasterKey');
+        return await readEncryptedStorage('whisperMasterKey');
       } else if (
         authType == SecurityAuthenticationTypes.MANUAL ||
         authType == SecurityAuthenticationTypes.MANUAL_4

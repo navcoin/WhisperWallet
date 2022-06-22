@@ -3,7 +3,6 @@ import {Button, Layout, LayoutProps} from '@tsejerome/ui-kitten-components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useSecurity from '../src/hooks/useSecurity';
 import {SecurityAuthenticationTypes} from '../contexts/SecurityContext';
-import {BlurView} from '@react-native-community/blur';
 import {StyleSheet, View} from 'react-native';
 import {scale} from 'react-native-size-matters';
 
@@ -35,12 +34,13 @@ const Container: React.FC<ContainerProps> = ({
         style,
       ]}>
       {children}
+
       {lockedScreen && !props.doNotLock && (
-        <BlurView
-          style={{...StyleSheet.absoluteFillObject}}
-          blurType="dark"
-          blurAmount={10}
-          reducedTransparencyFallbackColor="#1f2933">
+        <View
+          style={{
+            ...StyleSheet.absoluteFillObject,
+            backgroundColor: '#1f2933',
+          }}>
           <View style={styles.contentContainer}>
             {!(
               currentAuthenticationType ==
@@ -63,7 +63,7 @@ const Container: React.FC<ContainerProps> = ({
               />
             )}
           </View>
-        </BlurView>
+        </View>
       )}
     </Layout>
   );
