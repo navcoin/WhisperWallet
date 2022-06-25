@@ -94,16 +94,17 @@ export const WalletProvider = (props: any) => {
 
   const ExecWrapper = useCallback(
     (func: string, params?: string[], cb?: any, cb2?: any) => {
-      callbacks[func] = [cb, cb2];
+      let funcCbName = func + '~~' + Math.random().toString(36).slice(2, 7);
+      callbacks[funcCbName] = [cb, cb2];
       setCallbacks(callbacks);
       InjectJavascript(
         `${func}(${
           params ? params.join(',') : ''
-        }).then((a) => sendToRN("${func}", a))${
+        }).then((a) => sendToRN("${funcCbName}", a))${
           cb2 === undefined
             ? ''
             : '.catch(e => sendToRN("E-' +
-              func +
+              funcCbName +
               '", {message: e.toString(), stack: e.stack}))'
         };`,
       );
@@ -113,8 +114,10 @@ export const WalletProvider = (props: any) => {
 
   const ExecWrapperSyncPromise = useCallback(
     (func: string, params?: string[]) => {
-      const parsedFunc = func.replace(/[ \n"]/g, '');
-      console.log(parsedFunc);
+      const parsedFunc =
+        func.replace(/[ \n"]/g, '') +
+        '~~' +
+        Math.random().toString(36).slice(2, 7);
       return new Promise((res, rej) => {
         callbacks[parsedFunc] = [res, rej];
         setCallbacks(callbacks);
@@ -133,7 +136,10 @@ try {
   const ExecWrapperPromise = useCallback(
     (func: string, params?: string[]) => {
       return new Promise((res, rej) => {
-        let parsedFunc = func.replace(/"/g, '');
+        let parsedFunc =
+          func.replace(/"/g, '') +
+          '~~' +
+          Math.random().toString(36).slice(2, 7);
         callbacks[parsedFunc] = [res, rej];
         setCallbacks(callbacks);
         InjectJavascript(
@@ -148,14 +154,15 @@ try {
 
   const ExecWrapperSync = useCallback(
     (func: string, params?: string[], cb?: any, cb2?: any) => {
-      callbacks[func] = [cb, cb2];
+      let funcCbName = func + '~~' + Math.random().toString(36).slice(2, 7);
+      callbacks[funcCbName] = [cb, cb2];
       setCallbacks(callbacks);
       InjectJavascript(`
 try {
   let res = ${func}(${params ? params.join(',') : ''});
-  sendToRN("${func}", res);
+  sendToRN("${funcCbName}", res);
 } catch(e) {
-  sendToRN("E-${func}", {message: e.toString(), stack: e.stack});
+  sendToRN("E-${funcCbName}", {message: e.toString(), stack: e.stack});
 }`);
     },
     [callbacks, InjectJavascript],
@@ -1111,29 +1118,30 @@ wallet.Load({
           delete callbacks[dataPayload.type];
           setCallbacks(callbacks);
         }
-        if (dataPayload.type === 'Console') {
+        let func = dataPayload.type.split('~~')[0];
+        if (func === 'Console') {
           console.log(
             `[navcoin-js:${dataPayload.data.type}] ${dataPayload.data.log}`,
           );
-        } else if (dataPayload.type === 'WalletInit') {
+        } else if (func === 'WalletInit') {
           setWalletLibLoaded(true);
-        } else if (dataPayload.type === 'WalletsList') {
+        } else if (func === 'WalletsList') {
           setWalletsList(dataPayload.data);
-        } else if (dataPayload.type === 'wallet.GetBalance') {
+        } else if (func === 'wallet.GetBalance') {
           setBalances(dataPayload.data);
-        } else if (dataPayload.type === 'wallet.GetAllAddresses') {
+        } else if (func === 'wallet.GetAllAddresses') {
           setAddresses(dataPayload.data);
-        } else if (dataPayload.type === 'wallet.GetHistory') {
+        } else if (func === 'wallet.GetHistory') {
           setHistory(dataPayload.data);
-        } else if (dataPayload.type === 'wallet.GetMyTokens') {
+        } else if (func === 'wallet.GetMyTokens') {
           setMyTokens(dataPayload.data);
-        } else if (dataPayload.type === 'wallet.Sync') {
+        } else if (func === 'wallet.Sync') {
           ExecWrapper('wallet.GetBalance');
           ExecWrapper('wallet.GetHistory');
           ExecWrapper('wallet.GetAllAddresses');
-        } else if (dataPayload.type === 'RemoveWallet') {
+        } else if (func === 'RemoveWallet') {
           RequestWallets();
-        } else if (dataPayload.type === 'loaded') {
+        } else if (func === 'loaded') {
           ExecWrapper('wallet.GetBalance');
           ExecWrapper('wallet.GetHistory');
           ExecWrapper('wallet.GetMyTokens', [`"${spendingPassword}"`]);
@@ -1145,33 +1153,35 @@ wallet.Load({
           setNetwork(dataPayload.data.network);
           RequestWallets();
           AsyncStorage.setItem('LastOpenedWalletName', walletName);
-        } else if (dataPayload.type === 'new_token') {
+        } else if (func === 'new_token') {
           ExecWrapper('wallet.GetMyTokens', [`"${spendingPassword}"`]);
-        } else if (dataPayload.type === 'sync_status') {
+        } else if (func === 'sync_status') {
           setSyncProgress(dataPayload.data.progress);
-        } else if (dataPayload.type === 'disconnected') {
+        } else if (func === 'disconnected') {
           setConnected(Connection_Stats_Enum.Disconnected);
-        } else if (dataPayload.type === 'connection_failed') {
+        } else if (func === 'connecting') {
+          setConnected(Connection_Stats_Enum.Connecting);
+        } else if (func === 'connection_failed') {
           setConnected(Connection_Stats_Enum.Disconnected);
-        } else if (dataPayload.type === 'connected') {
+        } else if (func === 'connected') {
           console.log('connected to ', dataPayload.data.serverName);
           setServer(dataPayload.data.serverName);
           setConnected(Connection_Stats_Enum.Connected);
-        } else if (dataPayload.type === 'new_tx') {
+        } else if (func === 'new_tx') {
           if (firstSyncCompleted && !dataPayload.data?.confirmed) {
             ExecWrapper('wallet.GetBalance');
             ExecWrapper('wallet.GetHistory');
             ExecWrapper('wallet.GetAllAddresses');
           }
-        } else if (dataPayload.type === 'sync_started') {
+        } else if (func === 'sync_started') {
           setConnected(Connection_Stats_Enum.Syncing);
-        } else if (dataPayload.type === 'bootstrap_started') {
+        } else if (func === 'bootstrap_started') {
           setConnected(Connection_Stats_Enum.Bootstrapping);
-        } else if (dataPayload.type === 'bootstrap_progress') {
+        } else if (func === 'bootstrap_progress') {
           setBootstrapProgress(dataPayload.data.count);
-        } else if (dataPayload.type === 'new_mnemonic') {
+        } else if (func === 'new_mnemonic') {
           setMnemonic(dataPayload.data);
-        } else if (dataPayload.type === 'sync_finished') {
+        } else if (func === 'sync_finished') {
           console.log('sync_finished');
           setSyncProgress(100);
           setFirstSyncCompleted(true);
@@ -1181,7 +1191,7 @@ wallet.Load({
           ExecWrapper('wallet.GetMyTokens', [`"${spendingPassword}"`]);
           ExecWrapper('wallet.GetAllAddresses');
           setSpendingPassword('');
-        } else if (dataPayload.type === 'new_staking_address') {
+        } else if (func === 'new_staking_address') {
           updateAccounts();
         } else {
           console.log(dataPayload.type, dataPayload.data);

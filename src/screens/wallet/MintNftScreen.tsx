@@ -20,6 +20,7 @@ import {SwipeButton} from '../../../components/SwipeButton';
 import {useBottomSheet} from '../../hooks/useBottomSheet';
 import {useModal} from '../../hooks/useModal';
 import LoadingModalContent from '../../../components/Modals/LoadingModalContent';
+import Toast from 'react-native-toast-message';
 
 const MintNftScreen = (props: any) => {
   const {MintNft, ExecWrapperPromise, sendTransaction, parsedAddresses} =
@@ -271,6 +272,12 @@ const MintNftScreen = (props: any) => {
             onPress={() => {
               if (assignedId != -1) {
                 mintNftItem();
+              } else {
+                Toast.show({
+                  type: 'error',
+                  text1: 'Please wait until the ID is assigned...',
+                  autoHide: false,
+                });
               }
             }}>
             {fullyMinted

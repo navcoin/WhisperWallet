@@ -167,7 +167,7 @@ export const SecurityProvider = (props: any) => {
     }
     AsyncStorage.getItem('AuthenticationType').then(async val => {
       if (!val) {
-        if (supportedBiometry !== null) {
+        if (supportedBiometry !== null && Platform.OS == 'ios') {
           AsyncStorage.setItem(
             'AuthenticationType',
             SecurityAuthenticationTypes.KEYCHAIN,

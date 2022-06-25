@@ -170,17 +170,9 @@ const ScanQRScreen = (props: any) => {
     } else if (type == 'gzo') {
       try {
         let order = JSON.parse(Gzip.unzip(toParse));
-        if (
-          !(await ExecWrapperPromise(
-            'wallet.VerifyOrder',
-            [order].map(el => JSON.stringify(el)),
-          ))
-        ) {
-          setQrError('The order is invalid');
-        } else {
-          AcceptOrder(order);
-          setQrError(undefined);
-        }
+
+        AcceptOrder(order);
+        setQrError(undefined);
       } catch (e: any) {
         setQrError('Error: ' + e.message ? e.message : e.toString());
       }
