@@ -69,7 +69,7 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
       setError('Invalid port');
       return;
     }
-    props.route.params.addServer(newServer, () => {
+    props.route.params.params.addServer(newServer, () => {
       props.navigation.goBack();
     });
   };
@@ -101,7 +101,7 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
             </Text>
             <Input
               style={[styles.inputField]}
-              value={newServer.port}
+              value={newServer.port?.toString()}
               onChangeText={value => {
                 setNewServerProperty('port', Number.parseInt(value));
               }}
