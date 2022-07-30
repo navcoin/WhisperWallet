@@ -24,3 +24,13 @@ platform :ios do
     upload_to_testflight
   end
 end
+
+lane :release do
+  get_certificates           # invokes cert
+  get_provisioning_profile 
+  build_app(scheme: "navcash",
+            workspace: "navcash.xcworkspace",
+            include_bitcode: true)
+  upload_to_app_store                  # upload your app to App Store Connect
+  slack(message: "Successfully uploaded a new App Store build")
+end
