@@ -13,7 +13,7 @@ export const QrProvider = (props: any) => {
   const [qrError, setQrError] = useState('');
   const [to, setTo] = useState('');
   const [cameraPermision, setCameraPermision] = useState(false);
-  const {ExecWrapperSyncPromise} = useWallet();
+  const {ExecWrapperSyncPromise, network} = useWallet();
   const theme = useTheme();
 
   const qrContext: QrContextValue = useMemo(
@@ -60,8 +60,8 @@ export const QrProvider = (props: any) => {
             }
             if (
               !(await ExecWrapperSyncPromise(
-                'bitcore.Address.isValid',
-                [toParse].map(el => JSON.stringify(el)),
+                'njs.wallet.bitcore.Address.isValid',
+                [toParse, network].map(el => JSON.stringify(el)),
               ))
             ) {
               setQrError('Wrong address');

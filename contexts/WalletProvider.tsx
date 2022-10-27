@@ -126,6 +126,7 @@ try {
   let res = ${func}(${params ? params.join(',') : ''});
   sendToRN("${parsedFunc}", res);
 } catch(e) {
+  console.log(e.toString());
   sendToRN("${parsedFunc}", false);
 }`);
       });
@@ -162,6 +163,7 @@ try {
   let res = ${func}(${params ? params.join(',') : ''});
   sendToRN("${funcCbName}", res);
 } catch(e) {
+  console.log(e.toString());
   sendToRN("E-${funcCbName}", {message: e.toString(), stack: e.stack});
 }`);
     },

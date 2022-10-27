@@ -25,11 +25,12 @@ import LoadingModalContent from '../../../components/Modals/LoadingModalContent'
 import useSecurity from '../../hooks/useSecurity';
 import useLayout from '../../hooks/useLayout';
 import {QRreader} from 'react-native-qr-decode-image-camera';
+import {check} from 'react-native-permissions';
 
 const ScanQRScreen = (props: any) => {
   const {goBack} = useNavigation<NavigationProp<RootStackParamList>>();
   const styles = useStyleSheet(themedStyles);
-  const {ExecWrapperPromise, ExecWrapperSyncPromise, sendTransaction} =
+  const {ExecWrapperPromise, ExecWrapperSyncPromise, sendTransaction, network} =
     useWallet();
   const {readPassword} = useSecurity();
   const {collapse} = useBottomSheet();
@@ -150,6 +151,7 @@ const ScanQRScreen = (props: any) => {
   }, []);
 
   const processData = useCallback(async data => {
+    console.log(data.data);
     let toParse = data.data;
     let type = 'navcoin';
     if (data.data.indexOf(':') > -1) {
@@ -159,8 +161,8 @@ const ScanQRScreen = (props: any) => {
     if (type == 'navcoin') {
       if (
         !(await ExecWrapperSyncPromise(
-          'bitcore.Address.isValid',
-          [toParse].map(el => JSON.stringify(el)),
+          'njs.wallet.bitcore.Address.isValid',
+          [toParse, network].map(el => JSON.stringify(el)),
         ))
       ) {
         setQrError('Wrong address');

@@ -87,15 +87,15 @@ const SendToScreen = (props: any) => {
   }, [from, sources]);
 
   useEffect(() => {
-    ExecWrapperSyncPromise('bitcore.Address("' + to + '").isXnav').then(
-      isxNav => {
-        if (toType == Destination_Types_Enum.Address && to && !isxNav) {
-          setShowMemo(true);
-        } else {
-          setShowMemo(false);
-        }
-      },
-    );
+    ExecWrapperSyncPromise(
+      'njs.wallet.bitcore.Address("' + to + '").isXnav',
+    ).then(isxNav => {
+      if (toType == Destination_Types_Enum.Address && to && !isxNav) {
+        setShowMemo(true);
+      } else {
+        setShowMemo(false);
+      }
+    });
   }, [to, toType]);
 
   useEffect(() => {

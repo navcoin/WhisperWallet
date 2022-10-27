@@ -11,7 +11,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import TopNavigationComponent from '../../../components/TopNavigation';
 
 const AddStakingNodeScreen = () => {
-  const {updateAccounts, ExecWrapperPromise, ExecWrapperSyncPromise} =
+  const {updateAccounts, ExecWrapperPromise, ExecWrapperSyncPromise, network} =
     useWallet();
 
   const {goBack} = useNavigation<NavigationProp<RootStackParamList>>();
@@ -39,8 +39,8 @@ const AddStakingNodeScreen = () => {
     }
     if (
       !(await ExecWrapperSyncPromise(
-        'bitcore.Address.isValid',
-        [newNode.address].map(el => JSON.stringify(el)),
+        'njs.wallet.bitcore.Address.isValid',
+        [newNode.address, network].map(el => JSON.stringify(el)),
       ))
     ) {
       setError('Invalid Address');
@@ -48,7 +48,9 @@ const AddStakingNodeScreen = () => {
     }
     if (
       !(await ExecWrapperSyncPromise(
-        'bitcore.Address("' + newNode.address + '").isPayToPublicKeyHash',
+        'njs.wallet.bitcore.Address("' +
+          newNode.address +
+          '").isPayToPublicKeyHash',
       ))
     ) {
       setError('You need to specify a NAV address from the staking node');
