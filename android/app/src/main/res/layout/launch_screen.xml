@@ -7,8 +7,9 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="0dp"
         android:contentDescription="Splashscreen"
-        android:scaleType="center"
+        android:scaleType="fitCenter"
         android:background="@color/splashprimary"
-        android:src="@mipmap/splash_image"/>
+        android:src="@drawable/splashscreen"/>
 </RelativeLayout>
