@@ -17,7 +17,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 import BalanceCircle from '../../../components/BalanceCircle';
 
-import AccountsTab from '../../../components/AccountTabs';
+import MainScreenTab from '../../../components/MainScreenTab';
 import {RootStackParamList} from '../../../navigation/type';
 import {scale} from 'react-native-size-matters';
 import {TouchableWithoutFeedback} from '@tsejerome/ui-kitten-components/devsupport';
@@ -170,7 +170,7 @@ const MainWalletScreen = ({navigation}) => {
       <View style={{margin: scale(6)}}>
         <BalanceCircle />
       </View>
-      <AccountsTab />
+      <MainScreenTab />
     </Container>
   );
 };
