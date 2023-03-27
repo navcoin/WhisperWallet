@@ -17,7 +17,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 import BalanceCircle from '../../../components/BalanceCircle';
 
-import MainScreenTab from '../../../components/MainScreenTab';
+import MainScreenTab from '@screens/main';
 import {RootStackParamList} from '../../../navigation/type';
 import {scale} from 'react-native-size-matters';
 import {TouchableWithoutFeedback} from '@tsejerome/ui-kitten-components/devsupport';

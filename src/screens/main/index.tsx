@@ -3,9 +3,9 @@ import React from 'react';
 import {useTheme} from '@tsejerome/ui-kitten-components';
 import {scale} from 'react-native-size-matters';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Accounts from './AccountTab';
-import NFTs from './NFTTab';
-import Tokens from './TokensTab';
+import Accounts from './partials/AccountTab';
+import NFTs from './partials/NFTTab';
+import Tokens from './partials/TokensTab';
 
 const TabNavigator = createMaterialTopTabNavigator();
 

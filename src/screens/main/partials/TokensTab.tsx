@@ -1,58 +1,27 @@
-import Content from './Content';
 import {RefreshControl, ScrollView, View} from 'react-native';
 import {useEffect} from 'react';
-import BalanceCard from './BalanceCard';
 import React, {useCallback, useState} from 'react';
-import {BalanceFragment} from '../constants/Type';
-import {useBottomSheet} from '../src/hooks/useBottomSheet';
-import BottomSheetMenu from './BottomSheetMenu';
-import useWallet from '../src/hooks/useWallet';
+import {BalanceFragment} from '@constants/Type';
+import {useBottomSheet, useWallet} from '@hooks';
 import {
   StyleService,
   useStyleSheet,
   useTheme,
 } from '@tsejerome/ui-kitten-components';
-import BottomSheetOptions from './BottomSheetOptions';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {RootStackParamList} from '../navigation/type';
 
-const AccountTab = () => {
+import {BalanceCard, BottomSheetMenu, Content, Text} from '@components';
+
+const Tokens = () => {
   const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
   );
-  const {accounts, refreshWallet} = useWallet();
+  const {refreshWallet, tokens} = useWallet();
   const bottomSheet = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
   const theme = useTheme();
 
-  const pickDestination = useCallback(
-    account_ => {
-      let options = accounts
-        .filter(el => el.name != account_?.name)
-        .map(el => {
-          return {...el, text: el.name};
-        });
-
-      bottomSheet.expand(
-        <BottomSheetOptions
-          title={'Select destination'}
-          options={options}
-          bottomSheetRef={bottomSheet.getRef}
-          onSelect={(el: any) => {
-            navigate('SendToScreen' as any, {
-              from: account_,
-              toType: el,
-            });
-          }}
-        />,
-      );
-    },
-    [accounts, bottomSheet, navigate],
-  );
-
-  const expandMenu = useCallback(
+  const expandMenuToken = useCallback(
     account_ => {
       bottomSheet.expand(
         <BottomSheetMenu
@@ -79,14 +48,6 @@ const AccountTab = () => {
               },
             },
             {
-              text: 'Move to another account',
-              icon: 'exchange',
-              skipCollapse: true,
-              onPress: () => {
-                pickDestination(account_);
-              },
-            },
-            {
               text: 'Transaction history',
               icon: 'suitcase',
               navigate: {
@@ -100,31 +61,37 @@ const AccountTab = () => {
         />,
       );
     },
-    [bottomSheet, pickDestination],
+    [bottomSheet],
   );
 
-  const [accountsContent, setAccountContent] = useState(<></>);
+  const [tokensContent, setTokensContent] = useState(<></>);
 
   useEffect(() => {
-    setAccountContent(
+    setTokensContent(
       <>
-        {accounts.map((el, i) => {
-          return (
-            <View style={styles.item} key={i}>
-              <BalanceCard
-                item={{...el, name: el.name + ' account'}}
-                index={i}
-                onPress={() => {
-                  setAccount(el);
-                  expandMenu(el);
-                }}
-              />
-            </View>
-          );
-        })}
+        {tokens.length == 0 ? (
+          <Text marginBottom={scale(24)} center>
+            No private tokens found
+          </Text>
+        ) : (
+          tokens.map((el, i) => {
+            return (
+              <View style={styles.item} key={i}>
+                <BalanceCard
+                  item={{...el, name: el.name}}
+                  index={i}
+                  onPress={() => {
+                    setAccount(el);
+                    expandMenuToken(el);
+                  }}
+                />
+              </View>
+            );
+          })
+        )}
       </>,
     );
-  }, [accounts]);
+  }, [tokens]);
 
   return (
     <View
@@ -143,7 +110,7 @@ const AccountTab = () => {
           />
         }>
         <Content style={{paddingTop: verticalScale(24)}}>
-          {accountsContent}
+          {tokensContent}
         </Content>
       </ScrollView>
     </View>
@@ -155,4 +122,5 @@ const themedStyles = StyleService.create({
     marginBottom: verticalScale(16),
   },
 });
-export default AccountTab;
+
+export default Tokens;

@@ -1,50 +1,58 @@
-import Content from './Content';
 import {RefreshControl, ScrollView, View} from 'react-native';
 import {useEffect} from 'react';
-import BalanceCard from './BalanceCard';
-import Text from './Text';
 import React, {useCallback, useState} from 'react';
-import {BalanceFragment} from '../constants/Type';
-import {useBottomSheet} from '../src/hooks/useBottomSheet';
-import BottomSheetMenu from './BottomSheetMenu';
-import useWallet from '../src/hooks/useWallet';
+import {BalanceFragment} from '@constants/Type';
+import {useBottomSheet} from '@hooks/useBottomSheet';
+import useWallet from '@hooks/useWallet';
 import {
-  StyleService,
   useStyleSheet,
+  StyleService,
   useTheme,
 } from '@tsejerome/ui-kitten-components';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {scale, verticalScale} from 'react-native-size-matters';
+import {RootStackParamList} from '@navigation/type';
 
-const Tokens = () => {
+import {
+  BalanceCard,
+  BottomSheetMenu,
+  Content,
+  OptionCard,
+  Text,
+} from '@components';
+
+const NFTs = () => {
   const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
   );
-  const {refreshWallet, tokens} = useWallet();
+  const {refreshWallet, nfts} = useWallet();
   const bottomSheet = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
+  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
   const theme = useTheme();
 
-  const expandMenuToken = useCallback(
+  const expandMenuNft = useCallback(
     account_ => {
       bottomSheet.expand(
         <BottomSheetMenu
-          title={account_.name}
+          title={account_.name + ' Collection'}
+          ignoreSuffix={true}
           options={[
+            {
+              text: 'Open collection',
+              icon: 'image',
+              navigate: {
+                screen: 'CollectionScreen',
+                params: {
+                  collection: account_,
+                },
+              },
+            },
             {
               text: 'View address to receive',
               icon: 'download',
               navigate: {
                 screen: 'AddressScreen',
-                params: {
-                  from: account_,
-                },
-              },
-            },
-            {
-              text: 'Send to someone',
-              icon: 'diagonalArrow3',
-              navigate: {
-                screen: 'SendToScreen',
                 params: {
                   from: account_,
                 },
@@ -67,34 +75,49 @@ const Tokens = () => {
     [bottomSheet],
   );
 
-  const [tokensContent, setTokensContent] = useState(<></>);
+  const [nftsContent, setNftsContent] = useState(<></>);
 
   useEffect(() => {
-    setTokensContent(
+    setNftsContent(
       <>
-        {tokens.length == 0 ? (
-          <Text marginBottom={scale(24)} center>
-            No private tokens found
+        {nfts.length == 0 ? (
+          <Text center marginBottom={scale(24)}>
+            No private NFTs found
           </Text>
         ) : (
-          tokens.map((el, i) => {
+          nfts.map((el, i) => {
             return (
               <View style={styles.item} key={i}>
                 <BalanceCard
                   item={{...el, name: el.name}}
+                  key={i}
                   index={i}
                   onPress={() => {
                     setAccount(el);
-                    expandMenuToken(el);
+                    expandMenuNft(el);
                   }}
                 />
               </View>
             );
           })
         )}
+        <View style={styles.item}>
+          <OptionCard
+            color={theme['color-basic-1200']}
+            key={'add'}
+            index={nfts.length + 1}
+            item={{text: 'Create collection'}}
+            selected={''}
+            onPress={() => {
+              navigate('CreateNftCollectionScreen');
+            }}
+            icon={'add'}
+            cardType={'outline'}
+          />
+        </View>
       </>,
     );
-  }, [tokens]);
+  }, [nfts]);
 
   return (
     <View
@@ -112,9 +135,7 @@ const Tokens = () => {
             titleColor="#fff"
           />
         }>
-        <Content style={{paddingTop: verticalScale(24)}}>
-          {tokensContent}
-        </Content>
+        <Content style={{paddingTop: verticalScale(24)}}>{nftsContent}</Content>
       </ScrollView>
     </View>
   );
@@ -125,5 +146,4 @@ const themedStyles = StyleService.create({
     marginBottom: verticalScale(16),
   },
 });
-
-export default Tokens;
+export default NFTs;

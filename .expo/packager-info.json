@@ -1,6 +1,6 @@
 {
-  "expoServerPort": 8081,
-  "packagerPort": 8081,
+  "expoServerPort": null,
+  "packagerPort": null,
   "packagerPid": null,
   "expoServerNgrokUrl": null,
   "packagerNgrokUrl": null,
