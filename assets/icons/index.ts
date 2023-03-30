@@ -95,4 +95,5 @@ export const Icons = {
   biometrics: require('./biometrics.png'),
   unsecure: require('./unsecure.png'),
   pincode: require('./pincode.png'),
+  syncoutline: require('./sync-outline.svg'),
 };

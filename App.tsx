@@ -19,6 +19,7 @@ import {default as darkTheme} from './constants/theme/dark.json';
 import {default as lightTheme} from './constants/theme/light.json';
 import {default as customTheme} from './constants/theme/appTheme.json';
 import AppContainer from './navigation/AppContainer';
+import {QueryClient, QueryClientProvider} from 'react-query'
 
 patchFlatListProps();
 import WalletProvider from './contexts/WalletProvider';
@@ -178,11 +179,14 @@ const AppWrapper = () => {
     });
   }, []);
 
+  const queryClient = new QueryClient()
+
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaProvider>
         <ThemeContext.Provider value={{theme, toggleTheme}}>
           <IconRegistry icons={[AssetIconsPack, EvaIconsPack]} />
+          <QueryClientProvider client={queryClient}>
           <ApplicationProvider
             {...eva}
             theme={
@@ -194,6 +198,7 @@ const AppWrapper = () => {
               <App theme={theme} />
             </ModalProvider>
           </ApplicationProvider>
+          </QueryClientProvider>
         </ThemeContext.Provider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

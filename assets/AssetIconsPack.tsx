@@ -3,6 +3,7 @@ import {Image, ImageProps, ImageSourcePropType, StyleSheet} from 'react-native';
 import {IconPack, IconProvider} from '@tsejerome/ui-kitten-components';
 import {SvgProps} from 'react-native-svg';
 import {Icons} from './icons';
+import {Images} from './images';
 import {scale} from 'react-native-size-matters';
 
 const createIcon = (source: ImageSourcePropType): IconProvider<ImageProps> => {
@@ -124,6 +125,8 @@ const AssetIconsPack: IconPack<ImageProps | SvgProps> = {
     biometrics: createIcon(Icons.biometrics),
     pincode: createIcon(Icons.pincode),
     unsecure: createIcon(Icons.unsecure),
+    navlogo: createIcon(Images.navLogo),
+    syncoutline: createIcon(Icons.syncoutline),
   },
 };
 export default AssetIconsPack;

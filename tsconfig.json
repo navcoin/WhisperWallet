@@ -24,12 +24,13 @@
   "extends": "expo/tsconfig.base",
   "include": ["src"],
   "paths": {
-    "@constants/*": ["constants/*"],
-    "@context/*": ["src/context/*"],
-    "@components/*": ["components/*"],
-    "@utils/*": ["src/utils/*"],
-    "@screens": ["src/screens/*"],
-    "@hooks/*": ["src/hooks/*"],
-    "@navigation/*": ["navigation/*"]
+    "@constants/*": ["./constants/*"],
+    "@context/*": ["./src/context/*"],
+    "@components/*": ["./components/*"],
+    "@utils/*": ["./src/utils/*"],
+    "@screens": ["./src/screens/*"],
+    "@hooks/*": ["./src/hooks/*"],
+    "@navigation/*": ["./navigation/*"],
+    "@service/*": ["./src/service/*"]
   }
 }

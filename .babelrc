@@ -12,7 +12,8 @@
           "@utils": "./utils",
           "@screens": "./src/screens",
           "@hooks": "./src/hooks",
-          "@navigation": "./navigation"
+          "@navigation": "./navigation",
+          "@service": "./src/service"
         }
       }
     ]

@@ -21,6 +21,7 @@ const MainScreenTab = () => {
         marginRight: scale(16),
       }}>
       <TabNavigator.Navigator
+        // initialRouteName="Tokens"
         tabBarPosition={'top'}
         screenOptions={{
           tabBarLabelStyle: {fontSize: 12},
