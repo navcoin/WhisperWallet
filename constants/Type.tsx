@@ -11,6 +11,7 @@ export enum Balance_Types_Enum {
   Staking = 'cold_staking',
   PrivateToken = 'token',
   Nft = 'nft',
+  Fiat = 'fiat',
 }
 
 export enum Destination_Types_Enum {

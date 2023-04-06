@@ -25,7 +25,7 @@
   "include": ["src"],
   "paths": {
     "@constants/*": ["./constants/*"],
-    "@context/*": ["./src/context/*"],
+    "@contexts/*": ["./src/contexts/*"],
     "@components/*": ["./components/*"],
     "@utils/*": ["./src/utils/*"],
     "@screens": ["./src/screens/*"],

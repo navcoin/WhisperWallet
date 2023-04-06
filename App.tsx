@@ -19,10 +19,10 @@ import {default as darkTheme} from './constants/theme/dark.json';
 import {default as lightTheme} from './constants/theme/light.json';
 import {default as customTheme} from './constants/theme/appTheme.json';
 import AppContainer from './navigation/AppContainer';
-import {QueryClient, QueryClientProvider} from 'react-query'
+import {QueryClient, QueryClientProvider} from 'react-query';
 
 patchFlatListProps();
-import WalletProvider from './contexts/WalletProvider';
+import {ExchangeRateProvider, WalletProvider} from '@contexts';
 import {
   setJSExceptionHandler,
   setNativeExceptionHandler,
@@ -140,24 +140,26 @@ const App = (props: {theme: string}) => {
 
   return (
     <WalletProvider>
-      <StatusBar
-        barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
-        translucent={true}
-        backgroundColor={'#00000000'}
-      />
-      <NavigationContainer
-        theme={DarkTheme}
-        onStateChange={() => {
-          Toast.hide();
-        }}>
-        <SecurityProvider>
-          <View style={{flex: 1, backgroundColor: theme['color-basic-700']}}>
-            <AppContainer shownWelcome={shownWelcome} />
-          </View>
-        </SecurityProvider>
-      </NavigationContainer>
+      <ExchangeRateProvider>
+        <StatusBar
+          barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+          translucent={true}
+          backgroundColor={'#00000000'}
+        />
+        <NavigationContainer
+          theme={DarkTheme}
+          onStateChange={() => {
+            Toast.hide();
+          }}>
+          <SecurityProvider>
+            <View style={{flex: 1, backgroundColor: theme['color-basic-700']}}>
+              <AppContainer shownWelcome={shownWelcome} />
+            </View>
+          </SecurityProvider>
+        </NavigationContainer>
 
-      <Toast config={toastConfig} />
+        <Toast config={toastConfig} />
+      </ExchangeRateProvider>
     </WalletProvider>
   );
 };
@@ -179,7 +181,7 @@ const AppWrapper = () => {
     });
   }, []);
 
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient();
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>
@@ -187,17 +189,17 @@ const AppWrapper = () => {
         <ThemeContext.Provider value={{theme, toggleTheme}}>
           <IconRegistry icons={[AssetIconsPack, EvaIconsPack]} />
           <QueryClientProvider client={queryClient}>
-          <ApplicationProvider
-            {...eva}
-            theme={
-              theme === 'light'
-                ? {...eva.light, ...customTheme, ...lightTheme}
-                : {...eva.dark, ...customTheme, ...darkTheme}
-            }>
-            <ModalProvider>
-              <App theme={theme} />
-            </ModalProvider>
-          </ApplicationProvider>
+            <ApplicationProvider
+              {...eva}
+              theme={
+                theme === 'light'
+                  ? {...eva.light, ...customTheme, ...lightTheme}
+                  : {...eva.dark, ...customTheme, ...darkTheme}
+              }>
+              <ModalProvider>
+                <App theme={theme} />
+              </ModalProvider>
+            </ApplicationProvider>
           </QueryClientProvider>
         </ThemeContext.Provider>
       </SafeAreaProvider>

@@ -1,12 +1,34 @@
 import {View} from 'react-native';
-import React, {memo, useEffect, useState} from 'react';
-import useWallet from '../src/hooks/useWallet';
+import React, {memo, useEffect, useState, Fragment} from 'react';
+import {useWallet, useExchangeRate} from '@hooks';
 import {Connection_Stats_Enum} from '../constants/Type';
 import CurrencyText from './CurrencyText';
 import Text from './Text';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {AnimatedSegments} from './AnimatedSegments';
 import useTraceUpdates from '../src/hooks/useTraceUpdates';
+
+export const ToFiat = (props: {totalAmount: number}) => {
+  const {selectedCurrency, currencyRate} = useExchangeRate();
+
+  let calculatedAmount: number = props?.totalAmount * currencyRate;
+
+  let currency = selectedCurrency ? selectedCurrency.toUpperCase() : '';
+
+  useEffect(() => {
+    calculatedAmount = props?.totalAmount * currencyRate;
+  }, [selectedCurrency, currencyRate, props?.totalAmount, calculatedAmount]);
+
+  return (
+    <Fragment>
+      <CurrencyText
+        children={calculatedAmount}
+        currency={currency}
+        {...props}
+      />
+    </Fragment>
+  );
+};
 
 const BalanceCircle = memo(() => {
   const {
@@ -16,6 +38,7 @@ const BalanceCircle = memo(() => {
     connected,
     firstSyncCompleted,
   } = useWallet();
+
   const [totalBalance, setTotalBalance] = useState(0);
   const [segments, setSegments] = useState([0, 0, 0]);
 
@@ -87,7 +110,14 @@ const BalanceCircle = memo(() => {
       ) : (
         <View style={{position: 'absolute'}}>
           <Text style={{textAlign: 'center'}}>Balance:</Text>
-          <CurrencyText children={totalBalance.toFixed(8)} />
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+            <CurrencyText
+              category="caption1"
+              children={totalBalance.toFixed(8)}
+            />
+            <Text marginHorizontal={3} category='body'>/</Text>
+            <ToFiat category="caption1" totalAmount={totalBalance} />
+          </View>
         </View>
       )}
     </View>

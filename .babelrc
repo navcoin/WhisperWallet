@@ -7,7 +7,7 @@
         "root": ["."],
         "alias": {
           "@constants": "./constants",
-          "@context": "./context",
+          "@contexts": "./contexts",
           "@components": "./components",
           "@utils": "./utils",
           "@screens": "./src/screens",

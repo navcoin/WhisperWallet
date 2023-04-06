@@ -8,6 +8,7 @@ import numeral from 'numeral';
 export interface CurrencyTextProps extends MyTextProps {
   type?: Category_Types_Enum;
   formatType?: Balance_Types_Enum;
+  currency: string;
 }
 
 const CurrencyText = memo(
@@ -18,6 +19,7 @@ const CurrencyText = memo(
     currency = 'NAV',
     ...props
   }: CurrencyTextProps) => {
+    // console.log(children, "children")
     const formatLimit = (amount: string, currency = 'NAV') => {
       let textResult = '';
       try {
@@ -78,6 +80,8 @@ const CurrencyText = memo(
 
     const formatDefault = (amount: string, currency = 'NAV') => {
       let textResult = '';
+
+      /*console.log(currency)*/
       if (currency.substring(0, 4) == 'item') {
         textResult = parseInt(amount);
       } else {
@@ -100,6 +104,23 @@ const CurrencyText = memo(
       return textResult + ` ${currency}`;
     };
 
+    const formatFiatCurrency = (amount, currency = 'USD') => {
+      let textResult = '';
+      try {
+        if (isNaN(parseFloat(amount))) {
+          textResult += numeral(parseFloat(amount.replace(',', ''))).format(
+            '0,0.00a',
+          );
+        } else {
+          textResult += numeral(parseFloat(amount)).format('0,0.00a');
+        }
+      } catch (e) {
+        console.log(e);
+      }
+
+      return ` ${currency}` + textResult;
+    };
+
     const formatSecure = (currency = 'NAV') => {
       return '****' + currency;
     };
@@ -116,6 +137,8 @@ const CurrencyText = memo(
           ? formatDefault(children, currency)
           : formatType === Balance_Types_Enum.Nft
           ? formatDefault(children, 'item')
+          : formatType === Balance_Types_Enum.Fiat
+          ? formatFiatCurrency(children, currency)
           : formatDefault(children, currency)}
       </Text>
     );
