@@ -15,6 +15,8 @@ import {
 } from '../constants/Type';
 import useWallet from '../src/hooks/useWallet';
 import {scale} from 'react-native-size-matters';
+import {ToFiat} from '@utils';
+import DisplayCoinAndFiatValue from './DisplayCoinAndFiatValue';
 
 interface BalanceProps {
   item: BalanceFragment;
@@ -82,13 +84,10 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
             ) : connected === Connection_Stats_Enum.Syncing ? (
               <Text style={{fontSize: scale(13)}}>Synchronizing...</Text>
             ) : (
-              <CurrencyText
-                adjustsFontSizeToFit
-                category="footnote"
-                children={(amount + pending_amount).toFixed(8)}
-                marginTop={4}
+              <DisplayCoinAndFiatValue
                 type={type_id}
                 formatType={type_id}
+                coinAmount={amount + pending_amount}
                 currency={currency}
               />
             )}
