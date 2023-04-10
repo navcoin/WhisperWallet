@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Platform} from 'react-native';
 import {Text, Container, TopNavigationComponent} from '@components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -6,7 +6,6 @@ import {scale} from 'react-native-size-matters';
 import {
   StyleService,
   useStyleSheet,
-  useTheme,
   Radio,
   Layout,
   Icon,
@@ -16,10 +15,7 @@ import {currencyOptionList} from '@contexts';
 
 const DisplayCurrencyScreen = () => {
   const styles = useStyleSheet(themedStyles);
-  const theme = useTheme();
   const {selectedCurrency, updateCurrency} = useExchangeRate();
-
-  const [currencyListContent, setCurrencyListContent] = useState(<></>);
 
   return (
     <Container useSafeArea>
@@ -40,7 +36,6 @@ const DisplayCurrencyScreen = () => {
                 updateCurrency(item.ticker);
               }}
               style={{marginBottom: scale(20), alignItems: 'flex-end'}}>
-              {/* <View style={{flexDirection: 'row', width: 500, borderWidth: 1, borderColor: 'red'}}> */}
               <Icon
                 pack="assets"
                 name={item.icon}
@@ -52,7 +47,6 @@ const DisplayCurrencyScreen = () => {
                 }}
               />
               <Text> {item.ticker}</Text>
-              {/* </View> */}
             </Radio>
           ))}
         </Layout>
