@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {Platform} from 'react-native';
 import {Text, Container, TopNavigationComponent} from '@components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {scale} from 'react-native-size-matters';
@@ -39,16 +40,19 @@ const DisplayCurrencyScreen = () => {
                 updateCurrency(item.ticker);
               }}
               style={{marginBottom: scale(20), alignItems: 'flex-end'}}>
+              {/* <View style={{flexDirection: 'row', width: 500, borderWidth: 1, borderColor: 'red'}}> */}
               <Icon
                 pack="assets"
                 name={item.icon}
-                height={15}
+                height={item.icon === 'btc' ? 20 : 15}
                 width={20}
                 style={{
                   marginRight: 7,
+                  top: item.icon === 'btc' || Platform.OS === 'android' ? 4 : 0,
                 }}
               />
               <Text> {item.ticker}</Text>
+              {/* </View> */}
             </Radio>
           ))}
         </Layout>
