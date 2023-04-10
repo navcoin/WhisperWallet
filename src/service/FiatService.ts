@@ -20,7 +20,7 @@ const getFiatPrices = async (selectedCurrency: string) => {
 
       return res.data;
     });
-    console.log(response, ' response');
+    console.log(response, '......response');
     return response;
   } catch (error) {
     console.log('Failed Exchange Request: ', error);

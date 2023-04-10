@@ -46,6 +46,7 @@ export type RootStackParamList = {
   CollectionScreen: undefined;
   MintNftScreen: undefined;
   ScanQRScreen: undefined;
+  DisplayCurrencyScreen: undefined;
 };
 
 export type MnemonicScreenProps = {mnemonic: string};

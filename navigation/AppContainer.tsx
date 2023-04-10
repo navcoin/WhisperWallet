@@ -27,6 +27,7 @@ import CollectionScreen from '../src/screens/wallet/CollectionScreen';
 import MintNftScreen from '../src/screens/wallet/MintNftScreen';
 import SellNftScreen from '../src/screens/wallet/SellNftScreen';
 import ScanQRScreen from '../src/screens/wallet/ScanQRScreen';
+import DisplayCurrencyScreen from '@screens/wallet/DisplayCurrencyScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const StackApp = createStackNavigator<RootAppStackParamList>();
@@ -114,6 +115,12 @@ const AppContent = (props: any) => {
           {...blurProps}
           name={'MnemonicScreen'}
           component={MnemonicScreen}
+        />
+        <Stack.Screen
+          {...blurProps}
+          name={'DisplayCurrencyScreen'}
+          component={DisplayCurrencyScreen}
+          // options={{presentation: 'modal'}}
         />
         <Stack.Screen
           {...blurProps}

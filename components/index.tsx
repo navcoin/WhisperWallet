@@ -6,3 +6,5 @@ export {default as OptionCard} from './OptionCard';
 export {default as Text} from './Text';
 export {default as BalanceCircle} from './BalanceCircle';
 export {default as CurrencyText} from './CurrencyText';
+export {default as Container} from './Container';
+export {default as TopNavigationComponent} from './TopNavigation';

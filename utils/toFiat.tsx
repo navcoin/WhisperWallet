@@ -1,28 +1,26 @@
-import React, {useEffect, Fragment, useRef} from 'react';
+import React, {useEffect, Fragment, useRef, useState} from 'react';
 import {useExchangeRate} from '@hooks';
 import {CurrencyText} from '@components';
 
 const ToFiat = (props: {totalAmount: number}) => {
   const {selectedCurrency, currencyRate} = useExchangeRate();
+  const [fiatContent, setFiatContent] = useState(<></>);
 
   let calculatedAmountRef: any = useRef();
 
-  let currency = selectedCurrency ? selectedCurrency.toUpperCase() : '';
-
   useEffect(() => {
     calculatedAmountRef.current = props?.totalAmount * currencyRate;
-  }, [selectedCurrency, currencyRate, props?.totalAmount, calculatedAmountRef]);
-
-  return (
-    <Fragment>
+    setFiatContent(
       <CurrencyText
         children={calculatedAmountRef.current}
-        currency={currency}
-        
+        currency={selectedCurrency}
+        style={{textTransform: 'uppercase'}}
         {...props}
-      />
-    </Fragment>
-  );
+      />,
+    );
+  }, [currencyRate, props?.totalAmount, selectedCurrency, props]);
+
+  return <Fragment>{fiatContent}</Fragment>;
 };
 
-export default React.memo(ToFiat);
+export default ToFiat;

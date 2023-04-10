@@ -1,4 +1,10 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useReducer,
+} from 'react';
 import {
   ExchangeRateContext,
   ExchangeRateContextValue,
@@ -7,92 +13,135 @@ import {FiatRequest} from '@service';
 import {useWallet, useTraceUpdate} from '@hooks';
 import {getAsyncStorage, setAsyncStorage} from '@utils/asyncStorageManager';
 
+export const initialData = {
+  currencyRate: 0,
+  selectedCurrency: '',
+};
+
+export const exchangeReducer = (state, action) => {
+  switch (action.type) {
+    case 'UPDATE_RATE':
+      state.currencyRate = action.payload;
+      return state;
+    case 'SET_CURRENCY':
+      state.selectedCurrency = action.payload;
+      return state;
+    default:
+      return state;
+  }
+};
+
 export const ExchangeRateProvider = (props: any) => {
-  const [selectedCurrency, setSelectedCurrency] = useState<string>('usd');
-  const [currencyRate, setCurrencyRate] = useState<number>(0);
+  const seCurrencyTicker = useMemo(() => {
+    return async () => {
+      let currency = '';
+      let currencyStore = await getAsyncStorage('exchange_rate_currency');
+
+      if (!currencyStore || currencyStore === undefined) {
+        currencyStore = await setAsyncStorage('exchange_rate_currency', 'usd');
+
+        if (currencyStore) {
+          currency = await getAsyncStorage('exchange_rate_currency');
+          dispatch({type: 'SET_CURRENCY', payload: currency});
+
+          return currency;
+        }
+      }
+      dispatch({type: 'SET_CURRENCY', payload: currencyStore});
+      return currencyStore;
+    };
+  }, []);
+  const [state, dispatch] = useReducer(exchangeReducer, initialData);
   const {firstSyncCompleted, refreshWallet} = useWallet();
 
-  const exchangeRateRequest = FiatRequest(selectedCurrency);
+  const exchangeRateRequest = FiatRequest(state.selectedCurrency);
   const [status, setStatus] = useState<string>(exchangeRateRequest.status);
 
-  //   const refetchRate = useCallback(() => {}, [selectedCurrency]);
+  const updateCurrency = useCallback(
+    async (newCurrency: string) => {
+      newCurrency = newCurrency.toLowerCase();
+      const currency = await getAsyncStorage('exchange_rate_currency');
+      if (currency !== undefined && currency === newCurrency) {
+        return;
+      } else if (currency !== newCurrency) {
+        dispatch({type: 'SET_CURRENCY', payload: newCurrency});
+        updateExchangeRate();
+        refreshWallet();
+        let saveCurr = await setAsyncStorage(
+          'exchange_rate_currency',
+          newCurrency,
+        );
 
-  const updateCurrency = useCallback(async (newCurrency: string) => {
-    const currency = await getAsyncStorage('exchange_rate_currency');
-    if (currency !== undefined && currency === newCurrency) {
-      return;
-    } else if (currency !== newCurrency) {
-      await setAsyncStorage('exchange_rate_currency', newCurrency);
-      setSelectedCurrency(newCurrency);
-    }
-  }, []);
+        return saveCurr;
+      }
+    },
+    [state.selectedCurrency, state.currencyRate],
+  );
 
   const updateExchangeRate = useCallback(async () => {
-    
     try {
       const fetchExchangeRate = await exchangeRateRequest.refetch(
-        selectedCurrency,
+        state.selectedCurrency,
       );
 
-      let hasError = fetchExchangeRate.data.toString().includes('Error');
+      let hasError =
+        fetchExchangeRate?.data?.toString().includes('Error') ||
+        fetchExchangeRate?.data === undefined;
 
       if (hasError) {
-        setCurrencyRate(0);
         return;
       }
-
-      setStatus(
-        fetchExchangeRate.status === 'loading'
-          ? 'loading'
-          : fetchExchangeRate.status,
-      );
       if (fetchExchangeRate.status === 'success') {
         console.log('Successfully Fetched Exchange Rate Data');
         const {data} = fetchExchangeRate;
-        setCurrencyRate(data['nav-coin'][selectedCurrency]);
+        dispatch({
+          type: 'UPDATE_RATE',
+          payload: data['nav-coin'][state.selectedCurrency],
+        });
+
+        return true;
       }
     } catch (error) {
       console.log('Error Update Exchange Rate: ', error);
+      return false;
     }
-  }, [selectedCurrency, exchangeRateRequest]);
+  }, [state.selectedCurrency, exchangeRateRequest]);
 
   useEffect(() => {
-    if (refreshWallet) {
+    if (refreshWallet || state.currencyRate || state.selectedCurrency) {
       updateExchangeRate();
     }
-  }, [refreshWallet, exchangeRateRequest?.refetch]);
+  }, [refreshWallet, state.currencyRate, state.selectedCurrency]);
 
   useEffect(() => {
     const setExchangeRateValue = async () => {
-      let currencyTicker = await getAsyncStorage('exchange_rate_currency');
-
-      if (currencyTicker === undefined) {
-        currencyTicker = 'usd';
-        await setAsyncStorage('exchange_rate_currency', 'usd');
-      }
+      seCurrencyTicker();
       if (firstSyncCompleted) {
-        setSelectedCurrency(currencyTicker);
-        let result = await exchangeRateRequest.refetch(currencyTicker);
+        let result = await exchangeRateRequest.refetch(state.selectedCurrency);
         if (result && result.status === 'success') {
-          setCurrencyRate(result?.data['nav-coin'][currencyTicker]);
+          dispatch({
+            type: 'UPDATE_RATE',
+            payload: result?.data['nav-coin'][state.selectedCurrency],
+          });
         }
       }
     };
 
     setExchangeRateValue();
-  }, [firstSyncCompleted]);
+  }, []);
 
   const exchangeRateContext: ExchangeRateContextValue = useMemo(
     () => ({
-      currencyRate,
-      selectedCurrency,
+      currencyRate: state.currencyRate,
+      dispatch,
+      selectedCurrency: state.selectedCurrency ? state.selectedCurrency : '',
       updateExchangeRate,
       status,
       updateCurrency,
     }),
     [
-      currencyRate,
-      selectedCurrency,
+      state.currencyRate,
+      state.selectedCurrency,
       updateExchangeRate,
       status,
       updateCurrency,
