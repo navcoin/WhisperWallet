@@ -79,13 +79,7 @@ const CurrencyText = memo(
 
     const formatDefault = (amount: string, currency = 'NAV') => {
       let textResult = '';
-      console.log(currency, "     CURRENCY")
 
-      // if (currency === 'none') {
-      //   return;
-      // }
-
-      /*console.log(currency)*/
       if (currency.substring(0, 4) == 'item') {
         textResult = parseInt(amount);
       } else {
@@ -107,7 +101,6 @@ const CurrencyText = memo(
       }
       return textResult + ` ${currency}`;
     };
-
 
     const formatSecure = (currency = 'NAV') => {
       return '****' + currency;
