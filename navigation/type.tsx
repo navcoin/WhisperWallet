@@ -24,6 +24,7 @@ export type RootAppStackParamList = {
   App: undefined;
   OnBoarding: undefined;
 };
+
 export type RootStackParamList = {
   Intro: undefined;
   CreateNewWallet: undefined;

@@ -19,8 +19,10 @@ import {
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {RootStackParamList} from '@navigation/type';
+import {useExchangeRate} from '@hooks';
 
 const AccountTab = () => {
+  const {selectedCurrency, HIDE_CURRENCY} = useExchangeRate();
   const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
   );
@@ -112,11 +114,13 @@ const AccountTab = () => {
     setAccountContent(
       <>
         {accounts.map((el, i) => {
+          console.log(el, '  EL');
           return (
             <View style={styles.item} key={i}>
               <BalanceCard
                 item={{...el, name: el.name + ' account'}}
                 index={i}
+                isFiatHidden={selectedCurrency === HIDE_CURRENCY ? true : false}
                 onPress={() => {
                   setAccount(el);
                   expandMenu(el);

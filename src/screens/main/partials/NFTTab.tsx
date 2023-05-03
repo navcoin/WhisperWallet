@@ -89,6 +89,7 @@ const NFTs = () => {
             return (
               <View style={styles.item} key={i}>
                 <BalanceCard
+                  isFiatHidden={true}
                   item={{...el, name: el.name}}
                   key={i}
                   index={i}

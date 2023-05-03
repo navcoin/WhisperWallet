@@ -16,9 +16,17 @@ import {getAsyncStorage, setAsyncStorage} from '@utils/asyncStorageManager';
 export const initialData = {
   currencyRate: 0,
   selectedCurrency: '',
+  hideFiat: false,
 };
 
-export const exchangeReducer = (state, action) => {
+export const exchangeReducer = (
+  state: {
+    [x: string]: any;
+    currencyRate: any;
+    selectedCurrency: any;
+  },
+  action: {type: any; payload: any},
+) => {
   switch (action.type) {
     case 'UPDATE_RATE':
       state.currencyRate = action.payload;
@@ -26,12 +34,21 @@ export const exchangeReducer = (state, action) => {
     case 'SET_CURRENCY':
       state.selectedCurrency = action.payload;
       return state;
+    case 'HIDE_FIAT':
+      if (action.payload === 'true') {
+        state.hideFiat = true;
+      } else {
+        state.hideFiat = false;
+      }
+      return state;
     default:
       return state;
   }
 };
 
 export const ExchangeRateProvider = (props: any) => {
+  const HIDE_CURRENCY = 'none';
+
   const seCurrencyTicker = useMemo(() => {
     return async () => {
       let currency = '';
@@ -42,6 +59,12 @@ export const ExchangeRateProvider = (props: any) => {
 
         if (currencyStore) {
           currency = await getAsyncStorage('exchange_rate_currency');
+
+          if (currencyStore === HIDE_CURRENCY) {
+            dispatch({type: 'HIDE_FIAT', payload: 'true'});
+          } else {
+            dispatch({type: 'HIDE_FIAT', payload: 'false'});
+          }
           dispatch({type: 'SET_CURRENCY', payload: currency});
 
           return currency;
@@ -61,10 +84,17 @@ export const ExchangeRateProvider = (props: any) => {
     async (newCurrency: string) => {
       newCurrency = newCurrency.toLowerCase();
       const currency = await getAsyncStorage('exchange_rate_currency');
+
       if (currency !== undefined && currency === newCurrency) {
         return;
       } else if (currency !== newCurrency) {
+        if (newCurrency === HIDE_CURRENCY) {
+          dispatch({type: 'HIDE_FIAT', payload: 'true'});
+        } else {
+          dispatch({type: 'HIDE_FIAT', payload: 'false'});
+        }
         dispatch({type: 'SET_CURRENCY', payload: newCurrency});
+
         updateExchangeRate();
         refreshWallet();
         let saveCurr = await setAsyncStorage(
@@ -80,6 +110,9 @@ export const ExchangeRateProvider = (props: any) => {
 
   const updateExchangeRate = useCallback(async () => {
     try {
+      if (state.hideFiat) {
+        return;
+      }
       const fetchExchangeRate = await exchangeRateRequest.refetch(
         state.selectedCurrency,
       );
@@ -105,10 +138,13 @@ export const ExchangeRateProvider = (props: any) => {
       console.log('Error Update Exchange Rate: ', error);
       return false;
     }
-  }, [state.selectedCurrency, exchangeRateRequest]);
+  }, [state.selectedCurrency, exchangeRateRequest, state.hideFiat]);
 
   useEffect(() => {
-    if (refreshWallet || state.currencyRate || state.selectedCurrency) {
+    if (
+      (refreshWallet || state.currencyRate || state.selectedCurrency) &&
+      !state.hideFiat
+    ) {
       updateExchangeRate();
     }
   }, [refreshWallet, state.currencyRate, state.selectedCurrency]);
@@ -116,6 +152,11 @@ export const ExchangeRateProvider = (props: any) => {
   useEffect(() => {
     const setExchangeRateValue = async () => {
       seCurrencyTicker();
+
+      // if (state.hideFiat) {
+      //   return;
+      // }
+
       if (firstSyncCompleted) {
         let result = await exchangeRateRequest.refetch(state.selectedCurrency);
         if (result && result.status === 'success') {
@@ -138,6 +179,8 @@ export const ExchangeRateProvider = (props: any) => {
       updateExchangeRate,
       status,
       updateCurrency,
+      hideFiat: state.hideFiat,
+      HIDE_CURRENCY,
     }),
     [
       state.currencyRate,
@@ -145,6 +188,7 @@ export const ExchangeRateProvider = (props: any) => {
       updateExchangeRate,
       status,
       updateCurrency,
+      state.hideFiat,
     ],
   );
 

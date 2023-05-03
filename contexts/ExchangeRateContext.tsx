@@ -34,6 +34,7 @@ export const currencyOptionList = [
   {ticker: 'TRY', icon: 'try'},
   {ticker: 'TWD', icon: 'twd'},
   {ticker: 'ZAR', icon: 'zar'},
+  {ticker: 'NONE'},
 ];
 
 export interface ExchangeRateContextValue {
@@ -42,6 +43,8 @@ export interface ExchangeRateContextValue {
   updateExchangeRate: any;
   status: string;
   updateCurrency: any;
+  hideFiat: boolean;
+  HIDE_CURRENCY: string;
 }
 
 export const ExchangeRateContext = createContext<

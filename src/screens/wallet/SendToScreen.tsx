@@ -6,14 +6,14 @@ import {
   StyleService,
   useStyleSheet,
 } from '@tsejerome/ui-kitten-components';
-import Text from '../../../components/Text';
+import {Text, CurrencyText} from '@components';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import Container from '../../../components/Container';
 import {TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {scale, verticalScale} from 'react-native-size-matters';
 
-import useWallet from '../../hooks/useWallet';
+import {useWallet, useExchangeRate} from '@hooks';
 import CardSelect from '../../../components/CardSelect';
 import {
   Balance_Types_Enum,
@@ -51,8 +51,22 @@ const SendToScreen = (props: any) => {
   const [subtractFee, setSubtractFee] = useState(false);
   const {accounts, tokens, nfts, walletName, ExecWrapperSyncPromise} =
     useWallet();
+  const {selectedCurrency, currencyRate} = useExchangeRate();
+
+  useEffect(() => {
+    if (amountInputRef.current.props.value !== '') {
+      setFiatValue(parseFloat(amountInString) * currencyRate);
+    } else if (amountInputRef.current?.props.value === '') {
+      setFiatValue(0.0);
+    }
+  }, [currencyRate, amountInString]);
+
   const [isMemoDialogVisible, showMemoDialog] = useState(false);
   const [accountStr, setAccountStr] = useState('account');
+  const [fiatValue, setFiatValue] = useState(0.0);
+  const [fiatCurrency, setFiatCurrency] = useState(
+    selectedCurrency.toUpperCase(),
+  );
 
   const [nftId, setNftId] = useState(
     props.route.params.nftId !== undefined ? props.route.params.nftId : -1,
@@ -274,10 +288,13 @@ const SendToScreen = (props: any) => {
                     value={amountInString}
                     placeholder={'0'}
                     onChangeText={(text: string) => {
+                      // console.log('Text  ', text);
                       let t = 0;
                       let res = text.replace(/\./g, match =>
                         ++t === 2 ? '' : match,
                       );
+                      // console.log('New Text  ', res.trim().replace(',', '.'));
+
                       setAmount(res.trim().replace(',', '.'));
                     }}
                   />
@@ -293,6 +310,15 @@ const SendToScreen = (props: any) => {
                     </TouchableOpacity>
                   </View>
                 </View>
+                {fiatCurrency !== 'NONE' && (
+                  <View style={[styles.row, {justifyContent: 'flex-end'}]}>
+                    <CurrencyText
+                      category="caption2"
+                      children={fiatValue}
+                      currency={fiatCurrency}
+                    />
+                  </View>
+                )}
               </Layout>
             </TouchableOpacity>
           )}

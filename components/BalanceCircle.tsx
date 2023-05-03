@@ -1,6 +1,6 @@
 import {View} from 'react-native';
 import React, {memo, useEffect, useState} from 'react';
-import {useWallet} from '@hooks';
+import {useWallet, useExchangeRate} from '@hooks';
 import {Connection_Stats_Enum} from '../constants/Type';
 import CurrencyText from './CurrencyText';
 import Text from './Text';
@@ -10,6 +10,7 @@ import useTraceUpdates from '../src/hooks/useTraceUpdates';
 import {ToFiat} from '@utils';
 
 const BalanceCircle = memo(() => {
+  const {hideFiat, selectedCurrency, HIDE_CURRENCY} = useExchangeRate();
   const {
     syncProgress,
     bootstrapProgress,
@@ -100,14 +101,21 @@ const BalanceCircle = memo(() => {
               category="caption1"
               children={totalBalance.toFixed(8)}
             />
-            <Text adjustsFontSizeToFit marginHorizontal={3} category="body">
-              /
-            </Text>
-            <ToFiat
-              adjustsFontSizeToFit
-              category="caption1"
-              totalAmount={totalBalance}
-            />
+            {selectedCurrency === HIDE_CURRENCY ? (
+              <></>
+            ) : (
+              <>
+                <Text adjustsFontSizeToFit marginHorizontal={3} category="body">
+                  /
+                </Text>
+                <ToFiat
+                  adjustsFontSizeToFit
+                  category="caption1"
+                  totalAmount={totalBalance}
+                  hideFiat={hideFiat}
+                />
+              </>
+            )}
           </View>
         </View>
       )}

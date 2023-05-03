@@ -13,7 +13,7 @@ import {
 import {useExchangeRate} from '@hooks';
 import {currencyOptionList} from '@contexts';
 
-const DisplayCurrencyScreen = () => {
+const DisplayCurrencyScreen = ({navigation}) => {
   const styles = useStyleSheet(themedStyles);
   const {selectedCurrency, updateCurrency} = useExchangeRate();
 
@@ -34,18 +34,23 @@ const DisplayCurrencyScreen = () => {
               }
               onChange={() => {
                 updateCurrency(item.ticker);
+                navigation.goBack();
               }}
               style={{marginBottom: scale(20), alignItems: 'flex-end'}}>
-              <Icon
-                pack="assets"
-                name={item.icon}
-                height={item.icon === 'btc' ? 20 : 15}
-                width={20}
-                style={{
-                  marginRight: 7,
-                  top: item.icon === 'btc' || Platform.OS === 'android' ? 4 : 0,
-                }}
-              />
+              {item.icon ? (
+                <Icon
+                  pack="assets"
+                  name={item.icon}
+                  height={item.icon === 'btc' ? 20 : 15}
+                  width={20}
+                  style={{
+                    marginRight: 7,
+                    top:
+                      item.icon === 'btc' || Platform.OS === 'android' ? 4 : 0,
+                  }}
+                />
+              ) : null}
+
               <Text> {item.ticker}</Text>
             </Radio>
           ))}

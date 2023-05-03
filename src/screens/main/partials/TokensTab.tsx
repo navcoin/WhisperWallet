@@ -78,6 +78,7 @@ const Tokens = () => {
             return (
               <View style={styles.item} key={i}>
                 <BalanceCard
+                  isFiatHidden={true}
                   item={{...el, name: el.name}}
                   index={i}
                   onPress={() => {
