@@ -11,6 +11,7 @@ const axios = require('axios').default;
 // };
 
 const getFiatPrices = async (selectedCurrency: string) => {
+  selectedCurrency = selectedCurrency.toLowerCase();
   try {
     let response = axios.get(
       `https://api.coingecko.com/api/v3/simple/price?ids=nav-coin&vs_currencies=${selectedCurrency}`,

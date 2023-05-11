@@ -97,6 +97,7 @@ const BalanceCard = ({
                 coinAmount={amount + pending_amount}
                 currency={currency}
                 hideFiat={isFiatHidden}
+                fiatCurrency={selectedCurrency}
               />
             )}
           </View>

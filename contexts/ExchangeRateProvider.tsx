@@ -47,7 +47,13 @@ export const exchangeReducer = (
 };
 
 export const ExchangeRateProvider = (props: any) => {
-  const HIDE_CURRENCY = 'none';
+  const HIDE_CURRENCY = 'NONE';
+
+  const [state, dispatch] = useReducer(exchangeReducer, initialData);
+  const {firstSyncCompleted, refreshWallet} = useWallet();
+
+  const exchangeRateRequest = FiatRequest(state.selectedCurrency);
+  const [status, setStatus] = useState<string>(exchangeRateRequest.status);
 
   const seCurrencyTicker = useMemo(() => {
     return async () => {
@@ -55,7 +61,7 @@ export const ExchangeRateProvider = (props: any) => {
       let currencyStore = await getAsyncStorage('exchange_rate_currency');
 
       if (!currencyStore || currencyStore === undefined) {
-        currencyStore = await setAsyncStorage('exchange_rate_currency', 'usd');
+        currencyStore = await setAsyncStorage('exchange_rate_currency', 'USD');
 
         if (currencyStore) {
           currency = await getAsyncStorage('exchange_rate_currency');
@@ -74,45 +80,41 @@ export const ExchangeRateProvider = (props: any) => {
       return currencyStore;
     };
   }, []);
-  const [state, dispatch] = useReducer(exchangeReducer, initialData);
-  const {firstSyncCompleted, refreshWallet} = useWallet();
 
-  const exchangeRateRequest = FiatRequest(state.selectedCurrency);
-  const [status, setStatus] = useState<string>(exchangeRateRequest.status);
-
-  const updateCurrency = useCallback(
-    async (newCurrency: string) => {
-      newCurrency = newCurrency.toLowerCase();
+  const updateCurrencyTicker = useCallback(async newCurrency => {
+    try {
       const currency = await getAsyncStorage('exchange_rate_currency');
 
       if (currency !== undefined && currency === newCurrency) {
-        return;
+        return {newCurrency, isSuccess: true};
       } else if (currency !== newCurrency) {
         if (newCurrency === HIDE_CURRENCY) {
           dispatch({type: 'HIDE_FIAT', payload: 'true'});
         } else {
           dispatch({type: 'HIDE_FIAT', payload: 'false'});
         }
+
         dispatch({type: 'SET_CURRENCY', payload: newCurrency});
 
-        updateExchangeRate();
-        refreshWallet();
         let saveCurr = await setAsyncStorage(
           'exchange_rate_currency',
           newCurrency,
         );
 
-        return saveCurr;
+        return {newCurrency, isSuccess: true};
       }
-    },
-    [state.selectedCurrency, state.currencyRate],
-  );
+    } catch (error) {
+      return {error, isSuccess: false};
+    }
+  }, []);
 
   const updateExchangeRate = useCallback(async () => {
+    let result: any = '';
     try {
       if (state.hideFiat) {
         return;
       }
+
       const fetchExchangeRate = await exchangeRateRequest.refetch(
         state.selectedCurrency,
       );
@@ -126,43 +128,52 @@ export const ExchangeRateProvider = (props: any) => {
       }
       if (fetchExchangeRate.status === 'success') {
         console.log('Successfully Fetched Exchange Rate Data');
-        const {data} = fetchExchangeRate;
+        result = fetchExchangeRate?.data;
+
         dispatch({
           type: 'UPDATE_RATE',
-          payload: data['nav-coin'][state.selectedCurrency],
+          payload: result['nav-coin'][state.selectedCurrency.toLowerCase()],
         });
 
-        return true;
+        return {result, isSuccess: true};
       }
     } catch (error) {
       console.log('Error Update Exchange Rate: ', error);
-      return false;
+      return {error, result: 'failed', isSuccess: false};
     }
   }, [state.selectedCurrency, exchangeRateRequest, state.hideFiat]);
 
   useEffect(() => {
-    if (
-      (refreshWallet || state.currencyRate || state.selectedCurrency) &&
-      !state.hideFiat
-    ) {
-      updateExchangeRate();
-    }
+    const update = async () => {
+      if (
+        (refreshWallet || state.currencyRate || state.selectedCurrency) &&
+        !state.hideFiat
+      ) {
+        const exch = await updateExchangeRate();
+        if (exch?.isSuccess) {
+          dispatch({
+            type: 'UPDATE_RATE',
+            payload:
+              exch?.result['nav-coin'][state.selectedCurrency.toLowerCase()],
+          });
+        }
+      }
+    };
+
+    update();
   }, [refreshWallet, state.currencyRate, state.selectedCurrency]);
 
   useEffect(() => {
     const setExchangeRateValue = async () => {
       seCurrencyTicker();
 
-      // if (state.hideFiat) {
-      //   return;
-      // }
-
       if (firstSyncCompleted) {
         let result = await exchangeRateRequest.refetch(state.selectedCurrency);
         if (result && result.status === 'success') {
           dispatch({
             type: 'UPDATE_RATE',
-            payload: result?.data['nav-coin'][state.selectedCurrency],
+            payload:
+              result?.data['nav-coin'][state.selectedCurrency.toLowerCase()],
           });
         }
       }
@@ -178,17 +189,17 @@ export const ExchangeRateProvider = (props: any) => {
       selectedCurrency: state.selectedCurrency ? state.selectedCurrency : '',
       updateExchangeRate,
       status,
-      updateCurrency,
       hideFiat: state.hideFiat,
       HIDE_CURRENCY,
+      updateCurrencyTicker,
     }),
     [
       state.currencyRate,
       state.selectedCurrency,
       updateExchangeRate,
       status,
-      updateCurrency,
       state.hideFiat,
+      updateCurrencyTicker,
     ],
   );
 

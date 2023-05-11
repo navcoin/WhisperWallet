@@ -9,21 +9,24 @@ interface ToFiatInterface {
 
 const ToFiat = (props: ToFiatInterface) => {
   let {hideFiat, totalAmount} = props;
-  const {selectedCurrency, currencyRate} = useExchangeRate();
+  const {selectedCurrency, currencyRate = 0.0} = useExchangeRate();
   const [fiatContent, setFiatContent] = useState(<></>);
 
   let calculatedAmountRef: any = useRef();
+  let rate = useRef(currencyRate);
+
 
   useEffect(() => {
+    console.log(rate.current, ' RATE');
     if (hideFiat) {
       setFiatContent(<></>);
     } else {
       calculatedAmountRef.current = totalAmount * currencyRate;
+
       setFiatContent(
         <CurrencyText
           children={calculatedAmountRef.current}
-          currency={selectedCurrency}
-          style={{textTransform: 'uppercase'}}
+          currency={selectedCurrency.toUpperCase()}
           {...props}
         />,
       );

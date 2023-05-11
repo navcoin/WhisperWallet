@@ -15,26 +15,27 @@ import {currencyOptionList} from '@contexts';
 
 const DisplayCurrencyScreen = ({navigation}) => {
   const styles = useStyleSheet(themedStyles);
-  const {selectedCurrency, updateCurrency} = useExchangeRate();
+  const {selectedCurrency, updateCurrencyTicker, dispatch} = useExchangeRate();
+  const [currencyContent, setCurrencyContent] = React.useState(<></>);
+  const [currency, setCurrency] = React.useState(selectedCurrency);
 
-  return (
-    <Container useSafeArea>
-      <KeyboardAwareScrollView>
-        <TopNavigationComponent title="Currency" />
-
-        <Layout style={styles.layout}>
-          {currencyOptionList.map((item, index) => (
+  React.useEffect(() => {
+    setCurrencyContent(
+      <>
+        {currencyOptionList.map((item, index) => {
+          return (
             <Radio
               key={index}
-              checked={
-                item.isSelected ||
-                selectedCurrency.toUpperCase() === item.ticker
-                  ? true
-                  : false
-              }
+              checked={currency === item.ticker ? true : false}
               onChange={() => {
-                updateCurrency(item.ticker);
-                navigation.goBack();
+                console.log(selectedCurrency, item.ticker);
+                updateCurrencyTicker(item.ticker).then(
+                  (data: {isSuccess: any; newCurrency: any}) => {
+                    if (data.isSuccess) {
+                      setCurrency(data.newCurrency);
+                    }
+                  },
+                );
               }}
               style={{marginBottom: scale(20), alignItems: 'flex-end'}}>
               {item.icon ? (
@@ -51,10 +52,20 @@ const DisplayCurrencyScreen = ({navigation}) => {
                 />
               ) : null}
 
-              <Text> {item.ticker}</Text>
+              <Text> {item.ticker.toUpperCase()}</Text>
             </Radio>
-          ))}
-        </Layout>
+          );
+        })}
+      </>,
+    );
+  }, [currency, updateCurrencyTicker, selectedCurrency]);
+
+  return (
+    <Container useSafeArea>
+      <KeyboardAwareScrollView>
+        <TopNavigationComponent title="Currency" />
+
+        <Layout style={styles.layout}>{currencyContent}</Layout>
       </KeyboardAwareScrollView>
     </Container>
   );

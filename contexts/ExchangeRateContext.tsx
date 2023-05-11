@@ -1,6 +1,7 @@
 import {createContext} from 'react';
 
 export const currencyOptionList = [
+  {ticker: 'NONE'},
   {ticker: 'BTC', icon: 'btc'},
   {ticker: 'EUR', icon: 'eur'},
   {ticker: 'USD', icon: 'usd'},
@@ -34,7 +35,6 @@ export const currencyOptionList = [
   {ticker: 'TRY', icon: 'try'},
   {ticker: 'TWD', icon: 'twd'},
   {ticker: 'ZAR', icon: 'zar'},
-  {ticker: 'NONE'},
 ];
 
 export interface ExchangeRateContextValue {
@@ -42,9 +42,9 @@ export interface ExchangeRateContextValue {
   currencyRate: number;
   updateExchangeRate: any;
   status: string;
-  updateCurrency: any;
   hideFiat: boolean;
   HIDE_CURRENCY: string;
+  updateCurrencyTicker: any;
 }
 
 export const ExchangeRateContext = createContext<
