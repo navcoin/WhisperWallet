@@ -33,7 +33,7 @@ const DisplayCurrencyScreen = ({navigation}) => {
                   item.ticker,
                 );
                 setCurrency(newCurrency);
-                console.log(newCurrency, isSuccess);
+                navigation.goBack();
               }}
               style={{marginBottom: scale(20), alignItems: 'flex-end'}}>
               {item.icon ? (
