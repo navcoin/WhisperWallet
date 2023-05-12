@@ -10,7 +10,10 @@ import useTraceUpdates from '../src/hooks/useTraceUpdates';
 import {ToFiat} from '@utils';
 
 const BalanceCircle = memo(() => {
-  const {hideFiat, selectedCurrency, HIDE_CURRENCY} = useExchangeRate();
+  const {hideFiat, selectedCurrency, HIDE_CURRENCY, currencyRate} =
+    useExchangeRate();
+  const [currency, setCurrency] = useState(selectedCurrency);
+  const [fiatContent, setFiatContent] = useState(<></>);
   const {
     syncProgress,
     bootstrapProgress,
@@ -41,6 +44,22 @@ const BalanceCircle = memo(() => {
     }
   }, [balances]);
 
+  useEffect(() => {
+    setFiatContent(
+      <>
+        <Text adjustsFontSizeToFit marginHorizontal={3} category="body">
+          /
+        </Text>
+        <ToFiat
+          adjustsFontSizeToFit
+          category="caption1"
+          totalAmount={totalBalance}
+          hideFiat={hideFiat}
+        />
+      </>,
+    );
+  }, [currency, hideFiat, currencyRate, totalBalance]);
+
   useTraceUpdates('BalanceCircle', {
     connected,
     syncProgress,
@@ -49,6 +68,7 @@ const BalanceCircle = memo(() => {
     bootstrapProgress,
     totalBalance,
     balances,
+    selectedCurrency,
   });
 
   return (
@@ -101,21 +121,7 @@ const BalanceCircle = memo(() => {
               category="caption1"
               children={totalBalance.toFixed(8)}
             />
-            {selectedCurrency === HIDE_CURRENCY ? (
-              <></>
-            ) : (
-              <>
-                <Text adjustsFontSizeToFit marginHorizontal={3} category="body">
-                  /
-                </Text>
-                <ToFiat
-                  adjustsFontSizeToFit
-                  category="caption1"
-                  totalAmount={totalBalance}
-                  hideFiat={hideFiat}
-                />
-              </>
-            )}
+            {selectedCurrency === HIDE_CURRENCY ? <></> : <>{fiatContent}</>}
           </View>
         </View>
       )}

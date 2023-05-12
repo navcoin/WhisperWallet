@@ -28,14 +28,12 @@ const DisplayCurrencyScreen = ({navigation}) => {
               key={index}
               checked={currency === item.ticker ? true : false}
               onChange={() => {
-                console.log(selectedCurrency, item.ticker);
-                updateCurrencyTicker(item.ticker).then(
-                  (data: {isSuccess: any; newCurrency: any}) => {
-                    if (data.isSuccess) {
-                      setCurrency(data.newCurrency);
-                    }
-                  },
+                console.log(currency);
+                let {newCurrency, isSuccess} = updateCurrencyTicker(
+                  item.ticker,
                 );
+                setCurrency(newCurrency);
+                console.log(newCurrency, isSuccess);
               }}
               style={{marginBottom: scale(20), alignItems: 'flex-end'}}>
               {item.icon ? (

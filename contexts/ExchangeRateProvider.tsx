@@ -12,6 +12,7 @@ import {
 import {FiatRequest} from '@service';
 import {useWallet, useTraceUpdate} from '@hooks';
 import {getAsyncStorage, setAsyncStorage} from '@utils/asyncStorageManager';
+import useAsyncStorageHook from '@hooks/useAsyncStorage';
 
 export const initialData = {
   currencyRate: 0,
@@ -50,6 +51,8 @@ export const ExchangeRateProvider = (props: any) => {
   const HIDE_CURRENCY = 'NONE';
 
   const [state, dispatch] = useReducer(exchangeReducer, initialData);
+  const [storedValue, setValue] = useAsyncStorageHook('exchange_rate_currency');
+
   const {firstSyncCompleted, refreshWallet} = useWallet();
 
   const exchangeRateRequest = FiatRequest(state.selectedCurrency);
@@ -81,30 +84,21 @@ export const ExchangeRateProvider = (props: any) => {
     };
   }, []);
 
-  const updateCurrencyTicker = useCallback(async newCurrency => {
-    try {
-      const currency = await getAsyncStorage('exchange_rate_currency');
+  const updateCurrencyTicker = useCallback(newCurrency => {
+    const currency = storedValue;
 
-      if (currency !== undefined && currency === newCurrency) {
-        return {newCurrency, isSuccess: true};
-      } else if (currency !== newCurrency) {
-        if (newCurrency === HIDE_CURRENCY) {
-          dispatch({type: 'HIDE_FIAT', payload: 'true'});
-        } else {
-          dispatch({type: 'HIDE_FIAT', payload: 'false'});
-        }
-
-        dispatch({type: 'SET_CURRENCY', payload: newCurrency});
-
-        let saveCurr = await setAsyncStorage(
-          'exchange_rate_currency',
-          newCurrency,
-        );
-
-        return {newCurrency, isSuccess: true};
+    if (currency !== undefined && currency === newCurrency) {
+      return {newCurrency, isSuccess: true};
+    } else if (currency !== newCurrency) {
+      if (newCurrency === HIDE_CURRENCY) {
+        dispatch({type: 'HIDE_FIAT', payload: 'true'});
+      } else {
+        dispatch({type: 'HIDE_FIAT', payload: 'false'});
       }
-    } catch (error) {
-      return {error, isSuccess: false};
+      dispatch({type: 'SET_CURRENCY', payload: newCurrency});
+      setValue(newCurrency);
+
+      return {newCurrency, isSuccess: true};
     }
   }, []);
 
@@ -166,7 +160,6 @@ export const ExchangeRateProvider = (props: any) => {
   useEffect(() => {
     const setExchangeRateValue = async () => {
       seCurrencyTicker();
-
       if (firstSyncCompleted) {
         let result = await exchangeRateRequest.refetch(state.selectedCurrency);
         if (result && result.status === 'success') {
