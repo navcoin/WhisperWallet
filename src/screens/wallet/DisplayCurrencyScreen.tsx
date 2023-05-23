@@ -1,7 +1,10 @@
-import React from 'react';
-import {Platform} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Platform, ScrollView} from 'react-native';
 import {Text, Container, TopNavigationComponent} from '@components';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import Animated, {
+  useAnimatedRef,
+  useSharedValue,
+} from 'react-native-reanimated';
 import {scale} from 'react-native-size-matters';
 import {
   StyleService,
@@ -13,29 +16,42 @@ import {
 import {useExchangeRate} from '@hooks';
 import {currencyOptionList} from '@contexts';
 
+const AnimatedRadio = Animated.createAnimatedComponent(Radio);
+
 const DisplayCurrencyScreen = ({navigation}) => {
   const styles = useStyleSheet(themedStyles);
   const {selectedCurrency, updateCurrencyTicker, dispatch} = useExchangeRate();
   const [currencyContent, setCurrencyContent] = React.useState(<></>);
   const [currency, setCurrency] = React.useState(selectedCurrency);
+  const [coord, setCoord] = useState([]);
+  const aref = useAnimatedRef<ScrollView>();
+  let scrollPosIndex = useSharedValue(0);
+  let coordinate = useSharedValue([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setCurrencyContent(
       <>
         {currencyOptionList.map((item, index) => {
+          if (item.ticker === currency) {
+            scrollPosIndex.value = index;
+          }
           return (
-            <Radio
+            <AnimatedRadio
               key={index}
+              onLayout={event => {
+                const layout = event.nativeEvent.layout;
+                coord[index] = layout.y;
+                coordinate.value = coord;
+              }}
               checked={currency === item.ticker ? true : false}
               onChange={() => {
-                console.log(currency);
                 let {newCurrency, isSuccess} = updateCurrencyTicker(
                   item.ticker,
                 );
                 setCurrency(newCurrency);
                 navigation.goBack();
               }}
-              style={{marginBottom: scale(20), alignItems: 'flex-end'}}>
+              style={[{marginBottom: scale(20), alignItems: 'flex-end'}]}>
               {item.icon ? (
                 <Icon
                   pack="assets"
@@ -51,20 +67,30 @@ const DisplayCurrencyScreen = ({navigation}) => {
               ) : null}
 
               <Text> {item.ticker.toUpperCase()}</Text>
-            </Radio>
+            </AnimatedRadio>
           );
         })}
       </>,
     );
   }, [currency, updateCurrencyTicker, selectedCurrency]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      aref.current.scrollTo({
+        x: 0,
+        y: coordinate.value[scrollPosIndex.value - 1],
+        animated: true,
+      });
+    }, 2500);
+  }, []);
+
   return (
     <Container useSafeArea>
-      <KeyboardAwareScrollView>
+      <Animated.ScrollView ref={aref}>
         <TopNavigationComponent title="Currency" />
 
         <Layout style={styles.layout}>{currencyContent}</Layout>
-      </KeyboardAwareScrollView>
+      </Animated.ScrollView>
     </Container>
   );
 };
