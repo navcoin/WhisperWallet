@@ -24,6 +24,7 @@ const DisplayCurrencyScreen = ({navigation}) => {
   const [currencyContent, setCurrencyContent] = React.useState(<></>);
   const [currency, setCurrency] = React.useState(selectedCurrency);
   const [coord, setCoord] = useState([]);
+  const [scrollIsInitiated, setScrollIsInitiated] = useState(false);
   const aref = useAnimatedRef<ScrollView>();
   let scrollPosIndex = useSharedValue(0);
   let coordinate = useSharedValue([]);
@@ -34,6 +35,7 @@ const DisplayCurrencyScreen = ({navigation}) => {
         {currencyOptionList.map((item, index) => {
           if (item.ticker === currency) {
             scrollPosIndex.value = index;
+            setScrollIsInitiated(true);
           }
           return (
             <AnimatedRadio
@@ -75,14 +77,16 @@ const DisplayCurrencyScreen = ({navigation}) => {
   }, [currency, updateCurrencyTicker, selectedCurrency]);
 
   useEffect(() => {
-    setTimeout(() => {
-      aref.current.scrollTo({
-        x: 0,
-        y: coordinate.value[scrollPosIndex.value - 1],
-        animated: true,
-      });
-    }, 2500);
-  }, []);
+    if (scrollIsInitiated) {
+      setTimeout(() => {
+        aref.current.scrollTo({
+          x: 0,
+          y: coordinate.value[scrollPosIndex.value - 1],
+          animated: true,
+        });
+      }, 500);
+    }
+  }, [aref, coordinate.value, scrollIsInitiated, scrollPosIndex.value]);
 
   return (
     <Container useSafeArea>
