@@ -24,6 +24,7 @@
     "@react-navigation/native-stack": "^6.6.2",
     "@tsejerome/ui-kitten-components": "^5.1.6",
     "@ui-kitten/eva-icons": "^5.1.1",
+    "axios": "^1.3.4",
     "dayjs": "^1.10.7",
     "expo": ">=44.0.0-0 <45.0.0",
     "fast-text-encoding": "^1.0.3",
@@ -68,6 +69,7 @@
     "react-native-vector-icons": "^9.1.0",
     "react-native-web-refresh-control": "^1.1.0",
     "react-native-webview": "^11.18.2",
+    "react-query": "^3.39.3",
     "rn-gzip": "^0.0.11"
   },
   "devDependencies": {
@@ -86,6 +88,7 @@
     "@typescript-eslint/parser": "^5.7.0",
     "@ui-kitten/metro-config": "^5.1.2",
     "babel-jest": "^26.6.3",
+    "babel-plugin-module-resolver": "^5.0.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "eslint": "^7.14.0",
     "jest": "^26.6.3",

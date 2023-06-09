@@ -3,10 +3,8 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Icon, useTheme} from '@tsejerome/ui-kitten-components';
 
 import Text from './Text';
-import CurrencyText from './CurrencyText';
 import AnimatedAppearance from './AnimatedAppearance';
 import Identicon from './Identicon';
-
 import {
   Animation_Types_Enum,
   Balance_Types_Enum,
@@ -15,15 +13,26 @@ import {
 } from '../constants/Type';
 import useWallet from '../src/hooks/useWallet';
 import {scale} from 'react-native-size-matters';
+import DisplayCoinAndFiatValue from './DisplayCoinAndFiatValue';
+import {useExchangeRate} from '@hooks';
 
 interface BalanceProps {
   item: BalanceFragment;
   onPress?(): void;
   index: number;
+  hideFiat: boolean;
+  isFiatHidden: boolean;
 }
 
-const BalanceCard = ({item, index, onPress}: BalanceProps) => {
+const BalanceCard = ({
+  item,
+  index,
+  onPress,
+  isFiatHidden = false,
+}: BalanceProps) => {
   const theme = useTheme();
+  const {hideFiat, selectedCurrency} = useExchangeRate();
+ 
   const {connected, firstSyncCompleted} = useWallet();
 
   const {name, amount, pending_amount, type_id, currency, tokenId, mine} = item;
@@ -82,14 +91,13 @@ const BalanceCard = ({item, index, onPress}: BalanceProps) => {
             ) : connected === Connection_Stats_Enum.Syncing ? (
               <Text style={{fontSize: scale(13)}}>Synchronizing...</Text>
             ) : (
-              <CurrencyText
-                adjustsFontSizeToFit
-                category="footnote"
-                children={(amount + pending_amount).toFixed(8)}
-                marginTop={4}
+              <DisplayCoinAndFiatValue
                 type={type_id}
                 formatType={type_id}
+                coinAmount={amount + pending_amount}
                 currency={currency}
+                hideFiat={isFiatHidden}
+                fiatCurrency={selectedCurrency}
               />
             )}
           </View>

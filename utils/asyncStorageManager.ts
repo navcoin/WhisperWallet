@@ -4,6 +4,7 @@ export enum AsyncStoredItems {
   GLOBAL_ERROR_RECORDS = 'global_error_records', //string[]
   TEMP_ERROR_RECORDS = 'temporary_error_records', //string[]
   PROMPT_ERROR_ON_NEXT_LAUNCH = 'prompt_error_toasty_on_next_launch', //boolean
+  CURRENCY_RECORDS = 'exchange_rate_currency', // string
 }
 
 /*

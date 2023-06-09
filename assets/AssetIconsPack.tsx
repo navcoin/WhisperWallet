@@ -3,6 +3,7 @@ import {Image, ImageProps, ImageSourcePropType, StyleSheet} from 'react-native';
 import {IconPack, IconProvider} from '@tsejerome/ui-kitten-components';
 import {SvgProps} from 'react-native-svg';
 import {Icons} from './icons';
+import {Images} from './images';
 import {scale} from 'react-native-size-matters';
 
 const createIcon = (source: ImageSourcePropType): IconProvider<ImageProps> => {
@@ -124,6 +125,41 @@ const AssetIconsPack: IconPack<ImageProps | SvgProps> = {
     biometrics: createIcon(Icons.biometrics),
     pincode: createIcon(Icons.pincode),
     unsecure: createIcon(Icons.unsecure),
+    navlogo: createIcon(Images.navLogo),
+    syncoutline: createIcon(Icons.syncoutline),
+    usd: createIcon(Icons.usd),
+    eur: createIcon(Icons.eur),
+    ars: createIcon(Icons.ars),
+    aud: createIcon(Icons.aud),
+    brl: createIcon(Icons.brl),
+    cad: createIcon(Icons.cad),
+    chf: createIcon(Icons.chf),
+    clp: createIcon(Icons.clp),
+    czk: createIcon(Icons.czk),
+    dkk: createIcon(Icons.dkk),
+    gbp: createIcon(Icons.gbp),
+    hkd: createIcon(Icons.hkd),
+    huf: createIcon(Icons.huf),
+    idr: createIcon(Icons.idr),
+    ils: createIcon(Icons.ils),
+    inr: createIcon(Icons.inr),
+    jpy: createIcon(Icons.jpy),
+    mxn: createIcon(Icons.mxn),
+    myr: createIcon(Icons.myr),
+    nok: createIcon(Icons.nok),
+    nzd: createIcon(Icons.nzd),
+    krw: createIcon(Icons.krw),
+    php: createIcon(Icons.php),
+    pkr: createIcon(Icons.pkr),
+    pln: createIcon(Icons.pln),
+    rub: createIcon(Icons.rub),
+    sek: createIcon(Icons.sek),
+    sgd: createIcon(Icons.sgd),
+    thb: createIcon(Icons.thb),
+    try: createIcon(Icons.try),
+    twd: createIcon(Icons.twd),
+    zar: createIcon(Icons.zar),
+    btc: createIcon(Icons.btc),
   },
 };
 export default AssetIconsPack;

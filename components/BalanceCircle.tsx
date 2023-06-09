@@ -1,14 +1,19 @@
 import {View} from 'react-native';
 import React, {memo, useEffect, useState} from 'react';
-import useWallet from '../src/hooks/useWallet';
+import {useWallet, useExchangeRate} from '@hooks';
 import {Connection_Stats_Enum} from '../constants/Type';
 import CurrencyText from './CurrencyText';
 import Text from './Text';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {AnimatedSegments} from './AnimatedSegments';
 import useTraceUpdates from '../src/hooks/useTraceUpdates';
+import {ToFiat} from '@utils';
 
 const BalanceCircle = memo(() => {
+  const {hideFiat, selectedCurrency, HIDE_CURRENCY, currencyRate} =
+    useExchangeRate();
+  const [currency, setCurrency] = useState(selectedCurrency);
+  const [fiatContent, setFiatContent] = useState(<></>);
   const {
     syncProgress,
     bootstrapProgress,
@@ -16,6 +21,7 @@ const BalanceCircle = memo(() => {
     connected,
     firstSyncCompleted,
   } = useWallet();
+
   const [totalBalance, setTotalBalance] = useState(0);
   const [segments, setSegments] = useState([0, 0, 0]);
 
@@ -38,6 +44,22 @@ const BalanceCircle = memo(() => {
     }
   }, [balances]);
 
+  useEffect(() => {
+    setFiatContent(
+      <>
+        <Text adjustsFontSizeToFit marginHorizontal={3} category="body">
+          /
+        </Text>
+        <ToFiat
+          adjustsFontSizeToFit
+          category="caption1"
+          totalAmount={totalBalance}
+          hideFiat={hideFiat}
+        />
+      </>,
+    );
+  }, [currency, hideFiat, currencyRate, totalBalance]);
+
   useTraceUpdates('BalanceCircle', {
     connected,
     syncProgress,
@@ -46,6 +68,7 @@ const BalanceCircle = memo(() => {
     bootstrapProgress,
     totalBalance,
     balances,
+    selectedCurrency,
   });
 
   return (
@@ -87,7 +110,19 @@ const BalanceCircle = memo(() => {
       ) : (
         <View style={{position: 'absolute'}}>
           <Text style={{textAlign: 'center'}}>Balance:</Text>
-          <CurrencyText children={totalBalance.toFixed(8)} />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <CurrencyText
+              adjustsFontSizeToFit
+              category="caption1"
+              children={totalBalance.toFixed(8)}
+            />
+            {selectedCurrency === HIDE_CURRENCY ? <></> : <>{fiatContent}</>}
+          </View>
         </View>
       )}
     </View>

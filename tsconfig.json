@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "esnext",
     "module": "commonjs",
-    "lib": [
-      "es2017"
-    ],
+    "lib": ["es2017"],
     "allowJs": true,
     "jsx": "react-native",
     "noEmit": true,
@@ -22,5 +21,16 @@
     "metro.config.js",
     "jest.config.js"
   ],
-  "extends": "expo/tsconfig.base"
+  "extends": "expo/tsconfig.base",
+  "include": ["src"],
+  "paths": {
+    "@constants/*": ["./constants/*"],
+    "@contexts/*": ["./src/contexts/*"],
+    "@components/*": ["./components/*"],
+    "@utils/*": ["./src/utils/*"],
+    "@screens": ["./src/screens/*"],
+    "@hooks/*": ["./src/hooks/*"],
+    "@navigation/*": ["./navigation/*"],
+    "@service/*": ["./src/service/*"]
+  }
 }

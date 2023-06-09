@@ -24,6 +24,7 @@ export type RootAppStackParamList = {
   App: undefined;
   OnBoarding: undefined;
 };
+
 export type RootStackParamList = {
   Intro: undefined;
   CreateNewWallet: undefined;
@@ -46,6 +47,7 @@ export type RootStackParamList = {
   CollectionScreen: undefined;
   MintNftScreen: undefined;
   ScanQRScreen: undefined;
+  DisplayCurrencyScreen: undefined;
 };
 
 export type MnemonicScreenProps = {mnemonic: string};

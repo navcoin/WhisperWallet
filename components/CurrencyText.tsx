@@ -8,6 +8,7 @@ import numeral from 'numeral';
 export interface CurrencyTextProps extends MyTextProps {
   type?: Category_Types_Enum;
   formatType?: Balance_Types_Enum;
+  currency: string;
 }
 
 const CurrencyText = memo(
@@ -37,7 +38,7 @@ const CurrencyText = memo(
     const formatSaving = (
       amount: string,
       typeCategories = Category_Types_Enum.Input,
-      currency = '$',
+      currency = 'USD',
     ) => {
       let textResult = typeCategories === Category_Types_Enum.Input ? '' : '-';
       textResult += `${currency}`;
@@ -78,6 +79,7 @@ const CurrencyText = memo(
 
     const formatDefault = (amount: string, currency = 'NAV') => {
       let textResult = '';
+
       if (currency.substring(0, 4) == 'item') {
         textResult = parseInt(amount);
       } else {
@@ -116,6 +118,8 @@ const CurrencyText = memo(
           ? formatDefault(children, currency)
           : formatType === Balance_Types_Enum.Nft
           ? formatDefault(children, 'item')
+          : formatType === Balance_Types_Enum.Fiat
+          ? formatDefault(children, currency)
           : formatDefault(children, currency)}
       </Text>
     );

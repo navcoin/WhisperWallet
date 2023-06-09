@@ -15,7 +15,7 @@ import {
   GetAuthenticationName,
   SecurityAuthenticationTypes,
 } from '../../../contexts/SecurityContext';
-import {useBottomSheet} from '../../hooks/useBottomSheet';
+import {useBottomSheet, useExchangeRate} from '@hooks';
 import BottomSheetOptions from '../../../components/BottomSheetOptions';
 import {useModal} from '../../hooks/useModal';
 import {useTheme} from '@tsejerome/ui-kitten-components';
@@ -146,7 +146,17 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     );
   };
 
+  const {selectedCurrency, updateCurrency} = useExchangeRate();
+
   const items: SettingsItem[] = [
+    {
+      title: 'Currency',
+      icon: 'money',
+      show: true,
+      onPress: () => {
+        navigate('DisplayCurrencyScreen');
+      },
+    },
     {
       title: 'Staking nodes',
       icon: 'factory',
