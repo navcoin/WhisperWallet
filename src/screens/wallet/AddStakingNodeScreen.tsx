@@ -1,20 +1,23 @@
-import useWallet from '../../hooks/useWallet';
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Button, Input, Layout} from '@tsejerome/ui-kitten-components';
-import Container from '../../../components/Container';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {NodeOption} from '../../../constants/Type';
-import Text from '../../../components/Text';
-import {RootStackParamList} from '../../../navigation/type';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import TopNavigationComponent from '../../../components/TopNavigation';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Button, Input, Layout } from '@tsejerome/ui-kitten-components';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { NodeOption } from '@constants';
+import { RootStackParamList } from '@navigation/type';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { TopNavigationComponent, Text, Container } from '@components';
+import { useWallet } from '@hooks';
+import { addStakingNodeStyles as styles } from './styles';
 
 const AddStakingNodeScreen = () => {
-  const {updateAccounts, ExecWrapperPromise, ExecWrapperSyncPromise, network} =
-    useWallet();
+  const {
+    updateAccounts,
+    ExecWrapperPromise,
+    ExecWrapperSyncPromise,
+    network,
+  } = useWallet();
 
-  const {goBack} = useNavigation<NavigationProp<RootStackParamList>>();
+  const { goBack } = useNavigation<NavigationProp<RootStackParamList>>();
 
   const [error, setError] = useState('');
 
@@ -27,7 +30,7 @@ const AddStakingNodeScreen = () => {
     type: keyof NodeOption,
     value: string | number,
   ) => {
-    const temp = {...newNode};
+    const temp = { ...newNode };
     temp[type] = value as any;
     setNewNode(temp);
   };
@@ -119,27 +122,3 @@ const AddStakingNodeScreen = () => {
 };
 
 export default AddStakingNodeScreen;
-
-const styles = StyleSheet.create({
-  inputCard: {
-    borderRadius: 12,
-    marginTop: 24,
-    marginHorizontal: 24,
-    paddingVertical: 24,
-    paddingHorizontal: 16,
-  },
-  inputGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  inputField: {
-    flex: 1,
-    flexWrap: 'wrap',
-  },
-  inputTitle: {
-    marginRight: 16,
-  },
-  errorText: {color: 'red', flex: 1, marginTop: 24},
-});

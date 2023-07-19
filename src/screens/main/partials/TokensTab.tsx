@@ -1,22 +1,22 @@
-import {RefreshControl, ScrollView, View} from 'react-native';
-import React, {useCallback, useState, useEffect} from 'react';
-import {BalanceFragment} from '@constants/Type';
-import {useBottomSheet, useWallet} from '@hooks';
+import { RefreshControl, ScrollView, View } from 'react-native';
+import React, { useCallback, useState, useEffect } from 'react';
+import { BalanceFragment } from '@constants';
+import { useBottomSheet, useWallet } from '@hooks';
 import {
   StyleService,
   useStyleSheet,
   useTheme,
 } from '@tsejerome/ui-kitten-components';
-import {scale, verticalScale} from 'react-native-size-matters';
+import { scale, verticalScale } from 'react-native-size-matters';
 
-import {BalanceCard, BottomSheetMenu, Content, Text} from '@components';
+import { BalanceCard, BottomSheetMenu, Content, Text } from '@components';
 
 const Tokens = () => {
   const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
   );
 
-  const {refreshWallet, tokens} = useWallet();
+  const { refreshWallet, tokens } = useWallet();
   const bottomSheet = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
@@ -79,7 +79,7 @@ const Tokens = () => {
               <View style={styles.item} key={i}>
                 <BalanceCard
                   isFiatHidden={true}
-                  item={{...el, name: el.name}}
+                  item={{ ...el, name: el.name }}
                   index={i}
                   onPress={() => {
                     setAccount(el);
@@ -110,7 +110,7 @@ const Tokens = () => {
             titleColor="#fff"
           />
         }>
-        <Content style={{paddingTop: verticalScale(24)}}>
+        <Content style={{ paddingTop: verticalScale(24) }}>
           {tokensContent}
         </Content>
       </ScrollView>

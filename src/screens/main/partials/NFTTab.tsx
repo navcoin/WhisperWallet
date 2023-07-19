@@ -1,17 +1,16 @@
-import {RefreshControl, ScrollView, View} from 'react-native';
-import {useEffect} from 'react';
-import React, {useCallback, useState} from 'react';
-import {BalanceFragment} from '@constants/Type';
-import {useBottomSheet} from '@hooks/useBottomSheet';
-import useWallet from '@hooks/useWallet';
+import { RefreshControl, ScrollView, View } from 'react-native';
+import { useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
+import { BalanceFragment } from '@constants';
+import { useBottomSheet, useWallet } from '@hooks';
 import {
   useStyleSheet,
   StyleService,
   useTheme,
 } from '@tsejerome/ui-kitten-components';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {scale, verticalScale} from 'react-native-size-matters';
-import {RootStackParamList} from '@navigation/type';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { scale, verticalScale } from 'react-native-size-matters';
+import { RootStackParamList } from '@navigation/type';
 
 import {
   BalanceCard,
@@ -25,10 +24,10 @@ const NFTs = () => {
   const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
   );
-  const {refreshWallet, nfts} = useWallet();
+  const { refreshWallet, nfts } = useWallet();
   const bottomSheet = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+  const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
   const theme = useTheme();
 
   const expandMenuNft = useCallback(
@@ -90,7 +89,7 @@ const NFTs = () => {
               <View style={styles.item} key={i}>
                 <BalanceCard
                   isFiatHidden={true}
-                  item={{...el, name: el.name}}
+                  item={{ ...el, name: el.name }}
                   key={i}
                   index={i}
                   onPress={() => {
@@ -107,7 +106,7 @@ const NFTs = () => {
             color={theme['color-basic-1200']}
             key={'add'}
             index={nfts.length + 1}
-            item={{text: 'Create collection'}}
+            item={{ text: 'Create collection' }}
             selected={''}
             onPress={() => {
               navigate('CreateNftCollectionScreen');
@@ -136,7 +135,9 @@ const NFTs = () => {
             titleColor="#fff"
           />
         }>
-        <Content style={{paddingTop: verticalScale(24)}}>{nftsContent}</Content>
+        <Content style={{ paddingTop: verticalScale(24) }}>
+          {nftsContent}
+        </Content>
       </ScrollView>
     </View>
   );

@@ -1,17 +1,18 @@
 import React from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
-import Container from '../../../components/Container';
-import Text from '../../../components/Text';
-import OptionCard from '../../../components/OptionCard';
-import TopNavigationComponent from '../../../components/TopNavigation';
-import useAsyncStorage from '../../hooks/useAsyncStorage';
-import {AsyncStoredItems} from '../../../utils/asyncStorageManager';
-import {useModal} from '../../hooks/useModal';
-import ErrorModalContent from '../../../components/Modals/ErrorModalContent';
-import {scale} from 'react-native-size-matters';
+import { View, ScrollView } from 'react-native';
+import {
+  Container,
+  OptionCard,
+  Text,
+  TopNavigationComponent,
+  ErrorModalContent,
+} from '@components';
+import { useAsyncStorage, useModal } from '@hooks';
+import { AsyncStoredItems } from '@utils';
+import { errorLogsScreenStyles as styles } from './styles';
 
 const ErrorLogsScreen = (props: any) => {
-  const {openModal} = useModal();
+  const { openModal } = useModal();
   const [errorRecords, setErrorRecords] = useAsyncStorage(
     AsyncStoredItems.GLOBAL_ERROR_RECORDS,
     null,
@@ -55,24 +56,3 @@ const ErrorLogsScreen = (props: any) => {
 };
 
 export default ErrorLogsScreen;
-
-const styles = StyleSheet.create({
-  header: {
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-    paddingBottom: 8,
-  },
-  text: {
-    color: 'white',
-    textAlign: 'center',
-  },
-  emptyView: {
-    flex: 1,
-    alignContent: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  container: {
-    paddingHorizontal: scale(24),
-  },
-});

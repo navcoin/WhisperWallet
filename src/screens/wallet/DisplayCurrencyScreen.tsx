@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {Platform, ScrollView} from 'react-native';
-import {Text, Container, TopNavigationComponent} from '@components';
+import React, { useEffect, useState } from 'react';
+import { Platform, ScrollView } from 'react-native';
+import { Text, Container, TopNavigationComponent } from '@components';
 import Animated, {
   useAnimatedRef,
   useSharedValue,
 } from 'react-native-reanimated';
-import {scale} from 'react-native-size-matters';
+import { scale } from 'react-native-size-matters';
 import {
   StyleService,
   useStyleSheet,
@@ -13,14 +13,15 @@ import {
   Layout,
   Icon,
 } from '@tsejerome/ui-kitten-components';
-import {useExchangeRate} from '@hooks';
-import {currencyOptionList} from '@contexts';
+import { useExchangeRate } from '@hooks';
+import { currencyOptionList } from '@contexts';
 
 const AnimatedRadio = Animated.createAnimatedComponent(Radio);
 
-const DisplayCurrencyScreen = ({navigation}) => {
+const DisplayCurrencyScreen = ({ navigation }) => {
   const styles = useStyleSheet(themedStyles);
-  const {selectedCurrency, updateCurrencyTicker, dispatch} = useExchangeRate();
+  const { selectedCurrency, updateCurrencyTicker, dispatch } =
+    useExchangeRate();
   const [currencyContent, setCurrencyContent] = React.useState(<></>);
   const [currency, setCurrency] = React.useState(selectedCurrency);
   const [coord, setCoord] = useState([]);
@@ -47,13 +48,13 @@ const DisplayCurrencyScreen = ({navigation}) => {
               }}
               checked={currency === item.ticker ? true : false}
               onChange={() => {
-                let {newCurrency, isSuccess} = updateCurrencyTicker(
+                let { newCurrency, isSuccess } = updateCurrencyTicker(
                   item.ticker,
                 );
                 setCurrency(newCurrency);
                 navigation.goBack();
               }}
-              style={[{marginBottom: scale(20), alignItems: 'flex-end'}]}>
+              style={[{ marginBottom: scale(20), alignItems: 'flex-end' }]}>
               {item.icon ? (
                 <Icon
                   pack="assets"

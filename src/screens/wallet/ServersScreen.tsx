@@ -1,39 +1,36 @@
-import useWallet from '../../hooks/useWallet';
-import React, {useState} from 'react';
-import {View, StyleSheet, Alert} from 'react-native';
+import React, { useState } from 'react';
+import { View, Alert } from 'react-native';
 import {
   Button,
   Icon,
   TopNavigationAction,
 } from '@tsejerome/ui-kitten-components';
-import Container from '../../../components/Container';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {NetworkOption, ServerOption} from '../../../constants/Type';
-import OptionCard from '../../../components/OptionCard';
-import {RootStackParamList} from '../../../navigation/type';
-import useAsyncStorage from '../../hooks/useAsyncStorage';
-import {networkOptions} from '../../../constants/Data';
-import TopNavigationComponent from '../../../components/TopNavigation';
-import {scale} from 'react-native-size-matters';
+import { Container, OptionCard, TopNavigationComponent } from '@components';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '@navigation/type';
+import { useAsyncStorage, useWallet } from '@hooks';
+import { networkOptions, NetworkOption, ServerOption } from '@constants';
+import { scale } from 'react-native-size-matters';
+import { serversScreenStyles as styles } from './styles';
 
-const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
+const TopRightIcon = (props: { name: 'check' | 'edit' }) => (
   <Icon width={scale(20)} height={scale(20)} {...props} name={props.name} />
 );
 
 const renderRightActions = (editMode: boolean, onPress: () => void) => (
   <React.Fragment>
     <TopNavigationAction
-      style={{padding: scale(20)}}
-      icon={TopRightIcon({name: editMode ? 'check' : 'edit'})}
+      style={{ padding: scale(20) }}
+      icon={TopRightIcon({ name: editMode ? 'check' : 'edit' })}
       onPress={onPress}
     />
   </React.Fragment>
 );
 
 const ServersScreen = () => {
-  const {walletName, network} = useWallet();
+  const { walletName, network } = useWallet();
 
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+  const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
 
   const [currentServers, setCurrentServers] = useAsyncStorage(
     'currentServers',
@@ -80,7 +77,7 @@ const ServersScreen = () => {
             key={'1'}
             id={'1'}
             index={1}
-            item={{text: 'Add new server'}}
+            item={{ text: 'Add new server' }}
             selected={''}
             onPress={() => {
               navigate('AddServerScreen', {
@@ -132,11 +129,3 @@ const ServersScreen = () => {
 };
 
 export default ServersScreen;
-
-const styles = StyleSheet.create({
-  summary: {textAlign: 'center', paddingHorizontal: 24},
-  serversWrapper: {
-    padding: 24,
-    flex: 1,
-  },
-});

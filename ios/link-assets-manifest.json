@@ -1,0 +1,89 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Celias-Black.ttf",
+      "sha1": "1768b2eff68f403bcf3b7d7f7cafe94fb7c57764"
+    },
+    {
+      "path": "src/assets/fonts/Celias-BlackItalic.ttf",
+      "sha1": "fb68ee29c9f286becd593b98d133d8ea243a37a9"
+    },
+    {
+      "path": "src/assets/fonts/Celias-Bold.ttf",
+      "sha1": "eb7389abf825342c68e0708f6025846ef5755aea"
+    },
+    {
+      "path": "src/assets/fonts/Celias-BoldItalic.ttf",
+      "sha1": "a2e3fbe3937394a8b82e0795d84f0640ac2a7d32"
+    },
+    {
+      "path": "src/assets/fonts/Celias-Hairline.ttf",
+      "sha1": "342f20f942c24af0c677a343ccda43b96029a17f"
+    },
+    {
+      "path": "src/assets/fonts/Celias-Italic.ttf",
+      "sha1": "5f89ed20840125e3b2d03e3846bea5e04da27d1c"
+    },
+    {
+      "path": "src/assets/fonts/Celias-Light.ttf",
+      "sha1": "21d818dcfde960a6a9840d332e1252ae60dfcf46"
+    },
+    {
+      "path": "src/assets/fonts/Celias-LightItalic.ttf",
+      "sha1": "b23dbbb01cfb4e903a84652d9fd811f211721044"
+    },
+    {
+      "path": "src/assets/fonts/Celias-Medium.ttf",
+      "sha1": "bc8b7e48954ec81ffb0785532c77243ce47e2095"
+    },
+    {
+      "path": "src/assets/fonts/Celias-Thin.ttf",
+      "sha1": "883c10212a2ed3b2b1a51ace60cc27ad44e40477"
+    },
+    {
+      "path": "src/assets/fonts/Celias-ThinItalic.ttf",
+      "sha1": "3e41719f3cc817847c53a1c85394bfce0a162f60"
+    },
+    {
+      "path": "src/assets/fonts/Celias.ttf",
+      "sha1": "d0f9baf6772c4dcc87d56f0960c1a48deea557a1"
+    },
+    {
+      "path": "src/assets/fonts/Montserrat-Regular.ttf",
+      "sha1": "d25b35242deb1c6ff888b8162ca2aacc356d3899"
+    },
+    {
+      "path": "src/assets/fonts/Overpass-Bold.ttf",
+      "sha1": "5955e26572d9c614927863c7789bf29954228ea5"
+    },
+    {
+      "path": "src/assets/fonts/Overpass-Extrabold-Italic.otf",
+      "sha1": "ffd2b7a869797775a8bcc273ef63837f6936c1e4"
+    },
+    {
+      "path": "src/assets/fonts/Overpass-Regular.ttf",
+      "sha1": "6a0d66b2f001f6f25520f16ac0854802af00fec7"
+    },
+    {
+      "path": "src/assets/fonts/Overpass-SemiBold.ttf",
+      "sha1": "529e2571d9424bfecb0e3f393470899cb854c5e8"
+    },
+    {
+      "path": "src/assets/fonts/Roboto-BlackItalic.ttf",
+      "sha1": "91158ed880ebf4bb904568ec246e85a07fefcdfb"
+    },
+    {
+      "path": "src/assets/fonts/SFPro-Display-Bold.otf",
+      "sha1": "100e7b7fd24facbca4db38e6d4d7e01c73b82818"
+    },
+    {
+      "path": "src/assets/fonts/SFPro-Display-Heavy-Italic.otf",
+      "sha1": "094c4f5f6f14d5964efe8ece373ac918674bd498"
+    },
+    {
+      "path": "src/assets/fonts/SpaceMono-Regular.ttf",
+      "sha1": "fae3a5a43b50e0408fd61e14383d94a023d332b0"
+    }
+  ]
+}

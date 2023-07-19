@@ -1,29 +1,26 @@
-import React, {useEffect, useState} from 'react';
-import {
-  Icon,
-  StyleService,
-  useStyleSheet,
-} from '@tsejerome/ui-kitten-components';
-
-import Container from '../../../components/Container';
-import {BalanceFragment, NftItem} from '../../../constants/Type';
-import ImageViewer from 'react-native-image-zoom-viewer';
-import {scale} from 'react-native-size-matters';
-import TopNavigationComponent from '../../../components/TopNavigation';
+import React, { useEffect, useState } from 'react';
+import { Icon, useStyleSheet } from '@tsejerome/ui-kitten-components';
 import {
   View,
   FlatList,
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import Text from '../../../components/Text';
-import {IImageInfo} from 'react-native-image-zoom-viewer/built/image-viewer.type';
+import {
+  Container,
+  Text,
+  OptionCard,
+  TopNavigationComponent,
+} from '@components';
+import { BalanceFragment, NftItem } from '@constants';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import { scale } from 'react-native-size-matters';
+import { IImageInfo } from 'react-native-image-zoom-viewer/built/image-viewer.type';
 import FastImage from 'react-native-fast-image';
-import {screenWidth} from '../../../utils/layout';
-import {Modal} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import OptionCard from '../../../components/OptionCard';
-import {useNavigation} from '@react-navigation/native';
+import { Modal } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { collectionScreenStyles } from './styles';
 
 interface GalleryNftItem extends NftItem {
   galleryData: IImageInfo;
@@ -31,16 +28,16 @@ interface GalleryNftItem extends NftItem {
 }
 
 const CollectionScreen = (props: any) => {
-  const styles = useStyleSheet(themedStyles);
+  const styles = useStyleSheet(collectionScreenStyles);
   const [collection, setCollection] = useState<BalanceFragment | undefined>(
     props.route.params.collection,
   );
   const [nfts, setNfts] = useState<GalleryNftItem[]>([]);
   const [previewIndex, setPreviewIndex] = useState(0);
   const [previewMode, setPreviewMode] = useState(false);
-  const {bottom, top} = useSafeAreaInsets();
-  const {width, height} = useWindowDimensions();
-  const {navigate} = useNavigation();
+  const { bottom, top } = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
+  const { navigate } = useNavigation();
 
   useEffect(() => {
     if (!collection) {
@@ -60,7 +57,7 @@ const CollectionScreen = (props: any) => {
       for (const [key, value] of Object.entries<string>(
         tempCol.items.confirmed,
       )) {
-        tempCol.items.confirmed[key] = {name: value};
+        tempCol.items.confirmed[key] = { name: value };
         try {
           tempCol.items.confirmed[key] = JSON.parse(value);
         } catch (e) {}
@@ -90,7 +87,7 @@ const CollectionScreen = (props: any) => {
       for (const [key, value] of Object.entries<string>(
         tempCol.items.pending,
       )) {
-        tempCol.items.pending[key] = {name: value};
+        tempCol.items.pending[key] = { name: value };
         try {
           tempCol.items.pending[key] = JSON.parse(value);
         } catch (e) {}
@@ -131,17 +128,17 @@ const CollectionScreen = (props: any) => {
         title={
           collection?.name || collection?.tokenId?.substring(0, 16) + '...'
         }
-        style={{marginBottom: scale(0)}}
+        style={{ marginBottom: scale(0) }}
         accessoryRight={
           collection?.mine && (
             <TouchableOpacity
-              style={{paddingRight: scale(24)}}
+              style={{ paddingRight: scale(24) }}
               onPress={() => {
                 navigate('MintNftScreen', {
                   from: collection,
                 });
               }}>
-              <Icon name={'add'} style={{tintColor: '#fff'}} />
+              <Icon name={'add'} style={styles.iconTintColor} />
             </TouchableOpacity>
           )
         }
@@ -156,7 +153,7 @@ const CollectionScreen = (props: any) => {
               onSwipeDown={() => {
                 closeImagePreview();
               }}
-              style={{paddingHorizontal: scale(0)}}
+              style={{ paddingHorizontal: scale(0) }}
               enableSwipeDown
               useNativeDriver
               enablePreload
@@ -169,12 +166,12 @@ const CollectionScreen = (props: any) => {
               renderIndicator={() => <></>}
               renderHeader={currentIndex => (
                 <View
-                  style={{
-                    position: 'absolute',
-                    top: top,
-                    zIndex: 999,
-                    width: '100%',
-                  }}>
+                  style={[
+                    styles.headerWrapper,
+                    {
+                      top: top,
+                    },
+                  ]}>
                   <TopNavigationComponent
                     alignment={'center'}
                     title={nfts[currentIndex].name}
@@ -182,7 +179,7 @@ const CollectionScreen = (props: any) => {
                     pressBack={() => {
                       closeImagePreview();
                     }}
-                    style={{marginBottom: scale(0)}}
+                    style={{ marginBottom: scale(0) }}
                   />
                 </View>
               )}
@@ -195,9 +192,9 @@ const CollectionScreen = (props: any) => {
                       width: width,
                     }}>
                     {nfts[currentIndex].type !== 'pending' ? (
-                      <View style={{padding: scale(24)}}>
+                      <View style={{ padding: scale(24) }}>
                         <OptionCard
-                          item={{text: 'Send to someone'}}
+                          item={{ text: 'Send to someone' }}
                           index={0}
                           id={'sendTo'}
                           key={'sendTo'}
@@ -212,7 +209,7 @@ const CollectionScreen = (props: any) => {
                           selected={''}
                         />
                         <OptionCard
-                          item={{text: 'Create sell order'}}
+                          item={{ text: 'Create sell order' }}
                           index={0}
                           id={'sellNft'}
                           key={'sellNft'}
@@ -228,7 +225,7 @@ const CollectionScreen = (props: any) => {
                         />
                       </View>
                     ) : (
-                      <View style={{padding: scale(24)}}>
+                      <View style={{ padding: scale(24) }}>
                         <Text>Pending</Text>
                       </View>
                     )}
@@ -239,7 +236,7 @@ const CollectionScreen = (props: any) => {
           </Modal>
           <FlatList
             data={nfts}
-            renderItem={({item, index}) => (
+            renderItem={({ item, index }) => (
               <View
                 style={styles.singleImageContainerStyle}
                 opacity={item.type === 'pending' ? 0.7 : 1}>
@@ -249,11 +246,7 @@ const CollectionScreen = (props: any) => {
                     openImagePreview(index);
                   }}>
                   <FastImage
-                    style={{
-                      width: (screenWidth - 24) / 3,
-                      height: (screenWidth - 24) / 3,
-                      padding: 0,
-                    }}
+                    style={styles.fastImage}
                     source={{
                       uri:
                         item.image ||
@@ -262,31 +255,15 @@ const CollectionScreen = (props: any) => {
                     }}
                     resizeMode={FastImage.resizeMode.cover}
                   />
-                  <View
-                    style={{
-                      position: 'absolute',
-                      top: scale(10),
-                      right: scale(0),
-                      flexDirection: 'row',
-                    }}>
-                    <View
-                      style={{
-                        backgroundColor: '#fff',
-                        paddingHorizontal: scale(10),
-                        borderRadius: scale(10),
-                      }}>
-                      <Text category={'caption2'} style={{color: '#000'}}>
+                  <View style={styles.sectionWrapper}>
+                    <View style={styles.captionWrapper}>
+                      <Text category={'caption2'} style={styles.colorWhite}>
                         #{item.id}
                       </Text>
                     </View>
                     {item.type === 'pending' && (
-                      <View
-                        style={{
-                          backgroundColor: '#fff',
-                          paddingHorizontal: scale(10),
-                          borderRadius: scale(10),
-                        }}>
-                        <Text category={'caption2'} style={{color: 'red'}}>
+                      <View style={styles.typePending}>
+                        <Text category={'caption2'} style={styles.colorRed}>
                           Pending
                         </Text>
                       </View>
@@ -297,7 +274,7 @@ const CollectionScreen = (props: any) => {
             )}
             numColumns={2}
             keyExtractor={(item, index) => index.toString()}
-            style={{padding: 10}}
+            style={styles.flatListStyle}
           />
         </>
       ) : (
@@ -312,36 +289,3 @@ const CollectionScreen = (props: any) => {
 };
 
 export default CollectionScreen;
-
-const themedStyles = StyleService.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-  },
-  topTab: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: scale(12),
-  },
-  iconGrp: {
-    flexDirection: 'row',
-  },
-  icon: {
-    width: scale(18),
-    height: scale(18),
-    tintColor: '$icon-basic-color',
-  },
-  singleImageContainerStyle: {
-    backgroundColor: 'background-basic-color-2',
-    flex: 1,
-    width: (screenWidth - 24) / 2,
-    maxWidth: (screenWidth - 24) / 2,
-    margin: scale(10),
-    borderRadius: scale(10),
-    marginBottom: scale(12),
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

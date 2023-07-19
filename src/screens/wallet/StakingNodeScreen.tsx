@@ -1,36 +1,39 @@
-import useWallet from '../../hooks/useWallet';
-import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Icon, TopNavigationAction} from '@tsejerome/ui-kitten-components';
-import Container from '../../../components/Container';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {Balance_Types_Enum, BalanceFragment} from '../../../constants/Type';
-import Text from '../../../components/Text';
-import OptionCard from '../../../components/OptionCard';
-import {RootStackParamList} from '../../../navigation/type';
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import { Icon, TopNavigationAction } from '@tsejerome/ui-kitten-components';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { Balance_Types_Enum, BalanceFragment } from '@constants';
+import { RootStackParamList } from '@navigation/type';
 import DialogInput from 'react-native-dialog-input';
-import TopNavigationComponent from '../../../components/TopNavigation';
-import {scale} from 'react-native-size-matters';
+import {
+  Container,
+  Text,
+  OptionCard,
+  TopNavigationComponent,
+} from '@components';
+import { useWallet } from '@hooks';
+import { stakingNodeStyles as styles } from './styles';
+import { scale } from 'react-native-size-matters';
 
-const TopRightIcon = (props: {name: 'check' | 'edit'}) => (
+const TopRightIcon = (props: { name: 'check' | 'edit' }) => (
   <Icon width={scale(20)} height={scale(20)} {...props} name={props.name} />
 );
 
 const renderRightActions = (editMode: boolean, onPress: () => void) => (
   <React.Fragment>
     <TopNavigationAction
-      style={{padding: scale(20)}}
-      icon={TopRightIcon({name: editMode ? 'check' : 'edit'})}
+      style={{ padding: scale(20) }}
+      icon={TopRightIcon({ name: editMode ? 'check' : 'edit' })}
       onPress={onPress}
     />
   </React.Fragment>
 );
 
 const StakingNodeScreen = () => {
-  const {accounts, ExecWrapperPromise, updateAccounts} = useWallet();
+  const { accounts, ExecWrapperPromise, updateAccounts } = useWallet();
   const [isEditVisible, showEditDialog] = useState(false);
   const [editingNode, setEditingNode] = useState<string>('');
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+  const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
 
   const [editMode, setEditMode] = useState(false);
 
@@ -74,7 +77,7 @@ const StakingNodeScreen = () => {
             key={'1'}
             id={'1'}
             index={1}
-            item={{text: 'Add new node'}}
+            item={{ text: 'Add new node' }}
             selected={''}
             onPress={() => {
               navigate('AddStakingNodeScreen');
@@ -110,11 +113,3 @@ const StakingNodeScreen = () => {
 };
 
 export default StakingNodeScreen;
-
-const styles = StyleSheet.create({
-  summary: {textAlign: 'center', paddingHorizontal: 24},
-  serversWrapper: {
-    padding: 24,
-    flex: 1,
-  },
-});

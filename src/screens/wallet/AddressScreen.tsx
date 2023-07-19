@@ -1,25 +1,22 @@
-import {StyleSheet, TouchableOpacity, View, ScrollView} from 'react-native';
+import { TouchableOpacity, View, ScrollView } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
-import Text from '../../../components/Text';
-import React, {useEffect, useState} from 'react';
-import Container from '../../../components/Container';
-import {useTheme} from '@tsejerome/ui-kitten-components';
-import useLayout from '../../hooks/useLayout';
+import { Text, TopNavigationComponent, Container } from '@components';
+import React, { useEffect, useState } from 'react';
+import { useStyleSheet } from '@tsejerome/ui-kitten-components';
+import { useLayout, useWallet } from '@hooks';
 import QRCode from 'react-native-qrcode-svg';
-import {BalanceFragment} from '../../../constants/Type';
-import useWallet from '../../hooks/useWallet';
-import TopNavigationComponent from '../../../components/TopNavigation';
-import {verticalScale, scale} from 'react-native-size-matters';
+import { BalanceFragment } from '@constants';
 import Toast from 'react-native-toast-message';
+import { addressScreenStyles } from './styles';
 
 const AddressScreen = (props: any) => {
+  const styles = useStyleSheet(addressScreenStyles);
   const [addressType, setAddressType] = useState<BalanceFragment>(
     props.route.params.from,
   );
   const [address, setAddress] = useState('');
-  const {height} = useLayout();
-  const {parsedAddresses} = useWallet();
-  const theme = useTheme();
+  const { height } = useLayout();
+  const { parsedAddresses } = useWallet();
 
   useEffect(() => {
     setAddress(
@@ -40,30 +37,16 @@ const AddressScreen = (props: any) => {
   return (
     <Container>
       <TopNavigationComponent title={addressType.destination_id + ' address'} />
-      <Container
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <Container style={styles.wrapper}>
         <ScrollView>
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: verticalScale(32),
-            }}>
+          <View style={styles.qrCode}>
             {address ? (
               <QRCode value={'navcoin:' + address} size={height * 0.4} />
             ) : (
               <></>
             )}
           </View>
-          <View
-            style={[
-              styles.container,
-              {backgroundColor: theme['background-basic-color-2']},
-            ]}>
+          <View style={[styles.container, styles.textWrapper]}>
             <Text category={'caption1'} center>
               {address}
             </Text>
@@ -71,18 +54,18 @@ const AddressScreen = (props: any) => {
           <TouchableOpacity
             onPress={() => {
               Toast.hide();
-              Toast.show({text1: 'Address Copied'});
+              Toast.show({ text1: 'Address Copied' });
               Clipboard.setString(address);
             }}>
             <Text
               center
               underline
               variants={'transparent'}
-              style={{marginTop: verticalScale(32)}}>
+              style={styles.marginTop32}>
               Tap here to copy address
             </Text>
           </TouchableOpacity>
-          <View style={{height: verticalScale(40)}} />
+          <View style={styles.height40} />
         </ScrollView>
       </Container>
     </Container>
@@ -90,14 +73,3 @@ const AddressScreen = (props: any) => {
 };
 
 export default AddressScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: 12,
-    paddingVertical: verticalScale(32),
-    paddingLeft: scale(32),
-    paddingRight: scale(32),
-    marginLeft: scale(32),
-    marginRight: scale(32),
-  },
-});

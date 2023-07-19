@@ -1,6 +1,5 @@
-import useWallet from '../../hooks/useWallet';
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View } from 'react-native';
 import {
   Button,
   IndexPath,
@@ -9,21 +8,19 @@ import {
   Select,
   SelectItem,
 } from '@tsejerome/ui-kitten-components';
-import Container from '../../../components/Container';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {ServerOption} from '../../../constants/Type';
-import Text from '../../../components/Text';
-import {RootStackParamList, ScreenProps} from '../../../navigation/type';
-import {protosOptions} from '../../../constants/Data';
-import {validateIp, validatePort} from '../../../utils/server';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import TopNavigationComponent from '../../../components/TopNavigation';
-import {scale, verticalScale} from 'react-native-size-matters';
+import { Container, Text, TopNavigationComponent } from '@components';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { ServerOption, protosOptions } from '@constants';
+import { RootStackParamList, ScreenProps } from '@navigation/type';
+import { validateIp, validatePort } from '@utils';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useWallet } from '@hooks';
+import { addServerScreenStyles as styles } from './styles';
 
 const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
-  const {network} = useWallet();
+  const { network } = useWallet();
 
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+  const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
   const [error, setError] = useState('');
 
   const [newServer, setNewServer] = useState<ServerOption>({
@@ -47,7 +44,7 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
     type: keyof ServerOption,
     value: string | number,
   ) => {
-    const temp = {...newServer};
+    const temp = { ...newServer };
     temp[type] = value as any;
     setNewServer(temp);
   };
@@ -149,27 +146,3 @@ const AddServerScreen = (props: ScreenProps<'AddServerScreen'>) => {
 };
 
 export default AddServerScreen;
-
-const styles = StyleSheet.create({
-  inputCard: {
-    borderRadius: scale(12),
-    marginTop: verticalScale(24),
-    marginHorizontal: scale(12),
-    paddingVertical: verticalScale(24),
-    paddingHorizontal: scale(16),
-  },
-  inputGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: verticalScale(20),
-  },
-  inputField: {
-    flex: 1,
-    flexWrap: 'wrap',
-  },
-  inputTitle: {
-    marginRight: scale(16),
-  },
-  errorText: {color: 'red', flex: 1, marginTop: verticalScale(24)},
-});

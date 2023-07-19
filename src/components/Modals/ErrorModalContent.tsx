@@ -1,0 +1,98 @@
+import React, { useEffect, useState } from 'react';
+import { View, ScrollView } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
+import { verticalScale } from 'react-native-size-matters';
+import Toast from 'react-native-toast-message';
+import { useModal } from '@hooks';
+import {
+  sendErrorCrashEmail,
+  screenHeight,
+  AsyncStoredItems,
+  cleanTemporaryErrorRecord,
+  errorGroupParser,
+} from '@utils';
+import { Button } from '@tsejerome/ui-kitten-components';
+import Text from '../Text';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { errorModalStyles as styles } from './styles';
+
+const ErrorModalContent = (props: {
+  errorText: string;
+  focusOneError?: boolean;
+}) => {
+  const { errorText, focusOneError = false } = props;
+  const { closeModal } = useModal();
+  const [tempErrorRecords, setErrorRecords] = useState<string | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    AsyncStorage.getItem(AsyncStoredItems.TEMP_ERROR_RECORDS).then(val => {
+      if (val) {
+        setErrorRecords(val);
+      }
+    });
+  });
+
+  const buttonOptions = [
+    {
+      text: 'Share report',
+      onPress: async () => {
+        await sendErrorCrashEmail(focusOneError ? errorText : undefined);
+        if (!focusOneError) {
+          await cleanTemporaryErrorRecord();
+        }
+        closeModal();
+      },
+    },
+    {
+      text: 'Copy error',
+      onPress: async () => {
+        Clipboard.setString(
+          focusOneError ? errorText : errorGroupParser(tempErrorRecords),
+        );
+        Toast.show({
+          type: 'success',
+          text1: 'Error Copied!',
+        });
+        if (!focusOneError) {
+          await cleanTemporaryErrorRecord();
+        }
+        closeModal();
+      },
+    },
+    {
+      text: 'Close',
+      onPress: async () => {
+        if (!focusOneError) {
+          await cleanTemporaryErrorRecord();
+        }
+        closeModal();
+      },
+    },
+  ];
+  return (
+    <>
+      {errorText ? (
+        <ScrollView style={{ maxHeight: verticalScale(screenHeight * 0.3) }}>
+          <Text category="title4" center style={styles.item}>
+            {`The error encountered is as below:\n${errorText}`}
+          </Text>
+        </ScrollView>
+      ) : null}
+      <View style={[styles.buttonGroup]}>
+        {buttonOptions.map((option, index) => (
+          <Button
+            key={index}
+            status={'primary-whisper'}
+            style={[styles.button]}
+            children={option.text}
+            onPress={() => option.onPress()}
+          />
+        ))}
+      </View>
+    </>
+  );
+};
+
+export default ErrorModalContent;

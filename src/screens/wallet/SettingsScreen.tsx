@@ -1,26 +1,23 @@
-import useWallet from '../../hooks/useWallet';
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, ScrollView, Switch} from 'react-native';
-import Container from '../../../components/Container';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {Animation_Types_Enum} from '../../../constants/Type';
-import OptionCard from '../../../components/OptionCard';
-import {RootStackParamList, ScreenProps} from '../../../navigation/type';
-import LoadingModalContent from '../../../components/Modals/LoadingModalContent';
-import TopNavigationComponent from '../../../components/TopNavigation';
-import {screenHeight} from '../../../utils/layout';
-import {scale, verticalScale} from 'react-native-size-matters';
-import useSecurity from '../../hooks/useSecurity';
+import React, { useEffect, useState } from 'react';
+import { View, ScrollView, Switch } from 'react-native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { Animation_Types_Enum } from '@constants';
+import { RootStackParamList, ScreenProps } from '@navigation/type';
 import {
-  GetAuthenticationName,
-  SecurityAuthenticationTypes,
-} from '../../../contexts/SecurityContext';
-import {useBottomSheet, useExchangeRate} from '@hooks';
-import BottomSheetOptions from '../../../components/BottomSheetOptions';
-import {useModal} from '../../hooks/useModal';
-import {useTheme} from '@tsejerome/ui-kitten-components';
-import DeleteWalletModalContent from '../../../components/Modals/DeleteWalletModalContent';
-
+  DeleteWalletModalContent,
+  BottomSheetOptions,
+  TopNavigationComponent,
+  LoadingModalContent,
+  OptionCard,
+  Container,
+} from '@components';
+import { screenHeight } from '@utils';
+import { scale } from 'react-native-size-matters';
+import { useSecurity, useWallet, useModal } from '@hooks';
+import { GetAuthenticationName, SecurityAuthenticationTypes } from '@contexts';
+import { useBottomSheet, useExchangeRate } from '@hooks';
+import { useTheme } from '@tsejerome/ui-kitten-components';
+import { settingScreenStyles as styles } from './styles';
 interface SettingsItem {
   title: string;
   onPress: () => void;
@@ -31,7 +28,7 @@ interface SettingsItem {
 }
 
 const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
-  const {readPassword} = useSecurity();
+  const { readPassword } = useSecurity();
   const [loading, setLoading] = useState<string | undefined>(undefined);
   const {
     walletName,
@@ -89,10 +86,10 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     setAuthTypes(deviceAuth);
   }, [supportedType, currentAuthenticationType]);
 
-  const {navigate, goBack} =
+  const { navigate, goBack } =
     useNavigation<NavigationProp<RootStackParamList>>();
 
-  const {openModal, closeModal} = useModal();
+  const { openModal, closeModal } = useModal();
 
   const disconnectWallet = async (deleteWallet: boolean = false) => {
     closeWallet();
@@ -146,7 +143,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     );
   };
 
-  const {selectedCurrency, updateCurrency} = useExchangeRate();
+  const { selectedCurrency, updateCurrency } = useExchangeRate();
 
   const items: SettingsItem[] = [
     {
@@ -196,12 +193,12 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
       show: currentAuthenticationType != SecurityAuthenticationTypes.NONE,
       rightElement: (
         <Switch
-          trackColor={{false: '#fff', true: theme['color-staking']}}
+          trackColor={{ false: '#fff', true: theme['color-staking'] }}
           onValueChange={val => {
             setLockAfterBackground(!lockAfterBackground);
           }}
           value={lockAfterBackground}
-          style={{marginRight: scale(12)}}
+          style={{ marginRight: scale(12) }}
         />
       ),
       onPress: () => {
@@ -259,10 +256,12 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
     }
     closeModal();
   }, [loading]);
+
+  const height = { height: screenHeight };
   return (
     <Container useSafeArea>
       <TopNavigationComponent title={'Settings'} />
-      <ScrollView style={styles.contentWrapper}>
+      <ScrollView style={[styles.contentWrapper, height]}>
         {items.map((item, index) => {
           if (!item.show) {
             return <View key={index} />;
@@ -272,7 +271,7 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
               key={index}
               id={index.toString()}
               index={index}
-              item={{text: item.title}}
+              item={{ text: item.title }}
               selected={'walletName'}
               onPress={item.onPress}
               animationType={Animation_Types_Enum.SlideInLeft}
@@ -288,11 +287,3 @@ const SettingsScreen = (props: ScreenProps<'SettingsScreen'>) => {
 };
 
 export default SettingsScreen;
-
-const styles = StyleSheet.create({
-  contentWrapper: {
-    paddingHorizontal: scale(20),
-    marginBottom: verticalScale(20),
-    height: screenHeight,
-  },
-});
