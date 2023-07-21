@@ -21,3 +21,5 @@ export { default as toastConfig } from './Toast';
 export { default as AnimatedStep } from './AnimatedStep';
 export { default as ScanQR } from './ScanQR';
 export { default as Mnemonic } from './Mnemonic';
+export { default as Button } from './Button';
+export { default as ButtonText } from './ButtonText';
