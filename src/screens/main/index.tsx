@@ -1,16 +1,16 @@
 import { View } from 'react-native';
 import React from 'react';
-import { StyleService, useStyleSheet } from '@tsejerome/ui-kitten-components';
-import { scale } from 'react-native-size-matters';
+import { useStyleSheet } from '@tsejerome/ui-kitten-components';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Accounts from './partials/AccountTab';
 import NFTs from './partials/NFTTab';
 import Tokens from './partials/TokensTab';
+import { mainScreenTabStyles } from './styles';
 
 const TabNavigator = createMaterialTopTabNavigator();
 
 const MainScreenTab = () => {
-  const styles = useStyleSheet(themedStyles);
+  const styles = useStyleSheet(mainScreenTabStyles);
 
   return (
     <View style={styles.container}>
@@ -47,19 +47,5 @@ const MainScreenTab = () => {
     </View>
   );
 };
-
-const themedStyles = StyleService.create({
-  container: {
-    backgroundColor: 'color-basic-700',
-    flex: 1,
-    marginLeft: scale(16),
-    marginRight: scale(16),
-  },
-  fontSize12: {
-    fontSize: 12,
-  },
-  tabBarStyle: { backgroundColor: 'background-basic-color-700' },
-  tabBarIndicatorStyle: { backgroundColor: 'color-primary-100' },
-});
 
 export default MainScreenTab;
