@@ -1,5 +1,5 @@
-import {useContext} from 'react';
-import {ExchangeRateContext} from '@contexts';
+import { useContext } from 'react';
+import { ExchangeRateContext } from '@contexts';
 
 const useExchangeRate = () => {
   const context = useContext(ExchangeRateContext);

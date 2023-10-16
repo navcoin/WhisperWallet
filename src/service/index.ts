@@ -1,1 +1,1 @@
-export {default as FiatRequest} from './FiatService';
+export { default as FiatRequest } from './FiatService';

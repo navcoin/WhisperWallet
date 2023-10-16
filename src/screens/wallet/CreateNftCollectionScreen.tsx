@@ -1,33 +1,33 @@
-import useWallet from '../../hooks/useWallet';
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View } from 'react-native';
 import {
   Button,
   Input,
   Layout,
   TopNavigation,
 } from '@tsejerome/ui-kitten-components';
-import Container from '../../../components/Container';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {CollectionOption} from '../../../constants/Type';
-import Text from '../../../components/Text';
-import {RootStackParamList} from '../../../navigation/type';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import TopNavigationComponent from '../../../components/TopNavigation';
-import useSecurity from '../../hooks/useSecurity';
-import BottomSheetView from '../../../components/BottomSheetView';
-import {SwipeButton} from '../../../components/SwipeButton';
-import {useBottomSheet} from '../../hooks/useBottomSheet';
-import {useModal} from '../../hooks/useModal';
-import LoadingModalContent from '../../../components/Modals/LoadingModalContent';
+import {
+  Container,
+  TopNavigationComponent,
+  Text,
+  BottomSheetView,
+  SwipeButton,
+  LoadingModalContent,
+} from '@components';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { CollectionOption } from '@constants';
+import { RootStackParamList } from '@navigation/type';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useBottomSheet, useModal, useSecurity, useWallet } from '@hooks';
+import { createNftCollectionStyles as styles } from './styles';
 
 const CreateNftCollectionScreen = () => {
-  const {createNftCollection, sendTransaction} = useWallet();
-  const {readPassword} = useSecurity();
+  const { createNftCollection, sendTransaction } = useWallet();
+  const { readPassword } = useSecurity();
 
-  const {goBack} = useNavigation<NavigationProp<RootStackParamList>>();
-  const {collapse} = useBottomSheet();
-  const {openModal, closeModal} = useModal();
+  const { goBack } = useNavigation<NavigationProp<RootStackParamList>>();
+  const { collapse } = useBottomSheet();
+  const { openModal, closeModal } = useModal();
   const bottomSheet = useBottomSheet();
 
   const [error, setError] = useState('');
@@ -51,7 +51,7 @@ const CreateNftCollectionScreen = () => {
     type: keyof CollectionOption,
     value: string | number,
   ) => {
-    const temp = {...collection};
+    const temp = { ...collection };
     temp[type] = value as any;
     setCollection(temp);
   };
@@ -67,7 +67,7 @@ const CreateNftCollectionScreen = () => {
         setLoading('Creating transaction...');
         createNftCollection(
           collection.name,
-          JSON.stringify({...collection, amount: undefined, name: undefined}),
+          JSON.stringify({ ...collection, amount: undefined, name: undefined }),
           collection.amount,
           spendingPassword,
         )
@@ -78,42 +78,42 @@ const CreateNftCollectionScreen = () => {
                 <TopNavigation title="Confirm collection creation" />
                 <Layout level="2" style={styles.card}>
                   <View style={styles.row}>
-                    <Text category="headline" style={{marginRight: 16}}>
+                    <Text category="headline" style={{ marginRight: 16 }}>
                       Name:
                     </Text>
                     <Text
                       category="headline"
-                      style={{flex: 1, flexWrap: 'wrap'}}>
+                      style={{ flex: 1, flexWrap: 'wrap' }}>
                       {collection.name}
                     </Text>
                   </View>
 
                   <View style={styles.row}>
-                    <Text category="headline" style={{marginRight: 16}}>
+                    <Text category="headline" style={{ marginRight: 16 }}>
                       Description:
                     </Text>
                     <Text
                       category="headline"
-                      style={{flex: 1, flexWrap: 'wrap'}}>
+                      style={{ flex: 1, flexWrap: 'wrap' }}>
                       {collection.description}
                     </Text>
                   </View>
 
                   <View style={styles.row}>
-                    <Text category="headline" style={{marginRight: 16}}>
+                    <Text category="headline" style={{ marginRight: 16 }}>
                       Number of items:
                     </Text>
                     <Text
                       category="headline"
-                      style={{flex: 1, flexWrap: 'wrap'}}>
+                      style={{ flex: 1, flexWrap: 'wrap' }}>
                       {collection.amount}
                     </Text>
                   </View>
                 </Layout>
 
-                <Layout level="2" style={{...styles.card, marginBottom: 24}}>
+                <Layout level="2" style={{ ...styles.card, marginBottom: 24 }}>
                   <View style={styles.row}>
-                    <Text category="headline" style={{marginRight: 16}}>
+                    <Text category="headline" style={{ marginRight: 16 }}>
                       Fee:
                     </Text>
                     <Text category="headline">
@@ -131,10 +131,10 @@ const CreateNftCollectionScreen = () => {
                       if (res.error) {
                         bottomSheet.expand(
                           <BottomSheetView>
-                            <Text center style={{paddingBottom: 16}}>
+                            <Text center style={{ paddingBottom: 16 }}>
                               Unable to send transaction
                             </Text>
-                            <Text center style={{paddingBottom: 16}}>
+                            <Text center style={{ paddingBottom: 16 }}>
                               {res.error.split('[')[0]}
                             </Text>
                           </BottomSheetView>,
@@ -156,10 +156,10 @@ const CreateNftCollectionScreen = () => {
             console.log(e.stack);
             bottomSheet.expand(
               <BottomSheetView>
-                <Text center style={{paddingBottom: 16}}>
+                <Text center style={{ paddingBottom: 16 }}>
                   Unable to create transaction
                 </Text>
-                <Text center style={{paddingBottom: 16}}>
+                <Text center style={{ paddingBottom: 16 }}>
                   {e.message}
                 </Text>
               </BottomSheetView>,
@@ -172,10 +172,10 @@ const CreateNftCollectionScreen = () => {
 
         bottomSheet.expand(
           <BottomSheetView>
-            <Text center style={{paddingBottom: 16}}>
+            <Text center style={{ paddingBottom: 16 }}>
               Unable to create transaction
             </Text>
-            <Text center style={{paddingBottom: 16}}>
+            <Text center style={{ paddingBottom: 16 }}>
               {e.message}
             </Text>
           </BottomSheetView>,
@@ -245,39 +245,3 @@ const CreateNftCollectionScreen = () => {
   );
 };
 export default CreateNftCollectionScreen;
-
-const styles = StyleSheet.create({
-  inputCard: {
-    borderRadius: 12,
-    marginHorizontal: 24,
-    paddingVertical: 24,
-    paddingHorizontal: 16,
-  },
-  inputGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  inputField: {
-    flex: 1,
-    flexWrap: 'wrap',
-  },
-  inputTitle: {
-    marginRight: 16,
-  },
-  errorText: {color: 'red', flex: 1, marginTop: 24},
-  card: {
-    borderRadius: 12,
-    borderWidth: 1,
-    marginTop: 24,
-    paddingTop: 14,
-    paddingBottom: 12,
-    paddingHorizontal: 16,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-});

@@ -1,37 +1,35 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {View} from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View } from 'react-native';
 import {
   Layout,
-  StyleService,
   useStyleSheet,
   useTheme,
 } from '@tsejerome/ui-kitten-components';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Container from '../../../components/Container';
-import useWallet from '../../hooks/useWallet';
-import Text from '../../../components/Text';
-
-import {Connection_Stats_Enum} from '../../../constants/Type';
-
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-
-import BalanceCircle from '../../../components/BalanceCircle';
-
+import {
+  Container,
+  Text,
+  BalanceCircle,
+  BottomSheetOptions,
+} from '@components';
+import { useWallet, useBottomSheet } from '@hooks';
+import { Connection_Stats_Enum } from '@constants';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import MainScreenTab from '@screens/main';
-import {RootStackParamList} from '../../../navigation/type';
-import {scale} from 'react-native-size-matters';
-import {TouchableWithoutFeedback} from '@tsejerome/ui-kitten-components/devsupport';
-import {launchImageLibrary} from 'react-native-image-picker';
-import BottomSheetOptions from '../../../components/BottomSheetOptions';
-import {useBottomSheet} from '../../hooks/useBottomSheet';
+import { RootStackParamList } from '@navigation/type';
+import { scale } from 'react-native-size-matters';
+import { TouchableWithoutFeedback } from '@tsejerome/ui-kitten-components/devsupport';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { mainWalletStyles } from './styles';
 
-const MainWalletScreen = ({navigation}) => {
+const MainWalletScreen = ({ navigation }) => {
   const theme = useTheme();
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
-  const styles = useStyleSheet(themedStyles);
-  const {refreshWallet, connected, walletName} = useWallet();
+  const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
+  const styles = useStyleSheet(mainWalletStyles);
+  const { refreshWallet, connected, walletName } = useWallet();
 
   const [dotColor, setDotColor] = useState('gray');
+  const backgroundColor = { backgroundColor: dotColor };
 
   useEffect(() => {
     if (connected == Connection_Stats_Enum.Connecting) {
@@ -64,7 +62,7 @@ const MainWalletScreen = ({navigation}) => {
             onTap: () => {
               launchImageLibrary({}).then(result => {
                 if (result.assets[0].uri) {
-                  navigate('ScanQRScreen', {uri: result.assets[0].uri});
+                  navigate('ScanQRScreen', { uri: result.assets[0].uri });
                 } else {
                   bottomSheet.collapse();
                 }
@@ -122,39 +120,14 @@ const MainWalletScreen = ({navigation}) => {
           <Text center numberOfLines={1}>
             {walletName}
           </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Text
-              style={{
-                alignSelf: 'center',
-              }}
-              category={'caption1'}>
+          <View style={styles.connectedView}>
+            <Text style={styles.textAlign} category={'caption1'}>
               {connected}
             </Text>
-            <View
-              style={{
-                width: scale(8),
-                borderRadius: scale(4),
-                marginLeft: scale(8),
-                height: scale(8),
-                backgroundColor: dotColor,
-                alignSelf: 'center',
-              }}
-            />
+            <View style={[styles.divider, backgroundColor]} />
           </View>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingHorizontal: scale(12),
-            right: 0,
-          }}>
+        <View style={styles.settingClickWrapper}>
           <TouchableWithoutFeedback
             onPress={() => {
               navigate('SettingsScreen');
@@ -167,7 +140,7 @@ const MainWalletScreen = ({navigation}) => {
           </TouchableWithoutFeedback>
         </View>
       </Layout>
-      <View style={{margin: scale(6)}}>
+      <View style={{ margin: scale(6) }}>
         <BalanceCircle />
       </View>
       <MainScreenTab />
@@ -176,31 +149,3 @@ const MainWalletScreen = ({navigation}) => {
 };
 
 export default MainWalletScreen;
-
-const themedStyles = StyleService.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-  },
-  topTab: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: scale(12),
-    marginTop: scale(6),
-    marginBottom: scale(18),
-  },
-  iconGrp: {
-    padding: scale(12),
-    flexDirection: 'row',
-  },
-  iconContainer: {
-    backgroundColor: '#ff0000',
-    padding: 12,
-  },
-  icon: {
-    width: scale(18),
-    height: scale(18),
-    tintColor: '$icon-basic-color',
-  },
-});

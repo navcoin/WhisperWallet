@@ -1,43 +1,31 @@
-import React, {useState} from 'react';
-import Container from '../../../components/Container';
-import {ScreenProps} from '../../../navigation/type';
+import React, { useState } from 'react';
+import { Container } from '@components';
+import { ScreenProps } from '@navigation';
+import { White } from '@constants';
 import PINCode from '@haskkor/react-native-pincode';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
-import {Button, StyleService, Text} from '@tsejerome/ui-kitten-components';
+import { scale } from 'react-native-size-matters';
+import { Button, Text, useStyleSheet } from '@tsejerome/ui-kitten-components';
+import { askPinScreenStyles } from './styles';
 
 const AskPinScreen: React.FC<ScreenProps<'AskPinScreen'>> = (props: any) => {
-  const {setManualPin, askManualPin, pinLength} = props.route.params;
-  const {goBack} = useNavigation();
+  const { setManualPin, askManualPin, pinLength } = props.route.params;
+  const { goBack } = useNavigation();
   const [showInstructions, setShowInstructions] = useState(true);
+  const styles = useStyleSheet(askPinScreenStyles);
   return (
     <Container doNotLock={true}>
       {setManualPin ? (
         showInstructions ? (
-          <Container
-            useSafeArea
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              width: '100%',
-              height: '100%',
-            }}>
+          <Container useSafeArea style={styles.container}>
             <Icon
               name={'warning'}
               size={scale(32)}
-              color={'#fff'}
-              style={{opacity: 1, marginBottom: scale(32)}}
+              color={White}
+              style={styles.warningIcon}
             />
-            <Text
-              style={{
-                textAlign: 'center',
-                paddingHorizontal: scale(32),
-              }}>
+            <Text style={styles.instructionText}>
               In the next screen you are going to be asked to introduce a{' '}
               {pinLength}-digit PIN code. {'\n\n'}This code will be asked when:{' '}
               {'\n\n'}- A wallet is opened, deleted or resynced {'\n\n'}- Access
@@ -54,13 +42,13 @@ const AskPinScreen: React.FC<ScreenProps<'AskPinScreen'>> = (props: any) => {
           <PINCode
             status={'choose'}
             passwordLength={pinLength}
-            styleMainContainer={{backgroundColor: '#1F2933'}}
-            stylePinCodeTextTitle={{fontFamily: 'Overpass-Bold'}}
-            stylePinCodeTextSubtitle={{fontFamily: 'Overpass-Bold'}}
-            stylePinCodeDeleteButtonText={{fontFamily: 'Overpass-Bold'}}
-            stylePinCodeTextButtonCircle={{fontFamily: 'Overpass-Bold'}}
-            stylePinCodeButtonCircle={{backgroundColor: '#1F2933'}}
-            colorPassword={'#fff'}
+            styleMainContainer={styles.backgroundMirage}
+            stylePinCodeTextTitle={styles.boldFontFamily}
+            stylePinCodeTextSubtitle={styles.boldFontFamily}
+            stylePinCodeDeleteButtonText={styles.boldFontFamily}
+            stylePinCodeTextButtonCircle={styles.boldFontFamily}
+            stylePinCodeButtonCircle={styles.backgroundMirage}
+            colorPassword={White}
             subtitleChoose={'to protect the access to your wallet'}
             storePin={async (pin: string) => {
               setManualPin(pin);
@@ -73,15 +61,15 @@ const AskPinScreen: React.FC<ScreenProps<'AskPinScreen'>> = (props: any) => {
           status={'enter'}
           passwordLength={pinLength}
           touchIDDisabled={true}
-          styleMainContainer={{backgroundColor: '#1F2933'}}
-          stylePinCodeTextTitle={{fontFamily: 'Overpass-Bold'}}
-          stylePinCodeTextSubtitle={{fontFamily: 'Overpass-Bold'}}
-          stylePinCodeDeleteButtonText={{fontFamily: 'Overpass-Bold'}}
-          stylePinCodeTextButtonCircle={{fontFamily: 'Overpass-Bold'}}
-          stylePinCodeButtonCircle={{backgroundColor: '#1F2933'}}
-          stylePinCodeDeleteButtonColorHideUnderlay={'#fff'}
-          stylePinCodeDeleteButtonColorShowUnderlay={'#fff'}
-          colorPassword={'#fff'}
+          styleMainContainer={styles.backgroundMirage}
+          stylePinCodeTextTitle={styles.boldFontFamily}
+          stylePinCodeTextSubtitle={styles.boldFontFamily}
+          stylePinCodeDeleteButtonText={styles.boldFontFamily}
+          stylePinCodeTextButtonCircle={styles.boldFontFamily}
+          stylePinCodeButtonCircle={styles.backgroundMirage}
+          stylePinCodeDeleteButtonColorHideUnderlay={White}
+          stylePinCodeDeleteButtonColorShowUnderlay={White}
+          colorPassword={White}
           subtitleChoose={'to access your wallet'}
           endProcessFunction={async (pin: string) => {
             askManualPin(pin);
@@ -96,11 +84,3 @@ const AskPinScreen: React.FC<ScreenProps<'AskPinScreen'>> = (props: any) => {
 };
 
 export default AskPinScreen;
-
-const styles = StyleService.create({
-  wallet: {
-    marginTop: verticalScale(8),
-    marginBottom: verticalScale(16),
-    width: moderateScale(250, 0.5),
-  },
-});

@@ -1,33 +1,35 @@
-import Content from '../../../components/Content';
 import {
   Icon,
   Input,
   Layout,
-  StyleService,
   useStyleSheet,
 } from '@tsejerome/ui-kitten-components';
-import {Text, CurrencyText} from '@components';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
-import Container from '../../../components/Container';
-import {TouchableOpacity, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {scale, verticalScale} from 'react-native-size-matters';
-
-import {useWallet, useExchangeRate} from '@hooks';
-import CardSelect from '../../../components/CardSelect';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { scale, verticalScale } from 'react-native-size-matters';
+import { useWallet, useExchangeRate } from '@hooks';
+import {
+  CardSelect,
+  TopNavigationComponent,
+  SendTransactionButton,
+  DestinationComponent,
+  Text,
+  CurrencyText,
+  Content,
+  Container,
+} from '@components';
 import {
   Balance_Types_Enum,
   BalanceFragment,
   Destination_Types_Enum,
-} from '../../../constants/Type';
+} from '@constants';
 import DialogInput from 'react-native-dialog-input';
-import DestinationComponent from '../../../components/DestinationComponent';
-import {QrProvider} from '../../../contexts/QrProvider';
-import SendTransactionButton from '../../../components/SendTransactionButton';
-import TopNavigationComponent from '../../../components/TopNavigation';
+import { QrProvider } from '@contexts';
+import { sendToScreenStyles } from './styles';
 
 const SendToScreen = (props: any) => {
-  const styles = useStyleSheet(themedStyles);
+  const styles = useStyleSheet(sendToScreenStyles);
   const [from, setFrom] = useState<BalanceFragment | undefined>(
     props.route.params.from,
   );
@@ -45,13 +47,13 @@ const SendToScreen = (props: any) => {
     },
   );
   const [memo, setMemo] = useState('');
-  const {bottom} = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets();
   const [amountInString, setAmount] = useState('');
   const [showMemo, setShowMemo] = useState(false);
   const [subtractFee, setSubtractFee] = useState(false);
-  const {accounts, tokens, nfts, walletName, ExecWrapperSyncPromise} =
+  const { accounts, tokens, nfts, walletName, ExecWrapperSyncPromise } =
     useWallet();
-  const {selectedCurrency, currencyRate} = useExchangeRate();
+  const { selectedCurrency, currencyRate } = useExchangeRate();
 
   useEffect(() => {
     if (amountInputRef.current.props.value !== '') {
@@ -120,6 +122,9 @@ const SendToScreen = (props: any) => {
     }
   }, [amountInString, currentAmount]);
 
+  const sendTransactionPaddingBottom = {
+    paddingBottom: verticalScale(bottom + 16),
+  };
   return (
     <Container useSafeArea>
       <QrProvider>
@@ -204,34 +209,25 @@ const SendToScreen = (props: any) => {
                 onPress={() => {
                   showMemoDialog(true);
                 }}
-                style={{marginHorizontal: scale(12), flexDirection: 'row'}}>
+                style={styles.showDialog}>
                 {memo ? (
                   <>
                     <Text
                       category={'headline'}
-                      style={{paddingRight: scale(12)}}>
+                      style={{ paddingRight: scale(12) }}>
                       Encrypted memo:
                     </Text>
                     <Text
                       category={'headline'}
                       numberOfLines={1}
                       ellipsizeMode="tail"
-                      style={{flex: 1}}>
+                      style={styles.flexOne}>
                       {memo}
                     </Text>
                   </>
                 ) : (
                   <>
-                    <Icon
-                      pack={'assets'}
-                      name={'add'}
-                      style={{
-                        tintColor: 'white',
-                        width: scale(24),
-                        height: scale(24),
-                        marginRight: scale(24),
-                      }}
-                    />
+                    <Icon pack={'assets'} name={'add'} style={styles.addIcon} />
                     <Text>Add an encrypted memo</Text>
                   </>
                 )}
@@ -311,7 +307,7 @@ const SendToScreen = (props: any) => {
                   </View>
                 </View>
                 {fiatCurrency !== 'NONE' && (
-                  <View style={[styles.row, {justifyContent: 'flex-end'}]}>
+                  <View style={[styles.row, styles.flexEnd]}>
                     <CurrencyText
                       category="caption2"
                       children={fiatValue}
@@ -322,11 +318,7 @@ const SendToScreen = (props: any) => {
               </Layout>
             </TouchableOpacity>
           )}
-          <View
-            style={[
-              styles.bottom,
-              {paddingBottom: verticalScale(bottom + 16)},
-            ]}>
+          <View style={[styles.bottom, sendTransactionPaddingBottom]}>
             <SendTransactionButton
               walletName={walletName}
               from={from}
@@ -344,47 +336,3 @@ const SendToScreen = (props: any) => {
 };
 
 export default SendToScreen;
-
-const themedStyles = StyleService.create({
-  contentContainerStyle: {
-    paddingTop: verticalScale(24),
-    paddingHorizontal: scale(24),
-  },
-  card: {
-    borderRadius: scale(12),
-    borderWidth: scale(1),
-    borderColor: 'color-basic-1500',
-    marginTop: verticalScale(24),
-    paddingTop: verticalScale(14),
-    paddingBottom: verticalScale(12),
-    paddingHorizontal: scale(16),
-    marginBottom: verticalScale(24),
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  cardNumber: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: verticalScale(4),
-  },
-  note: {
-    paddingVertical: verticalScale(12),
-    paddingHorizontal: scale(16),
-    borderRadius: scale(24),
-  },
-  text: {
-    color: 'color-basic-1100',
-  },
-  bottom: {
-    paddingTop: verticalScale(8),
-    paddingHorizontal: scale(24),
-  },
-  flex1: {
-    flex: 1,
-    border: 'none',
-  },
-});

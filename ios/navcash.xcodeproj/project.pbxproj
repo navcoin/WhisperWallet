@@ -8,37 +8,37 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* navcashTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* navcashTests.m */; };
-		028F8EFAAC5E4832898A9035 /* Celias.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FE9755B1E42545D69740C5B6 /* Celias.ttf */; };
+		050A546856A04673BF23E0AA /* Celias-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 65D660928AE340A896AC4346 /* Celias-Italic.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		17C7D3D193394F829D6C2532 /* Celias-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 87BFC234074542A3B250F1AA /* Celias-LightItalic.ttf */; };
-		1E23B3B455B54FB7A0ED01C3 /* SpaceMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 372A10C1E44E4733ABFA0779 /* SpaceMono-Regular.ttf */; };
-		206B3A9EE8104C79864F3F94 /* SFPro-Display-Heavy-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 10FEDFE67DBD4D3A8C403CE7 /* SFPro-Display-Heavy-Italic.otf */; };
-		2A2CEB22EBE44C76A505D2B8 /* Celias-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 766D73763AEE4968B57A4070 /* Celias-Thin.ttf */; };
+		140579796B624DA183172AAD /* Celias-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64CA96723470400DA79C0368 /* Celias-BoldItalic.ttf */; };
+		1ABF98149ADF40F29B603212 /* Overpass-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 658BA380032245E1AC3C03F3 /* Overpass-Regular.ttf */; };
+		2C0837CE15C31F4B7032E864 /* libPods-navcash.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D10D4F8CB97FB33575CE412 /* libPods-navcash.a */; };
+		2F20A307A0954A84A57139DC /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 844C5C5D47DF40F2AEC67E54 /* Montserrat-Regular.ttf */; };
 		398A6A1ABB8BD95AE1CB63F1 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92473ECD9EE2563D99941659 /* ExpoModulesProvider.swift */; };
 		40CE3F65280115A800B6C566 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40CE3F64280115A800B6C566 /* BootSplash.storyboard */; };
-		444452B67AAE44C098B9D6FB /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 20E861F512964374AA623C7A /* Montserrat-Regular.ttf */; };
-		47355FE5649F484DAFD63172 /* Overpass-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C8987361994248159E211D23 /* Overpass-Regular.ttf */; };
-		6172F2D35A4C3AA820D92908 /* libPods-navcash.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-navcash.a */; };
-		6452646891E6442891F78D2B /* Celias-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3EB2FC6B90294DC181FBA443 /* Celias-BoldItalic.ttf */; };
-		6A76946D6A394A6F8D00C5F4 /* SFPro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = AD698E7C62A34B76B5680904 /* SFPro-Display-Bold.otf */; };
-		6FB6077748EF4FD9972384B9 /* Celias-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 30407DD8A185467EA3AE8ED7 /* Celias-ThinItalic.ttf */; };
-		778AA9919585474B9B260A7E /* Overpass-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA98F77B385A42578ACDAEA0 /* Overpass-SemiBold.ttf */; };
-		7B7C0937FD1D498ABFFA52BD /* Celias-Hairline.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 46658E63429141F0AB72699A /* Celias-Hairline.ttf */; };
-		7EF68E3733C33B6898317E18 /* libPods-navcash-navcashTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-navcash-navcashTests.a */; };
-		92DD7680E8D34BB3AAE6DA3B /* Overpass-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB50A099BD944FB699673756 /* Overpass-Bold.ttf */; };
-		AEA7FE0E582C4C23BAD6B56B /* Overpass-Extrabold-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 01D20685107944DBBE977851 /* Overpass-Extrabold-Italic.otf */; };
-		BB6209481A8E46729447509E /* Celias-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D07AC2FA46194585B3622EE4 /* Celias-Medium.ttf */; };
-		BFBDBCDE08F740709485E0DB /* Celias-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7FAB232D5AD74C57BB6D1B0D /* Celias-Bold.ttf */; };
-		C783B75188C84B81ABDC6765 /* Celias-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A3F016932B5A4379A7AF414C /* Celias-Light.ttf */; };
-		D9A02F4DBF9A414191D9AE61 /* Celias-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 59926A1ACC74446488E128B2 /* Celias-Black.ttf */; };
-		DA5A644F7C4C46A8A721D50D /* Celias-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CCE0E30BA8EE4B548D6607D4 /* Celias-Italic.ttf */; };
+		5756126B1CFA46338981ABE1 /* Celias.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F7D52585E6AA4234A5730343 /* Celias.ttf */; };
+		5E827ECA827B46CCAFAF2029 /* Overpass-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7EAE73A84C8A471E8FA7CE4A /* Overpass-Bold.ttf */; };
+		609E46C6AA914F48A9AB9EA9 /* Celias-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F8CAB2B66AD3448FBA5EA369 /* Celias-ThinItalic.ttf */; };
+		620D1AD5BE174A23A0BD9666 /* Celias-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 014921049C064E1D83E4F122 /* Celias-LightItalic.ttf */; };
+		65E200A8476F4EFDB26D5691 /* SFPro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 41B0D12C15E3428DA3454705 /* SFPro-Display-Bold.otf */; };
+		7828EB551F6D46AA8816A5C4 /* Celias-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A57130F37D3447B4ADFD0598 /* Celias-Black.ttf */; };
+		78761105E2F34D24ADE3B467 /* SpaceMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0DB73CAE831476DB78B8946 /* SpaceMono-Regular.ttf */; };
+		8CB8E59AA78A4AB8B7F1E6C5 /* Celias-Hairline.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 447CFB2E854F404C97B7E9CB /* Celias-Hairline.ttf */; };
+		918C7296616F40CBAFFFCCB1 /* Celias-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3868C79786FB48AA9DD2516E /* Celias-Bold.ttf */; };
+		930CC380C65449FAB7D760A4 /* Celias-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 957B52B18DA849C8B4B23554 /* Celias-BlackItalic.ttf */; };
+		9F839CC996D84AF5BE288706 /* Overpass-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0EB6862F39304D209FA942D0 /* Overpass-SemiBold.ttf */; };
+		A074C97D8C1E48749985BF14 /* SFPro-Display-Heavy-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6E5AE03E3EF4470984A5765D /* SFPro-Display-Heavy-Italic.otf */; };
+		AA6C91A65E96465BA04438A8 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EFB2F9E758F64A638DBD1ECA /* Roboto-BlackItalic.ttf */; };
+		AF22BF40BACE4C5A8B08FD21 /* Celias-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B8420B2D8264825B7D09A63 /* Celias-Thin.ttf */; };
+		BF4AD9384DE0514BD05C2C44 /* libPods-navcash-navcashTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90DD4A5AC39FC6F5C1732016 /* libPods-navcash-navcashTests.a */; };
+		CCB6536D93D24735B999B714 /* Celias-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 14FD8AB89CA7492B90504619 /* Celias-Light.ttf */; };
+		CF6BC0C42BF6402A96F3757B /* Overpass-Extrabold-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 23ABAAFE6A474102A373C500 /* Overpass-Extrabold-Italic.otf */; };
 		E7A2697EAFD87C823EAEA98F /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B815340AB5B91EED4003E033 /* ExpoModulesProvider.swift */; };
-		EA038D4138F049BD923D3EB5 /* Celias-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0FEA3C3A9E0F41FD91E420CA /* Celias-BlackItalic.ttf */; };
-		F917794371E14389854C6511 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B7B1135CF3ED4DD5BBE8A747 /* Roboto-BlackItalic.ttf */; };
 		FA07C46E2843C6FC0062BF40 /* www in Resources */ = {isa = PBXBuildFile; fileRef = FA07C46D2843C6FC0062BF40 /* www */; };
 		FA208EB7279BFDFD0055BF58 /* Empty.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA208EB6279BFDFD0055BF58 /* Empty.swift */; };
+		FFED1681945B4CAA8423D685 /* Celias-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24E09BF5CFD14BF6984AFAD2 /* Celias-Medium.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,46 +68,46 @@
 		00E356EE1AD99517003FC87E /* navcashTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = navcashTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* navcashTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = navcashTests.m; sourceTree = "<group>"; };
-		01D20685107944DBBE977851 /* Overpass-Extrabold-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Overpass-Extrabold-Italic.otf"; path = "../assets/fonts/Overpass-Extrabold-Italic.otf"; sourceTree = "<group>"; };
-		0FEA3C3A9E0F41FD91E420CA /* Celias-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-BlackItalic.ttf"; path = "../assets/fonts/Celias-BlackItalic.ttf"; sourceTree = "<group>"; };
-		10FEDFE67DBD4D3A8C403CE7 /* SFPro-Display-Heavy-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFPro-Display-Heavy-Italic.otf"; path = "../assets/fonts/SFPro-Display-Heavy-Italic.otf"; sourceTree = "<group>"; };
+		014921049C064E1D83E4F122 /* Celias-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-LightItalic.ttf"; path = "../src/assets/fonts/Celias-LightItalic.ttf"; sourceTree = "<group>"; };
+		0EB6862F39304D209FA942D0 /* Overpass-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Overpass-SemiBold.ttf"; path = "../src/assets/fonts/Overpass-SemiBold.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* navcash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = navcash.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = navcash/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = navcash/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = navcash/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = navcash/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = navcash/main.m; sourceTree = "<group>"; };
-		1D0AE47A65C8663E3B452821 /* Pods-navcash-navcashTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navcash-navcashTests.release.xcconfig"; path = "Target Support Files/Pods-navcash-navcashTests/Pods-navcash-navcashTests.release.xcconfig"; sourceTree = "<group>"; };
-		20E861F512964374AA623C7A /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Regular.ttf"; path = "../assets/fonts/Montserrat-Regular.ttf"; sourceTree = "<group>"; };
-		30407DD8A185467EA3AE8ED7 /* Celias-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-ThinItalic.ttf"; path = "../assets/fonts/Celias-ThinItalic.ttf"; sourceTree = "<group>"; };
-		372A10C1E44E4733ABFA0779 /* SpaceMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-Regular.ttf"; path = "../assets/fonts/SpaceMono-Regular.ttf"; sourceTree = "<group>"; };
-		3EB2FC6B90294DC181FBA443 /* Celias-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-BoldItalic.ttf"; path = "../assets/fonts/Celias-BoldItalic.ttf"; sourceTree = "<group>"; };
+		14FD8AB89CA7492B90504619 /* Celias-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Light.ttf"; path = "../src/assets/fonts/Celias-Light.ttf"; sourceTree = "<group>"; };
+		19706B475EBB598AC58686F7 /* Pods-navcash.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navcash.debug.xcconfig"; path = "Target Support Files/Pods-navcash/Pods-navcash.debug.xcconfig"; sourceTree = "<group>"; };
+		23ABAAFE6A474102A373C500 /* Overpass-Extrabold-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Overpass-Extrabold-Italic.otf"; path = "../src/assets/fonts/Overpass-Extrabold-Italic.otf"; sourceTree = "<group>"; };
+		24E09BF5CFD14BF6984AFAD2 /* Celias-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Medium.ttf"; path = "../src/assets/fonts/Celias-Medium.ttf"; sourceTree = "<group>"; };
+		2E29EF67EB5241EB2203F181 /* Pods-navcash-navcashTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navcash-navcashTests.debug.xcconfig"; path = "Target Support Files/Pods-navcash-navcashTests/Pods-navcash-navcashTests.debug.xcconfig"; sourceTree = "<group>"; };
+		3868C79786FB48AA9DD2516E /* Celias-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Bold.ttf"; path = "../src/assets/fonts/Celias-Bold.ttf"; sourceTree = "<group>"; };
 		40CE3F64280115A800B6C566 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = navcash/BootSplash.storyboard; sourceTree = "<group>"; };
-		46658E63429141F0AB72699A /* Celias-Hairline.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Hairline.ttf"; path = "../assets/fonts/Celias-Hairline.ttf"; sourceTree = "<group>"; };
-		59926A1ACC74446488E128B2 /* Celias-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Black.ttf"; path = "../assets/fonts/Celias-Black.ttf"; sourceTree = "<group>"; };
-		6423831EA8574132BED9D8CC /* libPods-navcash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-navcash.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6C97AB639B58BBB4B15BBE30 /* Pods-navcash-navcashTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navcash-navcashTests.debug.xcconfig"; path = "Target Support Files/Pods-navcash-navcashTests/Pods-navcash-navcashTests.debug.xcconfig"; sourceTree = "<group>"; };
-		766D73763AEE4968B57A4070 /* Celias-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Thin.ttf"; path = "../assets/fonts/Celias-Thin.ttf"; sourceTree = "<group>"; };
-		7FAB232D5AD74C57BB6D1B0D /* Celias-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Bold.ttf"; path = "../assets/fonts/Celias-Bold.ttf"; sourceTree = "<group>"; };
-		87BFC234074542A3B250F1AA /* Celias-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-LightItalic.ttf"; path = "../assets/fonts/Celias-LightItalic.ttf"; sourceTree = "<group>"; };
+		41B0D12C15E3428DA3454705 /* SFPro-Display-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFPro-Display-Bold.otf"; path = "../src/assets/fonts/SFPro-Display-Bold.otf"; sourceTree = "<group>"; };
+		447CFB2E854F404C97B7E9CB /* Celias-Hairline.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Hairline.ttf"; path = "../src/assets/fonts/Celias-Hairline.ttf"; sourceTree = "<group>"; };
+		4B8420B2D8264825B7D09A63 /* Celias-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Thin.ttf"; path = "../src/assets/fonts/Celias-Thin.ttf"; sourceTree = "<group>"; };
+		64CA96723470400DA79C0368 /* Celias-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-BoldItalic.ttf"; path = "../src/assets/fonts/Celias-BoldItalic.ttf"; sourceTree = "<group>"; };
+		658BA380032245E1AC3C03F3 /* Overpass-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Overpass-Regular.ttf"; path = "../src/assets/fonts/Overpass-Regular.ttf"; sourceTree = "<group>"; };
+		65D660928AE340A896AC4346 /* Celias-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Italic.ttf"; path = "../src/assets/fonts/Celias-Italic.ttf"; sourceTree = "<group>"; };
+		6E5AE03E3EF4470984A5765D /* SFPro-Display-Heavy-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFPro-Display-Heavy-Italic.otf"; path = "../src/assets/fonts/SFPro-Display-Heavy-Italic.otf"; sourceTree = "<group>"; };
+		7EAE73A84C8A471E8FA7CE4A /* Overpass-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Overpass-Bold.ttf"; path = "../src/assets/fonts/Overpass-Bold.ttf"; sourceTree = "<group>"; };
+		844C5C5D47DF40F2AEC67E54 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Regular.ttf"; path = "../src/assets/fonts/Montserrat-Regular.ttf"; sourceTree = "<group>"; };
+		8D10D4F8CB97FB33575CE412 /* libPods-navcash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-navcash.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		90DD4A5AC39FC6F5C1732016 /* libPods-navcash-navcashTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-navcash-navcashTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		92473ECD9EE2563D99941659 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-navcash-navcashTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		A3F016932B5A4379A7AF414C /* Celias-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Light.ttf"; path = "../assets/fonts/Celias-Light.ttf"; sourceTree = "<group>"; };
-		ABFE59519B596E51CEFDCCC0 /* libPods-navcash-navcashTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-navcash-navcashTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AD698E7C62A34B76B5680904 /* SFPro-Display-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFPro-Display-Bold.otf"; path = "../assets/fonts/SFPro-Display-Bold.otf"; sourceTree = "<group>"; };
-		B7B1135CF3ED4DD5BBE8A747 /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BlackItalic.ttf"; path = "../assets/fonts/Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
+		957B52B18DA849C8B4B23554 /* Celias-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-BlackItalic.ttf"; path = "../src/assets/fonts/Celias-BlackItalic.ttf"; sourceTree = "<group>"; };
+		A57130F37D3447B4ADFD0598 /* Celias-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Black.ttf"; path = "../src/assets/fonts/Celias-Black.ttf"; sourceTree = "<group>"; };
 		B815340AB5B91EED4003E033 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-navcash/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		C0A881CF5CF3F2B244570E2A /* Pods-navcash.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navcash.debug.xcconfig"; path = "Target Support Files/Pods-navcash/Pods-navcash.debug.xcconfig"; sourceTree = "<group>"; };
-		C8987361994248159E211D23 /* Overpass-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Overpass-Regular.ttf"; path = "../assets/fonts/Overpass-Regular.ttf"; sourceTree = "<group>"; };
-		CCE0E30BA8EE4B548D6607D4 /* Celias-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Italic.ttf"; path = "../assets/fonts/Celias-Italic.ttf"; sourceTree = "<group>"; };
-		D00AAFFCFCFDA5787532823F /* Pods-navcash.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navcash.release.xcconfig"; path = "Target Support Files/Pods-navcash/Pods-navcash.release.xcconfig"; sourceTree = "<group>"; };
-		D07AC2FA46194585B3622EE4 /* Celias-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-Medium.ttf"; path = "../assets/fonts/Celias-Medium.ttf"; sourceTree = "<group>"; };
+		D54B4EA9850020968C1941D0 /* Pods-navcash.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navcash.release.xcconfig"; path = "Target Support Files/Pods-navcash/Pods-navcash.release.xcconfig"; sourceTree = "<group>"; };
+		D8C3EE74B185F7CAD18A21F3 /* Pods-navcash-navcashTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-navcash-navcashTests.release.xcconfig"; path = "Target Support Files/Pods-navcash-navcashTests/Pods-navcash-navcashTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		FA07C46D2843C6FC0062BF40 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../assets/www; sourceTree = "<group>"; };
+		EFB2F9E758F64A638DBD1ECA /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BlackItalic.ttf"; path = "../src/assets/fonts/Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
+		F0DB73CAE831476DB78B8946 /* SpaceMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-Regular.ttf"; path = "../src/assets/fonts/SpaceMono-Regular.ttf"; sourceTree = "<group>"; };
+		F7D52585E6AA4234A5730343 /* Celias.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Celias.ttf; path = ../src/assets/fonts/Celias.ttf; sourceTree = "<group>"; };
+		F8CAB2B66AD3448FBA5EA369 /* Celias-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Celias-ThinItalic.ttf"; path = "../src/assets/fonts/Celias-ThinItalic.ttf"; sourceTree = "<group>"; };
+		FA07C46D2843C6FC0062BF40 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../src/assets/www; sourceTree = "<group>"; };
 		FA208EB6279BFDFD0055BF58 /* Empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Empty.swift; path = navcash/Empty.swift; sourceTree = "<group>"; };
-		FA98F77B385A42578ACDAEA0 /* Overpass-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Overpass-SemiBold.ttf"; path = "../assets/fonts/Overpass-SemiBold.ttf"; sourceTree = "<group>"; };
 		FADA6CC727D8B2CE003CD0C1 /* bls_framework.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = bls_framework.xcframework; sourceTree = "<group>"; };
-		FB50A099BD944FB699673756 /* Overpass-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Overpass-Bold.ttf"; path = "../assets/fonts/Overpass-Bold.ttf"; sourceTree = "<group>"; };
-		FE9755B1E42545D69740C5B6 /* Celias.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Celias.ttf; path = ../assets/fonts/Celias.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,7 +115,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7EF68E3733C33B6898317E18 /* libPods-navcash-navcashTests.a in Frameworks */,
+				BF4AD9384DE0514BD05C2C44 /* libPods-navcash-navcashTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,7 +123,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6172F2D35A4C3AA820D92908 /* libPods-navcash.a in Frameworks */,
+				2C0837CE15C31F4B7032E864 /* libPods-navcash.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,8 +166,8 @@
 			children = (
 				FADA6CC727D8B2CE003CD0C1 /* bls_framework.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				6423831EA8574132BED9D8CC /* libPods-navcash.a */,
-				ABFE59519B596E51CEFDCCC0 /* libPods-navcash-navcashTests.a */,
+				8D10D4F8CB97FB33575CE412 /* libPods-navcash.a */,
+				90DD4A5AC39FC6F5C1732016 /* libPods-navcash-navcashTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -234,27 +234,27 @@
 		DFD17F136ADD49A584EE0466 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				20E861F512964374AA623C7A /* Montserrat-Regular.ttf */,
-				FB50A099BD944FB699673756 /* Overpass-Bold.ttf */,
-				01D20685107944DBBE977851 /* Overpass-Extrabold-Italic.otf */,
-				C8987361994248159E211D23 /* Overpass-Regular.ttf */,
-				FA98F77B385A42578ACDAEA0 /* Overpass-SemiBold.ttf */,
-				B7B1135CF3ED4DD5BBE8A747 /* Roboto-BlackItalic.ttf */,
-				AD698E7C62A34B76B5680904 /* SFPro-Display-Bold.otf */,
-				10FEDFE67DBD4D3A8C403CE7 /* SFPro-Display-Heavy-Italic.otf */,
-				372A10C1E44E4733ABFA0779 /* SpaceMono-Regular.ttf */,
-				46658E63429141F0AB72699A /* Celias-Hairline.ttf */,
-				A3F016932B5A4379A7AF414C /* Celias-Light.ttf */,
-				766D73763AEE4968B57A4070 /* Celias-Thin.ttf */,
-				FE9755B1E42545D69740C5B6 /* Celias.ttf */,
-				59926A1ACC74446488E128B2 /* Celias-Black.ttf */,
-				0FEA3C3A9E0F41FD91E420CA /* Celias-BlackItalic.ttf */,
-				7FAB232D5AD74C57BB6D1B0D /* Celias-Bold.ttf */,
-				3EB2FC6B90294DC181FBA443 /* Celias-BoldItalic.ttf */,
-				CCE0E30BA8EE4B548D6607D4 /* Celias-Italic.ttf */,
-				87BFC234074542A3B250F1AA /* Celias-LightItalic.ttf */,
-				D07AC2FA46194585B3622EE4 /* Celias-Medium.ttf */,
-				30407DD8A185467EA3AE8ED7 /* Celias-ThinItalic.ttf */,
+				23ABAAFE6A474102A373C500 /* Overpass-Extrabold-Italic.otf */,
+				41B0D12C15E3428DA3454705 /* SFPro-Display-Bold.otf */,
+				6E5AE03E3EF4470984A5765D /* SFPro-Display-Heavy-Italic.otf */,
+				A57130F37D3447B4ADFD0598 /* Celias-Black.ttf */,
+				957B52B18DA849C8B4B23554 /* Celias-BlackItalic.ttf */,
+				3868C79786FB48AA9DD2516E /* Celias-Bold.ttf */,
+				64CA96723470400DA79C0368 /* Celias-BoldItalic.ttf */,
+				447CFB2E854F404C97B7E9CB /* Celias-Hairline.ttf */,
+				65D660928AE340A896AC4346 /* Celias-Italic.ttf */,
+				14FD8AB89CA7492B90504619 /* Celias-Light.ttf */,
+				014921049C064E1D83E4F122 /* Celias-LightItalic.ttf */,
+				24E09BF5CFD14BF6984AFAD2 /* Celias-Medium.ttf */,
+				4B8420B2D8264825B7D09A63 /* Celias-Thin.ttf */,
+				F8CAB2B66AD3448FBA5EA369 /* Celias-ThinItalic.ttf */,
+				F7D52585E6AA4234A5730343 /* Celias.ttf */,
+				844C5C5D47DF40F2AEC67E54 /* Montserrat-Regular.ttf */,
+				7EAE73A84C8A471E8FA7CE4A /* Overpass-Bold.ttf */,
+				658BA380032245E1AC3C03F3 /* Overpass-Regular.ttf */,
+				0EB6862F39304D209FA942D0 /* Overpass-SemiBold.ttf */,
+				EFB2F9E758F64A638DBD1ECA /* Roboto-BlackItalic.ttf */,
+				F0DB73CAE831476DB78B8946 /* SpaceMono-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -262,10 +262,10 @@
 		E233CBF5F47BEE60B243DCF8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				C0A881CF5CF3F2B244570E2A /* Pods-navcash.debug.xcconfig */,
-				D00AAFFCFCFDA5787532823F /* Pods-navcash.release.xcconfig */,
-				6C97AB639B58BBB4B15BBE30 /* Pods-navcash-navcashTests.debug.xcconfig */,
-				1D0AE47A65C8663E3B452821 /* Pods-navcash-navcashTests.release.xcconfig */,
+				19706B475EBB598AC58686F7 /* Pods-navcash.debug.xcconfig */,
+				D54B4EA9850020968C1941D0 /* Pods-navcash.release.xcconfig */,
+				2E29EF67EB5241EB2203F181 /* Pods-navcash-navcashTests.debug.xcconfig */,
+				D8C3EE74B185F7CAD18A21F3 /* Pods-navcash-navcashTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -277,11 +277,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "navcashTests" */;
 			buildPhases = (
-				A130D646172E58E1D159D8F2 /* [CP] Check Pods Manifest.lock */,
+				6F736687E45F3A974FBCBDF9 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				4E62BDF20514810D028A5FBF /* [CP] Copy Pods Resources */,
+				C82325689806665F51DCB767 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -297,14 +297,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "navcash" */;
 			buildPhases = (
-				3E482C27206C4DEF2FE45063 /* [CP] Check Pods Manifest.lock */,
+				2D13402710806080D1B8A9AD /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				ADC9DDC32298B72B3CF5DC8E /* [CP] Copy Pods Resources */,
 				FADA6CCA27D8B2CE003CD0C1 /* Embed Frameworks */,
+				F6341B67746B871E25551EB3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -365,28 +365,28 @@
 			files = (
 				FA07C46E2843C6FC0062BF40 /* www in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				444452B67AAE44C098B9D6FB /* Montserrat-Regular.ttf in Resources */,
 				40CE3F65280115A800B6C566 /* BootSplash.storyboard in Resources */,
-				92DD7680E8D34BB3AAE6DA3B /* Overpass-Bold.ttf in Resources */,
-				AEA7FE0E582C4C23BAD6B56B /* Overpass-Extrabold-Italic.otf in Resources */,
-				47355FE5649F484DAFD63172 /* Overpass-Regular.ttf in Resources */,
-				778AA9919585474B9B260A7E /* Overpass-SemiBold.ttf in Resources */,
-				F917794371E14389854C6511 /* Roboto-BlackItalic.ttf in Resources */,
-				6A76946D6A394A6F8D00C5F4 /* SFPro-Display-Bold.otf in Resources */,
-				206B3A9EE8104C79864F3F94 /* SFPro-Display-Heavy-Italic.otf in Resources */,
-				1E23B3B455B54FB7A0ED01C3 /* SpaceMono-Regular.ttf in Resources */,
-				7B7C0937FD1D498ABFFA52BD /* Celias-Hairline.ttf in Resources */,
-				C783B75188C84B81ABDC6765 /* Celias-Light.ttf in Resources */,
-				2A2CEB22EBE44C76A505D2B8 /* Celias-Thin.ttf in Resources */,
-				028F8EFAAC5E4832898A9035 /* Celias.ttf in Resources */,
-				D9A02F4DBF9A414191D9AE61 /* Celias-Black.ttf in Resources */,
-				EA038D4138F049BD923D3EB5 /* Celias-BlackItalic.ttf in Resources */,
-				BFBDBCDE08F740709485E0DB /* Celias-Bold.ttf in Resources */,
-				6452646891E6442891F78D2B /* Celias-BoldItalic.ttf in Resources */,
-				DA5A644F7C4C46A8A721D50D /* Celias-Italic.ttf in Resources */,
-				17C7D3D193394F829D6C2532 /* Celias-LightItalic.ttf in Resources */,
-				BB6209481A8E46729447509E /* Celias-Medium.ttf in Resources */,
-				6FB6077748EF4FD9972384B9 /* Celias-ThinItalic.ttf in Resources */,
+				CF6BC0C42BF6402A96F3757B /* Overpass-Extrabold-Italic.otf in Resources */,
+				65E200A8476F4EFDB26D5691 /* SFPro-Display-Bold.otf in Resources */,
+				A074C97D8C1E48749985BF14 /* SFPro-Display-Heavy-Italic.otf in Resources */,
+				7828EB551F6D46AA8816A5C4 /* Celias-Black.ttf in Resources */,
+				930CC380C65449FAB7D760A4 /* Celias-BlackItalic.ttf in Resources */,
+				918C7296616F40CBAFFFCCB1 /* Celias-Bold.ttf in Resources */,
+				140579796B624DA183172AAD /* Celias-BoldItalic.ttf in Resources */,
+				8CB8E59AA78A4AB8B7F1E6C5 /* Celias-Hairline.ttf in Resources */,
+				050A546856A04673BF23E0AA /* Celias-Italic.ttf in Resources */,
+				CCB6536D93D24735B999B714 /* Celias-Light.ttf in Resources */,
+				620D1AD5BE174A23A0BD9666 /* Celias-LightItalic.ttf in Resources */,
+				FFED1681945B4CAA8423D685 /* Celias-Medium.ttf in Resources */,
+				AF22BF40BACE4C5A8B08FD21 /* Celias-Thin.ttf in Resources */,
+				609E46C6AA914F48A9AB9EA9 /* Celias-ThinItalic.ttf in Resources */,
+				5756126B1CFA46338981ABE1 /* Celias.ttf in Resources */,
+				2F20A307A0954A84A57139DC /* Montserrat-Regular.ttf in Resources */,
+				5E827ECA827B46CCAFAF2029 /* Overpass-Bold.ttf in Resources */,
+				1ABF98149ADF40F29B603212 /* Overpass-Regular.ttf in Resources */,
+				9F839CC996D84AF5BE288706 /* Overpass-SemiBold.ttf in Resources */,
+				AA6C91A65E96465BA04438A8 /* Roboto-BlackItalic.ttf in Resources */,
+				78761105E2F34D24ADE3B467 /* SpaceMono-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,7 +408,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n# Fix for machines using nvm\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n if [ \"${CONFIGURATION}\" == \"Debug\" ]; then\n  export SKIP_BUNDLING=true\n fi\n";
 		};
-		3E482C27206C4DEF2FE45063 /* [CP] Check Pods Manifest.lock */ = {
+		2D13402710806080D1B8A9AD /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -430,24 +430,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4E62BDF20514810D028A5FBF /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-navcash-navcashTests/Pods-navcash-navcashTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-navcash-navcashTests/Pods-navcash-navcashTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-navcash-navcashTests/Pods-navcash-navcashTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A130D646172E58E1D159D8F2 /* [CP] Check Pods Manifest.lock */ = {
+		6F736687E45F3A974FBCBDF9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -469,7 +452,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		ADC9DDC32298B72B3CF5DC8E /* [CP] Copy Pods Resources */ = {
+		C82325689806665F51DCB767 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-navcash-navcashTests/Pods-navcash-navcashTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-navcash-navcashTests/Pods-navcash-navcashTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-navcash-navcashTests/Pods-navcash-navcashTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F6341B67746B871E25551EB3 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -541,7 +541,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6C97AB639B58BBB4B15BBE30 /* Pods-navcash-navcashTests.debug.xcconfig */;
+			baseConfigurationReference = 2E29EF67EB5241EB2203F181 /* Pods-navcash-navcashTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -568,7 +568,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1D0AE47A65C8663E3B452821 /* Pods-navcash-navcashTests.release.xcconfig */;
+			baseConfigurationReference = D8C3EE74B185F7CAD18A21F3 /* Pods-navcash-navcashTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -592,7 +592,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C0A881CF5CF3F2B244570E2A /* Pods-navcash.debug.xcconfig */;
+			baseConfigurationReference = 19706B475EBB598AC58686F7 /* Pods-navcash.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -622,7 +622,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D00AAFFCFCFDA5787532823F /* Pods-navcash.release.xcconfig */;
+			baseConfigurationReference = D54B4EA9850020968C1941D0 /* Pods-navcash.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

@@ -1,23 +1,23 @@
-import useWallet from '../../hooks/useWallet';
+import { useWallet } from '@hooks';
 import BigList from 'react-native-big-list';
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
-import Container from '../../../components/Container';
-import Transaction from '../../../components/Transaction';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { View } from 'react-native';
 import {
-  Connection_Stats_Enum,
-  Connection_Stats_Text,
-} from '../../../constants/Type';
-import Text from '../../../components/Text';
-import OptionCard from '../../../components/OptionCard';
-import {RootStackParamList} from '../../../navigation/type';
-import TopNavigationComponent from '../../../components/TopNavigation';
+  Container,
+  Transaction,
+  Text,
+  OptionCard,
+  TopNavigationComponent,
+} from '@components';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { Connection_Stats_Enum, Connection_Stats_Text } from '@constants';
+import { RootStackParamList } from '@navigation/type';
+import { historyScreenStyles as styles } from './styles';
 
 const HistoryScreen = (props: any) => {
-  const {history, connected} = useWallet();
+  const { history, connected } = useWallet();
 
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+  const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
   const [loadingStatusText, setLoadingStatus] =
     useState<Connection_Stats_Text>();
 
@@ -52,12 +52,12 @@ const HistoryScreen = (props: any) => {
     }
   }, [connected]);
 
-  const renderItem = ({item, index}) => (
+  const renderItem = ({ item, index }) => (
     <Transaction
       item={item}
       index={index}
       onPress={() => {
-        navigate('ViewTxScreen', {item});
+        navigate('ViewTxScreen', { item });
       }}
     />
   );
@@ -108,7 +108,7 @@ const HistoryScreen = (props: any) => {
             <OptionCard
               id={'1'}
               index={1}
-              item={{text: 'Show receiving address'}}
+              item={{ text: 'Show receiving address' }}
               selected={'walletName'}
               onPress={() => {
                 goToAddressCoin();
@@ -129,27 +129,3 @@ const HistoryScreen = (props: any) => {
 };
 
 export default HistoryScreen;
-
-const styles = StyleSheet.create({
-  header: {
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-    paddingBottom: 8,
-  },
-  text: {
-    color: 'white',
-    textAlign: 'center',
-  },
-  emptyView: {
-    flex: 1,
-    alignContent: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  cardWrapper: {
-    width: 300,
-    maxWidth: 300,
-    alignSelf: 'center',
-    marginTop: 50,
-  },
-});

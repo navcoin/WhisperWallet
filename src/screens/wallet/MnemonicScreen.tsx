@@ -1,9 +1,7 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import Container from '../../../components/Container';
-import {ScreenProps} from '../../../navigation/type';
-import Mnemonic from '../../../components/Mnemonic';
-import TopNavigationComponent from '../../../components/TopNavigation';
+import { View, StyleSheet } from 'react-native';
+import { Container, Mnemonic, TopNavigationComponent } from '@components';
+import { ScreenProps } from '@navigation/type';
 
 const MnemonicScreen: React.FC<ScreenProps<'MnemonicScreen'>> = (
   props: any,
@@ -29,6 +27,5 @@ const styles = StyleSheet.create({
     marginTop: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
   },
 });

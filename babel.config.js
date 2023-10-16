@@ -3,7 +3,7 @@ module.exports = api => {
   const plugins = ['@babel/syntax-bigint'];
   //change to 'production' to check if this is working in 'development' mode
   if (babelEnv !== 'development') {
-    plugins.push(['transform-remove-console', {exclude: ['error', 'warn']}]);
+    plugins.push(['transform-remove-console', { exclude: ['error', 'warn'] }]);
   }
   plugins.push('react-native-reanimated/plugin');
   return {

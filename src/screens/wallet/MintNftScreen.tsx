@@ -1,35 +1,35 @@
-import useWallet from '../../hooks/useWallet';
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View } from 'react-native';
 import {
   Button,
   Input,
   Layout,
   TopNavigation,
 } from '@tsejerome/ui-kitten-components';
-import Container from '../../../components/Container';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {Destination_Types_Enum, NftItemOption} from '../../../constants/Type';
-import Text from '../../../components/Text';
-import {RootStackParamList} from '../../../navigation/type';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import TopNavigationComponent from '../../../components/TopNavigation';
-import useSecurity from '../../hooks/useSecurity';
-import BottomSheetView from '../../../components/BottomSheetView';
-import {SwipeButton} from '../../../components/SwipeButton';
-import {useBottomSheet} from '../../hooks/useBottomSheet';
-import {useModal} from '../../hooks/useModal';
-import LoadingModalContent from '../../../components/Modals/LoadingModalContent';
+import {
+  Container,
+  Text,
+  TopNavigationComponent,
+  SwipeButton,
+  LoadingModalContent,
+  BottomSheetView,
+} from '@components';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { Destination_Types_Enum, NftItemOption } from '@constants';
+import { RootStackParamList } from '@navigation/type';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useSecurity, useModal, useBottomSheet, useWallet } from '@hooks';
 import Toast from 'react-native-toast-message';
+import { mintNftStyles as styles } from './styles';
 
 const MintNftScreen = (props: any) => {
-  const {MintNft, ExecWrapperPromise, sendTransaction, parsedAddresses} =
+  const { MintNft, ExecWrapperPromise, sendTransaction, parsedAddresses } =
     useWallet();
-  const {readPassword} = useSecurity();
+  const { readPassword } = useSecurity();
 
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
-  const {collapse} = useBottomSheet();
-  const {openModal, closeModal} = useModal();
+  const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
+  const { collapse } = useBottomSheet();
+  const { openModal, closeModal } = useModal();
   const bottomSheet = useBottomSheet();
 
   const nftCollection = props.route.params.from;
@@ -96,7 +96,7 @@ const MintNftScreen = (props: any) => {
     type: keyof NftItemOption,
     value: string | number,
   ) => {
-    const temp = {...collection};
+    const temp = { ...collection };
     temp[type] = value as any;
     setCollection(temp);
   };
@@ -131,7 +131,7 @@ const MintNftScreen = (props: any) => {
             ...collection,
             image: collection.resource,
             resource: undefined,
-            attributes: {thumbnail_url: collection.resource},
+            attributes: { thumbnail_url: collection.resource },
           }),
           spendingPassword,
         )
@@ -142,31 +142,27 @@ const MintNftScreen = (props: any) => {
                 <TopNavigation title="Confirm NFT mint" />
                 <Layout level="2" style={styles.card}>
                   <View style={styles.row}>
-                    <Text category="headline" style={{marginRight: 16}}>
+                    <Text category="headline" style={styles.marginRight16}>
                       Name:
                     </Text>
-                    <Text
-                      category="headline"
-                      style={{flex: 1, flexWrap: 'wrap'}}>
+                    <Text category="headline" style={styles.textResource}>
                       {collection.name}
                     </Text>
                   </View>
 
                   <View style={styles.row}>
-                    <Text category="headline" style={{marginRight: 16}}>
+                    <Text category="headline" style={styles.marginRight16}>
                       Image URL:
                     </Text>
-                    <Text
-                      category="headline"
-                      style={{flex: 1, flexWrap: 'wrap'}}>
+                    <Text category="headline" style={styles.textResource}>
                       {collection.resource}
                     </Text>
                   </View>
                 </Layout>
 
-                <Layout level="2" style={{...styles.card, marginBottom: 24}}>
+                <Layout level="2" style={[styles.card, styles.marginBottom24]}>
                   <View style={styles.row}>
-                    <Text category="headline" style={{marginRight: 16}}>
+                    <Text category="headline" style={styles.marginRight16}>
                       Fee:
                     </Text>
                     <Text category="headline">
@@ -184,10 +180,10 @@ const MintNftScreen = (props: any) => {
                       if (res.error) {
                         bottomSheet.expand(
                           <BottomSheetView>
-                            <Text center style={{paddingBottom: 16}}>
+                            <Text center style={styles.paddingBottom16}>
                               Unable to send transaction
                             </Text>
-                            <Text center style={{paddingBottom: 16}}>
+                            <Text center style={styles.paddingBottom16}>
                               {res.error.split('[')[0]}
                             </Text>
                           </BottomSheetView>,
@@ -209,10 +205,10 @@ const MintNftScreen = (props: any) => {
             console.log(e.stack);
             bottomSheet.expand(
               <BottomSheetView>
-                <Text center style={{paddingBottom: 16}}>
+                <Text center style={styles.paddingBottom16}>
                   Unable to create transaction
                 </Text>
-                <Text center style={{paddingBottom: 16}}>
+                <Text center style={styles.paddingBottom16}>
                   {e.message}
                 </Text>
               </BottomSheetView>,
@@ -225,10 +221,10 @@ const MintNftScreen = (props: any) => {
 
         bottomSheet.expand(
           <BottomSheetView>
-            <Text center style={{paddingBottom: 16}}>
+            <Text center style={styles.paddingBottom16}>
               Unable to create transaction
             </Text>
-            <Text center style={{paddingBottom: 16}}>
+            <Text center style={styles.paddingBottom16}>
               {e.message}
             </Text>
           </BottomSheetView>,
@@ -299,39 +295,3 @@ const MintNftScreen = (props: any) => {
   );
 };
 export default MintNftScreen;
-
-const styles = StyleSheet.create({
-  inputCard: {
-    borderRadius: 12,
-    marginHorizontal: 24,
-    paddingVertical: 24,
-    paddingHorizontal: 16,
-  },
-  inputGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  inputField: {
-    flex: 1,
-    flexWrap: 'wrap',
-  },
-  inputTitle: {
-    marginRight: 16,
-  },
-  errorText: {color: 'red', flex: 1, marginTop: 24},
-  card: {
-    borderRadius: 12,
-    borderWidth: 1,
-    marginTop: 24,
-    paddingTop: 14,
-    paddingBottom: 12,
-    paddingHorizontal: 16,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-});

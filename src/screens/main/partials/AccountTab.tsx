@@ -1,35 +1,34 @@
 // import Content from './Content';
-import {RefreshControl, ScrollView, View} from 'react-native';
-import {useEffect} from 'react';
+import { RefreshControl, ScrollView, View } from 'react-native';
+import { useEffect } from 'react';
 import {
   BalanceCard,
   BottomSheetMenu,
   Content,
   BottomSheetOptions,
 } from '@components';
-import React, {useCallback, useState} from 'react';
-import {BalanceFragment} from '@constants/Type';
-import {useBottomSheet} from '@hooks/useBottomSheet';
-import useWallet from '@hooks/useWallet';
+import React, { useCallback, useState } from 'react';
+import { BalanceFragment } from '@constants';
+import { useBottomSheet, useWallet } from '@hooks';
 import {
   StyleService,
   useStyleSheet,
   useTheme,
 } from '@tsejerome/ui-kitten-components';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {scale, verticalScale} from 'react-native-size-matters';
-import {RootStackParamList} from '@navigation/type';
-import {useExchangeRate} from '@hooks';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { scale, verticalScale } from 'react-native-size-matters';
+import { RootStackParamList } from '@navigation/type';
+import { useExchangeRate } from '@hooks';
 
 const AccountTab = () => {
-  const {selectedCurrency, HIDE_CURRENCY} = useExchangeRate();
+  const { selectedCurrency, HIDE_CURRENCY } = useExchangeRate();
   const [account, setAccount] = useState<BalanceFragment | undefined>(
     undefined,
   );
-  const {accounts, refreshWallet} = useWallet();
+  const { accounts, refreshWallet } = useWallet();
   const bottomSheet = useBottomSheet();
   const styles = useStyleSheet(themedStyles);
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+  const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
   const theme = useTheme();
 
   const pickDestination = useCallback(
@@ -37,7 +36,7 @@ const AccountTab = () => {
       let options = accounts
         .filter(el => el.name != account_?.name)
         .map(el => {
-          return {...el, text: el.name};
+          return { ...el, text: el.name };
         });
 
       bottomSheet.expand(
@@ -118,7 +117,7 @@ const AccountTab = () => {
           return (
             <View style={styles.item} key={i}>
               <BalanceCard
-                item={{...el, name: el.name + ' account'}}
+                item={{ ...el, name: el.name + ' account' }}
                 index={i}
                 isFiatHidden={selectedCurrency === HIDE_CURRENCY ? true : false}
                 onPress={() => {
@@ -149,7 +148,7 @@ const AccountTab = () => {
             titleColor="#fff"
           />
         }>
-        <Content style={{paddingTop: verticalScale(24)}}>
+        <Content style={{ paddingTop: verticalScale(24) }}>
           {accountsContent}
         </Content>
       </ScrollView>

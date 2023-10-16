@@ -1,5 +1,5 @@
-import {useContext} from 'react';
-import {QrContext} from '../../contexts/QrContext';
+import { useContext } from 'react';
+import { QrContext } from '@contexts';
 
 export const useQr = () => {
   const context = useContext(QrContext);

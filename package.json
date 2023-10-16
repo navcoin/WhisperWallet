@@ -9,8 +9,8 @@
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "dev-ios": "npx react-native run-ios --simulator=\"iPhone 13 Pro\"",
-    "generate-splash": "npx react-native generate-bootsplash 'assets/logos/splash/default.png' --background-color '#1F2933' --assets-path 'assets/logos/splash' --logo-width=200 ",
-    "postinstall": "patch-package;cp -rf assets/www android/app/src/main/assets/"
+    "generate-splash": "npx react-native generate-bootsplash 'src/assets/logos/splash/default.png' --background-color '#1F2933' --assets-path 'assets/logos/splash' --logo-width=200 ",
+    "postinstall": "patch-package;cp -rf src/assets/www android/app/src/main/assets/"
   },
   "dependencies": {
     "@eva-design/eva": "^2.1.1",
@@ -171,8 +171,8 @@
   },
   "rnpm": {
     "assets": [
-      "./assets/fonts",
-      "./assets/www"
+      "./src/assets/fonts",
+      "./src/assets/www"
     ]
   },
   "expo": {

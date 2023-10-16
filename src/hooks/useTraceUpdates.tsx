@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react';
+import { useEffect, useRef } from 'react';
 
 function useTraceUpdate(
   componentName: string,
@@ -8,17 +8,19 @@ function useTraceUpdate(
   const prev = useRef(propsAndStates);
 
   useEffect(() => {
-    const changedProps: {[key: string]: {old: any; new: any}} = Object.entries(
-      propsAndStates,
-    ).reduce((property: any, [key, value]: [string, any]) => {
-      if (prev.current[key] !== value) {
-        property[key] = {
-          old: prev.current[key],
-          new: value,
-        };
-      }
-      return property;
-    }, {});
+    const changedProps: { [key: string]: { old: any; new: any } } =
+      Object.entries(propsAndStates).reduce(
+        (property: any, [key, value]: [string, any]) => {
+          if (prev.current[key] !== value) {
+            property[key] = {
+              old: prev.current[key],
+              new: value,
+            };
+          }
+          return property;
+        },
+        {},
+      );
 
     if (Object.keys(changedProps).length > 0) {
       console[level](

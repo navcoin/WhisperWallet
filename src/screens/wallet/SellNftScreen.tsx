@@ -1,38 +1,42 @@
-import useWallet from '../../hooks/useWallet';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import {
   Button,
   Input,
   Layout,
   TopNavigation,
 } from '@tsejerome/ui-kitten-components';
-import Container from '../../../components/Container';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {Destination_Types_Enum} from '../../../constants/Type';
-import Text from '../../../components/Text';
-import {RootStackParamList} from '../../../navigation/type';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import TopNavigationComponent from '../../../components/TopNavigation';
-import useSecurity from '../../hooks/useSecurity';
-import BottomSheetView from '../../../components/BottomSheetView';
-import {SwipeButton} from '../../../components/SwipeButton';
-import {useBottomSheet} from '../../hooks/useBottomSheet';
-import {useModal} from '../../hooks/useModal';
-import LoadingModalContent from '../../../components/Modals/LoadingModalContent';
+import {
+  Container,
+  Text,
+  TopNavigationComponent,
+  BottomSheetView,
+  SwipeButton,
+  LoadingModalContent,
+} from '@components';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { Destination_Types_Enum } from '@constants';
+import { RootStackParamList } from '@navigation/type';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {
+  useSecurity,
+  useWallet,
+  useBottomSheet,
+  useModal,
+  useLayout,
+} from '@hooks';
 import QRCode from 'react-native-qrcode-svg';
 import Gzip from 'rn-gzip';
-import useLayout from '../../hooks/useLayout';
 import Share from 'react-native-share';
-import {scale} from 'react-native-size-matters';
+import { sellNftStyles as styles } from './styles';
 
 const SellNftScreen = (props: any) => {
-  const {CreateSellOrder, parsedAddresses} = useWallet();
-  const {readPassword} = useSecurity();
+  const { CreateSellOrder, parsedAddresses } = useWallet();
+  const { readPassword } = useSecurity();
 
-  const {goBack} = useNavigation<NavigationProp<RootStackParamList>>();
-  const {width} = useLayout();
-  const {openModal, closeModal} = useModal();
+  const { goBack } = useNavigation<NavigationProp<RootStackParamList>>();
+  const { width } = useLayout();
+  const { openModal, closeModal } = useModal();
   const bottomSheet = useBottomSheet();
 
   const nftCollection = props.route.params.from;
@@ -89,34 +93,28 @@ const SellNftScreen = (props: any) => {
                 <TopNavigation title="Confirm sell order" />
                 <Layout level="2" style={styles.card}>
                   <View style={styles.row}>
-                    <Text category="headline" style={{marginRight: 16}}>
+                    <Text category="headline" style={styles.marginRight16}>
                       Collection:
                     </Text>
-                    <Text
-                      category="headline"
-                      style={{flex: 1, flexWrap: 'wrap'}}>
+                    <Text category="headline" style={styles.flexWrap}>
                       {nftCollection.name}
                     </Text>
                   </View>
 
                   <View style={styles.row}>
-                    <Text category="headline" style={{marginRight: 16}}>
+                    <Text category="headline" style={styles.marginRight16}>
                       Item:
                     </Text>
-                    <Text
-                      category="headline"
-                      style={{flex: 1, flexWrap: 'wrap'}}>
+                    <Text category="headline" style={styles.flexWrap}>
                       #{nftId}
                     </Text>
                   </View>
 
                   <View style={styles.row}>
-                    <Text category="headline" style={{marginRight: 16}}>
+                    <Text category="headline" style={styles.marginRight16}>
                       Price:
                     </Text>
-                    <Text
-                      category="headline"
-                      style={{flex: 1, flexWrap: 'wrap'}}>
+                    <Text category="headline" style={styles.flexWrap}>
                       {price} xNAV
                     </Text>
                   </View>
@@ -130,7 +128,7 @@ const SellNftScreen = (props: any) => {
                         <Text
                           center
                           category={'title4'}
-                          style={{marginBottom: scale(24)}}>
+                          style={styles.marginBottom24}>
                           Share the following QR code with your buyer:
                         </Text>
                         <QRCode
@@ -142,7 +140,7 @@ const SellNftScreen = (props: any) => {
                           size={width * 0.9}
                         />
                         <Button
-                          style={{marginTop: 24}}
+                          style={styles.marginTop24}
                           status={'primary-whisper'}
                           children={'Share'}
                           onPress={() => {
@@ -177,10 +175,10 @@ const SellNftScreen = (props: any) => {
             console.log(e.stack);
             bottomSheet.expand(
               <BottomSheetView>
-                <Text center style={{paddingBottom: 16}}>
+                <Text center style={styles.paddingBottom16}>
                   Unable to create sell order
                 </Text>
-                <Text center style={{paddingBottom: 16}}>
+                <Text center style={styles.paddingBottom16}>
                   {e.message}
                 </Text>
               </BottomSheetView>,
@@ -193,10 +191,10 @@ const SellNftScreen = (props: any) => {
 
         bottomSheet.expand(
           <BottomSheetView>
-            <Text center style={{paddingBottom: 16}}>
+            <Text center style={styles.paddingBottom16}>
               Unable to create sell order
             </Text>
-            <Text center style={{paddingBottom: 16}}>
+            <Text center style={styles.paddingBottom16}>
               {e.message}
             </Text>
           </BottomSheetView>,
@@ -230,14 +228,7 @@ const SellNftScreen = (props: any) => {
             <Text category="headline" style={[styles.inputTitle]}>
               Price:
             </Text>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                paddingRight: 15,
-              }}>
+            <View style={styles.inputWrapper}>
               <Input
                 ref={amountInputRef}
                 keyboardType={'decimal-pad'}
@@ -253,7 +244,7 @@ const SellNftScreen = (props: any) => {
                   setPrice(res.trim().replace(',', '.'));
                 }}
               />
-              <Text style={{marginBottom: 2, marginLeft: -10}}>xNAV</Text>
+              <Text style={styles.xnavText}>xNAV</Text>
             </View>
           </View>
           <Button
@@ -276,42 +267,3 @@ const SellNftScreen = (props: any) => {
   );
 };
 export default SellNftScreen;
-
-const styles = StyleSheet.create({
-  inputCard: {
-    borderRadius: 12,
-    marginHorizontal: 24,
-    paddingVertical: 24,
-    paddingHorizontal: 16,
-  },
-  inputGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  inputField: {
-    flex: 1,
-    flexWrap: 'wrap',
-  },
-  inputTitle: {
-    marginRight: 16,
-  },
-  errorText: {color: 'red', flex: 1, marginTop: 24},
-  card: {
-    borderRadius: 12,
-    borderWidth: 1,
-    marginTop: 24,
-    paddingTop: 14,
-    paddingBottom: 12,
-    paddingHorizontal: 16,
-    marginBotton: 24,
-    flex: 1,
-    width: '100%',
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-});
